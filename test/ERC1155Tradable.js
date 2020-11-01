@@ -10,7 +10,7 @@ const vals = require('../lib/testValuesCommon.js');
 
 const ERC1155Tradable = artifacts.require("../contracts/ERC1155Tradable.sol");
 const MockProxyRegistry = artifacts.require(
-  "../contracts/MockProxyRegistry.sol"
+  "../contracts/lib/MockProxyRegistry.sol"
 );
 
 
