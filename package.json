@@ -4,6 +4,7 @@
   "description": "Starter contracts for an ERC-1155 project.",
   "main": "index.js",
   "scripts": {
+    "bootstrap": "npm install --python=/usr/bin/python2.7",
     "build": "truffle compile",
     "test": "truffle test"
   },
