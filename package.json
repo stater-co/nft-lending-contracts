@@ -4,8 +4,9 @@
   "description": "Starter contracts for an ERC-1155 project.",
   "main": "index.js",
   "scripts": {
+    "bootstrap": "npm install --python=/usr/bin/python2.7",
     "build": "truffle compile",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "truffle test"
   },
   "repository": {
     "type": "git",

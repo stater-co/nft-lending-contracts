@@ -1,6 +1,6 @@
 /* Contracts in this test */
 
-const MyCollectible = artifacts.require("../contracts/MyCollectible.sol");
+const MyCollectible = artifacts.require("../contracts/lib/MyCollectible.sol");
 
 
 contract("MyCollectible", (accounts) => {

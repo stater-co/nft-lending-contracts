@@ -59,6 +59,14 @@ Run
 yarn
 ```
 
+or
+
+Run
+```bash
+npm install --python=/usr/bin/python2.7
+```
+
+
 ## Deploying
 
 ### Deploying to the Rinkeby network.

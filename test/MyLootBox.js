@@ -9,8 +9,8 @@ const vals = require('../lib/testValuesCommon.js');
 const MockProxyRegistry = artifacts.require(
   "../contracts/MockProxyRegistry.sol"
 );
-const MyLootBox = artifacts.require("../contracts/MyLootBox.sol");
-const MyCollectible = artifacts.require("../contracts/MyCollectible.sol");
+const MyLootBox = artifacts.require("../contracts/lib/MyLootBox.sol");
+const MyCollectible = artifacts.require("../contracts/lib/MyCollectible.sol");
 
 
 /* Useful aliases */
