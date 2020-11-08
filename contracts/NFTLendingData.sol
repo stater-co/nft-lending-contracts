@@ -72,6 +72,8 @@ contract NFTLendingData is ERC721Holder, WhitelistedRole, Ownable {
     require(_interestRate > 0, "Interest rate must be higher than 0");
     require(_percent(_loanAmount, _assetsValue, 3) <= 500, "LTV must be under 50%");
 
+    // Would need to be preapproved by owner before, it might be better to outright transfer the NFT 
+    // to the escrow account before the contract is run
     _transferLoanNftsToEscrow(_nftAddressArray, _nftTokenIdArray);
 
     uint256 loanId = nftLoans.length;
