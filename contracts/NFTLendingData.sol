@@ -44,9 +44,6 @@ contract NFTLendingData is ERC721Holder, WhitelistedRole, Ownable {
   mapping(address => uint256[]) borrowers;
   mapping(address => uint256[]) lenders;
 
-  address constant escrow = address(0xdafbF3fE1aC5BBfE7c29A59907f84F41c2CC7613);
-  // fixed8x4 constant LTVCap = fixed8x4(1/2);
-
   function offerLoan(
     address[] calldata _nftAddressArray,
     uint256[] calldata _nftTokenIdArray,
@@ -125,7 +122,7 @@ contract NFTLendingData is ERC721Holder, WhitelistedRole, Ownable {
       // needs to be preapproved by owner
       IERC721(nftAddress).safeTransferFrom(
         msg.sender,
-        escrow,
+        address(this),
         nftTokenId
       );
     }
