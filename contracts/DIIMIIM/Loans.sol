@@ -8,7 +8,7 @@ import 'multi-token-standard/contracts/interfaces/IERC1155.sol';
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/access/roles/WhitelistedRole.sol";
 
-contract Lending {
+contract Lending is ERC721Holder {
 
   address payable public owner;
   uint256 public loanFee = 1;
@@ -232,6 +232,7 @@ contract Lending {
   }
 
   // Internal Functions 
+
   function _percent(uint256 numerator, uint256 denominator, uint256 precision) internal pure returns(uint256) {
     return (((numerator * 10 ** (precision + 1)) / denominator) + 5) / 10;
   }
