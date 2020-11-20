@@ -45,39 +45,6 @@ contract Lending {
     _;
   }
 
-
-
-  function getLoanNrOfPayments (uint256 loanId) external view returns(uint256) {
-    return loans[loanId].nrOfPayments;
-  }
-
-
-
-  function setLtv(uint256 newLtv) external onlyOwner returns(uint256) {
-    ltv = newLtv;
-    return(ltv);
-  }
-
-
-
-  function setInterestRateToCompany(uint256 newInterestRateToCompany) external onlyOwner returns(uint256) {
-    interestRateToCompany = newInterestRateToCompany;
-    return(ltv);
-  }
-
-
-
-  function setInterestRateToLender(uint256 newInterestRateToLender) external onlyOwner returns(uint256) {
-    interestRateToLender = newInterestRateToLender;
-    return(ltv);
-  }
-
-
-
-  function _percent(uint256 numerator, uint256 denominator, uint256 precision) internal pure returns(uint256) {
-    return (((numerator * 10 ** (precision + 1)) / denominator) + 5) / 10;
-  }
-
   function listLoan(uint256 loanId) external returns(uint256, uint256) {
     require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
     require(loans[loanId].status != 11, "Loan has a lender, impossible to launch");
@@ -144,8 +111,6 @@ contract Lending {
     return id;
   }
 
-
-
   function approveLoan(uint256 loanId) external payable returns(uint256, uint256, uint256, uint256){
     require(loans[loanId].lender == address(0), "Someone else payed for this loan before you");
     require(loans[loanId].nrOfPayments == 0, "This loan is currently not ready for lenders");
@@ -169,8 +134,6 @@ contract Lending {
     // Return the start date , finish date and current nrOfPayments of loan
     return (now, loans[loanId].loanEnd, loans[loanId].nrOfPayments, installmentAmount);
   }
-
-
 
   function cancelLoan(uint256 loanId) external returns(uint256,uint256) {
     require(loans[loanId].lender == address(0), "The loan has a lender , it cannot be cancelled");
@@ -236,8 +199,6 @@ contract Lending {
     return (loans[loanId].loanEnd, loans[loanId].nrOfPayments, loans[loanId].nrOfInstallments);
   }
 
-
-
   function payLoan(uint256 loanId) external payable returns(uint256, uint256, uint256){
     require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
     require(loans[loanId].status < 199, "All payments have been done for this loan");
@@ -270,6 +231,30 @@ contract Lending {
     return(now, loans[loanId].nrOfPayments, loans[loanId].status);
   }
 
+  // Internal Functions 
+  function _percent(uint256 numerator, uint256 denominator, uint256 precision) internal pure returns(uint256) {
+    return (((numerator * 10 ** (precision + 1)) / denominator) + 5) / 10;
+  }
 
+  // Getters & Setters
+
+  function getLoanNrOfPayments (uint256 loanId) external view returns(uint256) {
+    return loans[loanId].nrOfPayments;
+  }
+
+  function setLtv(uint256 newLtv) external onlyOwner returns(uint256) {
+    ltv = newLtv;
+    return(ltv);
+  }
+
+  function setInterestRateToCompany(uint256 newInterestRateToCompany) external onlyOwner returns(uint256) {
+    interestRateToCompany = newInterestRateToCompany;
+    return(ltv);
+  }
+
+  function setInterestRateToLender(uint256 newInterestRateToLender) external onlyOwner returns(uint256) {
+    interestRateToLender = newInterestRateToLender;
+    return(ltv);
+  }
 
 }
