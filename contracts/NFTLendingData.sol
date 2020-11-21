@@ -45,8 +45,6 @@ contract Loans is ERC721Holder {
     _;
   }
 
-
-
   // Create a loan
   function createLoan(
     uint256 loanAmount,
@@ -85,7 +83,6 @@ contract Loans is ERC721Holder {
     return (id,10);
   }
 
-
   // Approve a loan
   function approveLoan(uint256 loanId) external payable returns(uint256, uint256, uint256, uint256){
     require(loans[loanId].lender == address(0), "Someone else payed for this loan before you");
@@ -111,8 +108,6 @@ contract Loans is ERC721Holder {
     return (now, loans[loanId].loanEnd, loans[loanId].nrOfPayments, installmentAmount);
   }
 
-
-
   // Cancel a loan
   function cancelLoan(uint256 loanId) external returns(uint256,uint256) {
     require(loans[loanId].lender == address(0), "The loan has a lender , it cannot be cancelled");
@@ -127,8 +122,6 @@ contract Loans is ERC721Holder {
     // We return the changed values
     return (loans[loanId].nrOfPayments, loans[loanId].loanEnd);
   }
-
-
 
   // Withdraw loan items
   function withdrawItems(uint256 loanId) external {
@@ -152,8 +145,6 @@ contract Loans is ERC721Holder {
 
   }
 
-
-
   // The borrower can ask for a loan extension from the website , no blockchain operation required
   function extendLoan(uint256 loanId, uint256 nrOfWeeks) external returns(uint256,uint256,uint256) {
     require(loans[loanId].lender == msg.sender, "You're not the lender of this loan");
@@ -169,8 +160,6 @@ contract Loans is ERC721Holder {
     // Returns the loan finish date , current nrOfPayments and nuber of installments
     return (loans[loanId].loanEnd, loans[loanId].nrOfPayments, loans[loanId].nrOfInstallments);
   }
-
-
 
   // Pay for loan
   // Multiple installments : OK
@@ -266,7 +255,5 @@ contract Loans is ERC721Holder {
     interestRateToLender = newInterestRateToLender;
     return(ltv);
   }
-
-
 
 }
