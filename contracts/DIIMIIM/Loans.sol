@@ -4,7 +4,7 @@ pragma solidity ^0.5.12;
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
-import 'multi-token-standard/contracts/interfaces/IERC1155.sol';
+import "multi-token-standard/contracts/interfaces/IERC1155.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/access/roles/WhitelistedRole.sol";
 
@@ -45,72 +45,48 @@ contract Lending is ERC721Holder {
     _;
   }
 
+
+
+  // Create a loan
   function createLoan(
     uint256 loanAmount,
     uint256 installmentFrequency,
     uint256 nrOfInstallments,
-    address currency
-  ) external returns(uint256) {
+    address currency,
+    uint256 assetsValue, 
+    uint256 interestRate, 
+    address[] calldata nftAddressArray, 
+    uint256[] calldata nftTokenIdArray
+  ) external returns(uint256,uint256) {
     require(nrOfInstallments > 0, "Loan must include at least 1 installment");
     require(loanAmount > 0, "Loan amount must be higher than 0");
-
-    uint256[] memory emptyTokens;
-    address[] memory emptyAddresses;
+    require(_percent(loanAmount,assetsValue,3) <= ltv, "LTV must be under 60%");
+    _transferItems(msg.sender,address(this),nftAddressArray,nftTokenIdArray,loanId,true);
     uint256 id = loans.length;
     loans.push(
       Loan(
-          emptyTokens,
+          nftTokenIdArray,
           id,
           loanAmount,
-          0,
-          0,
+          assetsValue,
+          interestRate,
           installmentFrequency,
           0,
           nrOfInstallments,
           0,
-          0,
-          emptyAddresses,
+          10,
+          nftAddressArray,
           msg.sender,
           address(0),
           currency
       )
     );
 
-    return id;
+    return (id,10);
   }
 
-  function addItemToLoan(uint256 loanId, uint256 assetsValue, uint256 interestRate, address[] calldata nftAddressArray, uint256[] calldata nftTokenIdArray) external returns(uint256,uint256) {
-    require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
-    require(loans[loanId].status != 11, "Loan has a lender, impossible to launch");
-    uint256 length = nftAddressArray.length;
-    require(length == nftTokenIdArray.length, "Token infos provided are invalid");
-    loans[loanId].assetsValue += assetsValue;
-    loans[loanId].interestRate = loans[loanId].interestRate > 0 ? (loans[loanId].interestRate + interestRate) / 2 : interestRate;
-    require(_percent(loans[loanId].loanAmount,loans[loanId].assetsValue,3) <= ltv, "LTV must be under 60%");
-    for(uint256 i = 0; i < length; i++) {
-      IERC721(nftAddressArray[i]).safeTransferFrom(
-        msg.sender,
-        address(this),
-        nftTokenIdArray[i]
-      );
-      loans[loanId].nftTokenIdArray.push(nftTokenIdArray[i]);
-      loans[loanId].nftAddressArray.push(nftAddressArray[i]);
-    }
-    loans[loanId].status = 5;
-    return (loans[loanId].assetsValue, loans[loanId].interestRate);
-  }
 
-  function listLoan(uint256 loanId) external returns(uint256, uint256) {
-    require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
-    require(loans[loanId].status != 11, "Loan has a lender, impossible to launch");
-    require(loans[loanId].status != 10, "Loan is already listed");
-    require(loans[loanId].status != 404, "Loan is cancelled");
-    require(loans[loanId].status == 5, "Cannot be launched, you must add items");
-    require(loans[loanId].nftTokenIdArray.length > 0, "Cannot be launched , you must add items");
-    loans[loanId].status = 10;
-    return (10, now);
-  }
-
+  // Approve a loan
   function approveLoan(uint256 loanId) external payable returns(uint256, uint256, uint256, uint256){
     require(loans[loanId].lender == address(0), "Someone else payed for this loan before you");
     require(loans[loanId].nrOfPayments == 0, "This loan is currently not ready for lenders");
@@ -135,6 +111,9 @@ contract Lending is ERC721Holder {
     return (now, loans[loanId].loanEnd, loans[loanId].nrOfPayments, installmentAmount);
   }
 
+
+
+  // Cancel a loan
   function cancelLoan(uint256 loanId) external returns(uint256,uint256) {
     require(loans[loanId].lender == address(0), "The loan has a lender , it cannot be cancelled");
     require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
@@ -149,6 +128,9 @@ contract Lending is ERC721Holder {
     return (loans[loanId].nrOfPayments, loans[loanId].loanEnd);
   }
 
+
+
+  // Withdraw loan items
   function withdrawItems(uint256 loanId) external {
     require(now >= loans[loanId].loanEnd || loans[loanId].nrOfPayments == loans[loanId].nrOfInstallments, "The loan is not finished yet");
     require(loans[loanId].borrower == msg.sender || loans[loanId].lender == msg.sender, "You're not part of this loan");
@@ -159,29 +141,21 @@ contract Lending is ERC721Holder {
     uint256 length = loans[loanId].nftAddressArray.length;
 
     // If all payments are done by the borrower
-    if (loans[loanId].nrOfPayments == loans[loanId].nrOfInstallments) {
+    if (loans[loanId].nrOfPayments == loans[loanId].nrOfInstallments) 
 
       // We send the items back to him
-      for(uint256 i = 0; i < length; ++i) 
-        IERC721(loans[loanId].nftAddressArray[i]).safeTransferFrom(
-          address(this),
-          loans[loanId].borrower,
-          loans[loanId].nftTokenIdArray[i]
-        );
-    } else {
+      _transferItems(address(this),loans[loanId].borrower,loans[loanId].nftAddressArray,loans[loanId].nftTokenIdArray,loanId,false);
+
+    else 
 
       // Otherwise the lender will receive the items
-      for(uint256 i = 0; i < length; ++i) 
-        IERC721(loans[loanId].nftAddressArray[i]).safeTransferFrom(
-          address(this),
-          loans[loanId].lender,
-          loans[loanId].nftTokenIdArray[i]
-        );
-    }
+      _transferItems(address(this),loans[loanId].lender,loans[loanId].nftAddressArray,loans[loanId].nftTokenIdArray,loanId,false);
 
     loans[loanId].status = 200;
 
   }
+
+
 
   // The borrower can ask for a loan extension from the website , no blockchain operation required
   function extendLoan(uint256 loanId, uint256 nrOfWeeks) external returns(uint256,uint256,uint256) {
@@ -199,6 +173,10 @@ contract Lending is ERC721Holder {
     return (loans[loanId].loanEnd, loans[loanId].nrOfPayments, loans[loanId].nrOfInstallments);
   }
 
+
+
+  // Pay for loan
+  // Multiple installments : OK
   function payLoan(uint256 loanId) external payable returns(uint256, uint256, uint256){
     require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
     require(loans[loanId].status < 199, "All payments have been done for this loan");
@@ -231,16 +209,50 @@ contract Lending is ERC721Holder {
     return(now, loans[loanId].nrOfPayments, loans[loanId].status);
   }
 
+
+
   // Internal Functions 
 
+  // Calculates a percentage
   function _percent(uint256 numerator, uint256 denominator, uint256 precision) internal pure returns(uint256) {
     return (((numerator * 10 ** (precision + 1)) / denominator) + 5) / 10;
   }
+
+  // Transfer items fron an account to another
+  // Requires approvement
+  function _transferItems(
+    address from, 
+    address to, 
+    address[] calldata nftAddressArray, 
+    uint256[] calldata nftTokenIdArray, 
+    uint256 loanId,
+    bool pushable
+  ) internal {
+    uint256 length = nftAddressArray.length;
+    require(length == nftTokenIdArray.length, "Token infos provided are invalid");
+    for(uint256 i = 0; i < length; ++i) {
+      IERC721(nftAddressArray[i]).safeTransferFrom(
+        msg.sender,
+        address(this),
+        nftTokenIdArray[i]
+      );
+      if ( pushable ){
+        loans[loanId].nftTokenIdArray.push(nftTokenIdArray[i]);
+        loans[loanId].nftAddressArray.push(nftAddressArray[i]);
+      }
+    }
+  }
+
+
 
   // Getters & Setters
 
   function getLoanNrOfPayments (uint256 loanId) external view returns(uint256) {
     return loans[loanId].nrOfPayments;
+  }
+
+  function getLoanStatus (uint256 loanId) external view returns(uint256) {
+    return loans[loanId].status;
   }
 
   function setLtv(uint256 newLtv) external onlyOwner returns(uint256) {
@@ -257,5 +269,7 @@ contract Lending is ERC721Holder {
     interestRateToLender = newInterestRateToLender;
     return(ltv);
   }
+
+
 
 }
