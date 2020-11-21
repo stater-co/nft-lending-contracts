@@ -61,8 +61,8 @@ contract Lending is ERC721Holder {
     require(nrOfInstallments > 0, "Loan must include at least 1 installment");
     require(loanAmount > 0, "Loan amount must be higher than 0");
     require(_percent(loanAmount,assetsValue,3) <= ltv, "LTV must be under 60%");
-    _transferItems(msg.sender,address(this),nftAddressArray,nftTokenIdArray,loanId,true);
     uint256 id = loans.length;
+    _transferItems(msg.sender, address(this), nftAddressArray, nftTokenIdArray, id, true);
     loans.push(
       Loan(
           nftTokenIdArray,
@@ -136,9 +136,6 @@ contract Lending is ERC721Holder {
     require(loans[loanId].borrower == msg.sender || loans[loanId].lender == msg.sender, "You're not part of this loan");
     require(loans[loanId].status != 200, "Loan is already finished");
     require(loans[loanId].status == 199 || loans[loanId].status == 404, "Loan cannot be currently finished");
-
-    // We check the loan items
-    uint256 length = loans[loanId].nftAddressArray.length;
 
     // If all payments are done by the borrower
     if (loans[loanId].nrOfPayments == loans[loanId].nrOfInstallments) 
@@ -223,8 +220,8 @@ contract Lending is ERC721Holder {
   function _transferItems(
     address from, 
     address to, 
-    address[] calldata nftAddressArray, 
-    uint256[] calldata nftTokenIdArray, 
+    address[] memory nftAddressArray, 
+    uint256[] memory nftTokenIdArray, 
     uint256 loanId,
     bool pushable
   ) internal {
@@ -232,8 +229,8 @@ contract Lending is ERC721Holder {
     require(length == nftTokenIdArray.length, "Token infos provided are invalid");
     for(uint256 i = 0; i < length; ++i) {
       IERC721(nftAddressArray[i]).safeTransferFrom(
-        msg.sender,
-        address(this),
+        from,
+        to,
         nftTokenIdArray[i]
       );
       if ( pushable ){
