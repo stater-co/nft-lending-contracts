@@ -45,38 +45,6 @@ contract Lending is ERC721Holder {
     _;
   }
 
-  function listLoan(uint256 loanId) external returns(uint256, uint256) {
-    require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
-    require(loans[loanId].status != 11, "Loan has a lender, impossible to launch");
-    require(loans[loanId].status != 10, "Loan is already listed");
-    require(loans[loanId].status != 404, "Loan is cancelled");
-    require(loans[loanId].status == 5, "Cannot be launched, you must add items");
-    require(loans[loanId].nftTokenIdArray.length > 0, "Cannot be launched , you must add items");
-    loans[loanId].status = 10;
-    return (10, now);
-  }
-
-  function addItemToLoan(uint256 loanId, uint256 assetsValue, uint256 interestRate, address[] calldata nftAddressArray, uint256[] calldata nftTokenIdArray) external returns(uint256,uint256) {
-    require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
-    require(loans[loanId].status != 11, "Loan has a lender, impossible to launch");
-    uint256 length = nftAddressArray.length;
-    require(length == nftTokenIdArray.length, "Token infos provided are invalid");
-    loans[loanId].assetsValue += assetsValue;
-    loans[loanId].interestRate = loans[loanId].interestRate > 0 ? (loans[loanId].interestRate + interestRate) / 2 : interestRate;
-    require(_percent(loans[loanId].loanAmount,loans[loanId].assetsValue,3) <= ltv, "LTV must be under 60%");
-    for(uint256 i = 0; i < length; i++) {
-      IERC721(nftAddressArray[i]).safeTransferFrom(
-        msg.sender,
-        address(this),
-        nftTokenIdArray[i]
-      );
-      loans[loanId].nftTokenIdArray.push(nftTokenIdArray[i]);
-      loans[loanId].nftAddressArray.push(nftAddressArray[i]);
-    }
-    loans[loanId].status = 5;
-    return (loans[loanId].assetsValue, loans[loanId].interestRate);
-  }
-
   function createLoan(
     uint256 loanAmount,
     uint256 installmentFrequency,
@@ -109,6 +77,38 @@ contract Lending is ERC721Holder {
     );
 
     return id;
+  }
+
+  function addItemToLoan(uint256 loanId, uint256 assetsValue, uint256 interestRate, address[] calldata nftAddressArray, uint256[] calldata nftTokenIdArray) external returns(uint256,uint256) {
+    require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
+    require(loans[loanId].status != 11, "Loan has a lender, impossible to launch");
+    uint256 length = nftAddressArray.length;
+    require(length == nftTokenIdArray.length, "Token infos provided are invalid");
+    loans[loanId].assetsValue += assetsValue;
+    loans[loanId].interestRate = loans[loanId].interestRate > 0 ? (loans[loanId].interestRate + interestRate) / 2 : interestRate;
+    require(_percent(loans[loanId].loanAmount,loans[loanId].assetsValue,3) <= ltv, "LTV must be under 60%");
+    for(uint256 i = 0; i < length; i++) {
+      IERC721(nftAddressArray[i]).safeTransferFrom(
+        msg.sender,
+        address(this),
+        nftTokenIdArray[i]
+      );
+      loans[loanId].nftTokenIdArray.push(nftTokenIdArray[i]);
+      loans[loanId].nftAddressArray.push(nftAddressArray[i]);
+    }
+    loans[loanId].status = 5;
+    return (loans[loanId].assetsValue, loans[loanId].interestRate);
+  }
+
+  function listLoan(uint256 loanId) external returns(uint256, uint256) {
+    require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
+    require(loans[loanId].status != 11, "Loan has a lender, impossible to launch");
+    require(loans[loanId].status != 10, "Loan is already listed");
+    require(loans[loanId].status != 404, "Loan is cancelled");
+    require(loans[loanId].status == 5, "Cannot be launched, you must add items");
+    require(loans[loanId].nftTokenIdArray.length > 0, "Cannot be launched , you must add items");
+    loans[loanId].status = 10;
+    return (10, now);
   }
 
   function approveLoan(uint256 loanId) external payable returns(uint256, uint256, uint256, uint256){
