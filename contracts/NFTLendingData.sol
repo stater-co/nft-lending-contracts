@@ -8,7 +8,7 @@ import "multi-token-standard/contracts/interfaces/IERC1155.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/access/roles/WhitelistedRole.sol";
 
-contract NFTLendingData is ERC721Holder {
+contract Loans is ERC721Holder {
 
   address payable public owner;
   uint256 public loanFee = 1;
