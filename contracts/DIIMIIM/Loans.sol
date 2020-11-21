@@ -1,9 +1,14 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.2;
+pragma solidity ^0.5.12;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/IERC721.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
+import "openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
+import "multi-token-standard/contracts/interfaces/IERC1155.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/access/roles/WhitelistedRole.sol";
 
-contract Lending {
+contract Lending is ERC721Holder {
 
   address payable public owner;
   uint256 public loanFee = 1;
@@ -30,6 +35,7 @@ contract Lending {
     address[] nftAddressArray; // the adderess of the ERC721
     address payable borrower; // the address who receives the loan
     address payable lender; // the address who gives/offers the loan to the borrower
+    address currency; // the token that the borrower lends, address(0) for ETH
   }
 
   Loan[] loans; // the array of NFT loans
@@ -41,132 +47,76 @@ contract Lending {
 
 
 
-  function getLoanNrOfPayments ( uint256 loanId ) external view returns(uint256) {
-    return loans[loanId].nrOfPayments;
-  }
-
-
-
-  function setLtv(uint256 newLtv) external onlyOwner returns(uint256) {
-    ltv = newLtv;
-    return(ltv);
-  }
-
-
-
-  function setInterestRateToCompany(uint256 newInterestRateToCompany) external onlyOwner returns(uint256) {
-    interestRateToCompany = newInterestRateToCompany;
-    return(ltv);
-  }
-
-
-
-  function setInterestRateToLender(uint256 newInterestRateToLender) external onlyOwner returns(uint256) {
-    interestRateToLender = newInterestRateToLender;
-    return(ltv);
-  }
-
-
-
-  function _percent(uint256 numerator, uint256 denominator, uint256 precision) internal pure returns(uint256) {
-    return ( ( ( numerator * 10 ** ( precision + 1 ) ) / denominator) + 5 ) / 10;
-  }
-
-  function launchLoan( uint256 loanId ) external returns(uint256, uint256) {
-    require(loans[loanId].borrower == msg.sender,"You're not the borrower of this loan");
-    require(loans[loanId].status != 11,"Loan has a lender, impossible to launch");
-    require(loans[loanId].status != 10,"Loan is already launched");
-    require(loans[loanId].status != 404,"Loan is cancelled");
-    require(loans[loanId].status == 5,"Cannot be launched , you must add items");
-    require(loans[loanId].nftTokenIdArray.length > 0,"Cannot be launched , you must add items");
-    loans[loanId].status = 10;
-    return (10,now);
-  }
-
-  function addItemToLoan(uint256 loanId, uint256 assetsValue, uint256 interestRate, address[] calldata nftAddressArray, uint256[] calldata nftTokenIdArray) external returns(uint256,uint256) {
-    require(loans[loanId].borrower == msg.sender,"You're not the borrower of this loan");
-    require(loans[loanId].status != 11,"Loan has a lender, impossible to launch");
-    uint256 length = nftAddressArray.length;
-    require(length == nftTokenIdArray.length, "Token infos provided are invalid");
-    loans[loanId].assetsValue += assetsValue;
-    loans[loanId].interestRate = loans[loanId].interestRate > 0 ? ( loans[loanId].interestRate + interestRate ) / 2 : interestRate;
-    require(_percent(loans[loanId].loanAmount,loans[loanId].assetsValue,3) <= ltv, "LTV must be under 60%");
-    for(uint256 i = 0; i < length; i++) {
-      IERC721(nftAddressArray[i]).safeTransferFrom(
-        msg.sender,
-        address(this),
-        nftTokenIdArray[i]
-      );
-      loans[loanId].nftTokenIdArray.push(nftTokenIdArray[i]);
-      loans[loanId].nftAddressArray.push(nftAddressArray[i]);
-    }
-    loans[loanId].status = 5;
-    return (loans[loanId].assetsValue,loans[loanId].interestRate);
-  }
-
+  // Create a loan
   function createLoan(
     uint256 loanAmount,
     uint256 installmentFrequency,
-    uint256 nrOfInstallments
-  ) external returns(uint256) {
+    uint256 nrOfInstallments,
+    address currency,
+    uint256 assetsValue, 
+    uint256 interestRate, 
+    address[] calldata nftAddressArray, 
+    uint256[] calldata nftTokenIdArray
+  ) external returns(uint256,uint256) {
     require(nrOfInstallments > 0, "Loan must include at least 1 installment");
     require(loanAmount > 0, "Loan amount must be higher than 0");
-
-    uint256[] memory emptyTokens;
-    address[] memory emptyAddresses;
+    require(_percent(loanAmount,assetsValue,3) <= ltv, "LTV must be under 60%");
+    _transferItems(msg.sender,address(this),nftAddressArray,nftTokenIdArray,loanId,true);
     uint256 id = loans.length;
     loans.push(
       Loan(
-          emptyTokens,
+          nftTokenIdArray,
           id,
           loanAmount,
-          0,
-          0,
+          assetsValue,
+          interestRate,
           installmentFrequency,
           0,
           nrOfInstallments,
           0,
-          0,
-          emptyAddresses,
+          10,
+          nftAddressArray,
           msg.sender,
-          address(0)
+          address(0),
+          currency
       )
     );
 
-    return id;
+    return (id,10);
   }
 
 
-
-  function chooseLoan( uint256 loanId ) external payable returns(uint256, uint256, uint256, uint256){
-    require(loans[loanId].lender == address(0),"Someone else payed for this loan before you");
-    require(loans[loanId].nrOfPayments == 0, "This loan is currently not ready for borrowers");
+  // Approve a loan
+  function approveLoan(uint256 loanId) external payable returns(uint256, uint256, uint256, uint256){
+    require(loans[loanId].lender == address(0), "Someone else payed for this loan before you");
+    require(loans[loanId].nrOfPayments == 0, "This loan is currently not ready for lenders");
     require(loans[loanId].status == 10, "This loan is not currently ready for lenders, check later");
 
     // Check how much is payed
-    require(msg.value == loans[loanId].loanAmount,"The quantity of ether is not enough");
+    require(msg.value == loans[loanId].loanAmount, "The quantity of ether is not enough");
 
     // Send 99% to borrower & 1% to company
     // Floating point problem , impossible to send rational qty of ether ( debatable )
     // The rest of the wei is sent to company by default
-    loans[loanId].borrower.transfer( ( loans[loanId].loanAmount / 100 ) * ( 100 - loanFee ) );
-    owner.transfer( loans[loanId].loanAmount - ( ( loans[loanId].loanAmount / 100 ) * ( 100 - loanFee ) ) );
+    IERC20(loans[loanId].currency).transfer(loans[loanId].borrower, loans[loanId].loanAmount); // Transfer complete loanAmount to borrower
+    IERC20(loans[loanId].currency).transfer(owner, loans[loanId].loanAmount - ((loans[loanId].loanAmount / 100) * (100 - loanFee))); // loanFee percent on top of original loanAmount goes to contract owner
 
     // Borrower assigned , status is 1 , first installment ( payment ) completed
     loans[loanId].lender = msg.sender;
-    loans[loanId].loanEnd = now + ( loans[loanId].nrOfInstallments * loans[loanId].installmentFrequency * 1 days );
+    loans[loanId].loanEnd = now + (loans[loanId].nrOfInstallments * loans[loanId].installmentFrequency * 1 days);
     loans[loanId].status = 11;
 
-    uint256 installmentAmount = ( loans[loanId].loanAmount + loans[loanId].interestRate ) / loans[loanId].nrOfInstallments;
+    uint256 installmentAmount = (loans[loanId].loanAmount + loans[loanId].interestRate) / loans[loanId].nrOfInstallments;
     // Return the start date , finish date and current nrOfPayments of loan
-    return (now,loans[loanId].loanEnd,loans[loanId].nrOfPayments,installmentAmount);
+    return (now, loans[loanId].loanEnd, loans[loanId].nrOfPayments, installmentAmount);
   }
 
 
 
-  function cancelLoan( uint256 loanId ) external returns(uint256,uint256) {
-    require(loans[loanId].lender == address(0),"The loan has a lender , it cannot be cancelled");
-    require(loans[loanId].borrower == msg.sender,"You're not the borrower of this loan");
+  // Cancel a loan
+  function cancelLoan(uint256 loanId) external returns(uint256,uint256) {
+    require(loans[loanId].lender == address(0), "The loan has a lender , it cannot be cancelled");
+    require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
     require(loans[loanId].status != 404, "This loan is already cancelled");
     require(loans[loanId].status <= 10, "This loan is no longer cancellable");
     
@@ -175,12 +125,15 @@ contract Lending {
     loans[loanId].status = 404;
 
     // We return the changed values
-    return (loans[loanId].nrOfPayments,loans[loanId].loanEnd);
+    return (loans[loanId].nrOfPayments, loans[loanId].loanEnd);
   }
 
-  function withdrawItems( uint256 loanId ) external {
+
+
+  // Withdraw loan items
+  function withdrawItems(uint256 loanId) external {
     require(now >= loans[loanId].loanEnd || loans[loanId].nrOfPayments == loans[loanId].nrOfInstallments, "The loan is not finished yet");
-    require(loans[loanId].borrower == msg.sender || loans[loanId].lender == msg.sender,"You're not part of this loan");
+    require(loans[loanId].borrower == msg.sender || loans[loanId].lender == msg.sender, "You're not part of this loan");
     require(loans[loanId].status != 200, "Loan is already finished");
     require(loans[loanId].status == 199 || loans[loanId].status == 404, "Loan cannot be currently finished");
 
@@ -188,36 +141,28 @@ contract Lending {
     uint256 length = loans[loanId].nftAddressArray.length;
 
     // If all payments are done by the borrower
-    if ( loans[loanId].nrOfPayments == loans[loanId].nrOfInstallments ){
+    if (loans[loanId].nrOfPayments == loans[loanId].nrOfInstallments) 
 
       // We send the items back to him
-      for( uint256 i = 0; i < length; ++i ) 
-        IERC721(loans[loanId].nftAddressArray[i]).safeTransferFrom(
-          address(this),
-          loans[loanId].borrower,
-          loans[loanId].nftTokenIdArray[i]
-        );
-    }else{
+      _transferItems(address(this),loans[loanId].borrower,loans[loanId].nftAddressArray,loans[loanId].nftTokenIdArray,loanId,false);
+
+    else 
 
       // Otherwise the lender will receive the items
-      for( uint256 i = 0; i < length; ++i ) 
-        IERC721(loans[loanId].nftAddressArray[i]).safeTransferFrom(
-          address(this),
-          loans[loanId].lender,
-          loans[loanId].nftTokenIdArray[i]
-        );
-    }
+      _transferItems(address(this),loans[loanId].lender,loans[loanId].nftAddressArray,loans[loanId].nftTokenIdArray,loanId,false);
 
     loans[loanId].status = 200;
 
   }
 
+
+
   // The borrower can ask for a loan extension from the website , no blockchain operation required
-  function extendLoan( uint256 loanId , uint256 nrOfWeeks ) external returns(uint256,uint256,uint256) {
-    require(loans[loanId].lender == msg.sender,"You're not the lender of this loan");
+  function extendLoan(uint256 loanId, uint256 nrOfWeeks) external returns(uint256,uint256,uint256) {
+    require(loans[loanId].lender == msg.sender, "You're not the lender of this loan");
     require(loans[loanId].status < 199, "All payments have been done for this loan");
     require(loans[loanId].nrOfPayments < loans[loanId].nrOfInstallments, "All payments have been done for this loan");
-    require(loans[loanId].loanEnd >= now,"Loan validity expired");
+    require(loans[loanId].loanEnd >= now, "Loan validity expired");
     
     // Extend the loan finish date
     loans[loanId].loanEnd += nrOfWeeks * 1 days;
@@ -225,41 +170,104 @@ contract Lending {
     loans[loanId].nrOfInstallments += nrOfWeeks;
 
     // Returns the loan finish date , current nrOfPayments and nuber of installments
-    return (loans[loanId].loanEnd,loans[loanId].nrOfPayments,loans[loanId].nrOfInstallments);
+    return (loans[loanId].loanEnd, loans[loanId].nrOfPayments, loans[loanId].nrOfInstallments);
   }
 
 
 
-  function payLoan( uint256 loanId ) external payable returns(uint256, uint256, uint256){
-    require(loans[loanId].borrower == msg.sender,"You're not the borrower of this loan");
+  // Pay for loan
+  // Multiple installments : OK
+  function payLoan(uint256 loanId) external payable returns(uint256, uint256, uint256){
+    require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
     require(loans[loanId].status < 199, "All payments have been done for this loan");
-    require(loans[loanId].loanEnd >= now,"Loan validity expired");
+    require(loans[loanId].loanEnd >= now, "Loan validity expired");
     require(loans[loanId].nrOfPayments < loans[loanId].nrOfInstallments, "All payments have been done for this loan");
     
     // Check how much is payed
-    uint256 installmentAmount = ( loans[loanId].loanAmount + loans[loanId].interestRate ) / loans[loanId].nrOfInstallments;
-    require(msg.value >= installmentAmount,"Not enough ether");
+    uint256 installmentAmount = (loans[loanId].loanAmount + loans[loanId].interestRate) / loans[loanId].nrOfInstallments;
+    require(msg.value >= installmentAmount, "Not enough ether");
 
     // Check how many installments he's paying for
     uint256 totalPayments = msg.value / installmentAmount;
 
     // Check if payment doesn't exceed
-    require(totalPayments <= loans[loanId].nrOfInstallments - loans[loanId].nrOfPayments,"You're trying to pay too much");
+    require(totalPayments <= loans[loanId].nrOfInstallments - loans[loanId].nrOfPayments, "You're trying to pay too much");
 
     // We check to have an exact qty of ether
-    require(totalPayments * installmentAmount == msg.value,"Quantity of ether is not accurate");
+    require(totalPayments * installmentAmount == msg.value, "Quantity of ether is not accurate");
 
     // Transfer the ether
-    loans[loanId].lender.transfer( ( installmentAmount * totalPayments / 100 ) * ( 100 - loanFee ) );
-    owner.transfer( ( installmentAmount * totalPayments ) - ( ( installmentAmount * totalPayments / 100 ) * ( 100 - loanFee ) ) );
+    IERC20(loans[loanId].currency).transfer(loans[loanId].lender, (installmentAmount * totalPayments / 100) * (100 - interestRateToCompany));
+    IERC20(loans[loanId].currency).transfer(owner, (installmentAmount * totalPayments) - ((installmentAmount * totalPayments / 100) * (100 - interestRateToCompany)));
 
     loans[loanId].nrOfPayments += totalPayments;
     
-    if ( loans[loanId].nrOfPayments == loans[loanId].nrOfInstallments )
+    if (loans[loanId].nrOfPayments == loans[loanId].nrOfInstallments)
       loans[loanId].status = 199;
 
     // Return the date of payment , current nrOfPayments and the finished boolean nrOfPayments
-    return( now , loans[loanId].nrOfPayments , loans[loanId].status );
+    return(now, loans[loanId].nrOfPayments, loans[loanId].status);
+  }
+
+
+
+  // Internal Functions 
+
+  // Calculates a percentage
+  function _percent(uint256 numerator, uint256 denominator, uint256 precision) internal pure returns(uint256) {
+    return (((numerator * 10 ** (precision + 1)) / denominator) + 5) / 10;
+  }
+
+  // Transfer items fron an account to another
+  // Requires approvement
+  function _transferItems(
+    address from, 
+    address to, 
+    address[] calldata nftAddressArray, 
+    uint256[] calldata nftTokenIdArray, 
+    uint256 loanId,
+    bool pushable
+  ) internal {
+    uint256 length = nftAddressArray.length;
+    require(length == nftTokenIdArray.length, "Token infos provided are invalid");
+    for(uint256 i = 0; i < length; ++i) {
+      IERC721(nftAddressArray[i]).safeTransferFrom(
+        msg.sender,
+        address(this),
+        nftTokenIdArray[i]
+      );
+      if ( pushable ){
+        loans[loanId].nftTokenIdArray.push(nftTokenIdArray[i]);
+        loans[loanId].nftAddressArray.push(nftAddressArray[i]);
+      }
+    }
+  }
+
+
+
+  // Getters & Setters
+
+  function getLoanNrOfPayments (uint256 loanId) external view returns(uint256) {
+    return loans[loanId].nrOfPayments;
+  }
+
+  function getLoanStatus (uint256 loanId) external view returns(uint256) {
+    return loans[loanId].status;
+  }
+
+  function setLtv(uint256 newLtv) external onlyOwner returns(uint256) {
+    ltv = newLtv;
+    return(ltv);
+  }
+
+  function setInterestRateToCompany(uint256 newInterestRateToCompany) external onlyOwner returns(uint256) {
+    interestRateToCompany = newInterestRateToCompany;
+    return(ltv);
+  }
+
+  function setInterestRateToLender(uint256 newInterestRateToLender) external onlyOwner returns(uint256) {
+    interestRateToLender = newInterestRateToLender;
+    return(ltv);
   }
 
 
