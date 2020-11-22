@@ -1,6 +1,13 @@
 // SPDX-License-Identifier: MIT
+
+// Truffle + Ganache test
 pragma solidity ^0.5.12;
 
+// Ganache + Remix test
+//pragma solidity ^0.6.2;
+
+
+// Truffle + Ganache test
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
@@ -8,13 +15,33 @@ import "multi-token-standard/contracts/interfaces/IERC1155.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/access/roles/WhitelistedRole.sol";
 
-contract Loans is ERC721Holder {
+// Truffle + Remix test
+/*
+import "./IERC20.sol";
+import "./IERC721.sol";
+import "./ERC721Holder.sol";
+import "./IERC1155.sol";
+import "./Ownable.sol";
+//import "./WhitelistedRole.sol";
+*/
+
+contract Lending is ERC721Holder {
 
   address payable public owner;
   uint256 public loanFee = 1;
   uint256 public ltv = 600;
   uint256 public interestRateToCompany = 40;
   uint256 public interestRateToLender = 60;
+
+  event newLoan(uint256 indexed loanId, address indexed owner, uint256 loanPercentage, uint256 creationDate, address indexed currency, uint256 status);
+  event loanApproved(uint256 indexed loanId, uint256 approvalDate, uint256 loanPaymentEnd, uint256 nrOfPayments, uint256 installmentAmount, uint256 status);
+  event loanCancelled(uint256 indexed loanId, uint256 cancellationDate, uint256 status);
+  event itemsWithdrawn(uint256 indexed loanId, address indexed requester, bool finished, uint256 status);
+  event loanExtended(uint256 indexed loanId, uint256 extensionDate, uint256 loanPaymentEnd, uint256 nrOfPayments, uint256 nrOfInstallments);
+  event loanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 totalPayments, uint256 installmentAmount, uint256 status);
+  event ltvChanged(uint256 newLTV);
+  event interestRateToLenderChanged(uint256 newInterestRateToLender);
+  event interestRateToCompanyChanged(uint256 newInterestRateToCompany);
 
   constructor() public {
     owner = msg.sender;
@@ -45,6 +72,8 @@ contract Loans is ERC721Holder {
     _;
   }
 
+
+
   // Create a loan
   function createLoan(
     uint256 loanAmount,
@@ -55,12 +84,13 @@ contract Loans is ERC721Holder {
     uint256 interestRate, 
     address[] calldata nftAddressArray, 
     uint256[] calldata nftTokenIdArray
-  ) external returns(uint256,uint256) {
+  ) external {
     require(nrOfInstallments > 0, "Loan must include at least 1 installment");
     require(loanAmount > 0, "Loan amount must be higher than 0");
-    require(_percent(loanAmount,assetsValue,3) <= ltv, "LTV must be under 60%");
+    uint256 percentage = _percent(loanAmount,assetsValue,3);
+    require(percentage <= ltv, "LTV must be under 60%");
+    _transferItems(msg.sender,address(this),nftAddressArray,nftTokenIdArray);
     uint256 id = loans.length;
-    _transferItems(msg.sender, address(this), nftAddressArray, nftTokenIdArray, id, true);
     loans.push(
       Loan(
           nftTokenIdArray,
@@ -79,12 +109,13 @@ contract Loans is ERC721Holder {
           currency
       )
     );
-
-    return (id,10);
+    
+    emit newLoan(id, msg.sender, percentage, now, currency, 0);
   }
 
+
   // Approve a loan
-  function approveLoan(uint256 loanId) external payable returns(uint256, uint256, uint256, uint256){
+  function approveLoan(uint256 loanId) external payable {
     require(loans[loanId].lender == address(0), "Someone else payed for this loan before you");
     require(loans[loanId].nrOfPayments == 0, "This loan is currently not ready for lenders");
     require(loans[loanId].status == 10, "This loan is not currently ready for lenders, check later");
@@ -104,12 +135,14 @@ contract Loans is ERC721Holder {
     loans[loanId].status = 11;
 
     uint256 installmentAmount = (loans[loanId].loanAmount + loans[loanId].interestRate) / loans[loanId].nrOfInstallments;
-    // Return the start date , finish date and current nrOfPayments of loan
-    return (now, loans[loanId].loanEnd, loans[loanId].nrOfPayments, installmentAmount);
+
+    emit loanApproved(loanId, now, loans[loanId].loanEnd, loans[loanId].nrOfPayments, installmentAmount, 11);
   }
 
+
+
   // Cancel a loan
-  function cancelLoan(uint256 loanId) external returns(uint256,uint256) {
+  function cancelLoan(uint256 loanId) external {
     require(loans[loanId].lender == address(0), "The loan has a lender , it cannot be cancelled");
     require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
     require(loans[loanId].status != 404, "This loan is already cancelled");
@@ -119,9 +152,10 @@ contract Loans is ERC721Holder {
     loans[loanId].loanEnd = now;
     loans[loanId].status = 404;
 
-    // We return the changed values
-    return (loans[loanId].nrOfPayments, loans[loanId].loanEnd);
+    emit loanCancelled(loanId,now,404);
   }
+
+
 
   // Withdraw loan items
   function withdrawItems(uint256 loanId) external {
@@ -130,23 +164,29 @@ contract Loans is ERC721Holder {
     require(loans[loanId].status != 200, "Loan is already finished");
     require(loans[loanId].status == 199 || loans[loanId].status == 404, "Loan cannot be currently finished");
 
+    bool isFinished;
     // If all payments are done by the borrower
-    if (loans[loanId].nrOfPayments == loans[loanId].nrOfInstallments) 
+    if (loans[loanId].nrOfPayments == loans[loanId].nrOfInstallments) {
 
+      isFinished = true;
+      
       // We send the items back to him
-      _transferItems(address(this),loans[loanId].borrower,loans[loanId].nftAddressArray,loans[loanId].nftTokenIdArray,loanId,false);
+      _transferItems(address(this),loans[loanId].borrower,loans[loanId].nftAddressArray,loans[loanId].nftTokenIdArray);
 
-    else 
+    } else 
 
       // Otherwise the lender will receive the items
-      _transferItems(address(this),loans[loanId].lender,loans[loanId].nftAddressArray,loans[loanId].nftTokenIdArray,loanId,false);
+      _transferItems(address(this),loans[loanId].lender,loans[loanId].nftAddressArray,loans[loanId].nftTokenIdArray);
 
     loans[loanId].status = 200;
+    emit itemsWithdrawn(loanId,msg.sender,isFinished,200);
 
   }
 
+
+
   // The borrower can ask for a loan extension from the website , no blockchain operation required
-  function extendLoan(uint256 loanId, uint256 nrOfWeeks) external returns(uint256,uint256,uint256) {
+  function extendLoan(uint256 loanId, uint256 nrOfWeeks) external {
     require(loans[loanId].lender == msg.sender, "You're not the lender of this loan");
     require(loans[loanId].status < 199, "All payments have been done for this loan");
     require(loans[loanId].nrOfPayments < loans[loanId].nrOfInstallments, "All payments have been done for this loan");
@@ -157,13 +197,14 @@ contract Loans is ERC721Holder {
     loans[loanId].nrOfPayments += nrOfWeeks;
     loans[loanId].nrOfInstallments += nrOfWeeks;
 
-    // Returns the loan finish date , current nrOfPayments and nuber of installments
-    return (loans[loanId].loanEnd, loans[loanId].nrOfPayments, loans[loanId].nrOfInstallments);
+    emit loanExtended(loanId, now, loans[loanId].loanEnd, loans[loanId].nrOfPayments, loans[loanId].nrOfInstallments);
   }
+
+
 
   // Pay for loan
   // Multiple installments : OK
-  function payLoan(uint256 loanId) external payable returns(uint256, uint256, uint256){
+  function payLoan(uint256 loanId) external payable {
     require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
     require(loans[loanId].status < 199, "All payments have been done for this loan");
     require(loans[loanId].loanEnd >= now, "Loan validity expired");
@@ -191,8 +232,7 @@ contract Loans is ERC721Holder {
     if (loans[loanId].nrOfPayments == loans[loanId].nrOfInstallments)
       loans[loanId].status = 199;
 
-    // Return the date of payment , current nrOfPayments and the finished boolean nrOfPayments
-    return(now, loans[loanId].nrOfPayments, loans[loanId].status);
+    emit loanPayment(loanId,now,totalPayments,installmentAmount,199);
   }
 
 
@@ -210,23 +250,16 @@ contract Loans is ERC721Holder {
     address from, 
     address to, 
     address[] memory nftAddressArray, 
-    uint256[] memory nftTokenIdArray, 
-    uint256 loanId,
-    bool pushable
+    uint256[] memory nftTokenIdArray
   ) internal {
     uint256 length = nftAddressArray.length;
     require(length == nftTokenIdArray.length, "Token infos provided are invalid");
-    for(uint256 i = 0; i < length; ++i) {
+    for(uint256 i = 0; i < length; ++i) 
       IERC721(nftAddressArray[i]).safeTransferFrom(
         from,
         to,
         nftTokenIdArray[i]
       );
-      if ( pushable ){
-        loans[loanId].nftTokenIdArray.push(nftTokenIdArray[i]);
-        loans[loanId].nftAddressArray.push(nftAddressArray[i]);
-      }
-    }
   }
 
 
@@ -241,19 +274,21 @@ contract Loans is ERC721Holder {
     return loans[loanId].status;
   }
 
-  function setLtv(uint256 newLtv) external onlyOwner returns(uint256) {
+  function setLtv(uint256 newLtv) external onlyOwner {
     ltv = newLtv;
-    return(ltv);
+    emit ltvChanged(newLtv);
   }
 
-  function setInterestRateToCompany(uint256 newInterestRateToCompany) external onlyOwner returns(uint256) {
+  function setInterestRateToCompany(uint256 newInterestRateToCompany) external onlyOwner {
     interestRateToCompany = newInterestRateToCompany;
-    return(ltv);
+    emit interestRateToCompanyChanged(newInterestRateToCompany);
   }
 
-  function setInterestRateToLender(uint256 newInterestRateToLender) external onlyOwner returns(uint256) {
+  function setInterestRateToLender(uint256 newInterestRateToLender) external onlyOwner {
     interestRateToLender = newInterestRateToLender;
-    return(ltv);
+    emit interestRateToLenderChanged(newInterestRateToLender);
   }
+
+
 
 }
