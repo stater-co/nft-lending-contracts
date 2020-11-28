@@ -20,6 +20,7 @@
   "homepage": "https://github.com/ProjectOpenSea/opensea-erc1155#readme",
   "dependencies": {
     "@0x/subproviders": "^2.1.4",
+    "ganache-cli": "^6.12.1",
     "multi-token-standard": "github:ProjectOpenSea/multi-token-standard",
     "opensea-js": "^1.1.5",
     "openzeppelin-solidity": "^2.1.3",
