@@ -1,6 +1,6 @@
-pragma solidity ^0.5.12;
+pragma solidity ^0.7.4;
 
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import 'multi-token-standard/contracts/tokens/ERC1155/ERC1155.sol';
 import 'multi-token-standard/contracts/tokens/ERC1155/ERC1155Metadata.sol';
 import 'multi-token-standard/contracts/tokens/ERC1155/ERC1155MintBurn.sol';
