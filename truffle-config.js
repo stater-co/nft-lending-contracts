@@ -56,6 +56,12 @@ module.exports = {
       network_id: '*' // Match any network id
     },
     
+    stater_dev: {
+      url: 'ws://stater.devel/ganache/',
+      gas: 4600000,
+      network_id: '*' // Match any network id
+    },
+
     rinkeby: {
       provider: function() {
         return new HDWalletProvider(
