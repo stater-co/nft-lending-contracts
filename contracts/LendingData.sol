@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.5.12;
+pragma solidity 0.7.4;
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
 import "multi-token-standard/contracts/interfaces/IERC1155.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "openzeppelin-solidity/contracts/access/roles/WhitelistedRole.sol";
+import "openzeppelin-solidity/contracts/access/Ownable.sol";
+// import "openzeppelin-solidity/contracts/access/roles/WhitelistedRole.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 
-contract Lending is ERC721Holder, Ownable {
+contract LendingData is ERC721Holder, Ownable {
 
   using SafeMath for uint256;
 
@@ -106,7 +106,7 @@ contract Lending is ERC721Holder, Ownable {
       )
     );
     
-    emit newLoan(id, msg.sender, percentage, now, currency, Status.LISTED);
+    emit newLoan(id, msg.sender, percentage, block.timestamp, currency, Status.LISTED);
   }
 
 
@@ -133,11 +133,11 @@ contract Lending is ERC721Holder, Ownable {
 
     // Borrower assigned , status is 1 , first installment ( payment ) completed
     loans[loanId].lender = msg.sender;
-    loans[loanId].loanEnd = now.add(loans[loanId].nrOfInstallments.mul(loans[loanId].installmentFrequency).mul(1 days));
+    loans[loanId].loanEnd = block.timestamp.add(loans[loanId].nrOfInstallments.mul(loans[loanId].installmentFrequency).mul(1 days));
     loans[loanId].status = Status.APPROVED;
 
     emit loanApproved(loanId,
-      now, 
+      block.timestamp, 
       loans[loanId].loanEnd, 
       loans[loanId].installmentAmount, 
       Status.APPROVED);
@@ -152,8 +152,8 @@ contract Lending is ERC721Holder, Ownable {
     require(loans[loanId].status != Status.CANCELLED, "This loan is already cancelled");
     require(loans[loanId].status <= Status.LISTED, "This loan is no longer cancellable");
     
-    // We set its validity date as now
-    loans[loanId].loanEnd = now;
+    // We set its validity date as block.timestamp
+    loans[loanId].loanEnd = block.timestamp;
     loans[loanId].status = Status.CANCELLED;
 
     // We send the items back to him
@@ -162,7 +162,7 @@ contract Lending is ERC721Holder, Ownable {
       loans[loanId].nftAddressArray, 
       loans[loanId].nftTokenIdArray);
 
-    emit loanCancelled(loanId, now, Status.CANCELLED);
+    emit loanCancelled(loanId, block.timestamp, Status.CANCELLED);
   }
 
   // Borrower pays installment for loan
@@ -170,7 +170,7 @@ contract Lending is ERC721Holder, Ownable {
   function payLoan(uint256 loanId, uint256 amountPaidAsInstallment) external {
     require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
     require(loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
-    require(loans[loanId].loanEnd >= now, "Loan validity expired");
+    require(loans[loanId].loanEnd >= block.timestamp, "Loan validity expired");
     
     // Check how much is payed
     require(amountPaidAsInstallment >= loans[loanId].installmentAmount, "Installment amount is too low");
@@ -191,7 +191,7 @@ contract Lending is ERC721Holder, Ownable {
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
       loans[loanId].status = Status.LIQUIDATED;
 
-    emit loanPayment(loanId, now, amountPaidAsInstallment, Status.APPROVED);
+    emit loanPayment(loanId, block.timestamp, amountPaidAsInstallment, Status.APPROVED);
   }
 
 
@@ -199,10 +199,10 @@ contract Lending is ERC721Holder, Ownable {
   // Borrower can withdraw loan items if loan is LIQUIDATED
   // Lender can withdraw loan item is loan is DEFAULTED
   function withdrawItems(uint256 loanId) external {
-    require(now >= loans[loanId].loanEnd || loans[loanId].paidAmount == loans[loanId].amountDue, "The loan is not finished yet");
+    require(block.timestamp >= loans[loanId].loanEnd || loans[loanId].paidAmount == loans[loanId].amountDue, "The loan is not finished yet");
     require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
 
-    if ((now >= loans[loanId].loanEnd) && !(loans[loanId].paidAmount == loans[loanId].amountDue)) {
+    if ((block.timestamp >= loans[loanId].loanEnd) && !(loans[loanId].paidAmount == loans[loanId].amountDue)) {
 
       loans[loanId].status = Status.DEFAULTED;
       
@@ -233,13 +233,13 @@ contract Lending is ERC721Holder, Ownable {
     require(nrOfInstallments > 0, "You need to extend by at least 1 installment");
     require(loans[loanId].lender == msg.sender, "You're not the lender of this loan");
     require(loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
-    require(loans[loanId].loanEnd >= now, "Loan validity expired");
+    require(loans[loanId].loanEnd >= block.timestamp, "Loan validity expired");
     
     // Extend the loan finish date
     loans[loanId].loanEnd = loans[loanId].loanEnd.add(installmentFrequency.mul(1 days).mul(nrOfInstallments));
     loans[loanId].nrOfInstallments = loans[loanId].nrOfInstallments.add(nrOfInstallments);
 
-    emit loanExtended(loanId, now, loans[loanId].loanEnd, loans[loanId].nrOfInstallments);
+    emit loanExtended(loanId, block.timestamp, loans[loanId].loanEnd, loans[loanId].nrOfInstallments);
   }
 
 
