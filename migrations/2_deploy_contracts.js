@@ -1,5 +1,3 @@
-const MyCollectible = artifacts.require("MyCollectible");
-const MyLootBox = artifacts.require("MyLootBox");
 const NFTLendingData = artifacts.require("NFTLendingData");
 const NFTLendingLogic = artifacts.require("NFTLendingLogic");
 
@@ -22,32 +20,4 @@ module.exports = function(deployer, network) {
   deployer.deploy(NFTLendingData, proxyRegistryAddress, {gas: 5000000});
   deployer.deploy(NFTLendingLogic, proxyRegistryAddress, {gas: 5000000});
 
-  if (!ENABLE_LOOTBOX) {
-    deployer.deploy(MyCollectible, proxyRegistryAddress,  {gas: 5000000});
-  } else if (NFT_ADDRESS_TO_USE) {
-    deployer.deploy(MyLootBox, proxyRegistryAddress, NFT_ADDRESS_TO_USE, {gas: 5000000})
-      .then(setupLootbox);
-  } else {
-    deployer.deploy(MyCollectible, proxyRegistryAddress, {gas: 5000000})
-      .then(() => {
-        return deployer.deploy(MyLootBox, proxyRegistryAddress, MyCollectible.address, {gas: 5000000});
-      })
-      .then(setupLootbox);
-  }
 };
-
-async function setupLootbox() {
-  if (!NFT_ADDRESS_TO_USE) {
-    const collectible = await MyCollectible.deployed();
-    await collectible.transferOwnership(MyLootBox.address);
-  }
-
-  if (TOKEN_ID_MAPPING) {
-    const lootbox = await MyLootBox.deployed();
-    for (const rarity in TOKEN_ID_MAPPING) {
-      console.log(`Setting token ids for rarity ${rarity}`);
-      const tokenIds = TOKEN_ID_MAPPING[rarity];
-      await lootbox.setTokenIdsForClass(rarity, tokenIds);
-    }
-  }
-}
