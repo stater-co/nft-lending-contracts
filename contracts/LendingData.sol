@@ -10,7 +10,7 @@ import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 
-contract Lending is ERC721Holder, Ownable {
+contract LendingData is ERC721Holder, Ownable {
 
   using SafeMath for uint256;
 

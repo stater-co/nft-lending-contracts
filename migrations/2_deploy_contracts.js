@@ -1,5 +1,5 @@
-const NFTLendingData = artifacts.require("NFTLendingData");
-const NFTLendingLogic = artifacts.require("NFTLendingLogic");
+const LendingData = artifacts.require("LendingData");
+const LendingLogic = artifacts.require("LendingLogic");
 
 // Set to false if you only want the collectible to deploy
 const ENABLE_LOOTBOX = true;
@@ -17,7 +17,7 @@ module.exports = function(deployer, network) {
     proxyRegistryAddress = "0xa5409ec958c83c3f309868babaca7c86dcb077c1";
   }
 
-  deployer.deploy(NFTLendingData, proxyRegistryAddress, {gas: 5000000});
-  deployer.deploy(NFTLendingLogic, proxyRegistryAddress, {gas: 5000000});
+  deployer.deploy(LendingData, {gas: 5000000});
+  deployer.deploy(LendingLogic, {gas: 5000000});
 
 };
