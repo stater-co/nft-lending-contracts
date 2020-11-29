@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "bootstrap": "npm install --python=/usr/bin/python2.7",
-    "globa-truffle-install": "sudo npm install --unsafe-perm -g truffle",
+    "global-truffle-install": "sudo npm install --unsafe-perm -g truffle",
     "build": "truffle compile",
     "test": "truffle test"
   },
