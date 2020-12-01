@@ -9,4 +9,4 @@ yarn.lock
 package-lock.json
 .vscode
 
-contracts/artifacts/
+**/contracts/artifacts/
