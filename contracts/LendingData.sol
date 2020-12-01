@@ -21,17 +21,15 @@ contract LendingData is ERC721Holder, Ownable {
   uint256 public interestRate = 20; // 20%
   uint256 public installmentFrequency = 7; // days
 
-  event newLoan(uint256 indexed loanId, address indexed owner, uint256 loanPercentage, uint256 creationDate, address indexed currency, Status status);
-  event loanApproved(uint256 indexed loanId, uint256 approvalDate, uint256 loanPaymentEnd, uint256 installmentAmount, Status status);
-  event loanCancelled(uint256 indexed loanId, uint256 cancellationDate, Status status);
-  event itemsWithdrawn(uint256 indexed loanId, address indexed requester, Status status);
-  event loanExtended(uint256 indexed loanId, uint256 extensionDate, uint256 loanPaymentEnd, uint256 nrOfInstallments);
-  event loanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, Status status);
-  event ltvChanged(uint256 newLTV);
-  event interestRateToCompanyChanged(uint256 newInterestRateToCompany);
-
-  constructor() public {
-  }
+  event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
+  event LoanApproved(uint256 indexed loanId, uint256 approvalDate, uint256 loanPaymentEnd, uint256 installmentAmount, Status status);
+  event LoanCancelled(uint256 indexed loanId, uint256 cancellationDate, Status status);
+  event ItemsWithdrawn(uint256 indexed loanId, address indexed requester, Status status);
+  event LoanExtended(uint256 indexed loanId, uint256 extensionDate, uint256 loanPaymentEnd, uint256 nrOfInstallments);
+  event LoanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, Status status);
+  event LtvChanged(uint256 newLTV);
+  event InterestRateToLenderChanged(uint256 newInterestRateToLender);
+  event InterestRateToCompanyChanged(uint256 newInterestRateToCompany);
 
   enum Status { 
     UNINITIALIZED,
@@ -67,15 +65,14 @@ contract LendingData is ERC721Holder, Ownable {
     address currency,
     uint256 assetsValue, 
     address[] calldata nftAddressArray, 
-    uint256[] calldata nftTokenIdArray
+    uint256[] calldata nftTokenIdArray,
+    string calldata creationId
   ) external {
     require(nrOfInstallments > 0, "Loan must include at least 1 installment");
     require(loanAmount > 0, "Loan amount must be higher than 0");
 
     // Compute loan to value ratio for current loan application
-    uint256 percentage = _percent(loanAmount, assetsValue, PRECISION); 
-
-    require(percentage <= ltv, "LTV exceeds maximum limit allowed");
+    require(_percent(loanAmount, assetsValue, PRECISION) <= ltv, "LTV exceeds maximum limit allowed");
     _transferItems(msg.sender, address(this), nftAddressArray, nftTokenIdArray);
     uint256 id = loans.length;
     uint256 loanPlusInterest = loanAmount.mul(100 + interestRate).div(100);
@@ -99,7 +96,7 @@ contract LendingData is ERC721Holder, Ownable {
       )
     );
     
-    emit newLoan(id, msg.sender, percentage, block.timestamp, currency, Status.LISTED);
+    emit NewLoan(id, msg.sender, block.timestamp, currency, Status.LISTED, creationId);
   }
 
 
@@ -129,7 +126,7 @@ contract LendingData is ERC721Holder, Ownable {
     loans[loanId].loanEnd = block.timestamp.add(loans[loanId].nrOfInstallments.mul(installmentFrequency).mul(1 days));
     loans[loanId].status = Status.APPROVED;
 
-    emit loanApproved(loanId,
+    emit LoanApproved(loanId,
       block.timestamp, 
       loans[loanId].loanEnd, 
       loans[loanId].installmentAmount, 
@@ -155,7 +152,7 @@ contract LendingData is ERC721Holder, Ownable {
       loans[loanId].nftAddressArray, 
       loans[loanId].nftTokenIdArray);
 
-    emit loanCancelled(loanId, block.timestamp, Status.CANCELLED);
+    emit LoanCancelled(loanId, block.timestamp, Status.CANCELLED);
   }
 
   // Borrower pays installment for loan
@@ -184,7 +181,7 @@ contract LendingData is ERC721Holder, Ownable {
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
       loans[loanId].status = Status.LIQUIDATED;
 
-    emit loanPayment(loanId, block.timestamp, amountPaidAsInstallment, Status.APPROVED);
+    emit LoanPayment(loanId, block.timestamp, amountPaidAsInstallment, Status.APPROVED);
   }
 
 
@@ -214,7 +211,7 @@ contract LendingData is ERC721Holder, Ownable {
         loans[loanId].nftTokenIdArray);
     }
 
-    emit itemsWithdrawn(loanId, msg.sender, Status.LIQUIDATED);
+    emit ItemsWithdrawn(loanId, msg.sender, Status.LIQUIDATED);
 
   }
 
@@ -232,7 +229,7 @@ contract LendingData is ERC721Holder, Ownable {
     loans[loanId].loanEnd = loans[loanId].loanEnd.add(installmentFrequency.mul(1 days).mul(nrOfInstallments));
     loans[loanId].nrOfInstallments = loans[loanId].nrOfInstallments.add(nrOfInstallments);
 
-    emit loanExtended(loanId, block.timestamp, loans[loanId].loanEnd, loans[loanId].nrOfInstallments);
+    emit LoanExtended(loanId, block.timestamp, loans[loanId].loanEnd, loans[loanId].nrOfInstallments);
   }
 
 
@@ -276,13 +273,13 @@ contract LendingData is ERC721Holder, Ownable {
   // TODO validate input
   function setLtv(uint256 newLtv) external onlyOwner {
     ltv = newLtv;
-    emit ltvChanged(newLtv);
+    emit LtvChanged(newLtv);
   }
 
   // TODO validate input
   function setInterestRateToCompany(uint256 newInterestRateToCompany) external onlyOwner {
     interestRateToCompany = newInterestRateToCompany;
-    emit interestRateToCompanyChanged(newInterestRateToCompany);
+    emit InterestRateToCompanyChanged(newInterestRateToCompany);
   }
 
   // TODO validate input
