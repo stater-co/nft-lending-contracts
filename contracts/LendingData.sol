@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
-pragma experimental ABIEncoderV2;
-
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
@@ -9,7 +7,7 @@ import "openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
 import "multi-token-standard/contracts/interfaces/IERC1155.sol";
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 // import "openzeppelin-solidity/contracts/access/roles/WhitelistedRole.sol";
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "openzeppeiln-solidity/contracts/math/SafeMath.sol";
 
 
 contract LendingData is ERC721Holder, Ownable {
@@ -20,7 +18,6 @@ contract LendingData is ERC721Holder, Ownable {
   uint256 public loanFee = 1; // 1%
   uint256 public ltv = 600; // 60%
   uint256 public interestRateToCompany = 40; // 40%
-  uint256 public interestRateToLender = 100 - interestRateToCompany;  // 60%
   uint256 public interestRate = 20; // 20%
   uint256 public installmentFrequency = 7; // days
 
@@ -31,7 +28,6 @@ contract LendingData is ERC721Holder, Ownable {
   event loanExtended(uint256 indexed loanId, uint256 extensionDate, uint256 loanPaymentEnd, uint256 nrOfInstallments);
   event loanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, Status status);
   event ltvChanged(uint256 newLTV);
-  event interestRateToLenderChanged(uint256 newInterestRateToLender);
   event interestRateToCompanyChanged(uint256 newInterestRateToCompany);
 
   constructor() public {
@@ -50,9 +46,6 @@ contract LendingData is ERC721Holder, Ownable {
     uint256 id; // unique Loan identifier
     uint256 loanAmount; // the amount, denominated in tokens (see next struct entry), the borrower lends
     uint256 assetsValue; // important for determintng LTV which has to be under 50-60%
-    uint256 interestRate; // the total interest rate as percentage with 3 decimal digits after the comma 1234 means 1,234%
-    // changed to >> 1234 , automatically converted by / 1000 on front-end or back-end
-    uint256 installmentFrequency; // how many days between each installment ( payment )
     uint256 loanEnd; // "the point when the loan is approved to the point when it must be paid back to the lender"
     uint256 nrOfInstallments; // the number of installments that the borrower must pay.
     uint256 installmentAmount; // amount expected for each installment
@@ -93,8 +86,6 @@ contract LendingData is ERC721Holder, Ownable {
           id,
           loanAmount,
           assetsValue,
-          interestRate,
-          installmentFrequency,
           0, // Loan end
           nrOfInstallments,
           installmentAmount,
@@ -135,7 +126,7 @@ contract LendingData is ERC721Holder, Ownable {
 
     // Borrower assigned , status is 1 , first installment ( payment ) completed
     loans[loanId].lender = msg.sender;
-    loans[loanId].loanEnd = block.timestamp.add(loans[loanId].nrOfInstallments.mul(loans[loanId].installmentFrequency).mul(1 days));
+    loans[loanId].loanEnd = block.timestamp.add(loans[loanId].nrOfInstallments.mul(installmentFrequency).mul(1 days));
     loans[loanId].status = Status.APPROVED;
 
     emit loanApproved(loanId,
@@ -278,7 +269,7 @@ contract LendingData is ERC721Holder, Ownable {
 
   // Getters & Setters
 
-  function getLoanStatus (uint256 loanId) external view returns(Status) {
+  function getLoanStatus(uint256 loanId) external view returns(Status) {
     return loans[loanId].status;
   }
 
@@ -295,14 +286,63 @@ contract LendingData is ERC721Holder, Ownable {
   }
 
   // TODO validate input
-  function setInterestRateToLender(uint256 newInterestRateToLender) external onlyOwner {
-    interestRateToLender = newInterestRateToLender;
-    emit interestRateToLenderChanged(newInterestRateToLender);
-  }
-
   function setLoanFee(uint256 newLoanFee) external onlyOwner {
     require(loanFee >= 0 && loanFee < 100, "Loan fee out of bounds");
     loanFee = newLoanFee;
   }
+
+
+
+    // uint256[] nftTokenIdArray; // the unique identifier of the NFT token that the borrower uses as collateral
+    // uint256 id; // unique Loan identifier
+    // uint256 loanAmount; // the amount, denominated in tokens (see next struct entry), the borrower lends
+    // uint256 assetsValue; // important for determintng LTV which has to be under 50-60%
+    // uint256 installmentFrequency; // how many days between each installment ( payment )
+    // uint256 loanEnd; // "the point when the loan is approved to the point when it must be paid back to the lender"
+    // uint256 nrOfInstallments; // the number of installments that the borrower must pay.
+    // uint256 installmentAmount; // amount expected for each installment
+    // uint256 amountDue; // loanAmount + interest that needs to be paid back by borrower
+    // uint256 paidAmount; // the amount that has been paid back to the lender to date
+    // Status status; // the loan status
+    // address[] nftAddressArray; // the adderess of the ERC721
+    // address payable borrower; // the address who receives the loan
+    // address payable lender; // the address who gives/offers the loan to the borrower
+    // address currency; // the token that the borrower lends, address(0) for ETH
+
+  // Auxiliary gets & sest
+
+  function getLoanById(uint256 loanId) 
+    external
+    view
+    returns(
+      uint256 id,
+      uint256 loanAmount,
+      uint256 assetsValue,
+      uint256 loanEnd,
+      uint256 nrOfInstallments,
+      uint256 installmentAmount,
+      uint256 amountDue,
+      uint256 paidAmount,
+    //   Status status,
+    //   address borrower,
+    //   address lender,
+      address currency
+    ) {
+      Loan storage loan = loans[loanId];
+      
+      id = uint256(loan.id);
+      loanAmount = uint256(loan.loanAmount);
+      assetsValue = uint256(loan.assetsValue);
+      loanEnd = uint256(loan.loanEnd);
+      nrOfInstallments = uint256(loan.nrOfInstallments);
+      installmentAmount = uint256(loan.installmentAmount);
+      amountDue = uint256(loan.amountDue);
+      paidAmount = uint256(loan.paidAmount);
+    //   borrower = address payable(loan.borrower);
+    //   lender = address(loan.lender);
+      currency = address(currency);
+  }
+
+  // TODO: Add auxiliary loan status update function for DEFAULTED state to be used by whomever
 
 }
