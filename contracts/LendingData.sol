@@ -7,7 +7,7 @@ import "openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
 import "multi-token-standard/contracts/interfaces/IERC1155.sol";
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 // import "openzeppelin-solidity/contracts/access/roles/WhitelistedRole.sol";
-import "openzeppeiln-solidity/contracts/math/SafeMath.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 
 contract LendingData is ERC721Holder, Ownable {
@@ -39,6 +39,7 @@ contract LendingData is ERC721Holder, Ownable {
     LIQUIDATED,
     CANCELLED
   }
+  
   struct Loan {
     uint256[] nftTokenIdArray; // the unique identifier of the NFT token that the borrower uses as collateral
     uint256 id; // unique Loan identifier
@@ -57,6 +58,30 @@ contract LendingData is ERC721Holder, Ownable {
   }
 
   Loan[] loans; // the array of NFT loans
+
+  constructor() {
+    uint256[] memory empty1;
+    address[] memory empty2;
+    // Initialize loans[] with empty loan (NULL LOAN)
+    loans.push(
+      Loan(
+          empty1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          Status.UNINITIALIZED,
+          empty2,
+          address(0),
+          address(0),
+          address(0)
+      )
+    );
+  }
 
   // Borrower creates a loan
   function createLoan(
@@ -112,25 +137,27 @@ contract LendingData is ERC721Holder, Ownable {
     require(IERC20(loans[loanId].currency).transferFrom(
       msg.sender,
       loans[loanId].borrower, 
-      loans[loanId].loanAmount), 
-      "Transfer of liquidity failed"); // Transfer complete loanAmount to borrower
+      loans[loanId].loanAmount
+    ), "Transfer of liquidity failed"); // Transfer complete loanAmount to borrower
 
     require(IERC20(loans[loanId].currency).transferFrom(
       msg.sender,
       owner(), 
-      loans[loanId].loanAmount.mul(loanFee).div(100)), 
-      "Transfer of liquidity failed"); // loanFee percent on top of original loanAmount goes to contract owner
+      loans[loanId].loanAmount.mul(loanFee).div(100)
+    ), "Transfer of liquidity failed"); // loanFee percent on top of original loanAmount goes to contract owner
 
     // Borrower assigned , status is 1 , first installment ( payment ) completed
     loans[loanId].lender = msg.sender;
     loans[loanId].loanEnd = block.timestamp.add(loans[loanId].nrOfInstallments.mul(installmentFrequency).mul(1 days));
     loans[loanId].status = Status.APPROVED;
 
-    emit LoanApproved(loanId,
+    emit LoanApproved(
+      loanId,
       block.timestamp, 
       loans[loanId].loanEnd, 
       loans[loanId].installmentAmount, 
-      Status.APPROVED);
+      Status.APPROVED
+    );
   }
 
 
@@ -147,12 +174,18 @@ contract LendingData is ERC721Holder, Ownable {
     loans[loanId].status = Status.CANCELLED;
 
     // We send the items back to him
-    _transferItems(address(this), 
+    _transferItems(
+      address(this), 
       loans[loanId].borrower, 
       loans[loanId].nftAddressArray, 
-      loans[loanId].nftTokenIdArray);
+      loans[loanId].nftTokenIdArray
+    );
 
-    emit LoanCancelled(loanId, block.timestamp, Status.CANCELLED);
+    emit LoanCancelled(
+      loanId,
+      block.timestamp,
+      Status.CANCELLED
+    );
   }
 
   // Borrower pays installment for loan
@@ -169,19 +202,26 @@ contract LendingData is ERC721Holder, Ownable {
     IERC20(loans[loanId].currency).transferFrom(
       msg.sender,
       loans[loanId].lender, 
-      amountPaidAsInstallment);
+      amountPaidAsInstallment
+    );
 
     IERC20(loans[loanId].currency).transferFrom(
       msg.sender,
       owner(), 
-      amountPaidAsInstallment.mul(interestRateToCompany).div(100));
+      amountPaidAsInstallment.mul(interestRateToCompany).div(100)
+    );
 
     loans[loanId].paidAmount = loans[loanId].paidAmount.add(amountPaidAsInstallment);
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
       loans[loanId].status = Status.LIQUIDATED;
 
-    emit LoanPayment(loanId, block.timestamp, amountPaidAsInstallment, Status.APPROVED);
+    emit LoanPayment(
+      loanId,
+      block.timestamp,
+      amountPaidAsInstallment,
+      Status.APPROVED
+    );
   }
 
 
@@ -197,21 +237,30 @@ contract LendingData is ERC721Holder, Ownable {
       loans[loanId].status = Status.DEFAULTED;
       
       // We send the items back to him
-      _transferItems(address(this),
+      _transferItems(
+        address(this),
         loans[loanId].lender,
         loans[loanId].nftAddressArray,
-        loans[loanId].nftTokenIdArray);
+        loans[loanId].nftTokenIdArray
+      );
 
     } else if (loans[loanId].paidAmount == loans[loanId].amountDue) {
 
       // Otherwise the lender will receive the items
-      _transferItems(address(this),
+      _transferItems(
+        address(this),
         loans[loanId].borrower,
         loans[loanId].nftAddressArray,
-        loans[loanId].nftTokenIdArray);
+        loans[loanId].nftTokenIdArray
+      );
+        
     }
 
-    emit ItemsWithdrawn(loanId, msg.sender, Status.LIQUIDATED);
+    emit ItemsWithdrawn(
+      loanId,
+      msg.sender,
+      Status.LIQUIDATED
+    );
 
   }
 
@@ -229,7 +278,12 @@ contract LendingData is ERC721Holder, Ownable {
     loans[loanId].loanEnd = loans[loanId].loanEnd.add(installmentFrequency.mul(1 days).mul(nrOfInstallments));
     loans[loanId].nrOfInstallments = loans[loanId].nrOfInstallments.add(nrOfInstallments);
 
-    emit LoanExtended(loanId, block.timestamp, loans[loanId].loanEnd, loans[loanId].nrOfInstallments);
+    emit LoanExtended(
+      loanId,
+      block.timestamp,
+      loans[loanId].loanEnd,
+      loans[loanId].nrOfInstallments
+    );
   }
 
 
@@ -289,25 +343,9 @@ contract LendingData is ERC721Holder, Ownable {
   }
 
 
+  // Auxiliary functions
 
-    // uint256[] nftTokenIdArray; // the unique identifier of the NFT token that the borrower uses as collateral
-    // uint256 id; // unique Loan identifier
-    // uint256 loanAmount; // the amount, denominated in tokens (see next struct entry), the borrower lends
-    // uint256 assetsValue; // important for determintng LTV which has to be under 50-60%
-    // uint256 installmentFrequency; // how many days between each installment ( payment )
-    // uint256 loanEnd; // "the point when the loan is approved to the point when it must be paid back to the lender"
-    // uint256 nrOfInstallments; // the number of installments that the borrower must pay.
-    // uint256 installmentAmount; // amount expected for each installment
-    // uint256 amountDue; // loanAmount + interest that needs to be paid back by borrower
-    // uint256 paidAmount; // the amount that has been paid back to the lender to date
-    // Status status; // the loan status
-    // address[] nftAddressArray; // the adderess of the ERC721
-    // address payable borrower; // the address who receives the loan
-    // address payable lender; // the address who gives/offers the loan to the borrower
-    // address currency; // the token that the borrower lends, address(0) for ETH
-
-  // Auxiliary gets & sest
-
+  // Returns loan by id, ommits nrOfInstallments as the stack was too deep and we can derive it in the backend
   function getLoanById(uint256 loanId) 
     external
     view
@@ -316,14 +354,15 @@ contract LendingData is ERC721Holder, Ownable {
       uint256 loanAmount,
       uint256 assetsValue,
       uint256 loanEnd,
-      uint256 nrOfInstallments,
       uint256 installmentAmount,
       uint256 amountDue,
       uint256 paidAmount,
-    //   Status status,
-    //   address borrower,
-    //   address lender,
-      address currency
+      uint256[] memory nftTokenIdArray,
+      address[] memory nftAddressArray,
+      address payable borrower,
+      address payable lender,
+      address currency,
+      Status status
     ) {
       Loan storage loan = loans[loanId];
       
@@ -331,13 +370,15 @@ contract LendingData is ERC721Holder, Ownable {
       loanAmount = uint256(loan.loanAmount);
       assetsValue = uint256(loan.assetsValue);
       loanEnd = uint256(loan.loanEnd);
-      nrOfInstallments = uint256(loan.nrOfInstallments);
       installmentAmount = uint256(loan.installmentAmount);
       amountDue = uint256(loan.amountDue);
       paidAmount = uint256(loan.paidAmount);
-    //   borrower = address payable(loan.borrower);
-    //   lender = address(loan.lender);
+      nftTokenIdArray = uint256[](loan.nftTokenIdArray);
+      nftAddressArray = address[](loan.nftAddressArray);
+      borrower = payable(loan.borrower);
+      lender = payable(loan.lender);
       currency = address(currency);
+      status = Status(loan.status);
   }
 
   // TODO: Add auxiliary loan status update function for DEFAULTED state to be used by whomever
