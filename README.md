@@ -44,12 +44,6 @@ yarn truffle migrate --network live
 
 Look for your newly deployed contract address in the logs! 🥳
 
-### Viewing your items on OpenSea
-
-OpenSea will automatically pick up transfers on your contract. You can visit an asset by going to `https://opensea.io/assets/CONTRACT_ADDRESS/TOKEN_ID`.
-
-To load all your metadata on your items at once, visit [https://opensea.io/get-listed](https://opensea.io/get-listed) and enter your address to load the metadata into OpenSea! You can even do this for the Rinkeby test network if you deployed there, by going to [https://rinkeby.opensea.io/get-listed](https://rinkeby.opensea.io/get-listed).
-
 # License
 
 These contracts are available to the public under an MIT License.
