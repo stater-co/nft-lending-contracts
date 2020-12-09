@@ -1,6 +1,3 @@
-
-## Configuring the Lootbox
-
 # Stater NFT Collateralized Lending Contracts
 
 ## Requirements
