@@ -10,7 +10,7 @@
 
 
 
-### Status = 10 :
+### Status LISTED :
 
 #### The loan has been created
 #### SHOULD BE : listed on the website
@@ -19,7 +19,7 @@
 
 
 
-### Status 11 :
+### Status APPROVED :
 
 #### The loan has been chosen by a lender
 #### Its status SHOULD BE changed on the website
@@ -28,32 +28,22 @@
 
 
 
-### Status 199 :
-
-#### The loan has a lender
-#### The loan is now handling payments ( temporarily )
-#### Its status SHOULD BE changed on the website
-#### No longer waiting for a lender ( / approvement )
-#### Can't be cancelled anymore
-#### Waiting for items withdraw
-
-
-
-### Status 200 :
+### Status LIQUIDATED :
 
 #### The loan has a lender
 #### The loan has finished handling the temporarily payments
 #### Its status SHOULD BE changed on the website
 #### No longer waiting for a lender ( / approvement )
 #### Can't be cancelled anymore
-#### No longer available for items withdraw
+#### Available for items withdraw by Borrower
 #### Loan is finished
 
 
 
-### Status 404 :
+### Status DEFAULTED :
 
 #### The loan has been cancelled
 #### Its status SHOULD BE changed on the website
 #### No longer available for a lender ( / approvement )
+#### Available for items withdraw by Lender
 #### Can't be cancelled anymore
