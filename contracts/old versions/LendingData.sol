@@ -1,4 +1,3 @@
-// Stater.co
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
 
@@ -15,13 +14,12 @@ contract LendingData is ERC721Holder, Ownable {
 
   using SafeMath for uint256;
 
-  uint256 public loanID = 1;
   uint256 public constant PRECISION = 3;
   uint256 public loanFee = 1; // 1%
   uint256 public ltv = 600; // 60%
   uint256 public interestRateToCompany = 40; // 40%
   uint256 public interestRate = 20; // 20%
-  uint256 public installmentFrequency = 1; // days
+  uint256 public installmentFrequency = 7; // days
 
   event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
   event LoanApproved(uint256 indexed loanId, uint256 approvalDate, uint256 loanPaymentEnd, uint256 installmentAmount, Status status);
@@ -32,7 +30,7 @@ contract LendingData is ERC721Holder, Ownable {
   event InterestRateToLenderChanged(uint256 newInterestRateToLender);
   event InterestRateToCompanyChanged(uint256 newInterestRateToCompany);
 
-  enum Status {
+  enum Status { 
     UNINITIALIZED,
     LISTED,
     APPROVED,
@@ -43,6 +41,7 @@ contract LendingData is ERC721Holder, Ownable {
   
   struct Loan {
     uint256[] nftTokenIdArray; // the unique identifier of the NFT token that the borrower uses as collateral
+    uint256 id; // unique Loan identifier
     uint256 loanAmount; // the amount, denominated in tokens (see next struct entry), the borrower lends
     uint256 assetsValue; // important for determintng LTV which has to be under 50-60%
     uint256 loanStart; // the point when the loan is approved
@@ -52,7 +51,7 @@ contract LendingData is ERC721Holder, Ownable {
     uint256 amountDue; // loanAmount + interest that needs to be paid back by borrower
     uint256 paidAmount; // the amount that has been paid back to the lender to date
     uint256 defaultingLimit; // the number of installments allowed to be missed without getting defaulted
-    uint256 nrOfPayments; // the number of installments paid
+    uint256 installmentsPayed; // the number of installments paid
     Status status; // the loan status
     address[] nftAddressArray; // the adderess of the ERC721
     address payable borrower; // the address who receives the loan
@@ -60,7 +59,34 @@ contract LendingData is ERC721Holder, Ownable {
     address currency; // the token that the borrower lends, address(0) for ETH
   }
 
-  mapping(uint256 => Loan) public loans;
+  Loan[] loans; // the array of NFT loans
+
+  constructor() {
+    uint256[] memory empty1;
+    address[] memory empty2;
+    // Initialize loans[] with empty loan (NULL LOAN)
+    loans.push(
+        Loan(
+            empty1,
+            0,
+            0,
+            0,
+            block.timestamp,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            Status.UNINITIALIZED,
+            empty2,
+            address(0),
+            address(0),
+            address(0)
+        )
+    );
+  }
 
   // Borrower creates a loan
   function createLoan(
@@ -93,22 +119,33 @@ contract LendingData is ERC721Holder, Ownable {
     // Computing loan parameters
     uint256 loanPlusInterest = loanAmount.mul(100 + interestRate).div(100);
     uint256 installmentAmount = loanPlusInterest.div(nrOfInstallments);
+    uint256[] memory empty1;
 
-    // Set loan fields
-    loans[loanID].nftTokenIdArray = nftTokenIdArray;
-    loans[loanID].loanAmount = loanAmount;
-    loans[loanID].assetsValue = assetsValue;
-    loans[loanID].nrOfInstallments = nrOfInstallments;
-    loans[loanID].installmentAmount = installmentAmount;
-    loans[loanID].defaultingLimit = defaultingLimit;
-    loans[loanID].status = Status.LISTED;
-    loans[loanID].nftAddressArray = nftAddressArray;
-    loans[loanID].borrower = msg.sender;
-    loans[loanID].currency = currency;
- 
     // Fire event
-    emit NewLoan(loanID, msg.sender, block.timestamp, currency, Status.LISTED, creationId);
-    ++loanID;
+    emit NewLoan(loans.length, msg.sender, block.timestamp, currency, Status.LISTED, creationId);
+
+    loans.push(
+        Loan(
+            nftTokenIdArray,
+            loans.length,
+            loanAmount,
+            assetsValue,
+            block.timestamp,
+            0,
+            nrOfInstallments,
+            installmentAmount,
+            loanPlusInterest,
+            0,
+            defaultingLimit,
+            0,
+            Status.LISTED,
+            nftAddressArray,
+            msg.sender,
+            address(0), // Lender
+            currency
+        )
+    );
+ 
   }
 
 
@@ -200,7 +237,7 @@ contract LendingData is ERC721Holder, Ownable {
     );
 
     loans[loanId].paidAmount = loans[loanId].paidAmount.add(amountPaidAsInstallment);
-    loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].nrOfInstallments);
+    loans[loanId].installmentsPayed = loans[loanId].paidAmount.div(loans[loanId].nrOfInstallments);
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
       loans[loanId].status = Status.LIQUIDATED;
@@ -253,22 +290,7 @@ contract LendingData is ERC721Holder, Ownable {
 
   }
 
-  function cutTheLoan(uint256 loanId) external {
-    require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender,"You can't access this loan");
-    require(loans[loanId].status == Status.APPROVED,"Loan must be approved");
-    require(isReady(loanId),"Borrower still has time to pay his installments");
 
-    // The lender will take the items
-    _transferItems(
-      address(this),
-      loans[loanId].lender,
-      loans[loanId].nftAddressArray,
-      loans[loanId].nftTokenIdArray
-    );
-
-    loans[loanId].status = Status.DEFAULTED;
-
-  }
   
 
   // Internal Functions 
@@ -331,6 +353,7 @@ contract LendingData is ERC721Holder, Ownable {
     external
     view
     returns(
+      uint256 id,
       uint256 loanAmount,
       uint256 assetsValue,
       uint256 loanEnd,
@@ -346,6 +369,7 @@ contract LendingData is ERC721Holder, Ownable {
     ) {
       Loan storage loan = loans[loanId];
       
+      id = uint256(loan.id);
       loanAmount = uint256(loan.loanAmount);
       assetsValue = uint256(loan.assetsValue);
       loanEnd = uint256(loan.loanEnd);
@@ -360,11 +384,14 @@ contract LendingData is ERC721Holder, Ownable {
       status = Status(loan.status);
   }
 
-  // This function will indicate if the borrower has payed all his installments in time or not
-  // False >> Borrower still has time to pay his installments
-  // True >> Time to pay installments expired , the loan can be ended
-  function isReady(uint256 loanId) public view returns(bool) {
-    return loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(installmentFrequency.mul(1 days))) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(installmentFrequency.mul(1 days)));
+  function updateLoanStatus(uint256 loanId) external returns(uint256,uint256){
+      require(loans[loanId].status == Status.APPROVED);
+      if ( block.timestamp > loans[loanId].loanStart.add(loans[loanId].installmentsPayed.mul(1 days)) )
+        return (block.timestamp,loans[loanId].loanStart.add(loans[loanId].installmentsPayed.mul(1 days)));
+  }
+
+  function getNextPaymentDate(uint256 loanId) public returns(uint256) {
+      return loans[loanId].loanEnd.sub(loans[loanId].installmentsPayed.mul(installmentFrequency.mul(1 days)));
   }
 
   // TODO: Add auxiliary loan status update function for DEFAULTED state to be used by whomever
