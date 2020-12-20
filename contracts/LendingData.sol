@@ -1,6 +1,13 @@
-// Stater.co
+/* 
+ * Stater.co
+ */
+ 
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
+
+// Stack too deep when compiling inline assembly: Variable value0 is 2 slot(s) too deep inside the stack >> Fix : Check the enable optimization ( Remix )
+pragma experimental ABIEncoderV2;
+
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
@@ -321,6 +328,11 @@ contract LendingData is ERC721Holder, Ownable {
   function setLoanFee(uint256 newLoanFee) external onlyOwner {
     require(loanFee >= 0 && loanFee < 100, "Loan fee out of bounds");
     loanFee = newLoanFee;
+  }
+  
+  // Get loan by ID using the pragma encoder v2
+  function getLoanByIdV2(uint256 loanId) external view returns (Loan memory){
+        return loans[loanId];
   }
 
 
