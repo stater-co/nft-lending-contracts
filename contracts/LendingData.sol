@@ -28,7 +28,7 @@ contract LendingData is ERC721Holder, Ownable {
   uint256 public ltv = 600; // 60%
   uint256 public interestRateToCompany = 40; // 40%
   uint256 public interestRate = 20; // 20%
-  uint256 public installmentFrequency = 1; // days
+  uint256 public installmentFrequency = 7; // days
 
   event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
   event LoanApproved(uint256 indexed loanId, uint256 approvalDate, uint256 loanPaymentEnd, uint256 installmentAmount, Status status);
