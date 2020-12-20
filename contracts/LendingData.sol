@@ -120,25 +120,30 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
 
 
   // Lender approves a loan
-  function approveLoan(uint256 loanId) external {
+  function approveLoan(uint256 loanId) external payable {
     require(loans[loanId].lender == address(0), "Someone else payed for this loan before you");
     require(loans[loanId].paidAmount == 0, "This loan is currently not ready for lenders");
     require(loans[loanId].status == Status.LISTED, "This loan is not currently ready for lenders, check later");
+    require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.mul(loanFee).div(100)),"Not enough currency");
+    
+    if ( loans[loanId].currency != address(0) ){
 
-    // Send 99% to borrower & 1% to company
-    // Floating point problem , impossible to send rational qty of ether ( debatable )
-    // The rest of the wei is sent to company by default
-    require(IERC20(loans[loanId].currency).transferFrom(
-      msg.sender,
-      loans[loanId].borrower, 
-      loans[loanId].loanAmount
-    ), "Transfer of liquidity failed"); // Transfer complete loanAmount to borrower
+      require(IERC20(loans[loanId].currency).transferFrom(
+        msg.sender,
+        loans[loanId].borrower, 
+        loans[loanId].loanAmount
+      ), "Transfer of liquidity failed"); // Transfer complete loanAmount to borrower
 
-    require(IERC20(loans[loanId].currency).transferFrom(
-      msg.sender,
-      owner(), 
-      loans[loanId].loanAmount.mul(loanFee).div(100)
-    ), "Transfer of liquidity failed"); // loanFee percent on top of original loanAmount goes to contract owner
+      require(IERC20(loans[loanId].currency).transferFrom(
+        msg.sender,
+        owner(), 
+        loans[loanId].loanAmount.mul(loanFee).div(100)
+      ), "Transfer of liquidity failed"); // loanFee percent on top of original loanAmount goes to contract owner
+
+    }else{
+      require(loans[loanId].borrower.send(loans[loanId].loanAmount),"Transfer of liquidity failed");
+      require(payable(owner()).send(loans[loanId].loanAmount.mul(loanFee).div(100)),"Transfer of liquidity failed");
+    }
 
     // Borrower assigned , status is 1 , first installment ( payment ) completed
     loans[loanId].lender = msg.sender;
@@ -185,26 +190,36 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
 
   // Borrower pays installment for loan
   // Multiple installments : OK
-  function payLoan(uint256 loanId, uint256 amountPaidAsInstallment) external {
+  function payLoan(uint256 loanId, uint256 amountPaidAsInstallment) external payable {
     require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
     require(loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
     require(loans[loanId].loanEnd >= block.timestamp, "Loan validity expired");
+    require(msg.value >= amountPaidAsInstallment.add(loans[loanId].installmentAmount.div(20)),"Not enough currency");
     
     // Check how much is payed
     require(amountPaidAsInstallment >= loans[loanId].installmentAmount, "Installment amount is too low");
 
-    // Transfer the ether
-    IERC20(loans[loanId].currency).transferFrom(
-      msg.sender,
-      loans[loanId].lender, 
-      amountPaidAsInstallment
-    );
+    if ( loans[loanId].currency != address(0) ){
 
-    IERC20(loans[loanId].currency).transferFrom(
-      msg.sender,
-      owner(), 
-      loans[loanId].installmentAmount.div(20)
-    );
+      // Transfer the ether
+      require(IERC20(loans[loanId].currency).transferFrom(
+        msg.sender,
+        loans[loanId].lender, 
+        amountPaidAsInstallment
+      ),"Installment transfer failed");
+
+      require(IERC20(loans[loanId].currency).transferFrom(
+        msg.sender,
+        owner(), 
+        loans[loanId].installmentAmount.div(20)
+      ),"Fee transfer failed");
+
+    }else{
+
+      require(loans[loanId].lender.send(amountPaidAsInstallment),"Installment transfer failed");
+      require(payable(owner()).send(loans[loanId].installmentAmount.div(20)),"Fee transfer failed");
+
+    }
 
     loans[loanId].paidAmount = loans[loanId].paidAmount.add(amountPaidAsInstallment);
     loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].nrOfInstallments);
@@ -263,7 +278,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   function cutTheLoan(uint256 loanId) external {
     require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender,"You can't access this loan");
     require(loans[loanId].status == Status.APPROVED,"Loan must be approved");
-    require(isReady(loanId),"Borrower still has time to pay his installments");
+    require(lackOfPayment(loanId),"Borrower still has time to pay his installments");
 
     // The lender will take the items
     _transferItems(
@@ -310,6 +325,66 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
 
   function getLoanStatus(uint256 loanId) external view returns(Status) {
     return loans[loanId].status;
+  }
+
+  function getNftTokenIdArray(uint256 loanId) external view returns(uint256[] memory) {
+    return loans[loanId].nftTokenIdArray;
+  }
+
+  function getLoanAmount(uint256 loanId) external view returns(uint256) {
+    return loans[loanId].loanAmount;
+  }
+
+  function getAssetsValue(uint256 loanId) external view returns(uint256) {
+    return loans[loanId].assetsValue;
+  }
+
+  function getLoanStart(uint256 loanId) external view returns(uint256) {
+    return loans[loanId].loanStart;
+  }
+
+  function getLoanEnd(uint256 loanId) external view returns(uint256) {
+    return loans[loanId].loanEnd;
+  }
+
+  function getNrOfInstallments(uint256 loanId) external view returns(uint256) {
+    return loans[loanId].nrOfInstallments;
+  }
+
+  function getInstallmentAmount(uint256 loanId) external view returns(uint256) {
+    return loans[loanId].installmentAmount;
+  }
+
+  function getAmountDue(uint256 loanId) external view returns(uint256) {
+    return loans[loanId].amountDue;
+  }
+
+  function getPaidAmount(uint256 loanId) external view returns(uint256) {
+    return loans[loanId].paidAmount;
+  }
+
+  function getDefaultingLimit(uint256 loanId) external view returns(uint256) {
+    return loans[loanId].defaultingLimit;
+  }
+
+  function getNrOfPayments(uint256 loanId) external view returns(uint256) {
+    return loans[loanId].nrOfPayments;
+  }
+
+  function getNftAddressArray(uint256 loanId) external view returns(address[] memory) {
+    return loans[loanId].nftAddressArray;
+  }
+
+  function getBorrower(uint256 loanId) external view returns(address) {
+    return loans[loanId].borrower;
+  }
+
+  function getLender(uint256 loanId) external view returns(address) {
+    return loans[loanId].lender;
+  }
+
+  function getCurrency(uint256 loanId) external view returns(address) {
+    return loans[loanId].currency;
   }
 
   // TODO validate input
@@ -375,7 +450,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   // This function will indicate if the borrower has payed all his installments in time or not
   // False >> Borrower still has time to pay his installments
   // True >> Time to pay installments expired , the loan can be ended
-  function isReady(uint256 loanId) public view returns(bool) {
+  function lackOfPayment(uint256 loanId) public view returns(bool) {
     return loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(installmentFrequency.mul(1 days))) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(installmentFrequency.mul(1 days)));
   }
 
