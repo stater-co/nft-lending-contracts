@@ -208,7 +208,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
       require(loans[loanId].lender.send(amountPaidAsInstallment),"Installment transfer failed");
 
     loans[loanId].paidAmount = loans[loanId].paidAmount.add(amountPaidAsInstallment);
-    loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].nrOfInstallments);
+    loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].installmentAmount);
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
       loans[loanId].status = Status.LIQUIDATED;
