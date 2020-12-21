@@ -24,10 +24,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
 
   uint256 public loanID = 1;
   uint256 public constant PRECISION = 3;
-  uint256 public loanFee = 1; // 1%
   uint256 public ltv = 600; // 60%
-  uint256 public interestRateToCompany = 40; // 40%
-  uint256 public interestRate = 20; // 20%
   uint256 public installmentFrequency = 7; // days
 
   event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
@@ -36,8 +33,6 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   event ItemsWithdrawn(uint256 indexed loanId, address indexed requester, Status status);
   event LoanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, Status status);
   event LtvChanged(uint256 newLTV);
-  event InterestRateToLenderChanged(uint256 newInterestRateToLender);
-  event InterestRateToCompanyChanged(uint256 newInterestRateToCompany);
 
   enum Status {
     UNINITIALIZED,
@@ -98,7 +93,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
         defaultingLimit = 3;
 
     // Computing loan parameters
-    uint256 loanPlusInterest = loanAmount.mul(100 + interestRate).div(100);
+    uint256 loanPlusInterest = loanAmount.mul(140).div(100); // interest rate >> 40%
     uint256 installmentAmount = loanPlusInterest.div(nrOfInstallments);
 
     // Set loan fields
@@ -124,7 +119,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     require(loans[loanId].lender == address(0), "Someone else payed for this loan before you");
     require(loans[loanId].paidAmount == 0, "This loan is currently not ready for lenders");
     require(loans[loanId].status == Status.LISTED, "This loan is not currently ready for lenders, check later");
-    require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.mul(loanFee).div(100)),"Not enough currency");
+    require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(100)),"Not enough currency");
     
     if ( loans[loanId].currency != address(0) ){
 
@@ -137,12 +132,12 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
       require(IERC20(loans[loanId].currency).transferFrom(
         msg.sender,
         owner(), 
-        loans[loanId].loanAmount.mul(loanFee).div(100)
-      ), "Transfer of liquidity failed"); // loanFee percent on top of original loanAmount goes to contract owner
+        loans[loanId].loanAmount.div(100)
+      ), "Transfer of liquidity failed"); // 1% of original loanAmount goes to contract owner
 
     }else{
       require(loans[loanId].borrower.send(loans[loanId].loanAmount),"Transfer of liquidity failed");
-      require(payable(owner()).send(loans[loanId].loanAmount.mul(loanFee).div(100)),"Transfer of liquidity failed");
+      require(payable(owner()).send(loans[loanId].loanAmount.div(100)),"Transfer of liquidity failed");
     }
 
     // Borrower assigned , status is 1 , first installment ( payment ) completed
@@ -199,7 +194,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     // Check how much is payed
     require(amountPaidAsInstallment >= loans[loanId].installmentAmount, "Installment amount is too low");
 
-    if ( loans[loanId].currency != address(0) ){
+    if ( loans[loanId].currency != address(0) )
 
       // Transfer the ether
       require(IERC20(loans[loanId].currency).transferFrom(
@@ -208,18 +203,9 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
         amountPaidAsInstallment
       ),"Installment transfer failed");
 
-      require(IERC20(loans[loanId].currency).transferFrom(
-        msg.sender,
-        owner(), 
-        loans[loanId].installmentAmount.div(20)
-      ),"Fee transfer failed");
-
-    }else{
+    else
 
       require(loans[loanId].lender.send(amountPaidAsInstallment),"Installment transfer failed");
-      require(payable(owner()).send(loans[loanId].installmentAmount.div(20)),"Fee transfer failed");
-
-    }
 
     loans[loanId].paidAmount = loans[loanId].paidAmount.add(amountPaidAsInstallment);
     loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].nrOfInstallments);
@@ -275,7 +261,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
 
   }
 
-  function cutTheLoan(uint256 loanId) external {
+  function terminateLoan(uint256 loanId) external {
     require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender,"You can't access this loan");
     require(loans[loanId].status == Status.APPROVED,"Loan must be approved");
     require(lackOfPayment(loanId),"Borrower still has time to pay his installments");
@@ -392,22 +378,10 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     ltv = newLtv;
     emit LtvChanged(newLtv);
   }
-
-  // TODO validate input
-  function setInterestRateToCompany(uint256 newInterestRateToCompany) external onlyOwner {
-    interestRateToCompany = newInterestRateToCompany;
-    emit InterestRateToCompanyChanged(newInterestRateToCompany);
-  }
-
-  // TODO validate input
-  function setLoanFee(uint256 newLoanFee) external onlyOwner {
-    require(loanFee >= 0 && loanFee < 100, "Loan fee out of bounds");
-    loanFee = newLoanFee;
-  }
   
   // Get loan by ID using the pragma encoder v2
   function getLoanByIdV2(uint256 loanId) external view returns (Loan memory){
-        return loans[loanId];
+    return loans[loanId];
   }
 
 
