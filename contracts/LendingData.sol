@@ -22,7 +22,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
 
   using SafeMath for uint256;
 
-  uint256 public loanID = 1;
+  uint256 public loanID;
   uint256 public constant PRECISION = 3;
   uint256 public ltv = 600; // 60%
   uint256 public installmentFrequency = 7; // days
@@ -374,7 +374,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   }
   
   function getTotalLoans() external view returns(uint256) {
-    return loanID-1;
+    return loanID;
   }
 
   // TODO validate input
