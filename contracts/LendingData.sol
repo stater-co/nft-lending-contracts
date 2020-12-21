@@ -373,7 +373,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     return loans[loanId].currency;
   }
   
-  function getTotalLoans() external view returns(uint256) {
+  function getLoansCount() external view returns(uint256) {
     return loanID;
   }
 
