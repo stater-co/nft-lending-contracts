@@ -97,6 +97,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     loans[loanID].nftTokenIdArray = nftTokenIdArray;
     loans[loanID].loanAmount = loanAmount;
     loans[loanID].assetsValue = assetsValue;
+    loans[loanID].amountDue = loanPlusInterest;
     loans[loanID].nrOfInstallments = nrOfInstallments;
     loans[loanID].installmentAmount = installmentAmount;
     loans[loanID].defaultingLimit = defaultingLimit;
@@ -259,9 +260,9 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   }
 
   function terminateLoan(uint256 loanId) external {
-    require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender,"You can't access this loan");
-    require(loans[loanId].status == Status.APPROVED,"Loan must be approved");
-    require(lackOfPayment(loanId),"Borrower still has time to pay his installments");
+    require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender, "You can't access this loan");
+    require(loans[loanId].status == Status.APPROVED, "Loan must be approved");
+    require(lackOfPayment(loanId), "Borrower still has time to pay his installments");
 
     // The lender will take the items
     _transferItems(
