@@ -25,7 +25,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   uint256 public installmentFrequency = 7; // days
 
   event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
-  event LoanApproved(uint256 indexed loanId, uint256 approvalDate, uint256 loanPaymentEnd, uint256 installmentAmount, Status status);
+  event LoanApproved(uint256 indexed loanId, address indexed lender, uint256 approvalDate, uint256 loanPaymentEnd, Status status);
   event LoanCancelled(uint256 indexed loanId, uint256 cancellationDate, Status status);
   event ItemsWithdrawn(uint256 indexed loanId, address indexed requester, Status status);
   event LoanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, Status status);
@@ -146,9 +146,9 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
 
     emit LoanApproved(
       loanId,
-      block.timestamp, 
-      loans[loanId].loanEnd, 
-      loans[loanId].installmentAmount, 
+      msg.sender,
+      block.timestamp,
+      loans[loanId].loanEnd,
       Status.APPROVED
     );
   }
