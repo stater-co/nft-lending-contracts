@@ -30,7 +30,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   event LoanApproved(uint256 indexed loanId, address indexed lender, uint256 approvalDate, uint256 loanPaymentEnd, Status status);
   event LoanCancelled(uint256 indexed loanId, uint256 cancellationDate, Status status);
   event ItemsWithdrawn(uint256 indexed loanId, address indexed requester, Status status);
-  event LoanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, Status status);
+  event LoanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, uint256 amountPaidAsInstallmentToLender, uint256 interestPerInstallement, uint256 interestToStaterPerInstallement, Status status);
   event LtvChanged(uint256 newLTV);
 
   enum Status {
@@ -212,7 +212,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     }
 
     loans[loanId].paidAmount = loans[loanId].paidAmount.add(msg.value);
-    loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].installmentAmount);
+    loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(msg.value);
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
       loans[loanId].status = Status.LIQUIDATED;
@@ -221,7 +221,10 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
       loanId,
       block.timestamp,
       msg.value,
-      Status.APPROVED
+      amountPaidAsInstallmentToLender,
+      interestPerInstallement,
+      interestToStaterPerInstallement,
+      loans[loanId].status
     );
   }
 
