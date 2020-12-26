@@ -92,7 +92,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
         defaultingLimit = 3;
 
     // Computing loan parameters
-    uint256 loanPlusInterest = loanAmount.mul(interestRate.add(100)).div(100); // interest rate >> 20%
+    uint256 loanPlusInterest = loanAmount.mul(interestRate).div(100); // interest rate >> 20%
     uint256 installmentAmount = loanPlusInterest.div(nrOfInstallments);
 
     // Set loan fields
@@ -212,7 +212,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     }
 
     loans[loanId].paidAmount = loans[loanId].paidAmount.add(msg.value);
-    loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(msg.value);
+    loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].installmentAmount);
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
       loans[loanId].status = Status.LIQUIDATED;
@@ -233,8 +233,8 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   // Borrower can withdraw loan items if loan is LIQUIDATED
   // Lender can withdraw loan item is loan is DEFAULTED
   function withdrawItems(uint256 loanId) external {
-    require(block.timestamp >= loans[loanId].loanEnd || loans[loanId].paidAmount == loans[loanId].amountDue, "The loan is not finished yet");
-    require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
+    require(loans[loanId].paidAmount >= loans[loanId].amountDue, "The loan is not finished yet");
+    require(loans[loanId].status == Status.LIQUIDATED, "Incorrect state of loan");
 
     if ((block.timestamp >= loans[loanId].loanEnd) && !(loans[loanId].paidAmount == loans[loanId].amountDue)) {
 
@@ -282,6 +282,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     );
 
     loans[loanId].status = Status.DEFAULTED;
+    loans[loanId].loanEnd = block.timestamp;
 
   }
   
@@ -318,6 +319,10 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
 
   function getLoanStatus(uint256 loanId) external view returns(Status) {
     return loans[loanId].status;
+  }
+  
+  function getLoanApproveTotalPayment(uint256 loanId) external view returns(uint256) {
+      return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(100));
   }
 
   function getNftTokenIdArray(uint256 loanId) external view returns(uint256[] memory) {
@@ -431,7 +436,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   // False >> Borrower still has time to pay his installments
   // True >> Time to pay installments expired , the loan can be ended
   function lackOfPayment(uint256 loanId) public view returns(bool) {
-    return loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(installmentFrequency.mul(1 days))) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(installmentFrequency.mul(1 days)));
+    return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(installmentFrequency.mul(1 days))) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(installmentFrequency.mul(1 days)));
   }
 
   // TODO: Add auxiliary loan status update function for DEFAULTED state to be used by whomever

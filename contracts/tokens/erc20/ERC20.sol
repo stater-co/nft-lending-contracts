@@ -18,14 +18,13 @@ contract TokenERC20 {
     constructor(
         uint256 initialSupply,
         string memory tokenName,
-        string memory tokenSymbol,
-        address contractOwner
+        string memory tokenSymbol
     ) public {
         totalSupply = initialSupply * 10 ** uint256(decimals);
-        balanceOf[contractOwner] = totalSupply;
+        balanceOf[msg.sender] = totalSupply;
         name = tokenName;
         symbol = tokenSymbol;
-        owner = contractOwner;
+        owner = msg.sender;
     }
 
     modifier onlyOwner {
