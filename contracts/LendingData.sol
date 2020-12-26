@@ -191,8 +191,8 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     require(loans[loanId].loanEnd >= block.timestamp, "Loan validity expired");
     require(msg.value >= loans[loanId].installmentAmount, "Not enough currency");
     
-    uint256 interestPerInstallement = msg.value.div(interestRate).mul(100).div(loans[loanId].nrOfInstallments); // entire interest for installment
-    uint256 interestToStaterPerInstallement = interestPerInstallement.div(interestRateToStater).mul(100); // amount of interest that goes to Stater on each installment
+    uint256 interestPerInstallement = msg.value.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments); // entire interest for installment
+    uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100); // amount of interest that goes to Stater on each installment
     uint256 amountPaidAsInstallmentToLender = msg.value.sub(interestToStaterPerInstallement); // amount of installment that goes to lender
     
     if ( loans[loanId].currency != address(0) ) {
