@@ -263,7 +263,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     emit ItemsWithdrawn(
       loanId,
       msg.sender,
-      Status.LIQUIDATED
+      loans[loanId].status
     );
 
   }
