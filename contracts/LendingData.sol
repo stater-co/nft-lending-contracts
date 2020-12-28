@@ -92,7 +92,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
         defaultingLimit = 3;
 
     // Computing loan parameters
-    uint256 loanPlusInterest = loanAmount.mul(interestRate).div(100); // interest rate >> 20%
+    uint256 loanPlusInterest = loanAmount.mul(interestRate.add(100)).div(100); // interest rate >> 20%
     uint256 installmentAmount = loanPlusInterest.div(nrOfInstallments);
 
     // Set loan fields
