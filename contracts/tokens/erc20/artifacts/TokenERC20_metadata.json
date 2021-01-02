@@ -21,11 +21,6 @@
 						"internalType": "string",
 						"name": "tokenSymbol",
 						"type": "string"
-					},
-					{
-						"internalType": "address",
-						"name": "contractOwner",
-						"type": "address"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -363,17 +358,17 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"localhost/contracts/tokens/erc20/ERC20.sol": {
-			"keccak256": "0x286e69444ea6ae2eb9a3f1797a2fe33015c0c165d4f9604a0d3874eb77c1650f",
+			"keccak256": "0xa74b470630bb88f6a783d0ab828e2d36837c827de49622651fe793dca9a3cda3",
 			"urls": [
-				"bzz-raw://b6379370bdfdb0fa8f553828dabfb0f84261d1b1bbd1e1f9640ad3115595dc26",
-				"dweb:/ipfs/QmaT8h3TxYvfpkSY3iEA3iXjkq7BSbDpY8hLo3JfjnmHzL"
+				"bzz-raw://ffc212110c88de5775ed85a3380f10cfbefe487d77b9e61102d13b171a7ff5d6",
+				"dweb:/ipfs/QmaBi7Y434HX9x7xJZacLkAYj1jg36sJxKb6ViudxcHyVD"
 			]
 		}
 	},
