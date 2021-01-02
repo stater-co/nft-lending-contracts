@@ -233,10 +233,10 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   // Borrower can withdraw loan items if loan is LIQUIDATED
   // Lender can withdraw loan item is loan is DEFAULTED
   function withdrawItems(uint256 loanId) external {
-    require(loans[loanId].paidAmount >= loans[loanId].amountDue, "The loan is not finished yet");
-    require(loans[loanId].status == Status.LIQUIDATED, "Incorrect state of loan");
+    require(block.timestamp >= loans[loanId].loanEnd || loans[loanId].paidAmount >= loans[loanId].amountDue, "The loan is not finished yet");
+    require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
 
-    if ((block.timestamp >= loans[loanId].loanEnd) && !(loans[loanId].paidAmount == loans[loanId].amountDue)) {
+    if ( (block.timestamp >= loans[loanId].loanEnd) && !(loans[loanId].paidAmount >= loans[loanId].amountDue) ) {
 
       loans[loanId].status = Status.DEFAULTED;
       
@@ -248,7 +248,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
         loans[loanId].nftTokenIdArray
       );
 
-    } else if (loans[loanId].paidAmount == loans[loanId].amountDue) {
+    } else if ( loans[loanId].paidAmount >= loans[loanId].amountDue ) {
 
       // Otherwise the lender will receive the items
       _transferItems(
