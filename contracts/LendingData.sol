@@ -1,8 +1,8 @@
+// SPDX-License-Identifier: MIT
+
 /* 
  * Stater.co
  */
- 
-// SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
 
 

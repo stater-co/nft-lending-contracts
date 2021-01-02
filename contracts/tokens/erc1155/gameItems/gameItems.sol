@@ -1,6 +1,5 @@
-// contracts/GameItems.sol
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.0;
+pragma solidity 0.7.4;
 
 import "openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol";
 
