@@ -2,7 +2,16 @@
 ### Debugged ✓
 ### Errors : 0
 ### Warnings : 0
-### Debugging date : 15.11.2020
+### Debugging date : 03.01.2021
+### Truffle tests
+
+### How to reproduce the tests :
+#### ganache-cli --port=8545
+#### truffle test ( from the repo root )
+##### ( Optional ) For using a custom network check the truffle-config.js
+
+
+
 
 # Documentation
 
