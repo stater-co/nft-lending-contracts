@@ -187,7 +187,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   // Multiple installments : OK
   function payLoan(uint256 loanId) external payable {
     require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
-    require(loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
+    require(loans[loanId].status == Status.APPROVED, "This loan is no longer in the approval phase, check its status");
     require(loans[loanId].loanEnd >= block.timestamp, "Loan validity expired");
     require(msg.value >= loans[loanId].installmentAmount, "Not enough currency");
     
@@ -359,6 +359,10 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
 
   function getPaidAmount(uint256 loanId) external view returns(uint256) {
     return loans[loanId].paidAmount;
+  }
+
+  function toPayForApprove(uint256 loanId) external view returns(uint256) {
+	return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(100));
   }
 
   function getDefaultingLimit(uint256 loanId) external view returns(uint256) {

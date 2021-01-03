@@ -1,6 +1,7 @@
 const LendingData = artifacts.require("LendingData");
 const LendingLogic = artifacts.require("LendingLogic");
 const GameItems = artifacts.require("GameItems");
+const FungibleTokens = artifacts.require("FungibleTokens");
 
 module.exports = function(deployer, network) {
 	
@@ -16,4 +17,5 @@ module.exports = function(deployer, network) {
   deployer.deploy(LendingData, {gas: 6000000});
   deployer.deploy(LendingLogic, {gas: 3000000});
   deployer.deploy(GameItems, {gas: 6000000});
+  deployer.deploy(FungibleTokens, web3.utils.toHex("1000000000000000000"), "FungibleToken", "FT", {gas: 6000000});
 };

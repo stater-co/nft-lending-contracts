@@ -1,4 +1,9 @@
-pragma solidity ^0.7.4;
+// SPDX-License-Identifier: MIT
+
+/* 
+ * Stater.co
+ */
+pragma solidity 0.7.4;
 
 contract Migrations {
   address public owner;
