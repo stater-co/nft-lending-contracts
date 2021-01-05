@@ -1,6 +1,11 @@
-pragma solidity ^0.7.4;
+// SPDX-License-Identifier: MIT
 
-contract TokenERC20 {
+/* 
+ * Stater.co
+ */
+pragma solidity 0.7.4;
+
+contract FungibleTokens {
 
     string public name;
     string public symbol;
