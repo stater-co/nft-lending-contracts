@@ -384,7 +384,12 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   }
   
   function getLoanApproveTotalPayment(uint256 loanId) external view returns(uint256) {
-      return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(100));
+        uint32 discount = 100;
+    
+        if ( geyser.totalStakedFor(msg.sender) > 0 )
+            discount = 105;
+        
+        return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(discount));
   }
 
   function getNftTokenIdArray(uint256 loanId) external view returns(uint256[] memory) {
