@@ -142,7 +142,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
         discount = 105;
     
     // We check if currency is ETH
-    if ( loans[loanId].currency != address(0) )
+    if ( loans[loanId].currency == address(0) )
       require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(discount)),"Not enough currency");
 
     // We send the tokens here
