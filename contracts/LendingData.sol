@@ -15,16 +15,24 @@ import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 
+contract Geyser {
+    function totalStakedFor(address addr) public view returns (uint256) {}
+}
+
+
 contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
 
   using SafeMath for uint256;
 
+  Geyser public geyser;
   uint256 public loanID;
   uint256 public constant PRECISION = 3;
   uint256 public ltv = 600; // 60%
   uint256 public installmentFrequency = 7; // days
   uint256 public interestRate = 20;
   uint256 public interestRateToStater = 40;
+  address public staterNftAddress;
+  address public staterFtAddress;
 
   event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
   event LoanApproved(uint256 indexed loanId, address indexed lender, uint256 approvalDate, uint256 loanPaymentEnd, Status status);
@@ -42,7 +50,17 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     CANCELLED
   }
   
+  enum TokenType {
+      ERC721,
+      ERC1155
+  }
+  
   struct Loan {
+    address[] nftAddressArray; // the adderess of the ERC721
+    address payable borrower; // the address who receives the loan
+    address payable lender; // the address who gives/offers the loan to the borrower
+    address currency; // the token that the borrower lends, address(0) for ETH
+    Status status; // the loan status
     uint256[] nftTokenIdArray; // the unique identifier of the NFT token that the borrower uses as collateral
     uint256 loanAmount; // the amount, denominated in tokens (see next struct entry), the borrower lends
     uint256 assetsValue; // important for determintng LTV which has to be under 50-60%
@@ -54,11 +72,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     uint256 paidAmount; // the amount that has been paid back to the lender to date
     uint256 defaultingLimit; // the number of installments allowed to be missed without getting defaulted
     uint256 nrOfPayments; // the number of installments paid
-    Status status; // the loan status
-    address[] nftAddressArray; // the adderess of the ERC721
-    address payable borrower; // the address who receives the loan
-    address payable lender; // the address who gives/offers the loan to the borrower
-    address currency; // the token that the borrower lends, address(0) for ETH
+    TokenType[] nftTokenTypesArray; // the token types : ERC721 , ERC1155 , ...
   }
 
   mapping(uint256 => Loan) public loans;
@@ -71,7 +85,8 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     uint256 assetsValue, 
     address[] calldata nftAddressArray, 
     uint256[] calldata nftTokenIdArray,
-    string calldata creationId
+    string calldata creationId,
+    TokenType[] memory types
   ) external {
     require(nrOfInstallments > 0, "Loan must include at least 1 installment");
     require(loanAmount > 0, "Loan amount must be higher than 0");
@@ -80,33 +95,34 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     require(_percent(loanAmount, assetsValue, PRECISION) <= ltv, "LTV exceeds maximum limit allowed");
 
     // Transfer the items from lender to stater contract
-    _transferItems(msg.sender, address(this), nftAddressArray, nftTokenIdArray);
+    _transferItems(
+        msg.sender, 
+        address(this), 
+        nftAddressArray, 
+        nftTokenIdArray,
+        types
+    );
 
     // Computing the defaulting limit
-    uint256 defaultingLimit = 1;
     if ( nrOfInstallments <= 3 )
-        defaultingLimit = 1;
+        loans[loanID].defaultingLimit = 1;
     else if ( nrOfInstallments <= 5 )
-        defaultingLimit = 2;
+        loans[loanID].defaultingLimit = 2;
     else if ( nrOfInstallments >= 6 )
-        defaultingLimit = 3;
-
-    // Computing loan parameters
-    uint256 loanPlusInterest = loanAmount.mul(interestRate.add(100)).div(100); // interest rate >> 20%
-    uint256 installmentAmount = loanPlusInterest.div(nrOfInstallments);
+        loans[loanID].defaultingLimit = 3;
 
     // Set loan fields
     loans[loanID].nftTokenIdArray = nftTokenIdArray;
     loans[loanID].loanAmount = loanAmount;
     loans[loanID].assetsValue = assetsValue;
-    loans[loanID].amountDue = loanPlusInterest;
+    loans[loanID].amountDue = loanAmount.mul(interestRate.add(100)).div(100); // interest rate >> 20%
     loans[loanID].nrOfInstallments = nrOfInstallments;
-    loans[loanID].installmentAmount = installmentAmount;
-    loans[loanID].defaultingLimit = defaultingLimit;
+    loans[loanID].installmentAmount = loans[loanID].amountDue.div(nrOfInstallments);
     loans[loanID].status = Status.LISTED;
     loans[loanID].nftAddressArray = nftAddressArray;
     loans[loanID].borrower = msg.sender;
     loans[loanID].currency = currency;
+    loans[loanID].nftTokenTypesArray = types;
  
     // Fire event
     emit NewLoan(loanID, msg.sender, block.timestamp, currency, Status.LISTED, creationId);
@@ -119,26 +135,18 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     require(loans[loanId].lender == address(0), "Someone else payed for this loan before you");
     require(loans[loanId].paidAmount == 0, "This loan is currently not ready for lenders");
     require(loans[loanId].status == Status.LISTED, "This loan is not currently ready for lenders, check later");
-    require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(100)),"Not enough currency");
     
-    if ( loans[loanId].currency != address(0) ){
+    uint32 discount = 100;
+    
+    if ( geyser.totalStakedFor(msg.sender) > 0 )
+        discount = 105;
+    
+    // We check if currency is ETH
+    if ( loans[loanId].currency != address(0) )
+      require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(discount)),"Not enough currency");
 
-      require(IERC20(loans[loanId].currency).transferFrom(
-        msg.sender,
-        loans[loanId].borrower, 
-        loans[loanId].loanAmount
-      ), "Transfer of liquidity failed"); // Transfer complete loanAmount to borrower
-
-      require(IERC20(loans[loanId].currency).transferFrom(
-        msg.sender,
-        owner(), 
-        loans[loanId].loanAmount.div(100)
-      ), "Transfer of liquidity failed"); // 1% of original loanAmount goes to contract owner
-
-    }else{
-      require(loans[loanId].borrower.send(loans[loanId].loanAmount),"Transfer of liquidity failed");
-      require(payable(owner()).send(loans[loanId].loanAmount.div(100)),"Transfer of liquidity failed");
-    }
+    // We send the tokens here
+    _transferTokens(msg.sender,loans[loanId].borrower,loans[loanId].currency,loans[loanId].loanAmount,loans[loanId].loanAmount.div(discount));
 
     // Borrower assigned , status is 1 , first installment ( payment ) completed
     loans[loanId].lender = msg.sender;
@@ -173,7 +181,8 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
       address(this), 
       loans[loanId].borrower, 
       loans[loanId].nftAddressArray, 
-      loans[loanId].nftTokenIdArray
+      loans[loanId].nftTokenIdArray,
+      loans[loanId].nftTokenTypesArray
     );
 
     emit LoanCancelled(
@@ -189,29 +198,42 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
     require(loans[loanId].status == Status.APPROVED, "This loan is no longer in the approval phase, check its status");
     require(loans[loanId].loanEnd >= block.timestamp, "Loan validity expired");
-    require(msg.value >= loans[loanId].installmentAmount, "Not enough currency");
-    
-    uint256 interestPerInstallement = msg.value.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments); // entire interest for installment
-    uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100); // amount of interest that goes to Stater on each installment
-    uint256 amountPaidAsInstallmentToLender = msg.value.sub(interestToStaterPerInstallement); // amount of installment that goes to lender
-    
-    if ( loans[loanId].currency != address(0) ) {
-      require(IERC20(loans[loanId].currency).transferFrom(
-        msg.sender,
-        loans[loanId].lender, 
-        amountPaidAsInstallmentToLender
-      ), "Installment transfer failed");
-      require(IERC20(loans[loanId].currency).transferFrom(
-        msg.sender,
-        owner(),
-        interestToStaterPerInstallement
-      ), "Installment transfer failed");
-    } else {
-      require(loans[loanId].lender.send(amountPaidAsInstallmentToLender), "Installment transfer to lender failed");
-      require(payable(owner()).send(interestToStaterPerInstallement), "Installment transfer to stater failed");
-    }
 
-    loans[loanId].paidAmount = loans[loanId].paidAmount.add(msg.value);
+    uint256 interestPerInstallement; // entire interest for installment
+    uint256 interestToStaterPerInstallement; // amount of interest that goes to Stater on each installment
+    uint256 amountPaidAsInstallmentToLender; // amount of installment that goes to lender
+
+    uint32 discount = 100;
+    
+    if ( geyser.totalStakedFor(msg.sender) > 0 )
+        discount = 105;
+
+    // Custom tokens
+    if ( loans[loanId].currency != address(0) ) {
+
+      interestPerInstallement = loans[loanId].installmentAmount.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments);
+      interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(discount);
+      amountPaidAsInstallmentToLender = loans[loanId].installmentAmount.sub(interestToStaterPerInstallement);
+
+      // More accuracy
+      loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestToStaterPerInstallement).add(amountPaidAsInstallmentToLender);
+
+    } else {
+
+      require(msg.value >= loans[loanId].installmentAmount, "Not enough currency");
+
+      interestPerInstallement = msg.value.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments);
+      interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(discount);
+      amountPaidAsInstallmentToLender = msg.value.sub(interestToStaterPerInstallement);
+
+      // More accuracy
+      loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestToStaterPerInstallement).add(amountPaidAsInstallmentToLender);
+
+    }
+    
+    // We send the tokens here
+    _transferTokens(msg.sender,loans[loanId].lender,loans[loanId].currency,amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
+
     loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].installmentAmount);
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
@@ -236,7 +258,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     require(block.timestamp >= loans[loanId].loanEnd || loans[loanId].paidAmount >= loans[loanId].amountDue, "The loan is not finished yet");
     require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
 
-    if ( (block.timestamp >= loans[loanId].loanEnd) && !(loans[loanId].paidAmount >= loans[loanId].amountDue) ) {
+    if ( block.timestamp >= loans[loanId].loanEnd && loans[loanId].paidAmount < loans[loanId].amountDue ) {
 
       loans[loanId].status = Status.DEFAULTED;
       
@@ -245,7 +267,8 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
         address(this),
         loans[loanId].lender,
         loans[loanId].nftAddressArray,
-        loans[loanId].nftTokenIdArray
+        loans[loanId].nftTokenIdArray,
+        loans[loanId].nftTokenTypesArray
       );
 
     } else if ( loans[loanId].paidAmount >= loans[loanId].amountDue ) {
@@ -255,7 +278,8 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
         address(this),
         loans[loanId].borrower,
         loans[loanId].nftAddressArray,
-        loans[loanId].nftTokenIdArray
+        loans[loanId].nftTokenIdArray,
+        loans[loanId].nftTokenTypesArray
       );
         
     }
@@ -278,7 +302,8 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
       address(this),
       loans[loanId].lender,
       loans[loanId].nftAddressArray,
-      loans[loanId].nftTokenIdArray
+      loans[loanId].nftTokenIdArray,
+      loans[loanId].nftTokenTypesArray
     );
 
     loans[loanId].status = Status.DEFAULTED;
@@ -301,19 +326,56 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     address from, 
     address to, 
     address[] memory nftAddressArray, 
-    uint256[] memory nftTokenIdArray
+    uint256[] memory nftTokenIdArray,
+    TokenType[] memory types
   ) internal {
     uint256 length = nftAddressArray.length;
-    require(length == nftTokenIdArray.length, "Token infos provided are invalid");
+    require(length == nftTokenIdArray.length && types.length == length, "Token infos provided are invalid");
     for(uint256 i = 0; i < length; ++i) 
-      IERC721(nftAddressArray[i]).safeTransferFrom(
-        from,
-        to,
-        nftTokenIdArray[i]
-      );
+        if ( types[i] == TokenType.ERC721 )
+            IERC721(nftAddressArray[i]).safeTransferFrom(
+                from,
+                to,
+                nftTokenIdArray[i]
+            );
+        else
+            IERC1155(nftAddressArray[i]).safeTransferFrom(
+                from,
+                to,
+                nftTokenIdArray[i],
+                1,
+                ""
+            );
   }
 
+  function _transferTokens(
+      address from,
+      address payable to,
+      address currency,
+      uint256 quantity1,
+      uint256 quantity2
+  ) internal {
+      if ( currency != address(0) ){
 
+          require(IERC20(currency).transferFrom(
+              from,
+              to, 
+              quantity1
+          ), "Transfer of liquidity failed"); // Transfer complete loanAmount to borrower
+
+          require(IERC20(currency).transferFrom(
+              from,
+              owner(), 
+              quantity2
+          ), "Transfer of liquidity failed"); // 1% of original loanAmount goes to contract owner
+
+      }else{
+
+          require(to.send(quantity1),"Transfer of liquidity failed");
+          require(payable(owner()).send(quantity2),"Transfer of liquidity failed");
+
+      }
+  }
 
   // Getters & Setters
 
