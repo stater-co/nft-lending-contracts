@@ -11,7 +11,7 @@ import "openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 
-contract GameItems is ERC721, Ownable, ReentrancyGuard {
+contract GameItems721 is ERC721, Ownable, ReentrancyGuard {
 
     constructor() ERC721("GameItem", "ITM") {}
 

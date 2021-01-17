@@ -5,7 +5,7 @@ import "openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol";
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 
-contract TokenGameItems1155 is ERC1155, Ownable, ReentrancyGuard {
+contract GameItems1155 is ERC1155, Ownable, ReentrancyGuard {
     uint256 public constant STATER_COMMUNITY_EDITION = 0;
     uint256 public constant STATER_FOUNDER_EDITION = 1;
     

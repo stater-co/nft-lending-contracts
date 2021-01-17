@@ -1,5 +1,6 @@
 const LendingData = artifacts.require("LendingData");
-const GameItems = artifacts.require("GameItems");
+const GameItems721 = artifacts.require("GameItems721");
+const GameItems1155 = artifacts.require("GameItems1155");
 
 // Not used for the moment
 // const FungibleTokens = artifacts.require("FungibleTokens");
@@ -9,7 +10,7 @@ contract('LendingData', (accounts) => {
   // createLoan(uint256, uint256, address, uint256, address[] calldata, uint256[] calldata, string calldata)
   it('Should create a loan', async () => {
     const instance = await LendingData.deployed();
-    const tokenInstance = await GameItems.deployed();
+    const tokenInstance = await GameItems721.deployed();
     let loanAmount = Math.floor(Math.random() * 100000000) + 1;
     let nrOfInstallments = Math.floor(Math.random() * 20) + 1;
     let currency = "0x0000000000000000000000000000000000000000";

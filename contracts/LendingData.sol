@@ -20,10 +20,6 @@ contract Geyser {
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool) {}
 }
 
-contract ERC721Token {
-    function safeTransferFrom(address from, address to, uint256 tokenId) external {}
-}
-
 contract ERC1155Token {
     function balanceOf(address account, uint256 id) external view returns (uint256) {}
     function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes calldata data) external {}
@@ -35,7 +31,6 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   using SafeMath for uint256;
 
   Geyser public geyser;
-  ERC721Token public erc721token;
   ERC1155Token public erc1155token;
   
   uint256 public communityTokenId;
@@ -92,9 +87,8 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
 
   mapping(uint256 => Loan) public loans;
   
-  constructor(address tokenGeyser, address erc721Token, address erc1155Token) {
+  constructor(address tokenGeyser, address erc1155Token) {
       geyser = Geyser(tokenGeyser);
-      erc721token = ERC721Token(erc721Token);
       erc1155token = ERC1155Token(erc1155Token);
   }
 
@@ -536,6 +530,13 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   // True >> Time to pay installments expired , the loan can be ended
   function lackOfPayment(uint256 loanId) public view returns(bool) {
     return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(installmentFrequency.mul(1 days))) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(installmentFrequency.mul(1 days)));
+  }
+  
+  // Set the token ids
+  function setTokenIds(uint256 community,uint256 founder,uint256 sttr) external onlyOwner {
+        communityTokenId = community;
+        founderTokenId = founder;
+        geyserTokenId = sttr;
   }
 
   // TODO: Add auxiliary loan status update function for DEFAULTED state to be used by whomever
