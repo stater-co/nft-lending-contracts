@@ -4,7 +4,6 @@
  * Stater.co
  */
 pragma solidity 0.7.4;
-pragma experimental ABIEncoderV2;
 
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
@@ -26,6 +25,7 @@ contract ERC721Token {
 }
 
 contract ERC1155Token {
+    function balanceOf(address account, uint256 id) external view returns (uint256) {}
     function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes calldata data) external {}
 }
 
@@ -38,6 +38,9 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   ERC721Token public erc721token;
   ERC1155Token public erc1155token;
   
+  uint256 public communityTokenId;
+  uint256 public founderTokenId;
+  uint256 public geyserTokenId;
   uint256 public loanID;
   uint256 public ltv = 600; // 60%
   uint256 public installmentFrequency = 7; // days
@@ -65,21 +68,6 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   enum TokenType {
       ERC721,
       ERC1155
-  }
-  
-  enum DiscountType {
-      NONE,
-      GEYSER,
-      ERC721,
-      ERC1155
-  }
-  
-  struct TokenDiscount {
-      uint256 amount;
-      uint256 tokenId;
-      bytes data;
-      DiscountType discountType;
-      uint32 valueReduced;
   }
   
   struct Loan {
@@ -164,22 +152,19 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
 
 
   // Lender approves a loan
-  function approveLoan(uint256 loanId, TokenDiscount memory tokenDiscount) external payable {
+  function approveLoan(uint256 loanId) external payable {
     require(loans[loanId].lender == address(0), "Someone else payed for this loan before you");
     require(loans[loanId].paidAmount == 0, "This loan is currently not ready for lenders");
     require(loans[loanId].status == Status.LISTED, "This loan is not currently ready for lenders, check later");
     
     uint32 discount = 100;
-    if ( tokenDiscount.discountType == DiscountType.ERC721 ){
-        erc721token.safeTransferFrom(msg.sender,owner(),tokenDiscount.tokenId);
-        discount += tokenDiscount.valueReduced;
-    }else if ( tokenDiscount.discountType == DiscountType.ERC1155 ){
-        erc1155token.safeTransferFrom(msg.sender,owner(),tokenDiscount.tokenId,tokenDiscount.amount,tokenDiscount.data);
-        discount += tokenDiscount.valueReduced;
-    }else if ( tokenDiscount.discountType == DiscountType.GEYSER ){
-        require(geyser.transferFrom(msg.sender,owner(),1),"STTR discount failed : not enough tokens");
-        discount += tokenDiscount.valueReduced;
-    }
+    
+    if ( erc1155token.balanceOf(msg.sender,founderTokenId) > 0 )
+        discount = 200;
+    else if ( erc1155token.balanceOf(msg.sender,communityTokenId) > 0 )
+        discount = 115;
+    else if ( geyser.totalStakedFor(msg.sender) > 0 )
+        discount = 105;
     
     // We check if currency is ETH
     if ( loans[loanId].currency == address(0) )
@@ -245,7 +230,11 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
 
     uint32 discount = 100;
     
-    if ( geyser.totalStakedFor(msg.sender) > 0 )
+    if ( erc1155token.balanceOf(msg.sender,founderTokenId) > 0 )
+        discount = 200;
+    else if ( erc1155token.balanceOf(msg.sender,communityTokenId) > 0 )
+        discount = 115;
+    else if ( geyser.totalStakedFor(msg.sender) > 0 )
         discount = 105;
 
     // Custom tokens
