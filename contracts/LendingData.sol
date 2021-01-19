@@ -82,7 +82,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     uint256 paidAmount; // the amount that has been paid back to the lender to date
     uint256 defaultingLimit; // the number of installments allowed to be missed without getting defaulted
     uint256 nrOfPayments; // the number of installments paid
-    TokenType[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
+    TokenType[] nftTokenTypesArray; // the token types : ERC721 , ERC1155 , ...
   }
 
   mapping(uint256 => Loan) public loans;
@@ -115,7 +115,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
         address(this), 
         nftAddressArray, 
         nftTokenIdArray,
-        types
+        nftTokenTypeArray
     );
 
     // Computing the defaulting limit
