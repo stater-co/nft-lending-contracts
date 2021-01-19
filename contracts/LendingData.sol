@@ -101,7 +101,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     address[] calldata nftAddressArray, 
     uint256[] calldata nftTokenIdArray,
     string calldata creationId,
-    TokenType[] memory types
+    TokenType[] memory nftTokenTypeArray
   ) external {
     require(nrOfInstallments > 0, "Loan must include at least 1 installment");
     require(loanAmount > 0, "Loan amount must be higher than 0");
@@ -137,7 +137,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     loans[loanID].nftAddressArray = nftAddressArray;
     loans[loanID].borrower = msg.sender;
     loans[loanID].currency = currency;
-    loans[loanID].nftTokenTypesArray = types;
+    loans[loanID].nftTokenTypeArray = nftTokenTypeArray;
  
     // Fire event
     emit NewLoan(loanID, msg.sender, block.timestamp, currency, Status.LISTED, creationId);
