@@ -1,38 +1,26 @@
-// SPDX-License-Identifier: MIT
-
-/* 
- * Stater.co
- */
 pragma solidity 0.7.4;
-
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
 import "multi-token-standard/contracts/interfaces/IERC1155.sol";
+import "openzeppelin-solidity/contracts/token/ERC1155/ERC1155Holder.sol";
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-
 interface Geyser {
-    function totalStakedFor(address addr) public view returns(uint256);
-    function transferFrom(address sender, address recipient, uint256 amount) external returns(bool);
+    function totalStakedFor(address addr) external view returns(uint256);
 }
 
-interface ERC1155Token {
-    function balanceOf(address account, uint256 id) external view returns(uint256);
-    function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes calldata data) external;
-}
-
-
-contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
+contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
 
   using SafeMath for uint256;
 
   Geyser public geyser;
-  ERC1155Token public erc1155token;
-  
+  address public erc1155token;
+  address public staterNftAddress;
+  address public staterFtAddress;
   uint256 public communityTokenId;
   uint256 public founderTokenId;
   uint256 public geyserTokenId;
@@ -41,8 +29,6 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   uint256 public installmentFrequency = 7; // days
   uint256 public interestRate = 20;
   uint256 public interestRateToStater = 40;
-  address public staterNftAddress;
-  address public staterFtAddress;
 
   event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
   event LoanApproved(uint256 indexed loanId, address indexed lender, uint256 approvalDate, uint256 loanPaymentEnd, Status status);
@@ -86,11 +72,6 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   }
 
   mapping(uint256 => Loan) public loans;
-  
-  constructor(address tokenGeyser, address erc1155Token) {
-      geyser = Geyser(tokenGeyser);
-      erc1155token = ERC1155Token(erc1155Token);
-  }
 
   // Borrower creates a loan
   function createLoan(
@@ -153,9 +134,9 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     
     uint32 discount = 100;
     
-    if ( erc1155token.balanceOf(msg.sender,founderTokenId) > 0 )
+    if ( IERC1155(erc1155token).balanceOf(msg.sender,founderTokenId) > 0 )
         discount = 200;
-    else if ( erc1155token.balanceOf(msg.sender,communityTokenId) > 0 )
+    else if ( IERC1155(erc1155token).balanceOf(msg.sender,communityTokenId) > 0 )
         discount = 115;
     else if ( geyser.totalStakedFor(msg.sender) > 0 )
         discount = 105;
@@ -201,7 +182,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
       loans[loanId].borrower, 
       loans[loanId].nftAddressArray, 
       loans[loanId].nftTokenIdArray,
-      loans[loanId].nftTokenTypesArray
+      loans[loanId].nftTokenTypeArray
     );
 
     emit LoanCancelled(
@@ -224,9 +205,9 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
 
     uint32 discount = 100;
     
-    if ( erc1155token.balanceOf(msg.sender,founderTokenId) > 0 )
+    if ( IERC1155(erc1155token).balanceOf(msg.sender,founderTokenId) > 0 )
         discount = 200;
-    else if ( erc1155token.balanceOf(msg.sender,communityTokenId) > 0 )
+    else if ( IERC1155(erc1155token).balanceOf(msg.sender,communityTokenId) > 0 )
         discount = 115;
     else if ( geyser.totalStakedFor(msg.sender) > 0 )
         discount = 105;
@@ -286,7 +267,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
         loans[loanId].lender,
         loans[loanId].nftAddressArray,
         loans[loanId].nftTokenIdArray,
-        loans[loanId].nftTokenTypesArray
+        loans[loanId].nftTokenTypeArray
       );
 
     } else if ( loans[loanId].paidAmount >= loans[loanId].amountDue ) {
@@ -297,7 +278,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
         loans[loanId].borrower,
         loans[loanId].nftAddressArray,
         loans[loanId].nftTokenIdArray,
-        loans[loanId].nftTokenTypesArray
+        loans[loanId].nftTokenTypeArray
       );
         
     }
@@ -321,7 +302,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
       loans[loanId].lender,
       loans[loanId].nftAddressArray,
       loans[loanId].nftTokenIdArray,
-      loans[loanId].nftTokenTypesArray
+      loans[loanId].nftTokenTypeArray
     );
 
     loans[loanId].status = Status.DEFAULTED;
@@ -330,15 +311,12 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   }
   
 
-  // Internal Functions 
-
   // Calculates loan to value ratio
   function _percent(uint256 numerator, uint256 denominator) internal pure returns(uint256) {
     return numerator.mul(10 ** 4).div(denominator).add(5).div(10);
   }
 
   // Transfer items fron an account to another
-  // Requires approvement
   function _transferItems(
     address from, 
     address to, 
@@ -378,13 +356,13 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
               from,
               to, 
               quantity1
-          ), "Transfer of liquidity failed"); // Transfer complete loanAmount to borrower
+          ), "Transfer of liquidity failed");
 
           require(IERC20(currency).transferFrom(
               from,
               owner(), 
               quantity2
-          ), "Transfer of liquidity failed"); // 1% of original loanAmount goes to contract owner
+          ), "Transfer of liquidity failed");
 
       }else{
 
@@ -394,134 +372,9 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
       }
   }
 
-  // Getters & Setters
-
-  function getLoanStatus(uint256 loanId) external view returns(Status) {
-    return loans[loanId].status;
-  }
-  
-  function getLoanApproveTotalPayment(uint256 loanId) external view returns(uint256) {
-        uint32 discount = 100;
-
-	if ( erc1155token.balanceOf(msg.sender,founderTokenId) > 0 )
-		discount = 200;
-	else if ( erc1155token.balanceOf(msg.sender,communityTokenId) > 0 )
-		discount = 115;
-	else if ( geyser.totalStakedFor(msg.sender) > 0 )
-		discount = 105;
-        
-        return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(discount));
-  }
-
-  function getNftTokenIdArray(uint256 loanId) external view returns(uint256[] memory) {
-    return loans[loanId].nftTokenIdArray;
-  }
-
-  function getLoanAmount(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].loanAmount;
-  }
-
-  function getAssetsValue(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].assetsValue;
-  }
-
-  function getLoanStart(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].loanStart;
-  }
-
-  function getLoanEnd(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].loanEnd;
-  }
-
-  function getNrOfInstallments(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].nrOfInstallments;
-  }
-
-  function getInstallmentAmount(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].installmentAmount;
-  }
-
-  function getAmountDue(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].amountDue;
-  }
-
-  function getPaidAmount(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].paidAmount;
-  }
-
-  function toPayForApprove(uint256 loanId) external view returns(uint256) {
-	return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(100));
-  }
-
-  function getDefaultingLimit(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].defaultingLimit;
-  }
-
-  function getNrOfPayments(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].nrOfPayments;
-  }
-
-  function getNftAddressArray(uint256 loanId) external view returns(address[] memory) {
-    return loans[loanId].nftAddressArray;
-  }
-
-  function getBorrower(uint256 loanId) external view returns(address) {
-    return loans[loanId].borrower;
-  }
-
-  function getLender(uint256 loanId) external view returns(address) {
-    return loans[loanId].lender;
-  }
-
-  function getCurrency(uint256 loanId) external view returns(address) {
-    return loans[loanId].currency;
-  }
-  
-  function getLoansCount() external view returns(uint256) {
-    return loanID;
-  }
-
-  // TODO validate input
   function setLtv(uint256 newLtv) external onlyOwner {
     ltv = newLtv;
     emit LtvChanged(newLtv);
-  }
-
-
-  // Auxiliary functions
-
-  // Returns loan by id, ommits nrOfInstallments as the stack was too deep and we can derive it in the backend
-  function getLoanById(uint256 loanId) 
-    external
-    view
-    returns(
-      uint256 loanAmount,
-      uint256 assetsValue,
-      uint256 loanEnd,
-      uint256 installmentAmount,
-      uint256 amountDue,
-      uint256 paidAmount,
-      uint256[] memory nftTokenIdArray,
-      address[] memory nftAddressArray,
-      address payable borrower,
-      address payable lender,
-      address currency,
-      Status status
-    ) {
-      Loan storage loan = loans[loanId];
-      
-      loanAmount = uint256(loan.loanAmount);
-      assetsValue = uint256(loan.assetsValue);
-      loanEnd = uint256(loan.loanEnd);
-      installmentAmount = uint256(loan.installmentAmount);
-      amountDue = uint256(loan.amountDue);
-      paidAmount = uint256(loan.paidAmount);
-      nftTokenIdArray = uint256[](loan.nftTokenIdArray);
-      nftAddressArray = address[](loan.nftAddressArray);
-      borrower = payable(loan.borrower);
-      lender = payable(loan.lender);
-      currency = address(currency);
-      status = Status(loan.status);
   }
 
   // This function will indicate if the borrower has payed all his installments in time or not
@@ -531,13 +384,15 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(installmentFrequency.mul(1 days))) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(installmentFrequency.mul(1 days)));
   }
   
-  // Set the token ids
   function setTokenIds(uint256 community,uint256 founder,uint256 sttr) external onlyOwner {
-        communityTokenId = community;
-        founderTokenId = founder;
-        geyserTokenId = sttr;
+    communityTokenId = community;
+    founderTokenId = founder;
+    geyserTokenId = sttr;
   }
-
-  // TODO: Add auxiliary loan status update function for DEFAULTED state to be used by whomever
+  
+  function setInterfaces(address tokenGeyser, address erc1155Token) external onlyOwner {
+	geyser = Geyser(tokenGeyser);
+	erc1155token = erc1155Token;
+  }
 
 }
