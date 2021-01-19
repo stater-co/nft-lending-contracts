@@ -344,12 +344,12 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     address to, 
     address[] memory nftAddressArray, 
     uint256[] memory nftTokenIdArray,
-    TokenType[] memory types
+    TokenType[] memory nftTokenTypeArray
   ) internal {
     uint256 length = nftAddressArray.length;
-    require(length == nftTokenIdArray.length && types.length == length, "Token infos provided are invalid");
+    require(length == nftTokenIdArray.length && nftTokenTypeArray.length == length, "Token infos provided are invalid");
     for(uint256 i = 0; i < length; ++i) 
-        if ( types[i] == TokenType.ERC721 )
+        if ( nftTokenTypeArray[i] == TokenType.ERC721 )
             IERC721(nftAddressArray[i]).safeTransferFrom(
                 from,
                 to,
