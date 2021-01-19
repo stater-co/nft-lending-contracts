@@ -15,14 +15,14 @@ import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 
-contract Geyser {
-    function totalStakedFor(address addr) public view returns (uint256) {}
-    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool) {}
+interface Geyser {
+    function totalStakedFor(address addr) public view returns(uint256);
+    function transferFrom(address sender, address recipient, uint256 amount) external returns(bool);
 }
 
-contract ERC1155Token {
-    function balanceOf(address account, uint256 id) external view returns (uint256) {}
-    function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes calldata data) external {}
+interface ERC1155Token {
+    function balanceOf(address account, uint256 id) external view returns(uint256);
+    function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes calldata data) external;
 }
 
 
@@ -82,7 +82,7 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
     uint256 paidAmount; // the amount that has been paid back to the lender to date
     uint256 defaultingLimit; // the number of installments allowed to be missed without getting defaulted
     uint256 nrOfPayments; // the number of installments paid
-    TokenType[] nftTokenTypesArray; // the token types : ERC721 , ERC1155 , ...
+    TokenType[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
   }
 
   mapping(uint256 => Loan) public loans;
