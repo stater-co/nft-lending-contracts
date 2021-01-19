@@ -402,9 +402,13 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
   
   function getLoanApproveTotalPayment(uint256 loanId) external view returns(uint256) {
         uint32 discount = 100;
-    
-        if ( geyser.totalStakedFor(msg.sender) > 0 )
-            discount = 105;
+
+	if ( erc1155token.balanceOf(msg.sender,founderTokenId) > 0 )
+		discount = 200;
+	else if ( erc1155token.balanceOf(msg.sender,communityTokenId) > 0 )
+		discount = 115;
+	else if ( geyser.totalStakedFor(msg.sender) > 0 )
+		discount = 105;
         
         return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(discount));
   }
