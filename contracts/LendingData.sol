@@ -238,9 +238,6 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
       interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(discount);
       amountPaidAsInstallmentToLender = loans[loanId].installmentAmount.sub(interestToStaterPerInstallement);
 
-      // More accuracy
-      loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestToStaterPerInstallement).add(amountPaidAsInstallmentToLender);
-
     } else {
 
       require(msg.value >= loans[loanId].installmentAmount, "Not enough currency");
@@ -249,14 +246,12 @@ contract LendingData is ERC721Holder, Ownable, ReentrancyGuard {
       interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(discount);
       amountPaidAsInstallmentToLender = msg.value.sub(interestToStaterPerInstallement);
 
-      // More accuracy
-      loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestToStaterPerInstallement).add(amountPaidAsInstallmentToLender);
-
     }
     
     // We send the tokens here
     _transferTokens(msg.sender,loans[loanId].lender,loans[loanId].currency,amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
 
+    loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestToStaterPerInstallement).add(amountPaidAsInstallmentToLender);
     loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].installmentAmount);
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
