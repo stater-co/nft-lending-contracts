@@ -1,6 +1,7 @@
 pragma solidity 0.7.4;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "multi-token-standard/contracts/interfaces/IERC1155.sol";
 import "./LendingData.sol";
 
 contract Getters is LendingData {
@@ -112,9 +113,9 @@ contract Getters is LendingData {
   
   function getLoanApprovalCost(uint256 loanId) external view returns(uint256) {
     uint32 discount = 100;
-	if ( erc1155token.balanceOf(msg.sender,founderTokenId) > 0 )
+	if ( IERC1155(erc1155token).balanceOf(msg.sender,founderTokenId) > 0 )
 		discount = 200;
-	else if ( erc1155token.balanceOf(msg.sender,communityTokenId) > 0 )
+	else if ( IERC1155(erc1155token).balanceOf(msg.sender,communityTokenId) > 0 )
 		discount = 115;
 	else if ( geyser.totalStakedFor(msg.sender) > 0 )
 		discount = 105;
@@ -124,9 +125,9 @@ contract Getters is LendingData {
   function getLoanInstallmentCost(uint256 loanId, uint256 nrOfInstallments) external view returns(uint256,uint256) {
     uint32 discount = 100;
     uint256 installmentsToPay = loans[loanId].installmentAmount.mul(nrOfInstallments);
-    if ( erc1155token.balanceOf(msg.sender,founderTokenId) > 0 )
+    if ( IERC1155(erc1155token).balanceOf(msg.sender,founderTokenId) > 0 )
         discount = 200;
-    else if ( erc1155token.balanceOf(msg.sender,communityTokenId) > 0 )
+    else if ( IERC1155(erc1155token).balanceOf(msg.sender,communityTokenId) > 0 )
         discount = 115;
     else if ( geyser.totalStakedFor(msg.sender) > 0 )
         discount = 105;

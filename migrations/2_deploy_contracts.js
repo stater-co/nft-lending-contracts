@@ -4,7 +4,6 @@ const FungibleTokens = artifacts.require("FungibleTokens");
 const StakingToken = artifacts.require("FungibleTokens");
 const DistributionToken = artifacts.require("FungibleTokens");
 const GameItems1155 = artifacts.require("GameItems1155");
-//const Geyser = artifacts.require("Geyser");
 
 module.exports = function(deployer, network) {
 	
@@ -22,6 +21,5 @@ module.exports = function(deployer, network) {
   deployer.deploy(FungibleTokens, web3.utils.toHex("1000000000000000000"), "FungibleToken", "FT", {gas: 6000000});
   deployer.deploy(StakingToken, web3.utils.toHex("1000000000000000000"), "FungibleToken", "FT", {gas: 6000000});
   deployer.deploy(DistributionToken, web3.utils.toHex("1000000000000000000"), "FungibleToken", "FT", {gas: 6000000});
-  //deployer.deploy(Geyser, StakingToken.address, DistributionToken.address, 1000, 0, 1000000, 1000, {gas: 9000000});
-  deployer.deploy(LendingData, GameItems1155.address /*Geyser.address*/ , GameItems1155.address, {gas: 6000000});
+  deployer.deploy(LendingData, {gas: 6000000});
 };
