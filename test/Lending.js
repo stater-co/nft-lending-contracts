@@ -27,12 +27,26 @@ contract('LendingData', (accounts) => {
     assert.typeOf(setTokens, 'object', "[BUGGED] :: Not possible to set the Loan used tokens.");
   });
 
+  // balanceOfBatch(address[],uint256[])
+  it('Should get the balance of a batch ( ERC1155 )', async () => {
+    const instanceGameItems1155 = await GameItems1155.deployed();
+    let balanceOfBatch = await instanceGameItems1155.balanceOfBatch.call([accounts[0],accounts[0]],[0,1]);
+    //console.log("The batch balance is : " + JSON.stringify(balanceOfBatch));
+    for ( let i = 0 , l = balanceOfBatch.length ; i < l ; ++i )
+      assert.typeOf(Number(balanceOfBatch[i]), 'number', "[BUGGED] :: Not possible to get the balance of batch.");
+  });
+
   // createLoan(uint256, uint256, address, uint256, address[] calldata, uint256[] calldata, string calldata)
   it('Should create a loan', async () => {
+
     const instance = await LendingData.deployed();
     const instanceGameItems721 = await GameItems721.deployed();
     const instanceGameItems1155 = await GameItems1155.deployed();
-    const instanceFungibleTokens = await FungibleTokens.deployed(); 
+    const instanceFungibleTokens = await FungibleTokens.deployed();
+
+    let setInterfaces = await instance.setInterfaces.call(instanceFungibleTokens.address,instanceGameItems1155.address);
+    assert.typeOf(setInterfaces, 'object', "[BUGGED] :: Not possible to set the Loan interfaces.");
+
     let loanAmount = Math.floor(Math.random() * 100000000) + 1;
     let nrOfInstallments = Math.floor(Math.random() * 20) + 1;
     let currency = Math.floor(Math.random() * 2) === 0 ? "0x0000000000000000000000000000000000000000" : instanceFungibleTokens.address;
@@ -42,51 +56,76 @@ contract('LendingData', (accounts) => {
     let assetsValue = loanAmount + Math.floor(Math.random() * (max - min + 1)) + min;
     let creationId = "db_index";
     let nrOfTokensToAdd = Math.floor(Math.random() * 20);
-    let nftAddressArray = new Array(nrOfTokensToAdd).fill(instanceGameItems721.address);
+    let nftAddressArray = [];
     let nftTokenIdArray = [];
     let nftTokenTypeArray = [];
-    for (let i = 0, l = nrOfTokensToAdd; i < l; ++i) {
+    let tokenId = null;
+
+
+
+    for (let i = 0, l = nrOfTokensToAdd; i < l; ++i) 
 
       // ERC721
       if ( Math.floor(Math.random() * 2) === 0 ){
 
-        nftTokenTypeArray.push(0);
+
         let createToken = await instanceGameItems721.createItem("name", "description", "image", {
           from: accounts[0]
         });
+
         for (let j = 0, k = createToken.logs.length; j < k; ++j)
           if (createToken.logs[j].event === "Transfer") {
-            let tokenId = Number(createToken.logs[j].args[2]);
+            tokenId = Number(createToken.logs[j].args[2]);
+
             let approveTokenToContract = await instanceGameItems721.approve(instance.address, tokenId, {
               from: accounts[0]
             });
             assert.typeOf(approveTokenToContract.receipt, 'object', "[ERROR] :: Approve token for contract failed.");
             nftTokenIdArray.push(tokenId);
+            nftAddressArray.push(instanceGameItems721.address);
+            nftTokenTypeArray.push(0);
+
           }
+
         assert.typeOf(createToken.receipt, 'object', "[ERROR] :: Create token failed.");
+
 
         // ERC1155
       }else{
 
-        nftTokenTypeArray.push(1);
-        let createToken = await instanceGameItems1155.createItem(accounts[0], "description", "image", {
+
+        let erc1155TokenId = Math.floor(Math.random() * 2);
+        let createToken = await instanceGameItems1155.createTokens(accounts[0], erc1155TokenId, 100, '0x00', "name", "description", "image_url", {
           from: accounts[0]
         });
-        for (let j = 0, k = createToken.logs.length; j < k; ++j)
-          if (createToken.logs[j].event === "Transfer") {
-            let tokenId = Number(createToken.logs[j].args[2]);
-            let approveTokenToContract = await instanceGameItems1155.approve(instance.address, tokenId, {
+
+        for (let j = 0, k = createToken.logs.length; j < k; ++j){
+
+          if (createToken.logs[j].event === "ItemCreation" )
+            tokenId = Number(createToken.logs[j].args.tokenId);
+
+          if (createToken.logs[j].event === "TransferSingle") {
+
+            let approveTokenToContract = await instanceGameItems1155.setApprovalForAll(instance.address, true, {
               from: accounts[0]
             });
+
             assert.typeOf(approveTokenToContract.receipt, 'object', "[ERROR] :: Approve token for contract failed.");
-            nftTokenIdArray.push(tokenId);
+
+              nftTokenIdArray.push(tokenId);
+              nftAddressArray.push(instanceGameItems1155.address);
+              nftTokenTypeArray.push(1);
+
           }
+        }
         assert.typeOf(createToken.receipt, 'object', "[ERROR] :: Create token failed.");
 
+
       }
-    }
+
     assert.lengthOf(nftTokenIdArray, nftAddressArray.length, "[ERROR] :: Some items haven't been approved.");
-    let createLoan = await instance.createLoan(loanAmount, nrOfInstallments, currency, assetsValue, nftAddressArray, nftTokenIdArray, creationId, {
+
+    let createLoan = await instance.createLoan(loanAmount, nrOfInstallments, currency, assetsValue, nftAddressArray, nftTokenIdArray, creationId, nftTokenTypeArray, {
       from: accounts[0]
     });
     assert.typeOf(createLoan.receipt, 'object', "[ERROR] :: Create loan failed.");

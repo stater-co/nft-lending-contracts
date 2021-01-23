@@ -136,5 +136,9 @@ contract Getters is LendingData {
     uint256 amountPaidAsInstallmentToLender = installmentsToPay.sub(interestToStaterPerInstallement);
     return(amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
   }
+  
+  function lackOfPayment(uint256 loanId) public view returns(bool) {
+    return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(installmentFrequency.mul(1 days))) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(installmentFrequency.mul(1 days)));
+  }
 
 }

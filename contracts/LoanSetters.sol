@@ -54,5 +54,22 @@ contract Getters is LendingData {
 
     loans[loanID].currency = currency;
   }
+  
+  function setLtv(uint256 newLtv) external onlyOwner {
+    ltv = newLtv;
+    emit LtvChanged(newLtv);
+  }
+  
+  function setTokenIds(uint256 community,uint256 founder,uint256 sttr) external onlyOwner {
+    communityTokenId = community;
+    founderTokenId = founder;
+    geyserTokenId = sttr;
+  }
+  
+  function setInterfaces(address tokenGeyser, address erc1155Token, address getters) external onlyOwner {
+	geyser = Geyser(tokenGeyser);
+	lendingGetters = LendingGetters(getters);
+	erc1155token = erc1155Token;
+  }
 
 }

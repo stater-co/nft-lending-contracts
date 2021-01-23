@@ -1,5 +1,4 @@
 pragma solidity 0.7.4;
-
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
@@ -8,16 +7,43 @@ import "openzeppelin-solidity/contracts/token/ERC1155/ERC1155Holder.sol";
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-
-interface Geyser {
-    function totalStakedFor(address addr) external view returns(uint256);
+interface Geyser{ function totalStakedFor(address addr) external view returns(uint256); }
+interface LendingGetters{
+  function getNftTokenIdArray(uint256 loanId) external view returns(uint256[] memory);
+  function getLoanAmount(uint256 loanId) external view returns(uint256);
+  function getAssetsValue(uint256 loanId) external view returns(uint256);
+  function getLoanStart(uint256 loanId) external view returns(uint256);
+  function getLoanEnd(uint256 loanId) external view returns(uint256);
+  function getNrOfInstallments(uint256 loanId) external view returns(uint256);
+  function getInstallmentAmount(uint256 loanId) external view returns(uint256);
+  function getAmountDue(uint256 loanId) external view returns(uint256);
+  function getPaidAmount(uint256 loanId) external view returns(uint256);
+  function toPayForApprove(uint256 loanId) external view returns(uint256);
+  function getDefaultingLimit(uint256 loanId) external view returns(uint256);
+  function getNrOfPayments(uint256 loanId) external view returns(uint256);
+  function getNftAddressArray(uint256 loanId) external view returns(address[] memory);
+  function getBorrower(uint256 loanId) external view returns(address);
+  function getLender(uint256 loanId) external view returns(address);
+  function getCurrency(uint256 loanId) external view returns(address);
+  function getLoansCount() external view returns(uint256);
+  function getLoanApprovalCost(uint256 loanId) external view returns(uint256);
+  function getLoanInstallmentCost(uint256 loanId, uint256 nrOfInstallments) external view returns(uint256,uint256);
+  function lackOfPayment(uint256 loanId) external view returns(bool);
+}
+interface LendingSetters{
+  function setLoanAssetsValue(uint256 loanId, uint256 assetsValue) external;
+  function setLoanAmount(uint256 loanId, uint256 loanAmount) external;
+  function setLoanNrOfInstallments(uint256 loanId, uint256 nrOfInstallments) external;
+  function setLoanCurrency(uint256 loanId, address currency) external;
+  function setLtv(uint256 newLtv) external;
+  function setTokenIds(uint256 community,uint256 founder,uint256 sttr) external;
+  function setInterfaces(address tokenGeyser, address erc1155Token, address getters) external;
 }
 
 contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
-
   using SafeMath for uint256;
-
   Geyser public geyser;
+  LendingGetters public lendingGetters;
   address public erc1155token;
   address public staterNftAddress;
   address public staterFtAddress;
@@ -29,28 +55,14 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   uint256 public installmentFrequency = 7; // days
   uint256 public interestRate = 20;
   uint256 public interestRateToStater = 40;
-
   event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
   event LoanApproved(uint256 indexed loanId, address indexed lender, uint256 approvalDate, uint256 loanPaymentEnd, Status status);
   event LoanCancelled(uint256 indexed loanId, uint256 cancellationDate, Status status);
   event ItemsWithdrawn(uint256 indexed loanId, address indexed requester, Status status);
   event LoanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, uint256 amountPaidAsInstallmentToLender, uint256 interestPerInstallement, uint256 interestToStaterPerInstallement, Status status);
   event LtvChanged(uint256 newLTV);
-
-  enum Status {
-    UNINITIALIZED,
-    LISTED,
-    APPROVED,
-    DEFAULTED, 
-    LIQUIDATED,
-    CANCELLED
-  }
-  
-  enum TokenType {
-      ERC721,
-      ERC1155
-  }
-  
+  enum Status{ UNINITIALIZED, LISTED, APPROVED, DEFAULTED, LIQUIDATED, CANCELLED }
+  enum TokenType{ ERC721, ERC1155 }
   struct Loan {
     address[] nftAddressArray; // the adderess of the ERC721
     address payable borrower; // the address who receives the loan
@@ -70,7 +82,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     uint256 nrOfPayments; // the number of installments paid
     TokenType[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
   }
-
   mapping(uint256 => Loan) public loans;
 
   // Borrower creates a loan
@@ -249,7 +260,41 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     );
   }
 
-
+  function getLoanById(uint256 loanId) 
+    external
+    view
+    returns(
+      uint256 loanAmount,
+      uint256 assetsValue,
+      uint256 loanEnd,
+      uint256 installmentAmount,
+      uint256 amountDue,
+      uint256 paidAmount,
+      uint256[] memory nftTokenIdArray,
+      address[] memory nftAddressArray,
+      address payable borrower,
+      address payable lender,
+      address currency,
+      Status status
+    ) {
+      Loan storage loan = loans[loanId];
+      loanAmount = uint256(loan.loanAmount);
+      assetsValue = uint256(loan.assetsValue);
+      loanEnd = uint256(loan.loanEnd);
+      installmentAmount = uint256(loan.installmentAmount);
+      amountDue = uint256(loan.amountDue);
+      paidAmount = uint256(loan.paidAmount);
+      nftTokenIdArray = uint256[](loan.nftTokenIdArray);
+      nftAddressArray = address[](loan.nftAddressArray);
+      borrower = payable(loan.borrower);
+      lender = payable(loan.lender);
+      currency = address(currency);
+      status = Status(loan.status);
+    }
+    
+  function getLoanStatus(uint256 loanId) external view returns(Status) {
+    return loans[loanId].status;
+  }
 
   // Borrower can withdraw loan items if loan is LIQUIDATED
   // Lender can withdraw loan item is loan is DEFAULTED
@@ -294,7 +339,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   function terminateLoan(uint256 loanId) external {
     require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender, "You can't access this loan");
     require(loans[loanId].status == Status.APPROVED, "Loan must be approved");
-    require(lackOfPayment(loanId), "Borrower still has time to pay his installments");
+    require(lendingGetters.lackOfPayment(loanId), "Borrower still has time to pay his installments");
 
     // The lender will take the items
     _transferItems(
@@ -339,7 +384,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
                 to,
                 nftTokenIdArray[i],
                 1,
-                ""
+                '0x00'
             );
   }
 
@@ -370,29 +415,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
           require(payable(owner()).send(quantity2),"Transfer of liquidity failed");
 
       }
-  }
-
-  function setLtv(uint256 newLtv) external onlyOwner {
-    ltv = newLtv;
-    emit LtvChanged(newLtv);
-  }
-
-  // This function will indicate if the borrower has payed all his installments in time or not
-  // False >> Borrower still has time to pay his installments
-  // True >> Time to pay installments expired , the loan can be ended
-  function lackOfPayment(uint256 loanId) public view returns(bool) {
-    return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(installmentFrequency.mul(1 days))) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(installmentFrequency.mul(1 days)));
-  }
-  
-  function setTokenIds(uint256 community,uint256 founder,uint256 sttr) external onlyOwner {
-    communityTokenId = community;
-    founderTokenId = founder;
-    geyserTokenId = sttr;
-  }
-  
-  function setInterfaces(address tokenGeyser, address erc1155Token) external onlyOwner {
-	geyser = Geyser(tokenGeyser);
-	erc1155token = erc1155Token;
   }
 
 }
