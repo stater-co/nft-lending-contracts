@@ -12,13 +12,9 @@ contract Getters is LendingData {
   ) external {
     require(loans[loanId].status < Status.APPROVED,"Loan can no longer be modified");
     require(assetsValue > 0, "Loan assets value must be higher than 0");
-
-    // Compute loan to value ratio for current loan application
     require(_percent(loans[loanId].loanAmount, assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
-
     loans[loanID].assetsValue = assetsValue;
   }
-  
   
   function setLoanAmount(
     uint256 loanId,
@@ -26,14 +22,10 @@ contract Getters is LendingData {
   ) external {
     require(loans[loanId].status < Status.APPROVED,"Loan can no longer be modified");
     require(loanAmount > 0, "Loan amount must be higher than 0");
-
-    // Compute loan to value ratio for current loan application
     require(_percent(loanAmount, loans[loanId].assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
-
     loans[loanID].loanAmount = loanAmount;
-    loans[loanID].amountDue = loanAmount.mul(interestRate.add(100)).div(100); // interest rate >> 20%
+    loans[loanID].amountDue = loanAmount.mul(interestRate.add(100)).div(100);
   }
-  
   
   function setLoanNrOfInstallments(
     uint256 loanId,
@@ -41,17 +33,14 @@ contract Getters is LendingData {
   ) external {
     require(loans[loanId].status < Status.APPROVED,"Loan can no longer be modified");
     require(nrOfInstallments > 0, "Loan number of installments must be higher than 0");
-
     loans[loanID].nrOfInstallments = nrOfInstallments;
   }
-  
   
   function setLoanCurrency(
     uint256 loanId,
     address currency
   ) external {
     require(loans[loanId].status < Status.APPROVED,"Loan can no longer be modified");
-
     loans[loanID].currency = currency;
   }
   
@@ -66,10 +55,8 @@ contract Getters is LendingData {
     geyserTokenId = sttr;
   }
   
-  function setInterfaces(address tokenGeyser, address erc1155Token, address getters) external onlyOwner {
+  function setInterfaces(address tokenGeyser, address erc1155Token) external onlyOwner {
 	geyser = Geyser(tokenGeyser);
-	lendingGetters = LendingGetters(getters);
 	erc1155token = erc1155Token;
   }
-
 }
