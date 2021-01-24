@@ -52,13 +52,13 @@ module.exports = {
     development: {
       host: 'localhost',
       port: 8545,
-      gas: 4600000,
+      gas: 9000000,
       network_id: '*' // Match any network id
     },
     
     stater_dev: {
       url: 'ws://stater.devel/ganache/',
-      gas: 4600000,
+      gas: 9000000,
       network_id: '*' // Match any network id
     },
 
@@ -70,7 +70,7 @@ module.exports = {
         );
       },
       network_id: "*",
-      gas: 4600000
+      gas: 9000000
     },
 
     live: {
@@ -81,7 +81,7 @@ module.exports = {
           "https://mainnet.infura.io/v3/" + INFURA_KEY
         );
       },
-      gas: 4000000,
+      gas: 9000000,
       gasPrice: 20000000000
     }
   },
