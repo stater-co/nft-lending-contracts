@@ -11,13 +11,10 @@ interface Geyser{ function totalStakedFor(address addr) external view returns(ui
 
 contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   using SafeMath for uint256;
-  Geyser public geyser;
-  address public erc1155token;
+  Geyser public geyser = Geyser(0xf1007ACC8F0229fCcFA566522FC83172602ab7e3);
   address public staterNftAddress;
-  address public staterFtAddress;
   uint256 public communityTokenId;
   uint256 public founderTokenId;
-  uint256 public geyserTokenId;
   uint256 public loanID;
   uint256 public ltv = 600; // 60%
   uint256 public installmentFrequency = 7; // days
@@ -113,9 +110,9 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     
     uint32 discount = 100;
     
-    if ( IERC1155(erc1155token).balanceOf(msg.sender,founderTokenId) > 0 )
+    if ( IERC1155(staterNftAddress).balanceOf(msg.sender,founderTokenId) > 0 )
         discount = 200;
-    else if ( IERC1155(erc1155token).balanceOf(msg.sender,communityTokenId) > 0 )
+    else if ( IERC1155(staterNftAddress).balanceOf(msg.sender,communityTokenId) > 0 )
         discount = 115;
     else if ( geyser.totalStakedFor(msg.sender) > 0 )
         discount = 105;
@@ -184,9 +181,9 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
 
     uint32 discount = 100;
     
-    if ( IERC1155(erc1155token).balanceOf(msg.sender,founderTokenId) > 0 )
+    if ( IERC1155(staterNftAddress).balanceOf(msg.sender,founderTokenId) > 0 )
         discount = 200;
-    else if ( IERC1155(erc1155token).balanceOf(msg.sender,communityTokenId) > 0 )
+    else if ( IERC1155(staterNftAddress).balanceOf(msg.sender,communityTokenId) > 0 )
         discount = 115;
     else if ( geyser.totalStakedFor(msg.sender) > 0 )
         discount = 105;
@@ -300,9 +297,9 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   }
   
   function calculateDiscount(address requester) internal view returns(uint32){
-	if ( IERC1155(erc1155token).balanceOf(requester,founderTokenId) > 0 )
+	if ( IERC1155(staterNftAddress).balanceOf(requester,founderTokenId) > 0 )
 		return 200;
-	if ( IERC1155(erc1155token).balanceOf(requester,communityTokenId) > 0 )
+	if ( IERC1155(staterNftAddress).balanceOf(requester,communityTokenId) > 0 )
 		return 115;
 	if ( geyser.totalStakedFor(requester) > 0 )
 		return 105;
@@ -318,15 +315,14 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     emit LtvChanged(newLtv);
   }
   
-  function setTokenIds(uint256 community,uint256 founder,uint256 sttr) external onlyOwner {
+  function setTokenIds(uint256 community,uint256 founder) external onlyOwner {
     communityTokenId = community;
     founderTokenId = founder;
-    geyserTokenId = sttr;
   }
   
-  function setInterfaces(address tokenGeyser, address erc1155Token) external onlyOwner {
+  function setInterfaces(address tokenGeyser, address staterNftAddress) external onlyOwner {
 	geyser = Geyser(tokenGeyser);
-	erc1155token = erc1155Token;
+	staterNftAddress = staterNftAddress;
   }
   
   function getLoanInstallmentCost(uint256 loanId, uint256 nrOfInstallments) external view returns(uint256,uint256) {
