@@ -25,7 +25,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   event LoanCancelled(uint256 indexed loanId, uint256 cancellationDate, Status status);
   event ItemsWithdrawn(uint256 indexed loanId, address indexed requester, Status status);
   event LoanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, uint256 amountPaidAsInstallmentToLender, uint256 interestPerInstallement, uint256 interestToStaterPerInstallement, Status status);
-  event LtvChanged(uint256 newLTV);
   enum Status{ UNINITIALIZED, LISTED, APPROVED, DEFAULTED, LIQUIDATED, CANCELLED }
   enum TokenType{ ERC721, ERC1155 }
   struct Loan {
@@ -310,19 +309,41 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(calculateDiscount(msg.sender)));
   }
   
-  function setLtv(uint256 newLtv) external onlyOwner {
-    ltv = newLtv;
-    emit LtvChanged(newLtv);
+  function setGlobalVariables(uint256 _ltv,uint256 _communityTokenId,uint256 _founderTokenId,uint256 _installmentFrequency,uint256 _interestRate,uint256 _interestRateToStater) external onlyOwner {
+    ltv = _ltv;
+    communityTokenId = _communityTokenId;
+    founderTokenId = _founderTokenId;
+    installmentFrequency = _installmentFrequency;
+    interestRate = _interestRate;
+    interestRateToStater = _interestRateToStater;
   }
   
-  function setTokenIds(uint256 community,uint256 founder) external onlyOwner {
-    communityTokenId = community;
-    founderTokenId = founder;
-  }
-  
-  function setInterfaces(address tokenGeyser, address staterNftAddress) external onlyOwner {
+  function setGeyser(address tokenGeyser) external onlyOwner {
 	geyser = Geyser(tokenGeyser);
-	staterNftAddress = staterNftAddress;
+  }
+  
+  function setNftAddress(address nftAddress) external onlyOwner {
+	staterNftAddress = nftAddress;
+  }
+  
+  function editLoan(
+    uint256 loanId,
+    uint256 assetsValue,
+    uint256 loanAmount,
+    uint256 nrOfInstallments,
+    address currency
+  ) external {
+    require(loans[loanId].status < Status.APPROVED,"Loan can no longer be modified");
+    require(assetsValue > 0, "Loan assets value must be higher than 0");
+    require(_percent(loans[loanId].loanAmount, assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
+    require(loanAmount > 0, "Loan amount must be higher than 0");
+    require(_percent(loanAmount, loans[loanId].assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
+    require(nrOfInstallments > 0, "Loan number of installments must be higher than 0");
+    loans[loanID].nrOfInstallments = nrOfInstallments;
+    loans[loanID].loanAmount = loanAmount;
+    loans[loanID].amountDue = loanAmount.mul(interestRate.add(100)).div(100);
+    loans[loanID].assetsValue = assetsValue;
+    loans[loanID].currency = currency;
   }
   
   function getLoanInstallmentCost(uint256 loanId, uint256 nrOfInstallments) external view returns(uint256,uint256) {
