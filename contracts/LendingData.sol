@@ -12,7 +12,7 @@ interface Geyser{ function totalStakedFor(address addr) external view returns(ui
 contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   using SafeMath for uint256;
   Geyser public geyser = Geyser(0xf1007ACC8F0229fCcFA566522FC83172602ab7e3);
-  address public staterNftAddress;
+  address public staterNftAddress = address(0xf1007ACC8F0229fCcFA566522FC83172602ab7e3);
   uint256 public communityTokenId;
   uint256 public founderTokenId;
   uint256 public loanID;
@@ -283,49 +283,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
 
   }
   
-  function getLoanValues1(uint256 loanId) external view returns(address[] memory,address,address,address,Status,uint256[] memory,uint256){
-    return(loans[loanId].nftAddressArray,loans[loanId].borrower,loans[loanId].lender,loans[loanId].currency,loans[loanId].status,loans[loanId].nftTokenIdArray,loans[loanId].loanAmount);
-  }
-  
-  function getLoanValues2(uint256 loanId) external view returns(uint256,uint256,uint256,uint256,uint256,uint256,uint256){
-    return(loans[loanId].assetsValue,loans[loanId].loanStart,loans[loanId].loanEnd,loans[loanId].nrOfInstallments,loans[loanId].installmentAmount,loans[loanId].amountDue,loans[loanId].paidAmount);
-  }
-  
-  function getLoanValues3(uint256 loanId) external view returns(uint256,uint256,TokenType[] memory){
-      return(loans[loanId].defaultingLimit,loans[loanId].nrOfPayments,loans[loanId].nftTokenTypeArray);
-  }
-  
-  function calculateDiscount(address requester) internal view returns(uint32){
-	if ( IERC1155(staterNftAddress).balanceOf(requester,founderTokenId) > 0 )
-		return 200;
-	if ( IERC1155(staterNftAddress).balanceOf(requester,communityTokenId) > 0 )
-		return 115;
-	if ( geyser.totalStakedFor(requester) > 0 )
-		return 105;
-	return 100;
-  }
-  
-  function getLoanApprovalCost(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(calculateDiscount(msg.sender)));
-  }
-  
-  function setGlobalVariables(uint256 _ltv,uint256 _communityTokenId,uint256 _founderTokenId,uint256 _installmentFrequency,uint256 _interestRate,uint256 _interestRateToStater) external onlyOwner {
-    ltv = _ltv;
-    communityTokenId = _communityTokenId;
-    founderTokenId = _founderTokenId;
-    installmentFrequency = _installmentFrequency;
-    interestRate = _interestRate;
-    interestRateToStater = _interestRateToStater;
-  }
-  
-  function setGeyser(address tokenGeyser) external onlyOwner {
-	geyser = Geyser(tokenGeyser);
-  }
-  
-  function setNftAddress(address nftAddress) external onlyOwner {
-	staterNftAddress = nftAddress;
-  }
-  
   function editLoan(
     uint256 loanId,
     uint256 assetsValue,
@@ -345,13 +302,97 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     loans[loanID].assetsValue = assetsValue;
     loans[loanID].currency = currency;
   }
+
+  function calculateDiscount(address requester) internal view returns(uint32){
+	if ( IERC1155(staterNftAddress).balanceOf(requester,founderTokenId) > 0 )
+		return 200;
+	if ( IERC1155(staterNftAddress).balanceOf(requester,communityTokenId) > 0 )
+		return 115;
+	if ( geyser.totalStakedFor(requester) > 0 )
+		return 105;
+	return 100;
+  }
+
+  function getLoanApprovalCost(uint256 loanId) external view returns(uint256) {
+    return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(calculateDiscount(msg.sender)));
+  }
   
-  function getLoanInstallmentCost(uint256 loanId, uint256 nrOfInstallments) external view returns(uint256,uint256) {
-    uint256 installmentsToPay = loans[loanId].installmentAmount.mul(nrOfInstallments);
-    uint256 interestPerInstallement = installmentsToPay.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments);
-    uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(calculateDiscount(msg.sender));
-    uint256 amountPaidAsInstallmentToLender = installmentsToPay.sub(interestToStaterPerInstallement);
-    return(amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
+  function getLoanInstallmentCost(
+      uint256 loanId,
+      uint256 nrOfInstallments
+  ) external view returns(
+      uint256 overallInstallmentAmount,
+      uint256 interestPerInstallement,
+      uint256 interestToStaterPerInstallement,
+      uint256 amountPaidAsInstallmentToLender
+  ) {
+    overallInstallmentAmount = uint256(loans[loanId].installmentAmount.mul(nrOfInstallments));
+    interestPerInstallement = uint256(overallInstallmentAmount.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments));
+    interestToStaterPerInstallement = uint256(interestPerInstallement.mul(interestRateToStater).div(calculateDiscount(msg.sender)));
+    amountPaidAsInstallmentToLender = uint256(overallInstallmentAmount.sub(interestToStaterPerInstallement));
+  }
+
+  function getLoanValues1(uint256 loanId) external view returns(
+      address[] memory nftAddressArray,
+      address borrower,
+      address lender,
+      address currency,
+      Status status,
+      uint256[] memory nftTokenIdArray,
+      uint256 loanAmount
+  ){
+    nftAddressArray = address[](loans[loanId].nftAddressArray);
+    borrower = address(loans[loanId].borrower);
+    lender = address(loans[loanId].lender);
+    currency = address(loans[loanId].currency);
+    status = Status(loans[loanId].status);
+    nftTokenIdArray = uint256[](loans[loanId].nftTokenIdArray);
+    loanAmount = uint256(loans[loanId].loanAmount);
+  }
+  
+  function getLoanValues2(uint256 loanId) external view returns(
+      uint256 assetsValue,
+      uint256 loanStart,
+      uint256 loanEnd,
+      uint256 nrOfInstallments,
+      uint256 installmentAmount,
+      uint256 amountDue,
+      uint256 paidAmount
+  ){
+    assetsValue = uint256(loans[loanId].assetsValue);
+    loanStart = uint256(loans[loanId].loanStart);
+    loanEnd = uint256(loans[loanId].loanEnd);
+    nrOfInstallments = uint256(loans[loanId].nrOfInstallments);
+    installmentAmount = uint256(loans[loanId].installmentAmount);
+    amountDue = uint256(loans[loanId].amountDue);
+    paidAmount = uint256(loans[loanId].paidAmount);
+  }
+  
+  function getLoanValues3(uint256 loanId) external view returns(
+      uint256 defaultingLimit,
+      uint256 nrOfPayments,
+      TokenType[] memory nftTokenTypeArray
+  ){
+    defaultingLimit = uint256(loans[loanId].defaultingLimit);
+    nrOfPayments = uint256(loans[loanId].nrOfPayments);
+    nftTokenTypeArray = TokenType[](loans[loanId].nftTokenTypeArray);
+  }
+  
+  function setGlobalVariables(uint256 _ltv,uint256 _communityTokenId,uint256 _founderTokenId,uint256 _installmentFrequency,uint256 _interestRate,uint256 _interestRateToStater) external onlyOwner {
+    ltv = _ltv;
+    communityTokenId = _communityTokenId;
+    founderTokenId = _founderTokenId;
+    installmentFrequency = _installmentFrequency;
+    interestRate = _interestRate;
+    interestRateToStater = _interestRateToStater;
+  }
+  
+  function setGeyser(address tokenGeyser) external onlyOwner {
+	geyser = Geyser(tokenGeyser);
+  }
+  
+  function setNftAddress(address nftAddress) external onlyOwner {
+	staterNftAddress = nftAddress;
   }
   
   function lackOfPayment(uint256 loanId) public view returns(bool) {
