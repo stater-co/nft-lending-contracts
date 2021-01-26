@@ -12,9 +12,9 @@ interface Geyser{ function totalStakedFor(address addr) external view returns(ui
 contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   using SafeMath for uint256;
   Geyser public geyser = Geyser(0xf1007ACC8F0229fCcFA566522FC83172602ab7e3);
-  address public staterNftAddress = address(0xf1007ACC8F0229fCcFA566522FC83172602ab7e3);
-  uint256 public communityTokenId;
-  uint256 public founderTokenId;
+  address public staterNftAddress = address(0xcb13DC836C2331C669413352b836F1dA728ce21c);
+  uint256 public founderTokenId = 0;
+  uint256 public communityTokenId = 1;
   uint256 public loanID;
   uint256 public ltv = 600; // 60%
   uint256 public installmentFrequency = 7; // days
@@ -107,14 +107,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require(loans[loanId].paidAmount == 0, "This loan is currently not ready for lenders");
     require(loans[loanId].status == Status.LISTED, "This loan is not currently ready for lenders, check later");
     
-    uint32 discount = 100;
-    
-    if ( IERC1155(staterNftAddress).balanceOf(msg.sender,founderTokenId) > 0 )
-        discount = 200;
-    else if ( IERC1155(staterNftAddress).balanceOf(msg.sender,communityTokenId) > 0 )
-        discount = 115;
-    else if ( geyser.totalStakedFor(msg.sender) > 0 )
-        discount = 105;
+    uint32 discount = calculateDiscount(msg.sender);
     
     // We check if currency is ETH
     if ( loans[loanId].currency == address(0) )
@@ -178,14 +171,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     uint256 interestToStaterPerInstallement; // amount of interest that goes to Stater on each installment
     uint256 amountPaidAsInstallmentToLender; // amount of installment that goes to lender
 
-    uint32 discount = 100;
-    
-    if ( IERC1155(staterNftAddress).balanceOf(msg.sender,founderTokenId) > 0 )
-        discount = 200;
-    else if ( IERC1155(staterNftAddress).balanceOf(msg.sender,communityTokenId) > 0 )
-        discount = 115;
-    else if ( geyser.totalStakedFor(msg.sender) > 0 )
-        discount = 105;
+    uint32 discount = calculateDiscount(msg.sender);
 
     // Custom tokens
     if ( loans[loanId].currency != address(0) ) {
