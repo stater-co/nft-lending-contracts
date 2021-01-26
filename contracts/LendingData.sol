@@ -289,7 +289,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     loans[loanID].currency = currency;
   }
 
-  function calculateDiscount(address requester) internal view returns(uint32){
+  function calculateDiscount(address requester) public view returns(uint32){
 	if ( IERC1155(staterNftAddress).balanceOf(requester,founderTokenId) > 0 )
 		return 200;
 	if ( IERC1155(staterNftAddress).balanceOf(requester,communityTokenId) > 0 )
