@@ -115,10 +115,10 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     
     // We check if currency is ETH
     if ( loans[loanId].currency == address(0) )
-      require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(discount)),"Not enough currency");
+      require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discount)),"Not enough currency");
 
     // We send the tokens here
-    _transferTokens(msg.sender,loans[loanId].borrower,loans[loanId].currency,loans[loanId].loanAmount,msg.value.sub(loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(discount))));
+    _transferTokens(msg.sender,loans[loanId].borrower,loans[loanId].currency,loans[loanId].loanAmount,msg.value.sub(loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discount))));
 
     // Borrower assigned , status is 1 , first installment ( payment ) completed
     loans[loanId].lender = msg.sender;
@@ -182,13 +182,21 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
       interestPerInstallement = msg.value.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments);
     }
     
-    uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(discount); // amount of interest that goes to Stater on each installment
+    uint256 interestDiscounted = 0;
+    if ( discount != lenderFee ){
+        interestDiscounted = interestPerInstallement.mul(interestRateToStater).div(discount); // amount of interest that goes to Stater on each installment
+        if ( loans[loanId].currency == address(0) ){
+          require(msg.sender.send(interestDiscounted),"ETH returnation failed");
+        }
+    }
+
+    uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).sub(interestDiscounted);
     
-    // .sub to suppress the tokens leak
-    uint256 amountPaidAsInstallmentToLender = interestPerInstallement.sub(interestToStaterPerInstallement); // amount of installment that goes to lender
+    uint256 amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); // >> amount of installment that goes to lender
     
-    // We send the tokens here
     _transferTokens(msg.sender,loans[loanId].lender,loans[loanId].currency,amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
+
+    // We transfer the tokens to borrower here
 
     loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestPerInstallement);
     loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].installmentAmount);
@@ -280,7 +288,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   }
 
   function getLoanApprovalCost(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(calculateDiscount(msg.sender)));
+    return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(calculateDiscount(msg.sender)));
   }
   
   function setDiscounts(uint32 _discountNft, uint32 _discountGeyser, uint32 _lenderFee) external onlyOwner {
