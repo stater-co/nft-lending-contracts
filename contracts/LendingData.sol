@@ -14,8 +14,8 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   address public nftAddress = 0xcb13DC836C2331C669413352b836F1dA728ce21c;
   address[] public geyserAddressArray;
   uint256[] public staterNftTokenIdArray;
-  uint32 public discountNft = 200;
-  uint32 public discountGeyser = 105;
+  uint32 public discountNft = 2;
+  uint32 public discountGeyser = 20;
   uint32 public lenderFee = 100;
   uint256 public loanID;
   uint256 public ltv = 600; // 60%
