@@ -11,10 +11,12 @@ interface Geyser{ function totalStakedFor(address addr) external view returns(ui
 
 contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   using SafeMath for uint256;
-  Geyser public geyser = Geyser(0xf1007ACC8F0229fCcFA566522FC83172602ab7e3);
-  address public staterNftAddress = address(0xcb13DC836C2331C669413352b836F1dA728ce21c);
-  uint256 public founderTokenId = 0;
-  uint256 public communityTokenId = 1;
+  address public nftAddress = 0xcb13DC836C2331C669413352b836F1dA728ce21c;
+  address[] public geyserAddressArray;
+  uint256[] public staterNftTokenIdArray;
+  uint32 public discountNft = 200;
+  uint32 public discountGeyser = 105;
+  uint32 public lenderFee = 100;
   uint256 public loanID;
   uint256 public ltv = 600; // 60%
   uint256 public installmentFrequency = 7; // days
@@ -25,6 +27,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   event LoanCancelled(uint256 indexed loanId, uint256 cancellationDate, Status status);
   event ItemsWithdrawn(uint256 indexed loanId, address indexed requester, Status status);
   event LoanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, uint256 amountPaidAsInstallmentToLender, uint256 interestPerInstallement, uint256 interestToStaterPerInstallement, Status status);
+  event DiscountsChanged(uint32 indexed discountNft, uint32 indexed discountGeyser, uint32 lenderFee);
   enum Status{ UNINITIALIZED, LISTED, APPROVED, DEFAULTED, LIQUIDATED, CANCELLED }
   enum TokenType{ ERC721, ERC1155 }
   struct Loan {
@@ -107,14 +110,14 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require(loans[loanId].paidAmount == 0, "This loan is currently not ready for lenders");
     require(loans[loanId].status == Status.LISTED, "This loan is not currently ready for lenders, check later");
     
-    uint32 discount = calculateDiscount(msg.sender);
+    uint256 discount = calculateDiscount(msg.sender,loans[loanId].loanAmount);
     
     // We check if currency is ETH
     if ( loans[loanId].currency == address(0) )
-      require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(discount)),"Not enough currency");
+      require(msg.value >= loans[loanId].loanAmount.add(discount),"Not enough currency");
 
     // We send the tokens here
-    _transferTokens(msg.sender,loans[loanId].borrower,loans[loanId].currency,loans[loanId].loanAmount,loans[loanId].loanAmount.div(discount));
+    _transferTokens(msg.sender,loans[loanId].borrower,loans[loanId].currency,loans[loanId].loanAmount,discount);
 
     // Borrower assigned , status is 1 , first installment ( payment ) completed
     loans[loanId].lender = msg.sender;
@@ -168,25 +171,23 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require(loans[loanId].loanEnd >= block.timestamp, "Loan validity expired");
 
     uint256 interestPerInstallement; // entire interest for installment
-    uint256 interestToStaterPerInstallement; // amount of interest that goes to Stater on each installment
     uint256 amountPaidAsInstallmentToLender; // amount of installment that goes to lender
-
-    uint32 discount = calculateDiscount(msg.sender);
-
+    uint256 interestToStaterPerInstallement; // amount of interest that goes to Stater on each installment
+    
     // Custom tokens
     if ( loans[loanId].currency != address(0) ) {
 
       interestPerInstallement = loans[loanId].installmentAmount.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments);
-      interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(discount);
       amountPaidAsInstallmentToLender = loans[loanId].installmentAmount.sub(interestToStaterPerInstallement);
+      interestToStaterPerInstallement = calculateDiscount(msg.sender,interestPerInstallement.mul(interestRateToStater));
 
     } else {
 
       require(msg.value >= loans[loanId].installmentAmount, "Not enough currency");
 
       interestPerInstallement = msg.value.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments);
-      interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(discount);
       amountPaidAsInstallmentToLender = msg.value.sub(interestToStaterPerInstallement);
+      interestToStaterPerInstallement = calculateDiscount(msg.sender,interestPerInstallement.mul(interestRateToStater));
 
     }
     
@@ -212,15 +213,15 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
 
   // Borrower can withdraw loan items if loan is LIQUIDATED
   // Lender can withdraw loan item is loan is DEFAULTED
-  function withdrawItems(uint256 loanId) external {
-    require(block.timestamp >= loans[loanId].loanEnd || loans[loanId].paidAmount >= loans[loanId].amountDue, "The loan is not finished yet");
+  function terminateLoan(uint256 loanId) external {
+    require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender, "You can't access this loan");
+    require((block.timestamp >= loans[loanId].loanEnd || loans[loanId].paidAmount >= loans[loanId].amountDue) || lackOfPayment(loanId), "Not possible to finish this loan yet");
     require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
 
-    if ( block.timestamp >= loans[loanId].loanEnd && loans[loanId].paidAmount < loans[loanId].amountDue ) {
-
+    if ( lackOfPayment(loanId) ){
       loans[loanId].status = Status.DEFAULTED;
-      
-      // We send the items back to him
+      loans[loanId].loanEnd = block.timestamp;
+      // We send the items back to lender
       _transferItems(
         address(this),
         loans[loanId].lender,
@@ -228,45 +229,28 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
         loans[loanId].nftTokenIdArray,
         loans[loanId].nftTokenTypeArray
       );
-
-    } else if ( loans[loanId].paidAmount >= loans[loanId].amountDue ) {
-
-      // Otherwise the lender will receive the items
-      _transferItems(
-        address(this),
-        loans[loanId].borrower,
-        loans[loanId].nftAddressArray,
-        loans[loanId].nftTokenIdArray,
-        loans[loanId].nftTokenTypeArray
-      );
-        
+    }else{
+      if ( block.timestamp >= loans[loanId].loanEnd && loans[loanId].paidAmount < loans[loanId].amountDue ){
+        loans[loanId].status = Status.DEFAULTED;
+        // We send the items back to lender
+        _transferItems(
+          address(this),
+          loans[loanId].lender,
+          loans[loanId].nftAddressArray,
+          loans[loanId].nftTokenIdArray,
+          loans[loanId].nftTokenTypeArray
+        );
+      }else if ( loans[loanId].paidAmount >= loans[loanId].amountDue ){
+        // We send the items back to borrower
+        _transferItems(
+          address(this),
+          loans[loanId].borrower,
+          loans[loanId].nftAddressArray,
+          loans[loanId].nftTokenIdArray,
+          loans[loanId].nftTokenTypeArray
+        );
+      }
     }
-
-    emit ItemsWithdrawn(
-      loanId,
-      msg.sender,
-      loans[loanId].status
-    );
-
-  }
-
-  function terminateLoan(uint256 loanId) external {
-    require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender, "You can't access this loan");
-    require(loans[loanId].status == Status.APPROVED, "Loan must be approved");
-    require(lackOfPayment(loanId), "Borrower still has time to pay his installments");
-
-    // The lender will take the items
-    _transferItems(
-      address(this),
-      loans[loanId].lender,
-      loans[loanId].nftAddressArray,
-      loans[loanId].nftTokenIdArray,
-      loans[loanId].nftTokenTypeArray
-    );
-
-    loans[loanId].status = Status.DEFAULTED;
-    loans[loanId].loanEnd = block.timestamp;
-
   }
   
   function editLoan(
@@ -289,18 +273,29 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     loans[loanID].currency = currency;
   }
 
-  function calculateDiscount(address requester) public view returns(uint32){
-	if ( IERC1155(staterNftAddress).balanceOf(requester,founderTokenId) > 0 )
-		return 200;
-	if ( IERC1155(staterNftAddress).balanceOf(requester,communityTokenId) > 0 )
-		return 115;
-	if ( geyser.totalStakedFor(requester) > 0 )
-		return 105;
-	return 100;
+  function calculateDiscount(address requester,uint256 value) public view returns(uint256){
+    for ( uint i = 0 ; i < staterNftTokenIdArray.length ; ++i )
+	    if ( IERC1155(nftAddress).balanceOf(requester,staterNftTokenIdArray[i]) > 0 )
+		    return value.div(lenderFee).div(discountNft);
+	for ( uint256 i = 0 ; i < geyserAddressArray.length ; ++i )
+	    if ( Geyser(geyserAddressArray[i]).totalStakedFor(requester) > 0 )
+		    return value.div(lenderFee).div(discountGeyser);
+	return value.div(lenderFee);
   }
 
   function getLoanApprovalCost(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(calculateDiscount(msg.sender)));
+    return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(calculateDiscount(msg.sender,loans[loanId].loanAmount)));
+  }
+  
+  function setDiscounts(uint32 _discountNft, uint32 _discountGeyser, uint32 _lenderFee) external onlyOwner {
+    discountNft = _discountNft;
+    discountGeyser = _discountGeyser;
+    lenderFee = _lenderFee;
+    emit DiscountsChanged(discountNft,discountGeyser,lenderFee);
+  }
+  
+  function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {
+    return loans[loanId].amountDue - loans[loanId].paidAmount;
   }
   
   function getLoanInstallmentCost(
@@ -314,71 +309,23 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   ) {
     overallInstallmentAmount = uint256(loans[loanId].installmentAmount.mul(nrOfInstallments));
     interestPerInstallement = uint256(overallInstallmentAmount.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments));
-    interestToStaterPerInstallement = uint256(interestPerInstallement.mul(interestRateToStater).div(calculateDiscount(msg.sender)));
+    interestToStaterPerInstallement = uint256(interestPerInstallement.mul(interestRateToStater).div(calculateDiscount(msg.sender,interestPerInstallement.mul(interestRateToStater))));
     amountPaidAsInstallmentToLender = uint256(overallInstallmentAmount.sub(interestToStaterPerInstallement));
   }
-
-  function getLoanValues1(uint256 loanId) external view returns(
-      address[] memory nftAddressArray,
-      address borrower,
-      address lender,
-      address currency,
-      Status status,
-      uint256[] memory nftTokenIdArray,
-      uint256 loanAmount
-  ){
-    nftAddressArray = address[](loans[loanId].nftAddressArray);
-    borrower = address(loans[loanId].borrower);
-    lender = address(loans[loanId].lender);
-    currency = address(loans[loanId].currency);
-    status = Status(loans[loanId].status);
-    nftTokenIdArray = uint256[](loans[loanId].nftTokenIdArray);
-    loanAmount = uint256(loans[loanId].loanAmount);
-  }
   
-  function getLoanValues2(uint256 loanId) external view returns(
-      uint256 assetsValue,
-      uint256 loanStart,
-      uint256 loanEnd,
-      uint256 nrOfInstallments,
-      uint256 installmentAmount,
-      uint256 amountDue,
-      uint256 paidAmount
-  ){
-    assetsValue = uint256(loans[loanId].assetsValue);
-    loanStart = uint256(loans[loanId].loanStart);
-    loanEnd = uint256(loans[loanId].loanEnd);
-    nrOfInstallments = uint256(loans[loanId].nrOfInstallments);
-    installmentAmount = uint256(loans[loanId].installmentAmount);
-    amountDue = uint256(loans[loanId].amountDue);
-    paidAmount = uint256(loans[loanId].paidAmount);
-  }
-  
-  function getLoanValues3(uint256 loanId) external view returns(
-      uint256 defaultingLimit,
-      uint256 nrOfPayments,
-      TokenType[] memory nftTokenTypeArray
-  ){
-    defaultingLimit = uint256(loans[loanId].defaultingLimit);
-    nrOfPayments = uint256(loans[loanId].nrOfPayments);
-    nftTokenTypeArray = TokenType[](loans[loanId].nftTokenTypeArray);
-  }
-  
-  function setGlobalVariables(uint256 _ltv,uint256 _communityTokenId,uint256 _founderTokenId,uint256 _installmentFrequency,uint256 _interestRate,uint256 _interestRateToStater) external onlyOwner {
+  function setGlobalVariables(uint256 _ltv,uint256 _installmentFrequency,uint256 _interestRate,uint256 _interestRateToStater) external onlyOwner {
     ltv = _ltv;
-    communityTokenId = _communityTokenId;
-    founderTokenId = _founderTokenId;
     installmentFrequency = _installmentFrequency;
     interestRate = _interestRate;
     interestRateToStater = _interestRateToStater;
   }
   
-  function setGeyser(address tokenGeyser) external onlyOwner {
-	geyser = Geyser(tokenGeyser);
+  function addGeyserAddress(address geyserAddress) external onlyOwner {
+      geyserAddressArray.push(geyserAddress);
   }
   
-  function setNftAddress(address nftAddress) external onlyOwner {
-	staterNftAddress = nftAddress;
+  function addNftTokenId(uint256 nftId) external onlyOwner {
+      staterNftTokenIdArray.push(nftId);
   }
   
   function lackOfPayment(uint256 loanId) public view returns(bool) {
