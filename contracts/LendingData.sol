@@ -104,20 +104,21 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   }
 
 
+
   // Lender approves a loan
   function approveLoan(uint256 loanId) external payable {
     require(loans[loanId].lender == address(0), "Someone else payed for this loan before you");
     require(loans[loanId].paidAmount == 0, "This loan is currently not ready for lenders");
     require(loans[loanId].status == Status.LISTED, "This loan is not currently ready for lenders, check later");
     
-    uint256 discount = calculateDiscount(msg.sender,loans[loanId].loanAmount);
+    uint256 discount = calculateDiscount(msg.sender);
     
     // We check if currency is ETH
     if ( loans[loanId].currency == address(0) )
-      require(msg.value >= loans[loanId].loanAmount.add(discount),"Not enough currency");
+      require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(discount)),"Not enough currency");
 
     // We send the tokens here
-    _transferTokens(msg.sender,loans[loanId].borrower,loans[loanId].currency,loans[loanId].loanAmount,discount);
+    _transferTokens(msg.sender,loans[loanId].borrower,loans[loanId].currency,loans[loanId].loanAmount,msg.value.sub(loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(discount))));
 
     // Borrower assigned , status is 1 , first installment ( payment ) completed
     loans[loanId].lender = msg.sender;
@@ -171,30 +172,25 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require(loans[loanId].loanEnd >= block.timestamp, "Loan validity expired");
 
     uint256 interestPerInstallement; // entire interest for installment
-    uint256 amountPaidAsInstallmentToLender; // amount of installment that goes to lender
-    uint256 interestToStaterPerInstallement; // amount of interest that goes to Stater on each installment
-    
+    uint256 discount = calculateDiscount(msg.sender);
+
     // Custom tokens
     if ( loans[loanId].currency != address(0) ) {
-
       interestPerInstallement = loans[loanId].installmentAmount.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments);
-      amountPaidAsInstallmentToLender = loans[loanId].installmentAmount.sub(interestToStaterPerInstallement);
-      interestToStaterPerInstallement = calculateDiscount(msg.sender,interestPerInstallement.mul(interestRateToStater));
-
     } else {
-
       require(msg.value >= loans[loanId].installmentAmount, "Not enough currency");
-
       interestPerInstallement = msg.value.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments);
-      amountPaidAsInstallmentToLender = msg.value.sub(interestToStaterPerInstallement);
-      interestToStaterPerInstallement = calculateDiscount(msg.sender,interestPerInstallement.mul(interestRateToStater));
-
     }
+    
+    uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(discount); // amount of interest that goes to Stater on each installment
+    
+    // .sub to suppress the tokens leak
+    uint256 amountPaidAsInstallmentToLender = interestPerInstallement.sub(interestToStaterPerInstallement); // amount of installment that goes to lender
     
     // We send the tokens here
     _transferTokens(msg.sender,loans[loanId].lender,loans[loanId].currency,amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
 
-    loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestToStaterPerInstallement).add(amountPaidAsInstallmentToLender);
+    loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestPerInstallement);
     loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].installmentAmount);
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
@@ -273,18 +269,18 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     loans[loanID].currency = currency;
   }
 
-  function calculateDiscount(address requester,uint256 value) public view returns(uint256){
+  function calculateDiscount(address requester) public view returns(uint256){
     for ( uint i = 0 ; i < staterNftTokenIdArray.length ; ++i )
 	    if ( IERC1155(nftAddress).balanceOf(requester,staterNftTokenIdArray[i]) > 0 )
-		    return value.div(lenderFee).div(discountNft);
+		    return discountNft;
 	for ( uint256 i = 0 ; i < geyserAddressArray.length ; ++i )
 	    if ( Geyser(geyserAddressArray[i]).totalStakedFor(requester) > 0 )
-		    return value.div(lenderFee).div(discountGeyser);
-	return value.div(lenderFee);
+		    return discountGeyser;
+	return lenderFee;
   }
 
   function getLoanApprovalCost(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(calculateDiscount(msg.sender,loans[loanId].loanAmount)));
+    return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(calculateDiscount(msg.sender)));
   }
   
   function setDiscounts(uint32 _discountNft, uint32 _discountGeyser, uint32 _lenderFee) external onlyOwner {
@@ -309,7 +305,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   ) {
     overallInstallmentAmount = uint256(loans[loanId].installmentAmount.mul(nrOfInstallments));
     interestPerInstallement = uint256(overallInstallmentAmount.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments));
-    interestToStaterPerInstallement = uint256(interestPerInstallement.mul(interestRateToStater).div(calculateDiscount(msg.sender,interestPerInstallement.mul(interestRateToStater))));
+    interestToStaterPerInstallement = uint256(interestPerInstallement.mul(interestRateToStater).div(calculateDiscount(msg.sender)));
     amountPaidAsInstallmentToLender = uint256(overallInstallmentAmount.sub(interestToStaterPerInstallement));
   }
   
