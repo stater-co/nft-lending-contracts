@@ -198,7 +198,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
 
     // We transfer the tokens to borrower here
 
-    loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestPerInstallement);
+    loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestToStaterPerInstallement).add(amountPaidAsInstallmentToLender);
     loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].installmentAmount);
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
