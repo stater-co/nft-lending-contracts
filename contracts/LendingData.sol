@@ -183,7 +183,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     }
     
     uint256 interestDiscounted = 0;
-    if ( discount != lenderFee ){
+    if ( discount != 1 ){
         interestDiscounted = interestPerInstallement.mul(interestRateToStater).div(discount); // amount of interest that goes to Stater on each installment
         if ( loans[loanId].currency == address(0) ){
           require(msg.sender.send(interestDiscounted),"ETH returnation failed");
