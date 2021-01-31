@@ -183,14 +183,14 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     }
     
     uint256 interestDiscounted = 0;
-    if ( discount != lenderFee ){
+    if ( discount != 1 ){
         interestDiscounted = interestPerInstallement.mul(interestRateToStater).div(discount); // amount of interest that goes to Stater on each installment
         if ( loans[loanId].currency == address(0) ){
           require(msg.sender.send(interestDiscounted),"ETH returnation failed");
         }
     }
 
-    uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).sub(interestDiscounted);
+    uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100).sub(interestDiscounted);
     
     uint256 amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); // >> amount of installment that goes to lender
     
@@ -198,7 +198,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
 
     // We transfer the tokens to borrower here
 
-    loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestPerInstallement);
+    loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestToStaterPerInstallement).add(amountPaidAsInstallmentToLender);
     loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].installmentAmount);
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
@@ -338,11 +338,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
 
   // Calculates loan to value ratio
   function _percent(uint256 numerator, uint256 denominator) internal pure returns(uint256) {
-    return numerator.mul(10 ** 4).div(denominator).add(5).div(10);
-  }
-  
-  // Calculates loan to value ratio
-  function percent(uint256 numerator, uint256 denominator) external pure returns(uint256) {
     return numerator.mul(10 ** 4).div(denominator).add(5).div(10);
   }
 
