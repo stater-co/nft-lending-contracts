@@ -190,7 +190,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
         }
     }
 
-    uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).sub(interestDiscounted);
+    uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100).sub(interestDiscounted);
     
     uint256 amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); // >> amount of installment that goes to lender
     
