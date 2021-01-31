@@ -14,8 +14,8 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   address public nftAddress = 0xcb13DC836C2331C669413352b836F1dA728ce21c;
   address[] public geyserAddressArray;
   uint256[] public staterNftTokenIdArray;
-  uint32 public discountNft = 2;
-  uint32 public discountGeyser = 20;
+  uint32 public discountNft = 50;
+  uint32 public discountGeyser = 5;
   uint32 public lenderFee = 100;
   uint256 public loanID;
   uint256 public ltv = 600; // 60%
@@ -183,14 +183,14 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     }
     
     uint256 interestDiscounted = 0;
-    if ( discount != 1 ){
+    if ( discount != lenderFee ){
         interestDiscounted = interestPerInstallement.mul(interestRateToStater).div(discount); // amount of interest that goes to Stater on each installment
         if ( loans[loanId].currency == address(0) ){
           require(msg.sender.send(interestDiscounted),"ETH returnation failed");
         }
     }
 
-    uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100).sub(interestDiscounted);
+    uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).sub(interestDiscounted);
     
     uint256 amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); // >> amount of installment that goes to lender
     
@@ -198,7 +198,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
 
     // We transfer the tokens to borrower here
 
-    loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestToStaterPerInstallement).add(amountPaidAsInstallmentToLender);
+    loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestPerInstallement);
     loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].installmentAmount);
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
@@ -280,10 +280,10 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   function calculateDiscount(address requester) public view returns(uint256){
     for ( uint i = 0 ; i < staterNftTokenIdArray.length ; ++i )
 	    if ( IERC1155(nftAddress).balanceOf(requester,staterNftTokenIdArray[i]) > 0 )
-		    return discountNft;
+		    return 100 / discountNft;
 	for ( uint256 i = 0 ; i < geyserAddressArray.length ; ++i )
 	    if ( Geyser(geyserAddressArray[i]).totalStakedFor(requester) > 0 )
-		    return discountGeyser;
+		    return 100 / discountGeyser;
 	return 1;
   }
 
@@ -338,6 +338,11 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
 
   // Calculates loan to value ratio
   function _percent(uint256 numerator, uint256 denominator) internal pure returns(uint256) {
+    return numerator.mul(10 ** 4).div(denominator).add(5).div(10);
+  }
+  
+  // Calculates loan to value ratio
+  function percent(uint256 numerator, uint256 denominator) external pure returns(uint256) {
     return numerator.mul(10 ** 4).div(denominator).add(5).div(10);
   }
 
