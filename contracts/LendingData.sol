@@ -170,36 +170,29 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
     require(loans[loanId].status == Status.APPROVED, "This loan is no longer in the approval phase, check its status");
     require(loans[loanId].loanEnd >= block.timestamp, "Loan validity expired");
-
-    uint256 interestPerInstallement; // entire interest for installment
+    require((msg.value > 0 && loans[loanId].currency == address(0) ) || ( loans[loanId].currency != address(0) && msg.value == 0), "Insert the correct tokens");
+    
+    uint256 paidByBorrower = msg.value > 0 ? msg.value : loans[loanId].installmentAmount;
+    require(paidByBorrower >= loans[loanId].installmentAmount, "Not enough currency");
+    uint256 amountPaidAsInstallmentToLender = paidByBorrower; // >> amount of installment that goes to lender
+    uint256 interestPerInstallement = paidByBorrower.mul(interestRate).div(100); // entire interest for installment
     uint256 discount = calculateDiscount(msg.sender);
+    uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100);
 
-    // Custom tokens
-    if ( loans[loanId].currency != address(0) ) {
-      interestPerInstallement = loans[loanId].installmentAmount.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments);
-    } else {
-      require(msg.value >= loans[loanId].installmentAmount, "Not enough currency");
-      interestPerInstallement = msg.value.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments);
-    }
-    
-    uint256 interestDiscounted = 0;
     if ( discount != 1 ){
-        interestDiscounted = interestPerInstallement.mul(interestRateToStater).div(100).div(discount); // amount of interest saved per installment
         if ( loans[loanId].currency == address(0) ){
-          require(msg.sender.send(interestDiscounted),"ETH returnation failed");
+            require(msg.sender.send(interestToStaterPerInstallement.div(discount)),"Discount returnation failed");
+            amountPaidAsInstallmentToLender = amountPaidAsInstallmentToLender.sub(interestToStaterPerInstallement.div(discount));
         }
+        interestToStaterPerInstallement = interestToStaterPerInstallement.sub(interestToStaterPerInstallement.div(discount));
     }
-
-    uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100).sub(interestDiscounted);
+    amountPaidAsInstallmentToLender = amountPaidAsInstallmentToLender.sub(interestToStaterPerInstallement);
     
-    uint256 amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); // >> amount of installment that goes to lender
-    
+    // We transfer the tokens to borrower here
     _transferTokens(msg.sender,loans[loanId].lender,loans[loanId].currency,amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
 
-    // We transfer the tokens to borrower here ^
-
     loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestToStaterPerInstallement).add(amountPaidAsInstallmentToLender);
-    loans[loanId].nrOfPayments = loans[loanId].paidAmount.div(loans[loanId].installmentAmount);
+    loans[loanId].nrOfPayments += paidByBorrower.div(loans[loanId].installmentAmount);
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
       loans[loanId].status = Status.LIQUIDATED;
@@ -391,15 +384,15 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
               from,
               to, 
               qty1
-          ), "Transfer of liquidity failed");
+          ), "Transfer of tokens to receiver failed");
           require(IERC20(currency).transferFrom(
               from,
               owner(), 
               qty2
-          ), "Transfer of liquidity failed");
+          ), "Transfer of tokens to Stater failed");
       }else{
-          require(to.send(qty1),"Transfer of liquidity failed");
-          require(payable(owner()).send(qty2),"Transfer of liquidity failed");
+          require(to.send(qty1),"Transfer of ETH to receiver failed");
+          require(payable(owner()).send(qty2),"Transfer of ETH to Stater failed");
       }
   }
 
