@@ -91,7 +91,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     loans[loanID].assetsValue = assetsValue;
     loans[loanID].amountDue = loanAmount.mul(interestRate.add(100)).div(100); // interest rate >> 20%
     loans[loanID].nrOfInstallments = nrOfInstallments;
-    loans[loanID].installmentAmount = loans[loanID].amountDue.div(nrOfInstallments).add(1);
+    loans[loanID].installmentAmount = loans[loanID].amountDue.mod(nrOfInstallments) > 0 ? loans[loanID].amountDue.div(nrOfInstallments).add(1) : loans[loanID].amountDue.div(nrOfInstallments);
     loans[loanID].status = Status.LISTED;
     loans[loanID].nftAddressArray = nftAddressArray;
     loans[loanID].borrower = msg.sender;
