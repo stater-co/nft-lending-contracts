@@ -11,7 +11,7 @@ interface Geyser{ function totalStakedFor(address addr) external view returns(ui
 
 contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   using SafeMath for uint256;
-  address public nftAddress = 0xcb13DC836C2331C669413352b836F1dA728ce21c;
+  address public nftAddress = 0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8;
   address[] public geyserAddressArray = [0xf1007ACC8F0229fCcFA566522FC83172602ab7e3];
   uint256[] public staterNftTokenIdArray = [0, 1];
   uint32 public discountNft = 50;
@@ -91,7 +91,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     loans[loanID].assetsValue = assetsValue;
     loans[loanID].amountDue = loanAmount.mul(interestRate.add(100)).div(100); // interest rate >> 20%
     loans[loanID].nrOfInstallments = nrOfInstallments;
-    loans[loanID].installmentAmount = loans[loanID].amountDue.div(nrOfInstallments);
+    loans[loanID].installmentAmount = loans[loanID].amountDue.div(nrOfInstallments).add(1);
     loans[loanID].status = Status.LISTED;
     loans[loanID].nftAddressArray = nftAddressArray;
     loans[loanID].borrower = msg.sender;
@@ -191,7 +191,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     // We transfer the tokens to borrower here
     _transferTokens(msg.sender,loans[loanId].lender,loans[loanId].currency,amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
 
-    loans[loanId].paidAmount = loans[loanId].paidAmount.add(interestToStaterPerInstallement).add(amountPaidAsInstallmentToLender);
+    loans[loanId].paidAmount += paidByBorrower;
     loans[loanId].nrOfPayments += paidByBorrower.div(loans[loanId].installmentAmount);
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
@@ -280,9 +280,11 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     for ( uint i = 0 ; i < staterNftTokenIdArray.length ; ++i )
 	    if ( IERC1155(nftAddress).balanceOf(requester,staterNftTokenIdArray[i]) > 0 )
 		    return 100 / discountNft;
+	/*
 	for ( uint256 i = 0 ; i < geyserAddressArray.length ; ++i )
 	    if ( Geyser(geyserAddressArray[i]).totalStakedFor(requester) > 0 )
 		    return 100 / discountGeyser;
+	*/
 	return 1;
   }
 
