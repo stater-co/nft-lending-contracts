@@ -1,7 +1,5 @@
 const LendingData = artifacts.require("LendingData");
 const FungibleTokens = artifacts.require("FungibleTokens");
-const StakingToken = artifacts.require("FungibleTokens");
-const DistributionToken = artifacts.require("FungibleTokens");
 const GameItems721 = artifacts.require("GameItems721");
 const GameItems1155 = artifacts.require("GameItems1155");
 let currencyUsed;
@@ -10,34 +8,33 @@ let ltv = 600;
 let communityTokenId = 0;
 let founderTokenId = 1;
 let installmentFrequency = 7;
+let installmentTimeScale = 5;
 let interestRate = 20;
 let interestRateToStater = 40;
 let createdLoanId;
+let tokenIdToAdd = 3;
 
-// Not used for the moment
-// const FungibleTokens = artifacts.require("FungibleTokens");
 
 contract('LendingData', (accounts) => {
 
-  // setNftAddress(address)
-  it('Should set the nft token address', async () => {
+  // addGeyserAddress(address)
+  it('Should add a geyser address', async () => {
     const instance = await LendingData.deployed();
-    const instanceGameItems1155 = await GameItems1155.deployed();
-    let setNftAddress = await instance.setNftAddress.call(instanceGameItems1155.address);
-    assert.typeOf(setNftAddress, 'object', "[BUGGED] :: Not possible to set the loan NFT token address.");
+    let addGeyserAddress = await instance.addGeyserAddress.call(instance.address);
+    assert.typeOf(addGeyserAddress, 'object', "[BUGGED] :: Not possible to add geyser addresses.");
   });
 
-  // setGeyser(address)
-  it('Should set the nft geyser', async () => {
+  // addNftTokenId(uint256)
+  it('Should add a nft token id', async () => {
     const instance = await LendingData.deployed();
-    let setGeyser = await instance.setGeyser.call("0xf1007ACC8F0229fCcFA566522FC83172602ab7e3");
-    assert.typeOf(setGeyser, 'object', "[BUGGED] :: Not possible to set the loan geyser.");
+    let addNftTokenId = await instance.addNftTokenId.call(tokenIdToAdd);
+    assert.typeOf(addNftTokenId, 'object', "[BUGGED] :: Not possible to add nft token ids.");
   });
 
   // setGlobalVariables(uint256,uint256,uint256)
   it('Should set the lending contract global variables', async () => {
     const instance = await LendingData.deployed();
-    let setGlobalVariables = await instance.setGlobalVariables.call(ltv,communityTokenId,founderTokenId,installmentFrequency,interestRate,interestRateToStater);
+    let setGlobalVariables = await instance.setGlobalVariables.call(ltv,installmentFrequency,installmentTimeScale,interestRate,interestRateToStater);
     assert.typeOf(setGlobalVariables, 'object', "[BUGGED] :: Not possible to set the loan global variables.");
   });
 
@@ -45,7 +42,6 @@ contract('LendingData', (accounts) => {
   it('Should get the balance of a batch ( ERC1155 )', async () => {
     const instanceGameItems1155 = await GameItems1155.deployed();
     let balanceOfBatch = await instanceGameItems1155.balanceOfBatch.call([accounts[0],accounts[0]],[0,1]);
-    //console.log("The batch balance is : " + JSON.stringify(balanceOfBatch));
     for ( let i = 0 , l = balanceOfBatch.length ; i < l ; ++i )
       assert.typeOf(Number(balanceOfBatch[i]), 'number', "[BUGGED] :: Not possible to get the balance of batch.");
   });
@@ -57,9 +53,6 @@ contract('LendingData', (accounts) => {
     const instanceGameItems721 = await GameItems721.deployed();
     const instanceGameItems1155 = await GameItems1155.deployed();
     const instanceFungibleTokens = await FungibleTokens.deployed();
-
-    let setNftAddress = await instance.setNftAddress.call(instanceGameItems1155.address);
-    assert.typeOf(setNftAddress, 'object', "[BUGGED] :: Not possible to set the Loan interfaces.");
 
     let loanAmount = Math.floor(Math.random() * 100000000) + 1;
     let nrOfInstallments = Math.floor(Math.random() * 20) + 1;
@@ -74,8 +67,6 @@ contract('LendingData', (accounts) => {
     let nftTokenIdArray = [];
     let nftTokenTypeArray = [];
     let tokenId = null;
-
-
 
     for (let i = 0, l = nrOfTokensToAdd; i < l; ++i) 
 
@@ -150,9 +141,7 @@ contract('LendingData', (accounts) => {
   // getLoanApprovalCost(uint256)
   it('Should get the loan required qty of tokens for approval', async () => {
     const instance = await LendingData.deployed();
-    console.log("Approval cost is getLoanApprovalCost( " + createdLoanId + " )");
     let getLoanApprovalCost = await instance.getLoanApprovalCost.call(createdLoanId);
-    console.log("Approval cost is >> " + JSON.stringify(getLoanApprovalCost));
     getLoanApprovalCost = web3.utils.hexToNumber(web3.utils.toHex(getLoanApprovalCost));
     assert.typeOf(getLoanApprovalCost, 'number', "[BUGGED] :: Not possible to receive the required qty of tokens to pay for a loan.");
   });
@@ -161,15 +150,15 @@ contract('LendingData', (accounts) => {
   it('Should get the loan total qty of tokens required to pay for approval', async () => {
     const instance = await LendingData.deployed();
     let getLoanInstallmentCost = await instance.getLoanInstallmentCost.call(createdLoanId,1);
-    getLoanInstallmentCost = web3.utils.hexToNumber(web3.utils.toHex(getLoanInstallmentCost));
-    assert.typeOf(getLoanInstallmentCost, 'number', "[BUGGED] :: Not possible to get the loan total qty of tokens required to pay for approval.");
+    let overallInstallmentCost = Number(getLoanInstallmentCost.overallInstallmentAmount);
+    assert.typeOf(overallInstallmentCost, 'number', "[BUGGED] :: Not possible to get the loan total qty of tokens required to pay for approval.");
   });
 
   // approveLoan(uint256)
   it('Should find a lender for loan', async () => {
     const instance = await LendingData.deployed();
     let getLoanApprovalCost = await instance.getLoanApprovalCost.call(createdLoanId);
-    getLoanApprovalCost = web3.utils.hexToNumber(web3.utils.toHex(getLoanApprovalCost));
+    getLoanApprovalCost = web3.utils.hexToNumber("0x" + getLoanApprovalCost);
     const approveLoan = await instance.approveLoan(loansCount - 1, {
       from: accounts[1],
       value: getLoanApprovalCost
@@ -187,12 +176,15 @@ contract('LendingData', (accounts) => {
   // payLoan(uint256)
   it('Should pay for loan, 1x installment', async () => {
     const instance = await LendingData.deployed();
-    let installmentAmount = await instance.getInstallmentAmount.call(createdLoanId);
-    installmentAmount = web3.utils.hexToNumber(web3.utils.toHex(installmentAmount));
+    let installmentAmount = await instance.getLoanInstallmentCost.call(createdLoanId,1);
+    console.log("Installment amount is : " + JSON.stringify(installmentAmount));
+    installmentAmount = web3.utils.hexToNumber("0x" + installmentAmount.overallInstallmentAmount);
+    console.log("To pay >> " + installmentAmount);
     const payLoan = await instance.payLoan(createdLoanId, {
       from: accounts[0],
       value: installmentAmount
     });
+    console.log("Pay loan >> " +  JSON.stringify(payLoan));
     assert.typeOf(payLoan.receipt, 'object', "[BUGGED] :: Not possible to pay for loan.");
   });
 
