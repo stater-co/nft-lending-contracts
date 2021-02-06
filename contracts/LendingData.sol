@@ -124,7 +124,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
 
     // Borrower assigned , status is 1 , first installment ( payment ) completed
     loans[loanId].lender = msg.sender;
-    loans[loanId].loanEnd = block.timestamp.add(loans[loanId].nrOfInstallments.mul(generateInstallmentFrequency());
+    loans[loanId].loanEnd = block.timestamp.add(loans[loanId].nrOfInstallments.mul(generateInstallmentFrequency()));
     loans[loanId].status = Status.APPROVED;
     loans[loanId].loanStart = block.timestamp;
 
