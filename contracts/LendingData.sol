@@ -19,7 +19,9 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   uint32 public lenderFee = 100;
   uint256 public loanID;
   uint256 public ltv = 600; // 60%
-  uint256 public installmentFrequency = 7; // days
+  uint256 public installmentFrequency = 7;
+  enum TimeScale{ MINUTES, HOURS, DAYS, WEEKS }
+  TimeScale installmentTimeLevel = TimeScale.WEEKS;
   uint256 public interestRate = 20;
   uint256 public interestRateToStater = 40;
   event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
@@ -122,7 +124,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
 
     // Borrower assigned , status is 1 , first installment ( payment ) completed
     loans[loanId].lender = msg.sender;
-    loans[loanId].loanEnd = block.timestamp.add(loans[loanId].nrOfInstallments.mul(installmentFrequency).mul(1 days));
+    loans[loanId].loanEnd = block.timestamp.add(loans[loanId].nrOfInstallments.mul(generateInstallmentFrequency());
     loans[loanId].status = Status.APPROVED;
     loans[loanId].loanStart = block.timestamp;
 
@@ -280,11 +282,9 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     for ( uint i = 0 ; i < staterNftTokenIdArray.length ; ++i )
 	    if ( IERC1155(nftAddress).balanceOf(requester,staterNftTokenIdArray[i]) > 0 )
 		    return 100 / discountNft;
-	/*
-	for ( uint256 i = 0 ; i < geyserAddressArray.length ; ++i )
+	  for ( uint256 i = 0 ; i < geyserAddressArray.length ; ++i )
 	    if ( Geyser(geyserAddressArray[i]).totalStakedFor(requester) > 0 )
 		    return 100 / discountGeyser;
-	*/
 	return 1;
   }
 
@@ -323,9 +323,10 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); 
   }
   
-  function setGlobalVariables(uint256 _ltv,uint256 _installmentFrequency,uint256 _interestRate,uint256 _interestRateToStater) external onlyOwner {
+  function setGlobalVariables(uint256 _ltv,uint256 _installmentFrequency,TimeScale _installmentTimeLevel,uint256 _interestRate,uint256 _interestRateToStater) external onlyOwner {
     ltv = _ltv;
     installmentFrequency = _installmentFrequency;
+    installmentTimeLevel = _installmentTimeLevel;
     interestRate = _interestRate;
     interestRateToStater = _interestRateToStater;
   }
@@ -339,7 +340,18 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   }
   
   function lackOfPayment(uint256 loanId) public view returns(bool) {
-    return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(installmentFrequency.mul(1 days))) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(installmentFrequency.mul(1 days)));
+    return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(generateInstallmentFrequency())) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(generateInstallmentFrequency()));
+  }
+
+  function generateInstallmentFrequency() public view returns(uint256){
+    if ( installmentTimeLevel == TimeScale.MINUTES ){
+      return installmentFrequency.mul(1 minutes);  
+    }else if ( installmentTimeLevel == TimeScale.HOURS ){
+      return installmentFrequency.mul(1 hours);
+    }else if ( installmentTimeLevel == TimeScale.DAYS ){
+      return installmentFrequency.mul(1 days);
+    }
+    return installmentFrequency.mul(1 weeks);
   }
 
   // Calculates loan to value ratio
