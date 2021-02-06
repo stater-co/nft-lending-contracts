@@ -12,7 +12,7 @@ interface Geyser{ function totalStakedFor(address addr) external view returns(ui
 contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   using SafeMath for uint256;
   enum TimeScale{ MINUTES, HOURS, DAYS, WEEKS }
-  address public nftAddress = 0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8;
+  address public nftAddress = 0xcb13DC836C2331C669413352b836F1dA728ce21c;
   address[] public geyserAddressArray = [0xf1007ACC8F0229fCcFA566522FC83172602ab7e3];
   uint256[] public staterNftTokenIdArray = [0, 1];
   uint32 public discountNft = 50;
