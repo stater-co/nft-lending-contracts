@@ -11,11 +11,9 @@ import "openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 
-contract GameItems is ERC721, Ownable, ReentrancyGuard {
+contract GameItems721 is ERC721, Ownable, ReentrancyGuard {
 
-    constructor() public ERC721("GameItem", "ITM") {}
-
-    using SafeMath for uint256;
+    constructor() ERC721("GameItem", "ITM") {}
 
     event ItemCreation(uint256 indexed itemId, address indexed owner, string name, string description, string image_url);
 
@@ -28,7 +26,7 @@ contract GameItems is ERC721, Ownable, ReentrancyGuard {
 
     Item[] public items;
 
-    function createItem(string calldata name, string calldata description, string calldata image_url) external {
+    function createItem(string calldata name, string calldata description, string calldata image_url) external onlyOwner {
         emit ItemCreation(items.length,msg.sender,name,description,image_url);
         _mint(msg.sender, items.length);
         _setTokenURI(items.length, image_url);
