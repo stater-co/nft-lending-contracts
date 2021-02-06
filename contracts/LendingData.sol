@@ -344,11 +344,11 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   }
 
   function generateInstallmentFrequency() public view returns(uint256){
-    if (installmentTimeScale == TimeScale.MINUTES){
+    if (installmentTimeScale == TimeScale.MINUTES) {
       return installmentFrequency.mul(1 minutes);  
-    }else if (installmentTimeScale == TimeScale.HOURS){
+    } else if (installmentTimeScale == TimeScale.HOURS) {
       return installmentFrequency.mul(1 hours);
-    }else if (installmentTimeScale == TimeScale.DAYS){
+    } else if (installmentTimeScale == TimeScale.DAYS) {
       return installmentFrequency.mul(1 days);
     }
     return installmentFrequency.mul(1 weeks);
