@@ -11,6 +11,7 @@ interface Geyser{ function totalStakedFor(address addr) external view returns(ui
 
 contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   using SafeMath for uint256;
+  enum TimeScale{ MINUTES, HOURS, DAYS, WEEKS }
   address public nftAddress = 0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8;
   address[] public geyserAddressArray = [0xf1007ACC8F0229fCcFA566522FC83172602ab7e3];
   uint256[] public staterNftTokenIdArray = [0, 1];
@@ -20,8 +21,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   uint256 public loanID;
   uint256 public ltv = 600; // 60%
   uint256 public installmentFrequency = 7;
-  enum TimeScale{ MINUTES, HOURS, DAYS, WEEKS }
-  TimeScale installmentTimeLevel = TimeScale.WEEKS;
+  TimeScale installmentTimeScale = TimeScale.WEEKS;
   uint256 public interestRate = 20;
   uint256 public interestRateToStater = 40;
   event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
@@ -323,10 +323,10 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); 
   }
   
-  function setGlobalVariables(uint256 _ltv,uint256 _installmentFrequency,TimeScale _installmentTimeLevel,uint256 _interestRate,uint256 _interestRateToStater) external onlyOwner {
+  function setGlobalVariables(uint256 _ltv,uint256 _installmentFrequency,TimeScale _installmentTimeScale,uint256 _interestRate,uint256 _interestRateToStater) external onlyOwner {
     ltv = _ltv;
     installmentFrequency = _installmentFrequency;
-    installmentTimeLevel = _installmentTimeLevel;
+    installmentTimeScale = _installmentTimeScale;
     interestRate = _interestRate;
     interestRateToStater = _interestRateToStater;
   }
@@ -344,11 +344,11 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   }
 
   function generateInstallmentFrequency() public view returns(uint256){
-    if ( installmentTimeLevel == TimeScale.MINUTES ){
+    if (installmentTimeScale == TimeScale.MINUTES){
       return installmentFrequency.mul(1 minutes);  
-    }else if ( installmentTimeLevel == TimeScale.HOURS ){
+    }else if (installmentTimeScale == TimeScale.HOURS){
       return installmentFrequency.mul(1 hours);
-    }else if ( installmentTimeLevel == TimeScale.DAYS ){
+    }else if (installmentTimeScale == TimeScale.DAYS){
       return installmentFrequency.mul(1 days);
     }
     return installmentFrequency.mul(1 weeks);
