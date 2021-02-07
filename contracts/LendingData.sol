@@ -279,14 +279,12 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   }
 
   function calculateDiscount(address requester) public view returns(uint256){
-    /*
     for ( uint i = 0 ; i < staterNftTokenIdArray.length ; ++i )
 	    if ( IERC1155(nftAddress).balanceOf(requester,staterNftTokenIdArray[i]) > 0 )
 		    return 100 / discountNft;
 	  for ( uint256 i = 0 ; i < geyserAddressArray.length ; ++i )
 	    if ( Geyser(geyserAddressArray[i]).totalStakedFor(requester) > 0 )
 		    return 100 / discountGeyser;
-    */
 	  return 1;
   }
 
