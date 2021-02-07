@@ -325,10 +325,9 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); 
   }
   
-  function setGlobalVariables(uint256 _ltv,uint256 _installmentFrequency,TimeScale _installmentTimeScale,uint256 _interestRate,uint256 _interestRateToStater) external onlyOwner {
+  function setGlobalVariables(uint256 _ltv,uint256 _installmentFrequency,uint256 _interestRate,uint256 _interestRateToStater) external onlyOwner {
     ltv = _ltv;
     installmentFrequency = _installmentFrequency;
-    installmentTimeScale = _installmentTimeScale;
     interestRate = _interestRate;
     interestRateToStater = _interestRateToStater;
   }
@@ -339,6 +338,10 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   
   function addNftTokenId(uint256 nftId) external onlyOwner {
       staterNftTokenIdArray.push(nftId);
+  }
+
+  function setNftAddress(address _nftAddress) external onlyOwner {
+    nftAddress = _nftAddress;
   }
   
   function lackOfPayment(uint256 loanId) public view returns(bool) {
