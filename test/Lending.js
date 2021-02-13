@@ -2,6 +2,8 @@ const LendingData = artifacts.require("LendingData");
 const FungibleTokens = artifacts.require("FungibleTokens");
 const GameItems721 = artifacts.require("GameItems721");
 const GameItems1155 = artifacts.require("GameItems1155");
+//const StakingTokens = artifacts.require("StakingTokens");
+//const DistributionTokens = artifacts.require("DistributionTokens");
 let currencyUsed;
 let tokenCommunity = 0 , tokenFounder = 0 , tokenSttr = 0;
 let ltv = 600;
@@ -14,40 +16,37 @@ let interestRateToStater = 40;
 let createdLoanId;
 let tokenIdToAdd = 3;
 
-
-contract('LendingData', (accounts) => {
+contract('LendingData', async (accounts) => {
 
   // addGeyserAddress(address)
-  /*
   it('Should add a geyser address', async () => {
-    const instance = await LendingData.deployed();
-    let addGeyserAddress = await instance.addGeyserAddress.call(instance.address);
+    const instance = await LendingData.deployed({ from: accounts[0] });
+    let addGeyserAddress = await instance.addGeyserAddress(instance.address,{ from: accounts[0] });
     assert.typeOf(addGeyserAddress, 'object', "[BUGGED] :: Not possible to add geyser addresses.");
   });
-  */
 
   // addNftTokenId(uint256)
-  /*
   it('Should add a nft token id', async () => {
-    const instance = await LendingData.deployed();
-    let addNftTokenId = await instance.addNftTokenId.call(tokenIdToAdd);
+    const instance = await LendingData.deployed({ from: accounts[0] });
+    let addNftTokenId = await instance.addNftTokenId(tokenIdToAdd,{ from: accounts[0] });
     assert.typeOf(addNftTokenId, 'object', "[BUGGED] :: Not possible to add nft token ids.");
   });
-  */
 
   // setGlobalVariables(uint256,uint256,uint256)
   it('Should set the lending contract global variables', async () => {
     const instance = await LendingData.deployed();
-    //console.log("We call it here >> " + ltv,installmentFrequency,interestRate,interestRateToStater);
-    let setGlobalVariables = await instance.setGlobalVariables.call(ltv,installmentFrequency,interestRate,interestRateToStater);
-    //console.log("Global variables are >> " + JSON.stringify(setGlobalVariables));
+    console.log("We call it here >> " + ltv,installmentFrequency,interestRate,interestRateToStater);
+    let setGlobalVariables = await instance.setGlobalVariables(ltv,installmentFrequency,interestRate,interestRateToStater,{ from: accounts[0] });
+    console.log("Global variables are >> " + JSON.stringify(setGlobalVariables));
     assert.typeOf(setGlobalVariables, 'object', "[BUGGED] :: Not possible to set the loan global variables.");
   });
+  
 
   // balanceOfBatch(address[],uint256[])
   it('Should get the balance of a batch ( ERC1155 )', async () => {
     const instanceGameItems1155 = await GameItems1155.deployed();
     let balanceOfBatch = await instanceGameItems1155.balanceOfBatch.call([accounts[0],accounts[0]],[0,1]);
+    console.log("The balance of batch : " + JSON.stringify(balanceOfBatch));
     for ( let i = 0 , l = balanceOfBatch.length ; i < l ; ++i )
       assert.typeOf(Number(balanceOfBatch[i]), 'number', "[BUGGED] :: Not possible to get the balance of batch.");
   });
@@ -158,7 +157,9 @@ contract('LendingData', (accounts) => {
   // getLoanApprovalCost(uint256)
   it('Should get the loan required qty of tokens for approval', async () => {
     const instance = await LendingData.deployed();
-    let getLoanApprovalCost = await instance.getLoanApprovalCost.call(createdLoanId);
+    console.group("Get loan approval cost for : " + createdLoanId);
+    let getLoanApprovalCost = await instance.getLoanApprovalCost.call(createdLoanId,{ from : accounts[1] });
+    console.log("The loan approval cost should be >> " + JSON.stringify(getLoanApprovalCost));
     getLoanApprovalCost = web3.utils.hexToNumber(web3.utils.toHex(getLoanApprovalCost));
     assert.typeOf(getLoanApprovalCost, 'number', "[BUGGED] :: Not possible to receive the required qty of tokens to pay for a loan.");
   });
@@ -166,7 +167,7 @@ contract('LendingData', (accounts) => {
   // getLoanInstallmentCost(uint256,uint256)
   it('Should get the loan total qty of tokens required to pay for approval', async () => {
     const instance = await LendingData.deployed();
-    let getLoanInstallmentCost = await instance.getLoanInstallmentCost.call(createdLoanId,1);
+    let getLoanInstallmentCost = await instance.getLoanInstallmentCost.call(createdLoanId,1,{ from : accounts[1] });
     let overallInstallmentCost = Number(getLoanInstallmentCost.overallInstallmentAmount);
     assert.typeOf(overallInstallmentCost, 'number', "[BUGGED] :: Not possible to get the loan total qty of tokens required to pay for approval.");
   });
@@ -182,7 +183,7 @@ contract('LendingData', (accounts) => {
   // approveLoan(uint256)
   it('Should find a lender for loan', async () => {
     const instance = await LendingData.deployed();
-    let getLoanApprovalCost = await instance.getLoanApprovalCost.call(createdLoanId);
+    let getLoanApprovalCost = await instance.getLoanApprovalCost.call(createdLoanId,{ from : accounts[1] });
     console.log("To pay for approval >> " + getLoanApprovalCost + " , " + createdLoanId);
     let loanObject = await instance.loans.call(createdLoanId);
     console.log("The loan obj >> " + JSON.stringify(loanObject));
