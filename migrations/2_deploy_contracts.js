@@ -7,6 +7,7 @@ const GameItems1155 = artifacts.require("GameItems1155");
 const Geyser = artifacts.require("Geyser");
 
 // in order to increase the gas limit we need to run ganache-cli --gasLimit max_gas_limit
+// > ganache-cli --port=8545 --gasLimit 90000000
 module.exports = async function(deployer) {
 
   deployer.deploy(GameItems721, {gas: 90000000});
