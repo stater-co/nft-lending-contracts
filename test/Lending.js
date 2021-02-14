@@ -158,17 +158,16 @@ contract('LendingData', async (accounts) => {
   it('Should get the loan required qty of tokens for approval', async () => {
     const instance = await LendingData.deployed();
     console.group("Get loan approval cost for : " + createdLoanId);
-    let getLoanApprovalCost = await instance.getLoanApprovalCost.call(createdLoanId);
+    let getLoanApprovalCost = await instance.getLoanApprovalCost(createdLoanId,{ from : accounts[1] });
     console.log("The loan approval cost should be >> " + JSON.stringify(getLoanApprovalCost));
     getLoanApprovalCost = web3.utils.hexToNumber(web3.utils.toHex(getLoanApprovalCost));
     assert.typeOf(getLoanApprovalCost, 'number', "[BUGGED] :: Not possible to receive the required qty of tokens to pay for a loan.");
   });
 
   // getLoanInstallmentCost(uint256,uint256)
-  /*
   it('Should get the loan total qty of tokens required to pay for approval', async () => {
     const instance = await LendingData.deployed();
-    let getLoanInstallmentCost = await instance.getLoanInstallmentCost.call(createdLoanId,1,{ from : accounts[1] });
+    let getLoanInstallmentCost = await instance.getLoanInstallmentCost(createdLoanId,1,{ from : accounts[1] });
     let overallInstallmentCost = Number(getLoanInstallmentCost.overallInstallmentAmount);
     assert.typeOf(overallInstallmentCost, 'number', "[BUGGED] :: Not possible to get the loan total qty of tokens required to pay for approval.");
   });
@@ -258,6 +257,5 @@ contract('LendingData', async (accounts) => {
     const loanTermination = await instance.terminateLoan(createdLoanId,{ from : accounts[0] });
     assert.typeOf(loanTermination.receipt, 'object', "[BUGGED] :: Not possible to terminate the loan.");
   });
-  */
 
 });
