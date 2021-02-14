@@ -12,9 +12,9 @@ interface Geyser{ function totalStakedFor(address addr) external view returns(ui
 contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   using SafeMath for uint256;
   enum TimeScale{ MINUTES, HOURS, DAYS, WEEKS }
-  address public nftAddress = 0xcb13DC836C2331C669413352b836F1dA728ce21c;
-  address[] public geyserAddressArray = [0xf1007ACC8F0229fCcFA566522FC83172602ab7e3];
-  uint256[] public staterNftTokenIdArray = [0, 1];
+  address public nftAddress; //0xcb13DC836C2331C669413352b836F1dA728ce21c
+  address[] public geyserAddressArray; //[0xf1007ACC8F0229fCcFA566522FC83172602ab7e3]
+  uint256[] public staterNftTokenIdArray; //[0, 1]
   uint32 public discountNft = 50;
   uint32 public discountGeyser = 5;
   uint32 public lenderFee = 100;
@@ -52,6 +52,12 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     TokenType[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
   }
   mapping(uint256 => Loan) public loans;
+
+  constructor(address _nftAddress, address[] memory _geyserAddressArray, uint256[] memory _staterNftTokenIdArray) {
+    nftAddress = _nftAddress;
+    geyserAddressArray = _geyserAddressArray;
+    staterNftTokenIdArray = _staterNftTokenIdArray;
+  }
 
   // Borrower creates a loan
   function createLoan(
