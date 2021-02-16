@@ -6,7 +6,7 @@
 ### Truffle tests
 
 ### How to reproduce the tests :
-#### ganache-cli --port=8545
+#### truffle develop
 #### truffle test ( from the repo root )
 ##### ( Optional ) For using a custom network check the truffle-config.js
 

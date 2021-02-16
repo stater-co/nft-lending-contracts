@@ -16,40 +16,48 @@ let interestRateToStater = 40;
 let createdLoanId;
 let tokenIdToAdd = 3;
 
+//LendingData.deployed().then( async (instance) => {
 
-contract('LendingData', (accounts) => {
+  //console.log("It's deployed boss !!");
 
-  // addGeyserAddress(address)
-  it('Should add a geyser address', () => {
-    LendingData.deployed().then( async (instance) => {
+  contract('LendingData', async (accounts) => {
+
+    console.log("It's deployed boss !!!!");
+
+    // addGeyserAddress(address)
+    it('Should add a geyser address', async () => {
+      //LendingData.deployed().then( async (instance) => {
+      const instance = await LendingData.deployed();
       console.log("We're ok here !!");
       let addGeyserAddress = await instance.addGeyserAddress(instance.address,{ from: accounts[0] });
       console.log("We're ok here !!!");
       assert.typeOf(addGeyserAddress, 'object', "[BUGGED] :: Not possible to add geyser addresses.");
+      //});
     });
-  });
 
-  // addNftTokenId(uint256)
-  /*
-  it('Should add a nft token id', () => {
-    LendingData.deployed().then( async (instance) => {
+    // addNftTokenId(uint256)
+    it('Should add a nft token id', async () => {
+      //LendingData.deployed().then( async (instance) => {
+      const instance = await LendingData.deployed(); 
       let addNftTokenId = await instance.addNftTokenId(tokenIdToAdd,{ from: accounts[0] });
       assert.typeOf(addNftTokenId, 'object', "[BUGGED] :: Not possible to add nft token ids.");
+      //});
     });
-  });
 
-  // setGlobalVariables(uint256,uint256,uint256)
-  it('Should set the lending contract global variables', () => {
-    LendingData.deployed().then( async (instance) => {
+    // setGlobalVariables(uint256,uint256,uint256)
+    it('Should set the lending contract global variables', async () => {
+      //LendingData.deployed().then( async (instance) => {
+      const instance = await LendingData.deployed(); 
       console.log("We call it here >> " + ltv,installmentFrequency,interestRate,interestRateToStater);
       let setGlobalVariables = await instance.setGlobalVariables(ltv,installmentFrequency,interestRate,interestRateToStater,{ from: accounts[0] });
       console.log("Global variables are >> " + JSON.stringify(setGlobalVariables));
       assert.typeOf(setGlobalVariables, 'object', "[BUGGED] :: Not possible to set the loan global variables.");
+      //});
     });
-  });
-  */
 
-});
+  });
+
+//});
 
 
 //contract('LendingData', async (accounts) => {

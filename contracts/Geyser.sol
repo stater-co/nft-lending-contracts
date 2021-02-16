@@ -4,58 +4,9 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/GSN/Context.sol";
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
+import "./IStaking.sol";
+import "./TokenPool.sol";
 
-
-/**
- * @title Staking interface, as defined by EIP-900.
- * @dev https://github.com/ethereum/EIPs/blob/master/EIPS/eip-900.md
- */
-contract IStaking {
-    event Staked(address indexed user, uint256 amount, uint256 total, bytes data);
-    event Unstaked(address indexed user, uint256 amount, uint256 total, bytes data);
-
-    function stake(uint256 amount, bytes calldata data) virtual external {}
-    function stakeFor(address user, uint256 amount, bytes calldata data) virtual external {}
-    function unstake(uint256 amount, bytes calldata data) virtual external {}
-    function totalStakedFor(address addr) virtual public view returns (uint256) {}
-    function totalStaked() virtual public view returns (uint256) {}
-    function token() virtual external view returns (address) {}
-
-    /**
-     * @return False. This application does not support staking history.
-     */
-    function supportsHistory() external pure returns (bool) {
-        return false;
-    }
-}
-
-
-/**
- * @title A simple holder of tokens.
- * This is a simple contract to hold tokens. It's useful in the case where a separate contract
- * needs to hold multiple distinct pools of the same token.
- */
-contract TokenPool is Ownable {
-    IERC20 public token;
-
-    constructor(IERC20 _token) {
-        token = _token;
-    }
-
-    function balance() public view returns (uint256) {
-        return token.balanceOf(address(this));
-    }
-
-    function transfer(address to, uint256 value) external onlyOwner returns (bool) {
-        return token.transfer(to, value);
-    }
-
-    function rescueFunds(address tokenToRescue, address to, uint256 amount) external onlyOwner returns (bool) {
-        require(address(token) != tokenToRescue, 'TokenPool: Cannot claim token held by the contract');
-
-        return IERC20(tokenToRescue).transfer(to, amount);
-    }
-}
 
 
 /**
@@ -171,26 +122,32 @@ contract TokenGeyser is IStaking, Ownable {
     /**
      * @return The token users deposit as stake.
      */
+     /*
     function getStakingToken() public view returns (IERC20) {
         return _stakingPool.token();
     }
+    */
 
     /**
      * @return The token users receive as they unstake.
      */
+     /*
     function getDistributionToken() public view returns (IERC20) {
         assert(_unlockedPool.token() == _lockedPool.token());
         return _unlockedPool.token();
     }
+    */
 
     /**
      * @dev Transfers amount of deposit tokens from the user.
      * @param amount Number of deposit tokens to stake.
      * @param data Not used.
      */
+     /*
     function stake(uint256 amount, bytes calldata data) override external {
         _stakeFor(msg.sender, msg.sender, amount);
     }
+    */
 
     /**
      * @dev Transfers amount of deposit tokens from the caller on behalf of user.
@@ -198,9 +155,11 @@ contract TokenGeyser is IStaking, Ownable {
      * @param amount Number of deposit tokens to stake.
      * @param data Not used.
      */
+     /*
     function stakeFor(address user, uint256 amount, bytes calldata data) override external onlyOwner {
         _stakeFor(msg.sender, user, amount);
     }
+    */
 
     /**
      * @dev Private implementation of staking methods.
@@ -208,6 +167,7 @@ contract TokenGeyser is IStaking, Ownable {
      * @param beneficiary User address who gains credit for this stake operation.
      * @param amount Number of deposit tokens to stake.
      */
+     /*
     function _stakeFor(address staker, address beneficiary, uint256 amount) private {
         require(amount > 0, 'TokenGeyser: stake amount is zero');
         require(beneficiary != address(0), 'TokenGeyser: beneficiary is zero address');
@@ -240,6 +200,7 @@ contract TokenGeyser is IStaking, Ownable {
 
         emit Staked(beneficiary, amount, totalStakedFor(beneficiary), "");
     }
+    */
 
     /**
      * @dev Unstakes a certain amount of previously deposited tokens. User also receives their
@@ -247,17 +208,21 @@ contract TokenGeyser is IStaking, Ownable {
      * @param amount Number of deposit tokens to unstake / withdraw.
      * @param data Not used.
      */
+     /*
     function unstake(uint256 amount, bytes calldata data) override external {
         _unstake(amount);
     }
+    */
 
     /**
      * @param amount Number of deposit tokens to unstake / withdraw.
      * @return The total number of distribution tokens that would be rewarded.
      */
+     /*
     function unstakeQuery(uint256 amount) public returns (uint256) {
         return _unstake(amount);
     }
+    */
 
     /**
      * @dev Unstakes a certain amount of previously deposited tokens. User also receives their
@@ -265,6 +230,7 @@ contract TokenGeyser is IStaking, Ownable {
      * @param amount Number of deposit tokens to unstake / withdraw.
      * @return The total number of distribution tokens rewarded.
      */
+     /*
     function _unstake(uint256 amount) private returns (uint256) {
         updateAccounting();
 
@@ -326,6 +292,7 @@ contract TokenGeyser is IStaking, Ownable {
                 "TokenGeyser: Error unstaking. Staking shares exist, but no staking tokens do");
         return rewardAmount;
     }
+    */
 
     /**
      * @dev Applies an additional time-bonus to a distribution amount. This is necessary to
@@ -341,6 +308,7 @@ contract TokenGeyser is IStaking, Ownable {
      * @return Updated amount of distribution tokens to award, with any bonus included on the
      *         newly added tokens.
      */
+     /*
     function computeNewReward(uint256 currentRewardTokens,
                                 uint256 stakingShareSeconds,
                                 uint256 stakeTimeSec) private view returns (uint256) {
@@ -362,31 +330,38 @@ contract TokenGeyser is IStaking, Ownable {
             .div(oneHundredPct);
         return currentRewardTokens.add(bonusedReward);
     }
+    */
 
     /**
      * @param addr The user to look up staking information for.
      * @return The number of staking tokens deposited for addr.
      */
+     /*
     function totalStakedFor(address addr) override public view returns (uint256) {
         return totalStakingShares > 0 ?
             totalStaked().mul(_userTotals[addr].stakingShares).div(totalStakingShares) : 0;
     }
+    */
 
     /**
      * @return The total number of deposit tokens staked globally, by all users.
      */
+     /*
     function totalStaked() override public view returns (uint256) {
         return _stakingPool.balance();
     }
+    */
 
     /**
      * @dev Note that this application has a staking token as well as a distribution token, which
      * may be different. This function is required by EIP-900.
      * @return The deposit token used for staking.
      */
+     /*
     function token() override external view returns (address) {
         return address(getStakingToken());
     }
+    */
 
     /**
      * @dev A globally callable function to update the accounting state of the system.
@@ -398,6 +373,7 @@ contract TokenGeyser is IStaking, Ownable {
      * @return [4] Rewards caller has accumulated, optimistically assumes max time-bonus.
      * @return [5] block timestamp
      */
+     /*
     function updateAccounting() public returns (
         uint256, uint256, uint256, uint256, uint256, uint256) {
 
@@ -435,27 +411,34 @@ contract TokenGeyser is IStaking, Ownable {
             block.timestamp
         );
     }
+    */
 
     /**
      * @return Total number of locked distribution tokens.
      */
+     /*
     function totalLocked() public view returns (uint256) {
         return _lockedPool.balance();
     }
+    */
 
     /**
      * @return Total number of unlocked distribution tokens.
      */
+     /*
     function totalUnlocked() public view returns (uint256) {
         return _unlockedPool.balance();
     }
+    */
 
     /**
      * @return Number of unlock schedules.
      */
+     /*
     function unlockScheduleCount() public view returns (uint256) {
         return unlockSchedules.length;
     }
+    */
 
     /**
      * @dev This funcion allows the contract owner to add more locked distribution tokens, along
@@ -464,6 +447,7 @@ contract TokenGeyser is IStaking, Ownable {
      * @param amount Number of distribution tokens to lock. These are transferred from the caller.
      * @param durationSec Length of time to linear unlock the tokens.
      */
+     /*
     function lockTokens(uint256 amount, uint256 durationSec) external onlyOwner {
         require(unlockSchedules.length < _maxUnlockSchedules,
             'TokenGeyser: reached maximum unlock schedules');
@@ -489,12 +473,14 @@ contract TokenGeyser is IStaking, Ownable {
             'TokenGeyser: transfer into locked pool failed');
         emit TokensLocked(amount, durationSec, totalLocked());
     }
+    */
 
     /**
      * @dev Moves distribution tokens from the locked pool to the unlocked pool, according to the
      *      previously defined unlock schedules. Publicly callable.
      * @return Number of newly unlocked distribution tokens.
      */
+     /*
     function unlockTokens() public returns (uint256) {
         uint256 unlockedTokens = 0;
         uint256 lockedTokens = totalLocked();
@@ -518,6 +504,7 @@ contract TokenGeyser is IStaking, Ownable {
 
         return unlockedTokens;
     }
+    */
 
     /**
      * @dev Returns the number of unlockable shares from a given schedule. The returned value
@@ -526,6 +513,7 @@ contract TokenGeyser is IStaking, Ownable {
      * @param s Index of the unlock schedule.
      * @return The number of unlocked shares.
      */
+     /*
     function unlockScheduleShares(uint256 s) private returns (uint256) {
         UnlockSchedule storage schedule = unlockSchedules[s];
 
@@ -548,6 +536,7 @@ contract TokenGeyser is IStaking, Ownable {
         schedule.unlockedShares = schedule.unlockedShares.add(sharesToUnlock);
         return sharesToUnlock;
     }
+    */
 
     /**
      * @dev Lets the owner rescue funds air-dropped to the staking pool.
@@ -556,9 +545,11 @@ contract TokenGeyser is IStaking, Ownable {
      * @param amount Amount of tokens to be rescued.
      * @return Transfer success.
      */
+     /*
     function rescueFundsFromStakingPool(address tokenToRescue, address to, uint256 amount)
         public onlyOwner returns (bool) {
 
         return _stakingPool.rescueFunds(tokenToRescue, to, amount);
     }
+    */
 }
