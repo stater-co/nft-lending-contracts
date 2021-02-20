@@ -108,7 +108,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
  
     // Fire event
     emit NewLoan(loanID, msg.sender, block.timestamp, currency, Status.LISTED, creationId);
-    ++loanID;
+    loanID.add(1);
   }
 
 
@@ -181,7 +181,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require((msg.value > 0 && loans[loanId].currency == address(0) ) || ( loans[loanId].currency != address(0) && msg.value == 0), "Insert the correct tokens");
     
     uint256 paidByBorrower = msg.value > 0 ? msg.value : loans[loanId].installmentAmount;
-    require(paidByBorrower >= loans[loanId].installmentAmount, "Not enough currency");
     uint256 amountPaidAsInstallmentToLender = paidByBorrower; // >> amount of installment that goes to lender
     uint256 interestPerInstallement = paidByBorrower.mul(interestRate).div(100); // entire interest for installment
     uint256 discount = calculateDiscount(msg.sender);
@@ -199,8 +198,8 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     // We transfer the tokens to borrower here
     _transferTokens(msg.sender,loans[loanId].lender,loans[loanId].currency,amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
 
-    loans[loanId].paidAmount += paidByBorrower;
-    loans[loanId].nrOfPayments += paidByBorrower.div(loans[loanId].installmentAmount);
+    loans[loanId].paidAmount.add(paidByBorrower);
+    loans[loanId].nrOfPayments.add(loans[loanId].paidAmount.div(loans[loanId].installmentAmount));
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
       loans[loanId].status = Status.LIQUIDATED;
@@ -287,10 +286,10 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   function calculateDiscount(address requester) public view returns(uint256){
     for ( uint i = 0 ; i < staterNftTokenIdArray.length ; ++i )
 	    if ( IERC1155(nftAddress).balanceOf(requester,staterNftTokenIdArray[i]) > 0 )
-		    return 100 / discountNft;
+		    return uint256(100).div(discountNft);
 	  for ( uint256 i = 0 ; i < geyserAddressArray.length ; ++i )
 	    if ( Geyser(geyserAddressArray[i]).totalStakedFor(requester) > 0 )
-		    return 100 / discountGeyser;
+		    return uint256(100).div(discountGeyser);
 	  return 1;
   }
 
@@ -306,7 +305,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   }
   
   function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {
-    return loans[loanId].amountDue - loans[loanId].paidAmount;
+    return loans[loanId].amountDue.sub(loans[loanId].paidAmount);
   }
   
   function getLoanInstallmentCost(
@@ -354,13 +353,13 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
 
   function generateInstallmentFrequency() public view returns(uint256){
     if (installmentTimeScale == TimeScale.MINUTES) {
-      return installmentFrequency.mul(1 minutes);  
+      return 1 minutes;  
     } else if (installmentTimeScale == TimeScale.HOURS) {
-      return installmentFrequency.mul(1 hours);
+      return 1 hours;
     } else if (installmentTimeScale == TimeScale.DAYS) {
-      return installmentFrequency.mul(1 days);
+      return 1 days;
     }
-    return installmentFrequency.mul(1 weeks);
+    return 1 weeks;
   }
 
   // Calculates loan to value ratio
