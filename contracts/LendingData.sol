@@ -181,7 +181,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require((msg.value > 0 && loans[loanId].currency == address(0) ) || ( loans[loanId].currency != address(0) && msg.value == 0), "Insert the correct tokens");
     
     uint256 paidByBorrower = msg.value > 0 ? msg.value : loans[loanId].installmentAmount;
-    require(paidByBorrower >= loans[loanId].installmentAmount, "Not enough currency");
     uint256 amountPaidAsInstallmentToLender = paidByBorrower; // >> amount of installment that goes to lender
     uint256 interestPerInstallement = paidByBorrower.mul(interestRate).div(100); // entire interest for installment
     uint256 discount = calculateDiscount(msg.sender);
@@ -200,7 +199,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     _transferTokens(msg.sender,loans[loanId].lender,loans[loanId].currency,amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
 
     loans[loanId].paidAmount.add(paidByBorrower);
-    loans[loanId].nrOfPayments.add(paidByBorrower.div(loans[loanId].installmentAmount));
+    loans[loanId].nrOfPayments.add(loans[loanId].paidAmount.div(loans[loanId].installmentAmount));
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
       loans[loanId].status = Status.LIQUIDATED;
