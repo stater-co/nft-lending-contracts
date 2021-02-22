@@ -18,9 +18,5 @@ module.exports = (deployer) => {
   deployer.deploy(StakingTokens, web3.utils.toHex("1000000000000000000"), "StakingToken", "ST", { gas : 6000000 });
   deployer.deploy(DistributionTokens, web3.utils.toHex("1000000000000000000"), "DistributionToken", "DT", { gas : 6000000 });
   deployer.deploy(TokenGeyser, StakingTokens.address, DistributionTokens.address, 0, 10, 1000, 10000, { gas : 6000000 });
-<<<<<<< HEAD
   deployer.deploy(LendingData, GameItems1155.address, [], [0,1], { gas : 6000000 });
-=======
-  deployer.deploy(LendingData, GameItems1155.address, [TokenGeyser.address], [0,1], { gas : 6000000 });
->>>>>>> da3b73f7a18d8bcd31c8d86097a147716a56af1f
 };

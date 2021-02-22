@@ -21,7 +21,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   uint256 public loanID;
   uint256 public ltv = 600; // 60%
   uint256 public installmentFrequency = 7;
-  TimeScale installmentTimeScale = TimeScale.WEEKS;
+  TimeScale public installmentTimeScale = TimeScale.WEEKS;
   uint256 public interestRate = 20;
   uint256 public interestRateToStater = 40;
   event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
@@ -171,7 +171,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
       Status.CANCELLED
     );
   }
-
+  
   // Borrower pays installment for loan
   // Multiple installments : OK
   function payLoan(uint256 loanId) external payable {
@@ -284,23 +284,12 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   }
 
   function calculateDiscount(address requester) public view returns(uint256){
-<<<<<<< HEAD
-    if ( staterNftTokenIdArray.length > 0 )
-        for ( uint i = 0 ; i < staterNftTokenIdArray.length ; ++i )
-    	    if ( IERC1155(nftAddress).balanceOf(requester,staterNftTokenIdArray[i]) > 0 )
-    		    return uint256(100).div(discountNft);
-    if ( geyserAddressArray.length > 0 )
-        for ( uint256 i = 0 ; i < geyserAddressArray.length ; ++i )
-            if ( Geyser(geyserAddressArray[i]).totalStakedFor(requester) > 0 )
-        	    return uint256(100).div(discountGeyser);
-=======
     for ( uint i = 0 ; i < staterNftTokenIdArray.length ; ++i )
 	    if ( IERC1155(nftAddress).balanceOf(requester,staterNftTokenIdArray[i]) > 0 )
 		    return uint256(100).div(discountNft);
 	  for ( uint256 i = 0 ; i < geyserAddressArray.length ; ++i )
 	    if ( Geyser(geyserAddressArray[i]).totalStakedFor(requester) > 0 )
 		    return uint256(100).div(discountGeyser);
->>>>>>> da3b73f7a18d8bcd31c8d86097a147716a56af1f
 	  return 1;
   }
 

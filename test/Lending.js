@@ -111,14 +111,18 @@ contract('LendingData', async (accounts) => {
     // nftAddress
     it('Should get the nft address used by lending contract', async () => {
       const instance = await LendingData.deployed(); 
+      const nft1155 = await GameItems1155.deployed();
       const nftAddress = await instance.nftAddress.call();
+      //console.log("The nft adress is >> " + nftAddress + " !== " + nft1155.address + " ? " + (nft1155.address !== nftAddress ? "TRUE" : "FALSE"));
       assert.notEqual(nftAddress, "0x0000000000000000000000000000000000000000", "[WARNING] :: No NFT address used by Lending Contract.");
     });
 
     // geyserAddressArray
     it('Should get the geyser address array', async () => {
       const instance = await LendingData.deployed(); 
+      const geyser = await TokenGeyser.deployed();
       const geyserAddressArray = await instance.geyserAddressArray.call(0);
+      //console.log("The geyser address is : " + geyserAddressArray + " !== " + geyser.address + " ? " + ( geyser.address !== geyserAddressArray ? "TRUE" : "FALSE"));
       assert.typeOf(geyserAddressArray, 'string', "[BUGGED] :: Geyser address is not a valid address");
       assert.notEqual(geyserAddressArray, "0x0000000000000000000000000000000000000000", "[WARNING] :: One of the geyser addresses used by Lending Contract is not a valid address.");
     });
@@ -135,8 +139,10 @@ contract('LendingData', async (accounts) => {
     it('Should calculate the discount for both testing accounts', async () => {
       const instance = await LendingData.deployed(); 
       let calculateDiscount = await instance.calculateDiscount(accounts[0]);
+      //console.log("The discount is : " + JSON.stringify(calculateDiscount));
       assert.isNotNaN(Number(calculateDiscount), "[WARNING] :: One of the nft token ids used by Lending Contract is not a id.");
       calculateDiscount = await instance.calculateDiscount(accounts[1]);
+      //console.log("The discount is : " + JSON.stringify(calculateDiscount));
       assert.isNotNaN(Number(calculateDiscount), "[WARNING] :: One of the nft token ids used by Lending Contract is not a id.");
     });
 
@@ -314,7 +320,8 @@ contract('LendingData', async (accounts) => {
       let installmentAmount = await instance.getLoanInstallmentCost.call(createdLoanId,1);
       installmentAmount = web3.utils.hexToNumber("0x" + installmentAmount.overallInstallmentAmount);
 
-      if ( loanObject.lender !== "0x0000000000000000000000000000000000000000" ){
+      //console.log("Pay 1 loan for : " + JSON.stringify(loanObject));
+      if ( loanObject.currency !== "0x0000000000000000000000000000000000000000" ){
         txOptions.value = 0;
         let approveFungibleTokensToParties = await instanceFungibleTokens.approve(instance.address,installmentAmount,{
           from : accounts[0]
@@ -335,10 +342,11 @@ contract('LendingData', async (accounts) => {
       const instanceFungibleTokens = await FungibleTokens.deployed();
       let loanObject = await instance.loans.call(createdLoanId);
 
+      //console.log("Pay half loan for : " + JSON.stringify(loanObject));
       let txOptions = { from: accounts[0] };
       let installmentAmount = await instance.getLoanInstallmentCost.call(createdLoanId,1);
       installmentAmount = web3.utils.hexToNumber("0x" + installmentAmount.overallInstallmentAmount);
-      if ( loanObject.lender !== "0x0000000000000000000000000000000000000000" ){
+      if ( loanObject.currency !== "0x0000000000000000000000000000000000000000" ){
         txOptions.value = 0;
         let approveFungibleTokensToParties = await instanceFungibleTokens.approve(instance.address,installmentAmount,{
           from : accounts[0]
@@ -361,10 +369,12 @@ contract('LendingData', async (accounts) => {
       const instance = await LendingData.deployed();
       const instanceFungibleTokens = await FungibleTokens.deployed();
       let loanObject = await instance.loans.call(createdLoanId);
+
+      //console.log("Pay all loan for : " + JSON.stringify(loanObject));
       let txOptions = { from: accounts[0] };
       let installmentAmount = await instance.getLoanInstallmentCost.call(createdLoanId,1);
       installmentAmount = web3.utils.hexToNumber("0x" + installmentAmount.overallInstallmentAmount);
-      if ( loanObject.lender !== "0x0000000000000000000000000000000000000000" ){
+      if ( loanObject.currency !== "0x0000000000000000000000000000000000000000" ){
         txOptions.value = 0;
         let approveFungibleTokensToParties = await instanceFungibleTokens.approve(instance.address,installmentAmount,{
           from : accounts[0]
