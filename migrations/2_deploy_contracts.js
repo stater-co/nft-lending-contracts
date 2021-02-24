@@ -1,21 +1,22 @@
-const LendingData = artifacts.require("LendingData");
-const LendingLogic = artifacts.require("LendingLogic");
-const GameItems = artifacts.require("GameItems");
+const GameItems721 = artifacts.require("GameItems721");
 const FungibleTokens = artifacts.require("FungibleTokens");
+const StakingTokens = artifacts.require("StakingTokens");
+const DistributionTokens = artifacts.require("DistributionTokens");
+const GameItems1155 = artifacts.require("GameItems1155");
+const TokenGeyser = artifacts.require("TokenGeyser");
+const LendingData = artifacts.require("LendingData");
 
-module.exports = function(deployer, network) {
-	
-  // OpenSea proxy registry addresses for rinkeby and mainnet.
-  let proxyRegistryAddress;
-  
-  if (network === 'rinkeby') {
-    proxyRegistryAddress = "0xf57b2c51ded3a29e6891aba85459d600256cf317";
-  } else {
-    proxyRegistryAddress = "0xa5409ec958c83c3f309868babaca7c86dcb077c1";
-  }
-
-  deployer.deploy(LendingData, {gas: 6000000});
-  deployer.deploy(LendingLogic, {gas: 3000000});
-  deployer.deploy(GameItems, {gas: 6000000});
-  deployer.deploy(FungibleTokens, web3.utils.toHex("1000000000000000000"), "FungibleToken", "FT", {gas: 6000000});
+// in order to increase the gas limit we need to run ganache-cli --gasLimit max_gas_limit
+// > ganache-cli --port=8545 --gasLimit 90000000
+/* or */
+// > truffle develop
+// > test
+module.exports = (deployer) => {
+  deployer.deploy(GameItems721, { gas : 6000000 });
+  deployer.deploy(FungibleTokens, web3.utils.toHex("1000000000000000000"), "FungibleToken", "FT", { gas : 6000000 });
+  deployer.deploy(GameItems1155, "GAME-ITEMS-1155", { gas : 6000000 });
+  deployer.deploy(StakingTokens, web3.utils.toHex("1000000000000000000"), "StakingToken", "ST", { gas : 6000000 });
+  deployer.deploy(DistributionTokens, web3.utils.toHex("1000000000000000000"), "DistributionToken", "DT", { gas : 6000000 });
+  deployer.deploy(TokenGeyser, StakingTokens.address, DistributionTokens.address, 0, 10, 1000, 10000, { gas : 6000000 });
+  deployer.deploy(LendingData, GameItems1155.address, [], [0,1], { gas : 6000000 });
 };
