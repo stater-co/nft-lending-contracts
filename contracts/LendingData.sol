@@ -20,7 +20,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   uint32 public lenderFee = 100;
   uint256 public loanID = 0;
   uint256 public ltv = 600; // 60%
-  uint256 public installmentFrequency = 7;
+  uint256 public installmentFrequency = 1;
   TimeScale public installmentTimeScale = TimeScale.WEEKS;
   uint256 public interestRate = 20;
   uint256 public interestRateToStater = 40;
