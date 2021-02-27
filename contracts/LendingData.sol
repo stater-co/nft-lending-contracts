@@ -317,6 +317,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
       uint256 interestToStaterPerInstallement,
       uint256 amountPaidAsInstallmentToLender
   ) {
+    require(nrOfInstallments <= loans[loanId].nrOfInstallments,"Number of installments too high");
     uint256 discount = calculateDiscount(msg.sender);
     interestDiscounted = 0;
     
