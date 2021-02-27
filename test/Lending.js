@@ -19,7 +19,7 @@ let tokenIdToAdd = 3;
 
 
 
-contract('GameItems1155', async (accounts) => {
+contract('GameItems1155', (accounts) => {
 
   describe("1 > Should check the NFT1155 getters", function () {
 
@@ -52,7 +52,7 @@ contract('GameItems1155', async (accounts) => {
 
 contract('TokenGeyser', (accounts) => {
 
-  describe("2 > Should check the Token Geyser stake", async function () {
+  describe("2.1 > Should check the Token Geyser stake", async function () {
 
     it('Should check the token geyser stake', async () => {
       const instance = await TokenGeyser.deployed();
@@ -60,6 +60,20 @@ contract('TokenGeyser', (accounts) => {
       assert.isNotNaN(Number(totalStakedFor), "[WARNING] :: Total staked for mechanism doesn't work");
       totalStakedFor = await instance.totalStakedFor.call(accounts[1]);
       assert.isNotNaN(Number(totalStakedFor), "[WARNING] :: Total staked for mechanism doesn't work");
+    });
+
+  });
+
+  describe("2.2 > Should set the Token Geyser constructor parameters", async function () {
+
+    it('Should set the Token Geyser constructor parameters', async () => {
+      const instance = await TokenGeyser.deployed();
+      const stakingToken = await StakingTokens.deployed();
+      const distributionToken = await DistributionTokens.deployed();
+      let setStakingToken = await instance.setStakingToken(stakingToken.address, { from: accounts[0] });
+      assert.typeOf(setStakingToken, 'object', "[BUGGED] :: Not possible to set the staking token.");
+      let setDistributionToken = await instance.setDistributionToken(distributionToken.address, { from: accounts[0] });
+      assert.typeOf(setDistributionToken, 'object', "[BUGGED] :: Not possible to set the distribution token.");
     });
 
   });
@@ -76,21 +90,21 @@ contract('LendingData', async (accounts) => {
     it('Should add a geyser address', async () => {
       const instance = await LendingData.deployed();
       const geyser = await TokenGeyser.deployed();
-      let addGeyserAddress = await instance.addGeyserAddress(geyser.address,{ from: accounts[0] });
+      let addGeyserAddress = await instance.addGeyserAddress(geyser.address, { from: accounts[0] });
       assert.typeOf(addGeyserAddress, 'object', "[BUGGED] :: Not possible to add geyser addresses.");
     });
 
     // addNftTokenId(uint256)
     it('Should add a nft token id', async () => {
       const instance = await LendingData.deployed(); 
-      let addNftTokenId = await instance.addNftTokenId(tokenIdToAdd,{ from: accounts[0] });
+      let addNftTokenId = await instance.addNftTokenId(tokenIdToAdd, { from: accounts[0] });
       assert.typeOf(addNftTokenId, 'object', "[BUGGED] :: Not possible to add nft token ids.");
     });
 
     // setGlobalVariables(uint256,uint256,uint256)
     it('Should set the lending contract global variables', async () => {
       const instance = await LendingData.deployed(); 
-      let setGlobalVariables = await instance.setGlobalVariables(ltv,installmentFrequency,interestRate,interestRateToStater,{ from: accounts[0] });
+      let setGlobalVariables = await instance.setGlobalVariables(ltv,installmentFrequency,3,interestRate,interestRateToStater,{ from: accounts[0] });
       assert.typeOf(setGlobalVariables, 'object', "[BUGGED] :: Not possible to set the loan global variables.");
     });
 
