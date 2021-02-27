@@ -18,7 +18,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   uint32 public discountNft = 50;
   uint32 public discountGeyser = 5;
   uint32 public lenderFee = 100;
-  uint256 public loanID;
+  uint256 public loanID = 0;
   uint256 public ltv = 600; // 60%
   uint256 public installmentFrequency = 7;
   TimeScale public installmentTimeScale = TimeScale.WEEKS;
@@ -108,9 +108,8 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
  
     // Fire event
     emit NewLoan(loanID, msg.sender, block.timestamp, currency, Status.LISTED, creationId);
-    loanID.add(1);
+    ++loanID;
   }
-
 
 
   // Lender approves a loan
@@ -126,7 +125,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
       require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discount)),"Not enough currency");
 
     // We send the tokens here
-    _transferTokens(msg.sender,loans[loanId].borrower,loans[loanId].currency,loans[loanId].loanAmount,loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discount)));
+    _transferTokens(msg.sender,loans[loanId].borrower,loans[loanId].currency,loans[loanId].loanAmount,loans[loanId].loanAmount.div(lenderFee).div(discount));
 
     // Borrower assigned , status is 1 , first installment ( payment ) completed
     loans[loanId].lender = msg.sender;
@@ -198,8 +197,8 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     // We transfer the tokens to borrower here
     _transferTokens(msg.sender,loans[loanId].lender,loans[loanId].currency,amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
 
-    loans[loanId].paidAmount.add(paidByBorrower);
-    loans[loanId].nrOfPayments.add(loans[loanId].paidAmount.div(loans[loanId].installmentAmount));
+    loans[loanId].paidAmount = loans[loanId].paidAmount.add(paidByBorrower);
+    loans[loanId].nrOfPayments = loans[loanId].nrOfPayments.add(loans[loanId].paidAmount.div(loans[loanId].installmentAmount));
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
       loans[loanId].status = Status.LIQUIDATED;
