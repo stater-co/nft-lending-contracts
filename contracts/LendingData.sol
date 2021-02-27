@@ -18,7 +18,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   uint32 public discountNft = 50;
   uint32 public discountGeyser = 5;
   uint32 public lenderFee = 100;
-  uint256 public loanID = 0;
+  uint256 public loanID;
   uint256 public ltv = 600; // 60%
   uint256 public installmentFrequency = 1;
   TimeScale public installmentTimeScale = TimeScale.WEEKS;
