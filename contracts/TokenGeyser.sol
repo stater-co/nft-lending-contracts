@@ -168,6 +168,16 @@ contract TokenGeyser is IStaking, Ownable {
         _initialSharesPerToken = initialSharesPerToken;
     }
 
+    /* Set the staking token */
+    function setStakingToken(IERC20 stakingToken) external onlyOwner {
+        _stakingPool = new TokenPool(stakingToken);
+    }
+
+    /* Set the distribution token */
+    function setDistributionToken(IERC20 stakingToken) external onlyOwner {
+        _stakingPool = new TokenPool(stakingToken);
+    }
+
     /**
      * @return The token users deposit as stake.
      */
