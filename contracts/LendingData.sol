@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
@@ -198,7 +199,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     _transferTokens(msg.sender,loans[loanId].lender,loans[loanId].currency,amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
 
     loans[loanId].paidAmount = loans[loanId].paidAmount.add(paidByBorrower);
-    loans[loanId].nrOfPayments = loans[loanId].nrOfPayments.add(loans[loanId].paidAmount.div(loans[loanId].installmentAmount));
+    loans[loanId].nrOfPayments = loans[loanId].nrOfPayments.add(paidByBorrower.div(loans[loanId].installmentAmount));
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
       loans[loanId].status = Status.LIQUIDATED;
@@ -275,11 +276,19 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require(loanAmount > 0, "Loan amount must be higher than 0");
     require(_percent(loanAmount, loans[loanId].assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
     require(nrOfInstallments > 0, "Loan number of installments must be higher than 0");
-    loans[loanID].nrOfInstallments = nrOfInstallments;
-    loans[loanID].loanAmount = loanAmount;
-    loans[loanID].amountDue = loanAmount.mul(interestRate.add(100)).div(100);
-    loans[loanID].assetsValue = assetsValue;
-    loans[loanID].currency = currency;
+    loans[loanId].nrOfInstallments = nrOfInstallments;
+    loans[loanId].loanAmount = loanAmount;
+    loans[loanId].amountDue = loanAmount.mul(interestRate.add(100)).div(100);
+    loans[loanId].installmentAmount = loans[loanId].amountDue.mod(nrOfInstallments) > 0 ? loans[loanId].amountDue.div(nrOfInstallments).add(1) : loans[loanId].amountDue.div(nrOfInstallments);
+    loans[loanId].assetsValue = assetsValue;
+    loans[loanId].currency = currency;
+    // Computing the defaulting limit
+    if ( nrOfInstallments <= 3 )
+        loans[loanId].defaultingLimit = 1;
+    else if ( nrOfInstallments <= 5 )
+        loans[loanId].defaultingLimit = 2;
+    else if ( nrOfInstallments >= 6 )
+        loans[loanId].defaultingLimit = 3;
   }
 
   function calculateDiscount(address requester) public view returns(uint256){
