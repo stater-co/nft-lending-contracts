@@ -22,7 +22,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   uint256 public loanID;
   uint256 public ltv = 600; // 60%
   uint256 public installmentFrequency = 1;
-  TimeScale public installmentTimeScale = TimeScale.WEEKS;
+  TimeScale public installmentTimeScale = TimeScale.MINUTES;
   uint256 public interestRate = 20;
   uint256 public interestRateToStater = 40;
   event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
@@ -31,7 +31,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   event ItemsWithdrawn(uint256 indexed loanId, address indexed requester, Status status);
   event LoanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, uint256 amountPaidAsInstallmentToLender, uint256 interestPerInstallement, uint256 interestToStaterPerInstallement, Status status);
   event DiscountsChanged(uint32 indexed discountNft, uint32 indexed discountGeyser, uint32 lenderFee);
-  enum Status{ UNINITIALIZED, LISTED, APPROVED, DEFAULTED, LIQUIDATED, CANCELLED }
+  enum Status{ UNINITIALIZED, LISTED, APPROVED, DEFAULTED, LIQUIDATED, CANCELLED, WITHDRAWN }
   enum TokenType{ ERC721, ERC1155 }
   struct Loan {
     address[] nftAddressArray; // the adderess of the ERC721
@@ -221,6 +221,9 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender, "You can't access this loan");
     require((block.timestamp >= loans[loanId].loanEnd || loans[loanId].paidAmount >= loans[loanId].amountDue) || lackOfPayment(loanId), "Not possible to finish this loan yet");
     require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
+    require(loans[loanId].status != Status.WITHDRAWN,"Loan NFTs already withdrawn");
+    
+    loans[loanId].status = Status.WITHDRAWN;
 
     if ( lackOfPayment(loanId) ) {
       loans[loanId].status = Status.DEFAULTED;
