@@ -22,7 +22,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   uint256 public loanID;
   uint256 public ltv = 600; // 60%
   uint256 public installmentFrequency = 1;
-  TimeScale public installmentTimeScale = TimeScale.WEEKS;
+  TimeScale public installmentTimeScale = TimeScale.MINUTES;
   uint256 public interestRate = 20;
   uint256 public interestRateToStater = 40;
   event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
@@ -350,6 +350,14 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   
   function addGeyserAddress(address geyserAddress) external onlyOwner {
       geyserAddressArray.push(geyserAddress);
+  }
+  
+  function setGeyserAddressArray(address[] calldata geyserAddresses) external onlyOwner {
+      geyserAddressArray = geyserAddresses;
+  }
+  
+  function setNftTokenIdArray(uint256[] calldata nftIds) external onlyOwner {
+      staterNftTokenIdArray = nftIds;
   }
   
   function addNftTokenId(uint256 nftId) external onlyOwner {
