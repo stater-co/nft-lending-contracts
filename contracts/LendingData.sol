@@ -30,7 +30,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   event LoanCancelled(uint256 indexed loanId, uint256 cancellationDate, Status status);
   event ItemsWithdrawn(uint256 indexed loanId, address indexed requester, Status status);
   event LoanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, uint256 amountPaidAsInstallmentToLender, uint256 interestPerInstallement, uint256 interestToStaterPerInstallement, Status status);
-  event DiscountsChanged(uint32 indexed discountNft, uint32 indexed discountGeyser, uint32 lenderFee);
   enum Status{ UNINITIALIZED, LISTED, APPROVED, DEFAULTED, LIQUIDATED, CANCELLED, WITHDRAWN }
   enum TokenType{ ERC721, ERC1155 }
   struct Loan {
@@ -226,6 +225,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require(loans[loanId].status != Status.WITHDRAWN,"Loan NFTs already withdrawn");
 
     if ( lackOfPayment(loanId) ) {
+      loans[loanId].status = Status.WITHDRAWN;
       loans[loanId].loanEnd = block.timestamp;
       // We send the items back to lender
       _transferItems(
@@ -235,9 +235,9 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
         loans[loanId].nftTokenIdArray,
         loans[loanId].nftTokenTypeArray
       );
-      loans[loanId].status = Status.WITHDRAWN;
     } else {
       if ( block.timestamp >= loans[loanId].loanEnd && loans[loanId].paidAmount < loans[loanId].amountDue ) {
+        loans[loanId].status = Status.WITHDRAWN;
         // We send the items back to lender
         _transferItems(
           address(this),
@@ -246,8 +246,8 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
           loans[loanId].nftTokenIdArray,
           loans[loanId].nftTokenTypeArray
         );
-        loans[loanId].status = Status.WITHDRAWN;
       } else if ( loans[loanId].paidAmount >= loans[loanId].amountDue ){
+        loans[loanId].status = Status.WITHDRAWN;
         // We send the items back to borrower
         _transferItems(
           address(this),
@@ -256,7 +256,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
           loans[loanId].nftTokenIdArray,
           loans[loanId].nftTokenTypeArray
         );
-        loans[loanId].status = Status.WITHDRAWN;
       }
     }
     
@@ -348,39 +347,29 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     return 1 weeks;
   }
   
-  function setDiscounts(uint32 _discountNft, uint32 _discountGeyser, uint32 _lenderFee) external onlyOwner {
+  function setDiscounts(uint32 _discountNft, uint32 _discountGeyser, address[] calldata _geyserAddressArray, uint256[] calldata _staterNftTokenIdArray, address _nftAddress) external onlyOwner {
     discountNft = _discountNft;
     discountGeyser = _discountGeyser;
-    lenderFee = _lenderFee;
-    emit DiscountsChanged(discountNft,discountGeyser,lenderFee);
+    geyserAddressArray = _geyserAddressArray;
+    staterNftTokenIdArray = _staterNftTokenIdArray;
+    nftAddress = _nftAddress;
   }
   
-  function setGlobalVariables(uint256 _ltv, uint256 _installmentFrequency, TimeScale _installmentTimeScale, uint256 _interestRate, uint256 _interestRateToStater) external onlyOwner {
+  function setGlobalVariables(uint256 _ltv, uint256 _installmentFrequency, TimeScale _installmentTimeScale, uint256 _interestRate, uint256 _interestRateToStater, uint32 _lenderFee) external onlyOwner {
     ltv = _ltv;
     installmentFrequency = _installmentFrequency;
     installmentTimeScale = _installmentTimeScale;
     interestRate = _interestRate;
     interestRateToStater = _interestRateToStater;
+    lenderFee = _lenderFee;
   }
   
   function addGeyserAddress(address geyserAddress) external onlyOwner {
       geyserAddressArray.push(geyserAddress);
   }
   
-  function setGeyserAddressArray(address[] calldata geyserAddresses) external onlyOwner {
-      geyserAddressArray = geyserAddresses;
-  }
-  
-  function setNftTokenIdArray(uint256[] calldata nftIds) external onlyOwner {
-      staterNftTokenIdArray = nftIds;
-  }
-  
   function addNftTokenId(uint256 nftId) external onlyOwner {
       staterNftTokenIdArray.push(nftId);
-  }
-
-  function setNftAddress(address _nftAddress) external onlyOwner {
-    nftAddress = _nftAddress;
   }
 
   // Calculates loan to value ratio
