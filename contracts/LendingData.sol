@@ -71,7 +71,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     string calldata creationId,
     TokenType[] memory nftTokenTypeArray
   ) external {
-    require(nrOfInstallments > 1, "Loan must have at least 2 installments");
+    require(nrOfInstallments > 0, "Loan must have at least 1 installment");
     require(loanAmount > 0, "Loan amount must be higher than 0");
     require(nftAddressArray.length > 0, "Loan must have atleast 1 NFT");
     require(nftAddressArray.length == nftTokenIdArray.length && nftTokenIdArray.length == nftTokenTypeArray.length, "NFT provided informations are missing or incomplete");
@@ -224,8 +224,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require((block.timestamp >= loans[loanId].loanEnd || loans[loanId].paidAmount >= loans[loanId].amountDue) || lackOfPayment(loanId), "Not possible to finish this loan yet");
     require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
     require(loans[loanId].status != Status.WITHDRAWN,"Loan NFTs already withdrawn");
-    
-    loans[loanId].status = Status.WITHDRAWN;
 
     if ( lackOfPayment(loanId) ) {
       loans[loanId].status = Status.DEFAULTED;
@@ -250,6 +248,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
           loans[loanId].nftTokenTypeArray
         );
       } else if ( loans[loanId].paidAmount >= loans[loanId].amountDue ){
+        loans[loanId].status = Status.WITHDRAWN;
         // We send the items back to borrower
         _transferItems(
           address(this),
@@ -275,7 +274,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     uint256 nrOfInstallments,
     address currency
   ) external {
-    require(nrOfInstallments > 1, "Loan must have at least 2 installments");
+    require(nrOfInstallments > 0, "Loan must have at least 1 installment");
     require(loanAmount > 0, "Loan amount must be higher than 0");
     require(loans[loanId].borrower == msg.sender,"You're not the owner of this loan");
     require(loans[loanId].status < Status.APPROVED,"Loan can no longer be modified");
@@ -334,6 +333,21 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); 
   }
   
+  function lackOfPayment(uint256 loanId) public view returns(bool) {
+    return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(generateInstallmentFrequency())) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(generateInstallmentFrequency()));
+  }
+
+  function generateInstallmentFrequency() public view returns(uint256){
+    if (installmentTimeScale == TimeScale.MINUTES) {
+      return 1 minutes;  
+    } else if (installmentTimeScale == TimeScale.HOURS) {
+      return 1 hours;
+    } else if (installmentTimeScale == TimeScale.DAYS) {
+      return 1 days;
+    }
+    return 1 weeks;
+  }
+  
   function setDiscounts(uint32 _discountNft, uint32 _discountGeyser, uint32 _lenderFee) external onlyOwner {
     discountNft = _discountNft;
     discountGeyser = _discountGeyser;
@@ -367,21 +381,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
 
   function setNftAddress(address _nftAddress) external onlyOwner {
     nftAddress = _nftAddress;
-  }
-  
-  function lackOfPayment(uint256 loanId) public view returns(bool) {
-    return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(generateInstallmentFrequency())) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(generateInstallmentFrequency()));
-  }
-
-  function generateInstallmentFrequency() public view returns(uint256){
-    if (installmentTimeScale == TimeScale.MINUTES) {
-      return 1 minutes;  
-    } else if (installmentTimeScale == TimeScale.HOURS) {
-      return 1 hours;
-    } else if (installmentTimeScale == TimeScale.DAYS) {
-      return 1 days;
-    }
-    return 1 weeks;
   }
 
   // Calculates loan to value ratio
