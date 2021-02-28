@@ -71,7 +71,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     string calldata creationId,
     TokenType[] memory nftTokenTypeArray
   ) external {
-    require(nrOfInstallments > 1, "Loan must include at least 2 installment");
+    require(nrOfInstallments > 1, "Loan must have at least 2 installments");
     require(loanAmount > 0, "Loan amount must be higher than 0");
 
     // Compute loan to value ratio for current loan application
@@ -278,7 +278,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require(assetsValue > 0, "Loan assets value must be higher than 0");
     require(loanAmount > 0, "Loan amount must be higher than 0");
     require(_percent(loanAmount, assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
-    require(nrOfInstallments > 0, "Loan number of installments must be higher than 0");
+    require(nrOfInstallments > 1, "Loan must have at least 2 installments");
     loans[loanId].nrOfInstallments = nrOfInstallments;
     loans[loanId].loanAmount = loanAmount;
     loans[loanId].amountDue = loanAmount.mul(interestRate.add(100)).div(100);
