@@ -276,9 +276,8 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require(loans[loanId].borrower == msg.sender,"You're not the owner of this loan");
     require(loans[loanId].status < Status.APPROVED,"Loan can no longer be modified");
     require(assetsValue > 0, "Loan assets value must be higher than 0");
-    require(_percent(loans[loanId].loanAmount, assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
     require(loanAmount > 0, "Loan amount must be higher than 0");
-    require(_percent(loanAmount, loans[loanId].assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
+    require(_percent(loanAmount, assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
     require(nrOfInstallments > 0, "Loan number of installments must be higher than 0");
     loans[loanId].nrOfInstallments = nrOfInstallments;
     loans[loanId].loanAmount = loanAmount;
