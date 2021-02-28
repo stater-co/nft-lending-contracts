@@ -20,7 +20,7 @@ contract FungibleTokens {
         uint256 initialSupply,
         string memory tokenName,
         string memory tokenSymbol
-    ) public {
+    ) {
         totalSupply = initialSupply * 10 ** uint256(decimals);
         balanceOf[msg.sender] = totalSupply;
         name = tokenName;
