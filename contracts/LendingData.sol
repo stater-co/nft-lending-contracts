@@ -73,6 +73,8 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   ) external {
     require(nrOfInstallments > 1, "Loan must have at least 2 installments");
     require(loanAmount > 0, "Loan amount must be higher than 0");
+    require(nftAddressArray.length > 0, "Loan must have atleast 1 NFT");
+    require(nftAddressArray.length == nftTokenIdArray.length && nftTokenIdArray.length == nftTokenTypeArray.length, "NFT provided informations are missing or incomplete");
 
     // Compute loan to value ratio for current loan application
     require(_percent(loanAmount, assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
@@ -273,12 +275,11 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     uint256 nrOfInstallments,
     address currency
   ) external {
+    require(nrOfInstallments > 1, "Loan must have at least 2 installments");
+    require(loanAmount > 0, "Loan amount must be higher than 0");
     require(loans[loanId].borrower == msg.sender,"You're not the owner of this loan");
     require(loans[loanId].status < Status.APPROVED,"Loan can no longer be modified");
-    require(assetsValue > 0, "Loan assets value must be higher than 0");
-    require(loanAmount > 0, "Loan amount must be higher than 0");
     require(_percent(loanAmount, assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
-    require(nrOfInstallments > 1, "Loan must have at least 2 installments");
     loans[loanId].nrOfInstallments = nrOfInstallments;
     loans[loanId].loanAmount = loanAmount;
     loans[loanId].amountDue = loanAmount.mul(interestRate.add(100)).div(100);
@@ -308,13 +309,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(calculateDiscount(msg.sender)));
   }
   
-  function setDiscounts(uint32 _discountNft, uint32 _discountGeyser, uint32 _lenderFee) external onlyOwner {
-    discountNft = _discountNft;
-    discountGeyser = _discountGeyser;
-    lenderFee = _lenderFee;
-    emit DiscountsChanged(discountNft,discountGeyser,lenderFee);
-  }
-  
   function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {
     return loans[loanId].amountDue.sub(loans[loanId].paidAmount);
   }
@@ -338,6 +332,13 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     interestDiscounted = interestPerInstallement.mul(interestRateToStater).div(100).div(discount); // amount of interest saved per installment
     interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100).sub(interestDiscounted);
     amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); 
+  }
+  
+  function setDiscounts(uint32 _discountNft, uint32 _discountGeyser, uint32 _lenderFee) external onlyOwner {
+    discountNft = _discountNft;
+    discountGeyser = _discountGeyser;
+    lenderFee = _lenderFee;
+    emit DiscountsChanged(discountNft,discountGeyser,lenderFee);
   }
   
   function setGlobalVariables(uint256 _ltv, uint256 _installmentFrequency, TimeScale _installmentTimeScale, uint256 _interestRate, uint256 _interestRateToStater) external onlyOwner {
