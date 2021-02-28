@@ -15,6 +15,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   enum TimeScale{ MINUTES, HOURS, DAYS, WEEKS }
   address public nftAddress; //0xcb13DC836C2331C669413352b836F1dA728ce21c
   address[] public geyserAddressArray; //[0xf1007ACC8F0229fCcFA566522FC83172602ab7e3]
+  address public promissaryNoteContractAddress;
   uint256[] public staterNftTokenIdArray; //[0, 1]
   uint32 public discountNft = 50;
   uint32 public discountGeyser = 5;
@@ -53,10 +54,11 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
   }
   mapping(uint256 => Loan) public loans;
 
-  constructor(address _nftAddress, address[] memory _geyserAddressArray, uint256[] memory _staterNftTokenIdArray) {
+  constructor(address _nftAddress, address _promissaryNoteContractAddress, address[] memory _geyserAddressArray, uint256[] memory _staterNftTokenIdArray) {
     nftAddress = _nftAddress;
     geyserAddressArray = _geyserAddressArray;
     staterNftTokenIdArray = _staterNftTokenIdArray;
+    promissaryNoteContractAddress = _promissaryNoteContractAddress;
   }
 
   // Borrower creates a loan
@@ -292,6 +294,14 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     else if ( nrOfInstallments >= 6 )
         loans[loanId].defaultingLimit = 3;
   }
+  
+  function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external {
+      require(msg.sender == promissaryNoteContractAddress,"You're not whitelisted to access this method");
+      for ( uint256 i = 0 ; i < loanIds.length ; ++i ){
+        require(loans[loanIds[i]].lender != address(0),"One of the loans is not approved yet");
+        loans[loanIds[i]].lender = newOwner;
+      }
+  }
 
   function calculateDiscount(address requester) public view returns(uint256){
     for ( uint i = 0 ; i < staterNftTokenIdArray.length ; ++i )
@@ -355,13 +365,14 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     nftAddress = _nftAddress;
   }
   
-  function setGlobalVariables(uint256 _ltv, uint256 _installmentFrequency, TimeScale _installmentTimeScale, uint256 _interestRate, uint256 _interestRateToStater, uint32 _lenderFee) external onlyOwner {
+  function setGlobalVariables(address _promissaryNoteContractAddress, uint256 _ltv, uint256 _installmentFrequency, TimeScale _installmentTimeScale, uint256 _interestRate, uint256 _interestRateToStater, uint32 _lenderFee) external onlyOwner {
     ltv = _ltv;
     installmentFrequency = _installmentFrequency;
     installmentTimeScale = _installmentTimeScale;
     interestRate = _interestRate;
     interestRateToStater = _interestRateToStater;
     lenderFee = _lenderFee;
+    promissaryNoteContractAddress = _promissaryNoteContractAddress;
   }
   
   function addGeyserAddress(address geyserAddress) external onlyOwner {
