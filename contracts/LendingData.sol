@@ -226,7 +226,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require(loans[loanId].status != Status.WITHDRAWN,"Loan NFTs already withdrawn");
 
     if ( lackOfPayment(loanId) ) {
-      loans[loanId].status = Status.DEFAULTED;
+      loans[loanId].status = Status.WITHDRAWN;
       loans[loanId].loanEnd = block.timestamp;
       // We send the items back to lender
       _transferItems(
@@ -238,7 +238,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
       );
     } else {
       if ( block.timestamp >= loans[loanId].loanEnd && loans[loanId].paidAmount < loans[loanId].amountDue ) {
-        loans[loanId].status = Status.DEFAULTED;
+        loans[loanId].status = Status.WITHDRAWN;
         // We send the items back to lender
         _transferItems(
           address(this),
