@@ -226,7 +226,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     require(loans[loanId].status != Status.WITHDRAWN,"Loan NFTs already withdrawn");
 
     if ( lackOfPayment(loanId) ) {
-      loans[loanId].status = Status.WITHDRAWN;
       loans[loanId].loanEnd = block.timestamp;
       // We send the items back to lender
       _transferItems(
@@ -236,9 +235,9 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
         loans[loanId].nftTokenIdArray,
         loans[loanId].nftTokenTypeArray
       );
+      loans[loanId].status = Status.WITHDRAWN;
     } else {
       if ( block.timestamp >= loans[loanId].loanEnd && loans[loanId].paidAmount < loans[loanId].amountDue ) {
-        loans[loanId].status = Status.WITHDRAWN;
         // We send the items back to lender
         _transferItems(
           address(this),
@@ -247,8 +246,8 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
           loans[loanId].nftTokenIdArray,
           loans[loanId].nftTokenTypeArray
         );
-      } else if ( loans[loanId].paidAmount >= loans[loanId].amountDue ){
         loans[loanId].status = Status.WITHDRAWN;
+      } else if ( loans[loanId].paidAmount >= loans[loanId].amountDue ){
         // We send the items back to borrower
         _transferItems(
           address(this),
@@ -257,6 +256,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
           loans[loanId].nftTokenIdArray,
           loans[loanId].nftTokenTypeArray
         );
+        loans[loanId].status = Status.WITHDRAWN;
       }
     }
     
