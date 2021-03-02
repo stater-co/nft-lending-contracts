@@ -6,11 +6,10 @@ import "openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
 import "multi-token-standard/contracts/interfaces/IERC1155.sol";
 import "openzeppelin-solidity/contracts/token/ERC1155/ERC1155Holder.sol";
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
-import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 interface Geyser{ function totalStakedFor(address addr) external view returns(uint256); }
 
-contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
+contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   using SafeMath for uint256;
   enum TimeScale{ MINUTES, HOURS, DAYS, WEEKS }
   address public nftAddress; //0xcb13DC836C2331C669413352b836F1dA728ce21c
@@ -81,15 +80,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     // Compute loan to value ratio for current loan application
     require(_percent(loanAmount, assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
 
-    // Transfer the items from lender to stater contract
-    _transferItems(
-        msg.sender, 
-        address(this), 
-        nftAddressArray, 
-        nftTokenIdArray,
-        nftTokenTypeArray
-    );
-
     // Computing the defaulting limit
     if ( nrOfInstallments <= 3 )
         loans[loanID].defaultingLimit = 1;
@@ -111,6 +101,15 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     loans[loanID].currency = currency;
     loans[loanID].nftTokenTypeArray = nftTokenTypeArray;
  
+    // Transfer the items from lender to stater contract
+    _transferItems(
+        msg.sender, 
+        address(this), 
+        nftAddressArray, 
+        nftTokenIdArray,
+        nftTokenTypeArray
+    );
+
     // Fire event
     emit NewLoan(loanID, msg.sender, block.timestamp, currency, Status.LISTED, creationId);
     ++loanID;
@@ -128,14 +127,14 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
     if ( loans[loanId].currency == address(0) )
       require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discount)),"Not enough currency");
 
-    // We send the tokens here
-    _transferTokens(msg.sender,loans[loanId].borrower,loans[loanId].currency,loans[loanId].loanAmount,loans[loanId].loanAmount.div(lenderFee).div(discount));
-
     // Borrower assigned , status is 1 , first installment ( payment ) completed
     loans[loanId].lender = msg.sender;
     loans[loanId].loanEnd = block.timestamp.add(loans[loanId].nrOfInstallments.mul(generateInstallmentFrequency()));
     loans[loanId].status = Status.APPROVED;
     loans[loanId].loanStart = block.timestamp;
+
+    // We send the tokens here
+    _transferTokens(msg.sender,loans[loanId].borrower,loans[loanId].currency,loans[loanId].loanAmount,loans[loanId].loanAmount.div(lenderFee).div(discount));
 
     emit LoanApproved(
       loanId,
@@ -195,15 +194,15 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable, ReentrancyGuard {
         interestToStaterPerInstallement = interestToStaterPerInstallement.sub(interestToStaterPerInstallement.div(discount));
     }
     amountPaidAsInstallmentToLender = amountPaidAsInstallmentToLender.sub(interestToStaterPerInstallement);
-    
-    // We transfer the tokens to borrower here
-    _transferTokens(msg.sender,loans[loanId].lender,loans[loanId].currency,amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
 
     loans[loanId].paidAmount = loans[loanId].paidAmount.add(paidByBorrower);
     loans[loanId].nrOfPayments = loans[loanId].nrOfPayments.add(paidByBorrower.div(loans[loanId].installmentAmount));
 
     if (loans[loanId].paidAmount >= loans[loanId].amountDue)
       loans[loanId].status = Status.LIQUIDATED;
+
+    // We transfer the tokens to borrower here
+    _transferTokens(msg.sender,loans[loanId].lender,loans[loanId].currency,amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
 
     emit LoanPayment(
       loanId,
