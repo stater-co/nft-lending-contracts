@@ -112,7 +112,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
 
     // Fire event
     emit NewLoan(loanID, msg.sender, block.timestamp, currency, Status.LISTED, creationId);
-    ++loanID;
+    loanID = loanID.add(1);
   }
 
   // Lender approves a loan
@@ -267,7 +267,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   
   function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external {
       require(msg.sender == promissoryNoteContractAddress,"You're not whitelisted to access this method");
-      for ( uint256 i = 0 ; i < loanIds.length ; ++i ){
+      for ( uint256 i = 0 ; i < loanIds.length ; i = i.add(1) ){
         require(loans[loanIds[i]].lender != address(0),"One of the loans is not approved yet");
         require(promissoryPermissions[promissoryNoteContractAddress][loanIds[i]],"You're not allowed to perform this operation on loan");
         loans[loanIds[i]].lender = newOwner;
@@ -275,17 +275,17 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   }
   
   function setPromissoryPermissions(uint256[] calldata loanIds) external {
-      for ( uint256 i = 0 ; i < loanIds.length ; ++i ){
+      for ( uint256 i = 0 ; i < loanIds.length ; i.add(1) ){
           require(loans[loanIds[i]].lender == msg.sender,"One of the loans is not approved yet");
           promissoryPermissions[promissoryNoteContractAddress][loanIds[i]] = true;
       }
   }
 
   function calculateDiscount(address requester) public view returns(uint256){
-    for ( uint i = 0 ; i < staterNftTokenIdArray.length ; ++i )
+    for ( uint i = 0 ; i < staterNftTokenIdArray.length ; i.add(1) )
 	    if ( IERC1155(nftAddress).balanceOf(requester,staterNftTokenIdArray[i]) > 0 )
 		    return uint256(100).div(discountNft);
-	  for ( uint256 i = 0 ; i < geyserAddressArray.length ; ++i )
+	  for ( uint256 i = 0 ; i < geyserAddressArray.length ; i.add(1) )
 	    if ( Geyser(geyserAddressArray[i]).totalStakedFor(requester) > 0 )
 		    return uint256(100).div(discountGeyser);
 	  return 1;
@@ -363,7 +363,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
 
   // Calculates loan to value ratio
   function _percent(uint256 numerator, uint256 denominator) internal pure returns(uint256) {
-    return numerator.mul(10 ** 4).div(denominator).add(5).div(10);
+    return numerator.mul(10000).div(denominator).add(5).div(10);
   }
 
   // Transfer items fron an account to another
@@ -376,7 +376,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   ) internal {
     uint256 length = nftAddressArray.length;
     require(length == nftTokenIdArray.length && nftTokenTypeArray.length == length, "Token infos provided are invalid");
-    for(uint256 i = 0; i < length; ++i) 
+    for(uint256 i = 0; i < length; i.add(1) ) 
         if ( nftTokenTypeArray[i] == TokenType.ERC721 )
             IERC721(nftAddressArray[i]).safeTransferFrom(
                 from,
