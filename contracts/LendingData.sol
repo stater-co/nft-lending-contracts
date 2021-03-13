@@ -188,7 +188,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
 
     if ( discount != 1 ){
         if ( loans[loanId].currency == address(0) ){
-            require(msg.sender.send(interestToStaterPerInstallement.div(discount)),"Discount returnation failed");
+            require(msg.sender.send(interestToStaterPerInstallement.div(discount)), "Discount returnation failed");
             amountPaidAsInstallmentToLender = amountPaidAsInstallmentToLender.sub(interestToStaterPerInstallement.div(discount));
         }
         interestToStaterPerInstallement = interestToStaterPerInstallement.sub(interestToStaterPerInstallement.div(discount));
@@ -221,7 +221,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
     require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender, "You can't access this loan");
     require((block.timestamp >= loans[loanId].loanEnd || loans[loanId].paidAmount >= loans[loanId].amountDue) || lackOfPayment(loanId), "Not possible to finish this loan yet");
     require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
-    require(loans[loanId].status != Status.WITHDRAWN,"Loan NFTs already withdrawn");
+    require(loans[loanId].status != Status.WITHDRAWN, "Loan NFTs already withdrawn");
 
     if ( lackOfPayment(loanId) ) {
       loans[loanId].status = Status.WITHDRAWN;
@@ -266,17 +266,17 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   }
   
   function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external {
-      require(msg.sender == promissoryNoteContractAddress,"You're not whitelisted to access this method");
+      require(msg.sender == promissoryNoteContractAddress, "You're not whitelisted to access this method");
       for (uint256 i = 0; i < loanIds.length; ++i) {
-        require(loans[loanIds[i]].lender != address(0),"One of the loans is not approved yet");
-        require(promissoryPermissions[loanIds[i]] == msg.sender,"You're not allowed to perform this operation on loan");
+        require(loans[loanIds[i]].lender != address(0), "One of the loans is not approved yet");
+        require(promissoryPermissions[loanIds[i]] == msg.sender, "You're not allowed to perform this operation on loan");
         loans[loanIds[i]].lender = newOwner;
       }
   }
   
   function setPromissoryPermissions(uint256[] calldata loanIds) external {
       for (uint256 i = 0; i < loanIds.length; ++i) {
-          require(loans[loanIds[i]].lender == msg.sender,"You're not the lender of this loan");
+          require(loans[loanIds[i]].lender == msg.sender, "You're not the lender of this loan");
           promissoryPermissions[loanIds[i]] = promissoryNoteContractAddress;
       }
   }
@@ -309,7 +309,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
       uint256 interestToStaterPerInstallement,
       uint256 amountPaidAsInstallmentToLender
   ) {
-    require(nrOfInstallments <= loans[loanId].nrOfInstallments,"Number of installments too high");
+    require(nrOfInstallments <= loans[loanId].nrOfInstallments, "Number of installments too high");
     uint256 discount = calculateDiscount(msg.sender);
     interestDiscounted = 0;
     
@@ -412,8 +412,8 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
               qty2
           ), "Transfer of tokens to Stater failed");
       }else{
-          require(to.send(qty1),"Transfer of ETH to receiver failed");
-          require(payable(owner()).send(qty2),"Transfer of ETH to Stater failed");
+          require(to.send(qty1), "Transfer of ETH to receiver failed");
+          require(payable(owner()).send(qty2), "Transfer of ETH to Stater failed");
       }
   }
 
