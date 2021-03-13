@@ -52,7 +52,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
     TokenType[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
   }
   mapping(uint256 => Loan) public loans;
-  mapping(address => mapping(uint256 => bool)) public promissoryPermissions;
+  mapping(uint256 => address) public promissoryPermissions;
 
   constructor(address _nftAddress, address _promissoryNoteContractAddress, address[] memory _geyserAddressArray, uint256[] memory _staterNftTokenIdArray) {
     nftAddress = _nftAddress;
@@ -74,7 +74,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   ) external {
     require(nrOfInstallments > 0, "Loan must have at least 1 installment");
     require(loanAmount > 0, "Loan amount must be higher than 0");
-    require(nftAddressArray.length > 0, "Loan must have atleast 1 NFT");
+    //require(nftAddressArray.length > 0, "Loan must have atleast 1 NFT");
     require(nftAddressArray.length == nftTokenIdArray.length && nftTokenIdArray.length == nftTokenTypeArray.length, "NFT provided informations are missing or incomplete");
 
     // Compute loan to value ratio for current loan application
@@ -266,10 +266,9 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   }
   
   function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external {
-      require(msg.sender == promissoryNoteContractAddress,"You're not whitelisted to access this method");
       for ( uint256 i = 0 ; i < loanIds.length ; i = i.add(1) ){
         require(loans[loanIds[i]].lender != address(0),"One of the loans is not approved yet");
-        require(promissoryPermissions[promissoryNoteContractAddress][loanIds[i]],"You're not allowed to perform this operation on loan");
+        require(promissoryPermissions[loanIds[i]] == msg.sender,"You're not allowed to perform this operation on loan");
         loans[loanIds[i]].lender = newOwner;
       }
   }
@@ -277,7 +276,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   function setPromissoryPermissions(uint256[] calldata loanIds) external {
       for ( uint256 i = 0 ; i < loanIds.length ; i.add(1) ){
           require(loans[loanIds[i]].lender == msg.sender,"One of the loans is not approved yet");
-          promissoryPermissions[promissoryNoteContractAddress][loanIds[i]] = true;
+          promissoryPermissions[loanIds[i]] = promissoryNoteContractAddress;
       }
   }
 
