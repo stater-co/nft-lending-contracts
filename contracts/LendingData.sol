@@ -266,7 +266,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   }
   
   function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external {
-      for ( uint256 i = 0 ; i < loanIds.length ; i = i.add(1) ){
+      for (uint256 i = 0; i < loanIds.length; i = i.add(1)){
         require(loans[loanIds[i]].lender != address(0),"One of the loans is not approved yet");
         require(promissoryPermissions[loanIds[i]] == msg.sender,"You're not allowed to perform this operation on loan");
         loans[loanIds[i]].lender = newOwner;
@@ -274,17 +274,17 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   }
   
   function setPromissoryPermissions(uint256[] calldata loanIds) external {
-      for ( uint256 i = 0 ; i < loanIds.length ; i = i.add(1) ){
+      for (uint256 i = 0; i < loanIds.length; i = i.add(1)){
           require(loans[loanIds[i]].lender == msg.sender,"One of the loans is not approved yet");
           promissoryPermissions[loanIds[i]] = promissoryNoteContractAddress;
       }
   }
 
   function calculateDiscount(address requester) public view returns(uint256){
-    for ( uint i = 0 ; i < staterNftTokenIdArray.length ; i.add(1) )
+    for (uint i = 0; i < staterNftTokenIdArray.length; i = i.add(1))
 	    if ( IERC1155(nftAddress).balanceOf(requester,staterNftTokenIdArray[i]) > 0 )
 		    return uint256(100).div(discountNft);
-	  for ( uint256 i = 0 ; i < geyserAddressArray.length ; i.add(1) )
+	  for (uint256 i = 0; i < geyserAddressArray.length; i = i.add(1))
 	    if ( Geyser(geyserAddressArray[i]).totalStakedFor(requester) > 0 )
 		    return uint256(100).div(discountGeyser);
 	  return 1;
@@ -375,7 +375,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   ) internal {
     uint256 length = nftAddressArray.length;
     require(length == nftTokenIdArray.length && nftTokenTypeArray.length == length, "Token infos provided are invalid");
-    for(uint256 i = 0; i < length; i.add(1) ) 
+    for(uint256 i = 0; i < length; i = i.add(1)) 
         if ( nftTokenTypeArray[i] == TokenType.ERC721 )
             IERC721(nftAddressArray[i]).safeTransferFrom(
                 from,
