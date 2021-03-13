@@ -270,12 +270,13 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
         require(loans[loanIds[i]].lender != address(0),"One of the loans is not approved yet");
         require(promissoryPermissions[loanIds[i]] == msg.sender,"You're not allowed to perform this operation on loan");
         loans[loanIds[i]].lender = newOwner;
+        promissoryPermissions[loanIds[i]] = address(0);
       }
   }
   
   function setPromissoryPermissions(uint256[] calldata loanIds) external {
       for (uint256 i = 0; i < loanIds.length; ++i){
-          require(loans[loanIds[i]].lender == msg.sender,"One of the loans is not approved yet");
+          require(loans[loanIds[i]].lender == msg.sender,"You're not the lender of this loan");
           promissoryPermissions[loanIds[i]] = promissoryNoteContractAddress;
       }
   }
