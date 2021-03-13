@@ -266,7 +266,8 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   }
   
   function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external {
-      for (uint256 i = 0; i < loanIds.length; ++i){
+      require(msg.sender == promissoryNoteContractAddress,"You're not whitelisted to access this method");
+      for (uint256 i = 0; i < loanIds.length; ++i) {
         require(loans[loanIds[i]].lender != address(0),"One of the loans is not approved yet");
         require(promissoryPermissions[loanIds[i]] == msg.sender,"You're not allowed to perform this operation on loan");
         loans[loanIds[i]].lender = newOwner;
@@ -274,7 +275,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   }
   
   function setPromissoryPermissions(uint256[] calldata loanIds) external {
-      for (uint256 i = 0; i < loanIds.length; ++i){
+      for (uint256 i = 0; i < loanIds.length; ++i) {
           require(loans[loanIds[i]].lender == msg.sender,"You're not the lender of this loan");
           promissoryPermissions[loanIds[i]] = promissoryNoteContractAddress;
       }
