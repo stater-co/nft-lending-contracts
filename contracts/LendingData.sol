@@ -9,27 +9,45 @@ import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 interface Geyser{ function totalStakedFor(address addr) external view returns(uint256); }
 
+/**
+ * @title Stater Lending Contract
+ * @notice Contract that allows users to leverage their NFT assets
+ * @author Stater
+ */
 contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
+
+  // @notice OpenZeppelin's SafeMath library
   using SafeMath for uint256;
   enum TimeScale{ MINUTES, HOURS, DAYS, WEEKS }
+
+  // The address of the Stater NFT collection
   address public nftAddress; //0xcb13DC836C2331C669413352b836F1dA728ce21c
+
+  // The address of the Stater Geyser Contract 
   address[] public geyserAddressArray; //[0xf1007ACC8F0229fCcFA566522FC83172602ab7e3]
+
+  // The address of the Stater Promissory Note Contract
   address public promissoryNoteContractAddress;
+  
   uint256[] public staterNftTokenIdArray; //[0, 1]
   uint32 public discountNft = 50;
   uint32 public discountGeyser = 5;
   uint32 public lenderFee = 100;
   uint256 public loanID;
-  uint256 public ltv = 600; // 60%
+
+  // The maximum loan to value(ltv) 600=60%
+  uint256 public ltv = 600;
   uint256 public installmentFrequency = 1;
   TimeScale public installmentTimeScale = TimeScale.WEEKS;
   uint256 public interestRate = 20;
   uint256 public interestRateToStater = 40;
+
   event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
   event LoanApproved(uint256 indexed loanId, address indexed lender, uint256 approvalDate, uint256 loanPaymentEnd, Status status);
   event LoanCancelled(uint256 indexed loanId, uint256 cancellationDate, Status status);
   event ItemsWithdrawn(uint256 indexed loanId, address indexed requester, Status status);
   event LoanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, uint256 amountPaidAsInstallmentToLender, uint256 interestPerInstallement, uint256 interestToStaterPerInstallement, Status status);
+  
   enum Status{ UNINITIALIZED, LISTED, APPROVED, DEFAULTED, LIQUIDATED, CANCELLED, WITHDRAWN }
   enum TokenType{ ERC721, ERC1155 }
   struct Loan {
@@ -51,9 +69,20 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
     uint256 nrOfPayments; // the number of installments paid
     TokenType[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
   }
+
+  /// @notice Mapping for all the loans
   mapping(uint256 => Loan) public loans;
+
+  /// @notice Mapping for all the loans that are approved by the owner in order to be used in the promissory note
   mapping(uint256 => address) public promissoryPermissions;
 
+  /**
+   * @notice Construct a new lending contract
+   * @param _nftAddress The address of the Stater nft collection
+   * @param _promissoryNoteContractAddress The address of the Stater Promissory Note contract
+   * @param _geyserAddressArray The address of the Stater geyser contract
+   * @param _staterNftTokenIdArray
+   */
   constructor(address _nftAddress, address _promissoryNoteContractAddress, address[] memory _geyserAddressArray, uint256[] memory _staterNftTokenIdArray) {
     nftAddress = _nftAddress;
     geyserAddressArray = _geyserAddressArray;
@@ -62,6 +91,17 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   }
 
   // Borrower creates a loan
+  /**
+   * @notice The borrower creates the loan using the NFT as collateral
+   * @param loanAmount The amount of the loan
+   * @param nrOfInstallments Loan's number of installments
+   * @param currency 
+   * @param assetsValue The value of the assets
+   * @param nftAddressArray
+   * @param nftTokenIdArray
+   * @param creationId
+   * @param nftTokenTypeArray The token types : ERC721 , ERC115
+   */
   function createLoan(
     uint256 loanAmount,
     uint256 nrOfInstallments,
@@ -115,7 +155,10 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
     ++loanID;
   }
 
-  // Lender approves a loan
+  /**
+   * @notice The lender will approve the loan
+   * @param loanId The id of the loan 
+   */
   function approveLoan(uint256 loanId) external payable {
     require(loans[loanId].lender == address(0), "Someone else payed for this loan before you");
     require(loans[loanId].paidAmount == 0, "This loan is currently not ready for lenders");
@@ -172,8 +215,10 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
     );
   }
   
-  // Borrower pays installment for loan
-  // Multiple installments : OK
+  /**
+   * @notice Borrower pays installments for the loan
+   * @param loanId The id of the loan
+   */
   function payLoan(uint256 loanId) external payable {
     require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
     require(loans[loanId].status == Status.APPROVED, "This loan is no longer in the approval phase, check its status");
@@ -215,8 +260,11 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
     );
   }
 
-  // Borrower can withdraw loan items if loan is LIQUIDATED
-  // Lender can withdraw loan item is loan is DEFAULTED
+  /**
+   * @notice Borrwoer can withdraw loan items if loan is LIQUIDATED
+   * @notice Lender can withdraw loan items if loan is DEFAULTED
+   * @param loanId The id of the loan
+   */
   function terminateLoan(uint256 loanId) external {
     require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender, "You can't access this loan");
     require((block.timestamp >= loans[loanId].loanEnd || loans[loanId].paidAmount >= loans[loanId].amountDue) || lackOfPayment(loanId), "Not possible to finish this loan yet");
@@ -265,6 +313,11 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
     );
   }
   
+  /**
+   * @notice Used by the Promissory Note contract to change the ownership of the loan when the Promissory Note NFT is sold 
+   * @param loanIds The ids of the loans that will be transferred to the new owner
+   * @param newOwner The address of the new owner
+   */
   function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external {
       require(msg.sender == promissoryNoteContractAddress, "You're not whitelisted to access this method");
       for (uint256 i = 0; i < loanIds.length; ++i) {
@@ -274,6 +327,10 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
       }
   }
   
+  /**
+   * @notice Used by the Promissory Note contract to approve a list of loans to be used as a Promissory Note NFT
+   * @param loanIds The ids of the loans that will be approved
+   */
   function setPromissoryPermissions(uint256[] calldata loanIds) external {
       for (uint256 i = 0; i < loanIds.length; ++i) {
           require(loans[loanIds[i]].lender == msg.sender, "You're not the lender of this loan");
@@ -281,6 +338,10 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
       }
   }
 
+  /**
+   * @notice Liquidity mining participants or Stater NFT holders will be able to get some discount
+   * @param requester The address of the requester
+   */
   function calculateDiscount(address requester) public view returns(uint256){
     for (uint i = 0; i < staterNftTokenIdArray.length; ++i)
 	    if ( IERC1155(nftAddress).balanceOf(requester,staterNftTokenIdArray[i]) > 0 )
@@ -291,14 +352,29 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
 	  return 1;
   }
 
+  /**
+   * @notice
+   * @param loanId The id of the loan
+   */
   function getLoanApprovalCost(uint256 loanId) external view returns(uint256) {
     return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(calculateDiscount(msg.sender)));
   }
   
+  
+  /**
+   * @notice
+   * @param loanId The id of the loan
+   */
   function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {
     return loans[loanId].amountDue.sub(loans[loanId].paidAmount);
   }
   
+  
+  /**
+   * @notice
+   * @param loanId The id of the loan
+   * @param nrOfInstallments The id of the loan
+   */
   function getLoanInstallmentCost(
       uint256 loanId,
       uint256 nrOfInstallments
@@ -320,10 +396,17 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
     amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); 
   }
   
+  /**
+   * @notice
+   * @param loanId The id of the loan
+   */
   function lackOfPayment(uint256 loanId) public view returns(bool) {
     return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(generateInstallmentFrequency())) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(generateInstallmentFrequency()));
   }
 
+  /**
+   * @notice
+   */
   function generateInstallmentFrequency() public view returns(uint256){
     if (installmentTimeScale == TimeScale.MINUTES) {
       return 1 minutes;  
@@ -334,7 +417,15 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
     }
     return 1 weeks;
   }
-  
+
+  /**
+   * @notice Setter function for the discounts
+   * @param _discountNft Discount value for the Stater NFT holders
+   * @param _discountGeyser Discount value for the Stater liquidity mining participants
+   * @param _geyserAddressArray List of the Stater Geyser contracts 
+   * @param _staterNftTokenIdArray
+   * @param _nftAddress List of the Stater NFT collections
+   */
   function setDiscounts(uint32 _discountNft, uint32 _discountGeyser, address[] calldata _geyserAddressArray, uint256[] calldata _staterNftTokenIdArray, address _nftAddress) external onlyOwner {
     discountNft = _discountNft;
     discountGeyser = _discountGeyser;
@@ -343,6 +434,16 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
     nftAddress = _nftAddress;
   }
   
+  /**
+   * @notice Setter function
+   * @param _promissoryNoteContractAddress The address of the Stater promissory Note contract
+   * @param _ltv Value of Loan to value 
+   * @param _installmentFrequency Value of installment frequency
+   * @param _installmentTimeScale 
+   * @param _interestRate Value of interest rate
+   * @param _interestRateToStater Value of interest rate to stater
+   * @param _lenderFee Value of the lender fee
+   */
   function setGlobalVariables(address _promissoryNoteContractAddress, uint256 _ltv, uint256 _installmentFrequency, TimeScale _installmentTimeScale, uint256 _interestRate, uint256 _interestRateToStater, uint32 _lenderFee) external onlyOwner {
     ltv = _ltv;
     installmentFrequency = _installmentFrequency;
@@ -353,20 +454,39 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
     promissoryNoteContractAddress = _promissoryNoteContractAddress;
   }
   
+  /**
+   * @notice Adds a new geyser address to the list
+   * @param geyserAddress The new geyser address
+   */
   function addGeyserAddress(address geyserAddress) external onlyOwner {
       geyserAddressArray.push(geyserAddress);
   }
   
+  /**
+   * @notice Adds a new nft to the list
+   * @param nftId The id of the new nft
+   */
   function addNftTokenId(uint256 nftId) external onlyOwner {
       staterNftTokenIdArray.push(nftId);
   }
 
-  // Calculates loan to value ratio
+  /**
+   * @notice Calculates loan to value ration
+   * @param numerator
+   * @param denominator
+   */
   function _percent(uint256 numerator, uint256 denominator) internal pure returns(uint256) {
     return numerator.mul(10000).div(denominator).add(5).div(10);
   }
 
-  // Transfer items fron an account to another
+  /**
+   * @notice Transfer items fron an account to another
+   * @param from
+   * @param to
+   * @param nftAddressArray
+   * @param nftTokenIdArray
+   * @param nftTokenTypeArray
+   */
   function _transferItems(
     address from, 
     address to, 
