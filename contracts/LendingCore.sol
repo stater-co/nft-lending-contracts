@@ -63,6 +63,15 @@ contract LendingMethodsContract is ERC721Holder, ERC1155Holder, Ownable {
         staterNftTokenIdArray = _staterNftTokenIdArray;
         nftAddress = _nftAddress;
     }
+    function setGlobalVariables(address _promissoryNoteContractAddress, uint256 _ltv, uint256 _installmentFrequency, TimeScale _installmentTimeScale, uint256 _interestRate, uint256 _interestRateToStater, uint32 _lenderFee) public payable {
+        ltv = _ltv;
+        installmentFrequency = _installmentFrequency;
+        installmentTimeScale = _installmentTimeScale;
+        interestRate = _interestRate;
+        interestRateToStater = _interestRateToStater;
+        lenderFee = _lenderFee;
+        promissoryNoteContractAddress = _promissoryNoteContractAddress;
+    }
 }
 
 contract LendingCore is ERC721Holder, ERC1155Holder, Ownable {
@@ -255,7 +264,7 @@ contract LendingCore is ERC721Holder, ERC1155Holder, Ownable {
   }
   
   function setDiscounts(uint32 _discountNft, uint32 _discountGeyser, address[] calldata _geyserAddressArray, uint256[] calldata _staterNftTokenIdArray, address _nftAddress) public payable onlyOwner {
-        (bool success, bytes memory data) = lendingMethodsContract.delegatecall(
+        (bool success, ) = lendingMethodsContract.delegatecall(
             abi.encodeWithSignature(
                 "setDiscounts(uint32,uint32,address[],uint256[],address)",
                 _discountNft,_discountGeyser,_geyserAddressArray,_staterNftTokenIdArray,_nftAddress
@@ -272,13 +281,14 @@ contract LendingCore is ERC721Holder, ERC1155Holder, Ownable {
       uint256 _interestRate, 
       uint256 _interestRateToStater, 
       uint32 _lenderFee
-    ) external onlyOwner {
-        lendingMethodsContract.delegatecall(
+    ) public payable onlyOwner {
+        (bool success, ) = lendingMethodsContract.delegatecall(
             abi.encodeWithSignature(
-                "setGlobalVariables(address,uint256,uint256,TimeScale,uint256,uint256,uint32,address,address)",
+                "setGlobalVariables(address,uint256,uint256,TimeScale,uint256,uint256,uint32)",
                 _promissoryNoteContractAddress,_ltv,_installmentFrequency,_installmentTimeScale,_interestRate,_interestRateToStater,_lenderFee
             )
         );
+        require(success,"Failed to setGlobalVariables via delegatecall");
   }
   
   function addGeyserAddress(address geyserAddress) external onlyOwner {
