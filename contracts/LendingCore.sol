@@ -63,10 +63,10 @@ contract LendingMethodsContract is ERC721Holder, ERC1155Holder, Ownable {
         staterNftTokenIdArray = _staterNftTokenIdArray;
         nftAddress = _nftAddress;
     }
-    function setGlobalVariables(address _promissoryNoteContractAddress, uint256 _ltv, uint256 _installmentFrequency, TimeScale _installmentTimeScale, uint256 _interestRate, uint256 _interestRateToStater, uint32 _lenderFee) public payable {
+    function setGlobalVariables(address _promissoryNoteContractAddress, uint256 _ltv, uint256 _installmentFrequency, uint8 _installmentTimeScale, uint256 _interestRate, uint256 _interestRateToStater, uint32 _lenderFee) public payable {
         ltv = _ltv;
         installmentFrequency = _installmentFrequency;
-        installmentTimeScale = _installmentTimeScale;
+        installmentTimeScale = TimeScale(_installmentTimeScale);
         interestRate = _interestRate;
         interestRateToStater = _interestRateToStater;
         lenderFee = _lenderFee;
@@ -284,8 +284,8 @@ contract LendingCore is ERC721Holder, ERC1155Holder, Ownable {
     ) public payable onlyOwner {
         (bool success, ) = lendingMethodsContract.delegatecall(
             abi.encodeWithSignature(
-                "setGlobalVariables(address,uint256,uint256,TimeScale,uint256,uint256,uint32)",
-                _promissoryNoteContractAddress,_ltv,_installmentFrequency,_installmentTimeScale,_interestRate,_interestRateToStater,_lenderFee
+                "setGlobalVariables(address,uint256,uint256,uint8,uint256,uint256,uint32)",
+                _promissoryNoteContractAddress,_ltv,_installmentFrequency,uint8(_installmentTimeScale),_interestRate,_interestRateToStater,_lenderFee
             )
         );
         require(success,"Failed to setGlobalVariables via delegatecall");
