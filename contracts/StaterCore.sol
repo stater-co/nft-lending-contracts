@@ -13,6 +13,18 @@ contract StaterCore is ERC721Holder, ERC1155Holder, Ownable {
     using SafeMath for uint256;
     address public nftAddress; //0xcb13DC836C2331C669413352b836F1dA728ce21c
     address public promissoryNoteContractAddress;
+
+
+    /*
+    * @DIIMIIM This is gonna handle all the Stater Core permissions
+    * @The stater admin will be able to add new permissions identified by a bytes32 signature for the new stater smart contracts
+    */
+    mapping(bytes32 => address) public permissions;
+    function setPermission(bytes32 signature, address contractAddress) external onlyOwner {
+        permissions[signature] = contractAddress;
+    }
+
+
     address public lendingMethodsContract;
     address public lendingPoolContract;
     address[] public geyserAddressArray; //[0xf1007ACC8F0229fCcFA566522FC83172602ab7e3]
@@ -54,5 +66,66 @@ contract StaterCore is ERC721Holder, ERC1155Holder, Ownable {
     }
     mapping(uint256 => Loan) public loans;
     mapping(uint256 => address) public promissoryPermissions;
+
+
+    /*
+    * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
+    * @ => TRUE = Loan has exceed the maximum unpaid installments limit, lender can terminate the loan and get the NFTs
+    * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
+    */
+    function lackOfPayment(uint256 loanId) public view returns(bool) {
+        return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(generateInstallmentFrequency())) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(generateInstallmentFrequency()));
+    }
+
+    function _transferTokens(
+        address from,
+        address payable to,
+        address currency,
+        uint256 qty1,
+        uint256 qty2
+    ) internal {
+      if ( currency != address(0) ){
+          require(IERC20(currency).transferFrom(
+              from,
+              to, 
+              qty1
+          ), "Transfer of tokens to receiver failed");
+          require(IERC20(currency).transferFrom(
+              from,
+              owner(), 
+              qty2
+          ), "Transfer of tokens to Stater failed");
+      }else{
+          require(to.send(qty1), "Transfer of ETH to receiver failed");
+          require(payable(owner()).send(qty2), "Transfer of ETH to Stater failed");
+      }
+    }
+
+    // Transfer items fron an account to another
+    function _transferItems(
+        address from, 
+        address to, 
+        address[] memory nftAddressArray, 
+        uint256[] memory nftTokenIdArray,
+        TokenType[] memory nftTokenTypeArray
+    ) internal {
+        uint256 length = nftAddressArray.length;
+        require(length == nftTokenIdArray.length && nftTokenTypeArray.length == length, "Token infos provided are invalid");
+        for(uint256 i = 0; i < length; ++i) 
+            if ( nftTokenTypeArray[i] == TokenType.ERC721 )
+                IERC721(nftAddressArray[i]).safeTransferFrom(
+                    from,
+                    to,
+                    nftTokenIdArray[i]
+                );
+            else
+                IERC1155(nftAddressArray[i]).safeTransferFrom(
+                    from,
+                    to,
+                    nftTokenIdArray[i],
+                    1,
+                    '0x00'
+                );
+    }
 
 }
