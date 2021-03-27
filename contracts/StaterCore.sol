@@ -29,17 +29,14 @@ contract StaterCore is ERC721Holder, ERC1155Holder, Ownable {
     address public lendingPoolContract;
     address[] public geyserAddressArray; //[0xf1007ACC8F0229fCcFA566522FC83172602ab7e3]
     uint256[] public staterNftTokenIdArray; //[0, 1]
-    uint256 public loanID;
+    uint256 public id; // the loan ID
     uint256 public ltv = 600; // 60%
-    uint256 public installmentFrequency = 1;
     uint256 public interestRate = 20;
     uint256 public interestRateToStater = 40;
     uint32 public discountNft = 50;
     uint32 public discountGeyser = 5;
     uint32 public lenderFee = 100;
-    enum TimeScale{ MINUTES, HOURS, DAYS, WEEKS }
-    TimeScale public installmentTimeScale = TimeScale.WEEKS;
-    enum Status{ UNINITIALIZED, LISTED, APPROVED, DEFAULTED, LIQUIDATED, CANCELLED, WITHDRAWN }
+    enum Status{ LISTED, APPROVED, LIQUIDATED, CANCELLED, WITHDRAWN }
     event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
     event LoanApproved(uint256 indexed loanId, address indexed lender, uint256 approvalDate, uint256 loanPaymentEnd, Status status);
     event LoanCancelled(uint256 indexed loanId, uint256 cancellationDate, Status status);
@@ -52,6 +49,8 @@ contract StaterCore is ERC721Holder, ERC1155Holder, Ownable {
         address currency; // the token that the borrower lends, address(0) for ETH
         Status status; // the loan status
         uint256[] nftTokenIdArray; // the unique identifier of the NFT token that the borrower uses as collateral
+        uint256 timescale; // the loan time scale
+        uint256 installmentFrequency; // the loan installments frequency
         uint256 loanAmount; // the amount, denominated in tokens (see next struct entry), the borrower lends
         uint256 assetsValue; // important for determintng LTV which has to be under 50-60%
         uint256 loanStart; // the point when the loan is approved
@@ -67,15 +66,6 @@ contract StaterCore is ERC721Holder, ERC1155Holder, Ownable {
     mapping(uint256 => Loan) public loans;
     mapping(uint256 => address) public promissoryPermissions;
 
-
-    /*
-    * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
-    * @ => TRUE = Loan has exceed the maximum unpaid installments limit, lender can terminate the loan and get the NFTs
-    * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
-    */
-    function lackOfPayment(uint256 loanId) public view returns(bool) {
-        return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(generateInstallmentFrequency())) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(generateInstallmentFrequency()));
-    }
 
     function _transferTokens(
         address from,
