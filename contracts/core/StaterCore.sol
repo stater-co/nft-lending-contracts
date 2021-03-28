@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
 import "../openzeppelin-solidity/contracts/access/Ownable.sol";
-import "./StaterPermissions.sol";
+import "./StaterDiplomat.sol";
 import "./StaterTransfers.sol";
+import "./StaterDiscounts.sol";
 
-contract StaterCore is Ownable, StaterPermissions, StaterTransfers {
+contract StaterCore is Ownable, StaterDiplomat, StaterTransfers, StaterDiscounts {
     
     
     /*

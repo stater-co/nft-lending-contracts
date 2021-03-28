@@ -1,16 +1,32 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
-import "./StaterCore.sol";
+import "../openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "../core/StaterCore.sol";
 
 contract LendingCore is StaterCore {
+    using SafeMath for uint256;
+    bytes32 constant promissorySignature = "PROMISSORY_NOTE";
+    bytes32 constant lendingMethodsSignature = "LENDING_SETTERS";
+    bytes32 constant lendingPoolSignature = "LENDING_POOL";
 
-    constructor(address _nftAddress, address _promissoryNoteContractAddress, address[] memory _geyserAddressArray, uint256[] memory _staterNftTokenIdArray, address _lendingMethodsContract, address _lendingPoolContract) {
-        nftAddress = _nftAddress;
-        geyserAddressArray = _geyserAddressArray;
-        staterNftTokenIdArray = _staterNftTokenIdArray;
-        promissoryNoteContractAddress = _promissoryNoteContractAddress;
-        lendingMethodsContract = _lendingMethodsContract;
-        lendingPoolContract = _lendingPoolContract;
+    constructor(
+        address _nftAddress, 
+        address _promissoryNoteContractAddress, 
+        address[] memory _geyserAddressArray, 
+        uint256[] memory _staterNftTokenIdArray, 
+        address _lendingMethodsContract, 
+        address _lendingPoolContract
+    ) {
+        
+        permissions[promissorySignature] = _promissoryNoteContractAddress;
+        permissions[lendingMethodsSignature] = _lendingMethodsContract;
+        permissions[lendingPoolSignature] = _lendingPoolContract;
+        
+        addDiscount(uint8(1),_nftAddress,uint8(50),_staterNftTokenIdArray);
+        uint256[] memory emptyArray;
+        for ( uint256 i = 0 ; i < _geyserAddressArray.length ; ++i )
+            addDiscount(uint8(2),_geyserAddressArray[i],uint8(50),emptyArray);
+            
     }
 
     // Borrower creates a loan
@@ -26,7 +42,7 @@ contract LendingCore is StaterCore {
     ) public payable returns(string memory){
         // For 8 or more parameters via delegatecall >> Remix raises an error with no error message
         loans[id].assetsValue = assetsValue;
-        (bool success, bytes memory result) = lendingMethodsContract.delegatecall(
+        (bool success, bytes memory result) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "createLoan(uint256,uint256,address,address[],uint256[],string,uint32[])",
                 loanAmount,nrOfInstallments,currency,nftAddressArray,nftTokenIdArray,creationId,nftTokenTypeArray
@@ -43,7 +59,7 @@ contract LendingCore is StaterCore {
         uint256 nrOfInstallments,
         address currency
     ) external {
-        (bool success, ) = lendingMethodsContract.delegatecall(
+        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "editLoan(uint256,uint256,uint256,uint256,address)",
                 loanId,assetsValue,loanAmount,nrOfInstallments,currency
@@ -54,7 +70,7 @@ contract LendingCore is StaterCore {
 
     // Lender approves a loan
     function approveLoan(uint256 loanId) public payable {
-            (bool success, ) = lendingMethodsContract.delegatecall(
+            (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
                 abi.encodeWithSignature(
                     "approveLoan(uint256)",
                     loanId
@@ -66,7 +82,7 @@ contract LendingCore is StaterCore {
 
     // Borrower cancels a loan
     function cancelLoan(uint256 loanId) public payable {
-        (bool success, ) = lendingMethodsContract.delegatecall(
+        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "cancelLoan(uint256)",
                 loanId
@@ -79,7 +95,7 @@ contract LendingCore is StaterCore {
     // Borrower pays installment for loan
     // Multiple installments : OK
     function payLoan(uint256 loanId) public payable {
-        (bool success, ) = lendingMethodsContract.delegatecall(
+        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "payLoan(uint256)",
                 loanId
@@ -92,7 +108,7 @@ contract LendingCore is StaterCore {
     // Borrower can withdraw loan items if loan is LIQUIDATED
     // Lender can withdraw loan item is loan is DEFAULTED
     function terminateLoan(uint256 loanId) public payable {
-        (bool success, ) = lendingMethodsContract.delegatecall(
+        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "terminateLoan(uint256)",
                 loanId
@@ -103,7 +119,7 @@ contract LendingCore is StaterCore {
 
   
     function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) public payable {
-        (bool success, ) = lendingMethodsContract.delegatecall(
+        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "promissoryExchange(uint256[],address)",
                 loanIds,newOwner
@@ -114,7 +130,7 @@ contract LendingCore is StaterCore {
 
   
     function setPromissoryPermissions(uint256[] calldata loanIds) public payable {
-        (bool success, ) = lendingMethodsContract.delegatecall(
+        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "setPromissoryPermissions(uint256[])",
                 loanIds
@@ -157,7 +173,7 @@ contract LendingCore is StaterCore {
 
   
     function setDiscounts(uint32 _discountNft, uint32 _discountGeyser, address[] calldata _geyserAddressArray, uint256[] calldata _staterNftTokenIdArray, address _nftAddress) public payable onlyOwner {
-        (bool success, ) = lendingMethodsContract.delegatecall(
+        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "setDiscounts(uint32,uint32,address[],uint256[],address)",
                 _discountNft,_discountGeyser,_geyserAddressArray,_staterNftTokenIdArray,_nftAddress
@@ -172,37 +188,15 @@ contract LendingCore is StaterCore {
         uint256 _ltv, 
         uint256 _interestRate, 
         uint256 _interestRateToStater, 
-        uint32 _lenderFee,
-        address _lendingMethodsContract
+        uint32 _lenderFee
     ) public payable onlyOwner {
-        lendingMethodsContract = _lendingMethodsContract;
-        (bool success, ) = lendingMethodsContract.delegatecall(
+        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "setGlobalVariables(address,uint256,uint256,uint256,uint32)",
                 _promissoryNoteContractAddress,_ltv,_interestRate,_interestRateToStater,_lenderFee
             )
         );
         require(success,"Failed to setGlobalVariables via delegatecall");
-    }
-  
-
-    function addGeyserAddress(address geyserAddress) external onlyOwner {
-        geyserAddressArray.push(geyserAddress);
-    }
-
-  
-    function addNftTokenId(uint256 nftId) external onlyOwner {
-        staterNftTokenIdArray.push(nftId);
-    }
-  
-    function calculateDiscount(address requester) public view returns(uint256){
-        for (uint i = 0; i < staterNftTokenIdArray.length; ++i)
-            if ( IERC1155(nftAddress).balanceOf(requester,staterNftTokenIdArray[i]) > 0 )
-                return uint256(100).div(discountNft);
-        for (uint256 i = 0; i < geyserAddressArray.length; ++i)
-            if ( Geyser(geyserAddressArray[i]).totalStakedFor(requester) > 0 )
-                return uint256(100).div(discountGeyser);
-        return 1;
     }
   
 }

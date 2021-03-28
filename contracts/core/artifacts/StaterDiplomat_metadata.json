@@ -32,14 +32,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
+						"internalType": "bytes32",
 						"name": "",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
+						"type": "bytes32"
 					}
 				],
 				"name": "permissions",
@@ -51,24 +46,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_staterContract",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_address",
-						"type": "address"
-					}
-				],
-				"name": "pushPermission",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -97,14 +74,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_staterContract",
-						"type": "address"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_index",
-						"type": "uint32"
+						"internalType": "bytes32",
+						"name": "_signature",
+						"type": "bytes32"
 					},
 					{
 						"internalType": "address",
@@ -131,7 +103,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"../nft-lending-contracts/contracts/core/StaterPermissions.sol": "StaterPermissions"
+			"../nft-lending-contracts/contracts/core/StaterPermissions.sol": "StaterDiplomat"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -146,11 +118,11 @@
 	},
 	"sources": {
 		"../nft-lending-contracts/contracts/core/StaterPermissions.sol": {
-			"keccak256": "0x07460eb63fc93c326eb1393b7eb41eededc566b0e81c9b0f58ba8a673df4f1c4",
+			"keccak256": "0xd93f715ad01f81cbba584807a489f406698824cb2f205750611a8d9880fb5357",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f6a4cf58c06f7a8326147d5d75d7d444a2683b43dc21e83484c55143f57518f0",
-				"dweb:/ipfs/QmVrAWEbdkBpibGA2NhBSYUvnVMVR6JfYMmAnvQfCn8DaC"
+				"bzz-raw://7aecb0992f75dcb02d3783950bb74528d0eb5ccd3c905c825f15a4212a1d0170",
+				"dweb:/ipfs/QmUxPTxcL5BfXZ5oSJ2c59pCihScp92mwt3J5VuiQj4mvP"
 			]
 		}
 	},
