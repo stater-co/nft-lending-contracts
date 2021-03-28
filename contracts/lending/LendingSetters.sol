@@ -1,22 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
-import "./StaterCore.sol";
+import "../core/StaterCore.sol";
 
 contract LendingSetters is StaterCore {
-  
-    function setDiscounts(
-        uint32 _discountNft, 
-        uint32 _discountGeyser, 
-        address[] calldata _geyserAddressArray, 
-        uint256[] calldata _staterNftTokenIdArray, 
-        address _nftAddress
-    ) public payable {
-        discountNft = _discountNft;
-        discountGeyser = _discountGeyser;
-        geyserAddressArray = _geyserAddressArray;
-        staterNftTokenIdArray = _staterNftTokenIdArray;
-        nftAddress = _nftAddress;
-    }
+ 
     
     function setGlobalVariables(
         address _promissoryNoteContractAddress, 
@@ -293,22 +280,12 @@ contract LendingSetters is StaterCore {
     * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
     */
     function lackOfPayment(uint256 loanId) public view returns(bool) {
-        return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(loans[loanId].installmentFrequency) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(loans[loanId].installmentFrequency));
+        return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(loans[loanId].installmentFrequency)) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(loans[loanId].installmentFrequency));
     }
 
     // Calculates loan to value ratio
     function _percent(uint256 numerator, uint256 denominator) internal pure returns(uint256) {
         return numerator.mul(10000).div(denominator).add(5).div(10);
-    }
-    
-    function calculateDiscount(address requester) public view returns(uint256){
-        for (uint i = 0; i < staterNftTokenIdArray.length; ++i)
-            if ( IERC1155(nftAddress).balanceOf(requester,staterNftTokenIdArray[i]) > 0 )
-                return uint256(100).div(discountNft);
-        for (uint256 i = 0; i < geyserAddressArray.length; ++i)
-            if ( Geyser(geyserAddressArray[i]).totalStakedFor(requester) > 0 )
-                return uint256(100).div(discountGeyser);
-        return 1;
     }
     
 }

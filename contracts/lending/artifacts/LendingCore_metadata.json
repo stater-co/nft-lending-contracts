@@ -973,39 +973,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint32",
-						"name": "_discountNft",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_discountGeyser",
-						"type": "uint32"
-					},
-					{
-						"internalType": "address[]",
-						"name": "_geyserAddressArray",
-						"type": "address[]"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "_staterNftTokenIdArray",
-						"type": "uint256[]"
-					},
-					{
-						"internalType": "address",
-						"name": "_nftAddress",
-						"type": "address"
-					}
-				],
-				"name": "setDiscounts",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "address",
 						"name": "_promissoryNoteContractAddress",
 						"type": "address"
@@ -1189,11 +1156,11 @@
 			]
 		},
 		"../nft-lending-contracts/contracts/lending/LendingCore.sol": {
-			"keccak256": "0x8da748785f95dc01c03cae1185fcc3eba3e30d6cbaceb3dafca0ada4cbb03ac8",
+			"keccak256": "0xef79a498149cf3e52e6eb4e0b58800ae57a540719ce208c14298a6c65aee0074",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://adc9ec7551eb89c504840f413c0fd619098d6e59c69b322485e4e853d2c7eee2",
-				"dweb:/ipfs/QmWhREgiybc8mZMCN5sURzJuB5C6Zd73QPsThDA7EZ5KGJ"
+				"bzz-raw://775cae6a88d66cf5bb3ce513e59bbd915657e95fc2a140d5c2c42acb81ce05ba",
+				"dweb:/ipfs/QmWzNMQYx6keCf1XS7qUgx8eDgZiLKUMjteWig1Jw5Ut86"
 			]
 		},
 		"../nft-lending-contracts/contracts/multi-token-standard/contracts/interfaces/IERC1155.sol": {

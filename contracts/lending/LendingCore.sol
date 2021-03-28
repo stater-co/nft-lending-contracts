@@ -172,17 +172,6 @@ contract LendingCore is StaterCore {
     }
 
   
-    function setDiscounts(uint32 _discountNft, uint32 _discountGeyser, address[] calldata _geyserAddressArray, uint256[] calldata _staterNftTokenIdArray, address _nftAddress) public payable onlyOwner {
-        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
-            abi.encodeWithSignature(
-                "setDiscounts(uint32,uint32,address[],uint256[],address)",
-                _discountNft,_discountGeyser,_geyserAddressArray,_staterNftTokenIdArray,_nftAddress
-            )
-        );
-        require(success,"Failed to setDiscounts via delegatecall");
-    }
-
-  
     function setGlobalVariables(
         address _promissoryNoteContractAddress, 
         uint256 _ltv, 
