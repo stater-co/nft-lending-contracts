@@ -30,16 +30,29 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   address public promissoryNoteContractAddress;
   
   uint256[] public staterNftTokenIdArray; //[0, 1]
+  
+  // 50=50%
   uint32 public discountNft = 50;
-  uint32 public discountGeyser = 5;
+  
+  // 50=50%
+  uint32 public discountGeyser = 50;
+  
+  // 100 = 1%
   uint32 public lenderFee = 100;
+  
+  // Incremental value used for loan ids
   uint256 public loanID;
 
-  // The maximum loan to value(ltv) 600=60%
+  // Loan to value(ltv). 600=60%
   uint256 public ltv = 600;
+  
   uint256 public installmentFrequency = 1;
   TimeScale public installmentTimeScale = TimeScale.WEEKS;
+  
+  // 20 =20%
   uint256 public interestRate = 20;
+  
+  // 40=40% out of intersetRate
   uint256 public interestRateToStater = 40;
 
   event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
@@ -48,7 +61,15 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   event ItemsWithdrawn(uint256 indexed loanId, address indexed requester, Status status);
   event LoanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, uint256 amountPaidAsInstallmentToLender, uint256 interestPerInstallement, uint256 interestToStaterPerInstallement, Status status);
   
-  enum Status{ UNINITIALIZED, LISTED, APPROVED, DEFAULTED, LIQUIDATED, CANCELLED, WITHDRAWN }
+  enum Status{
+      UNINITIALIZED, // will be removed in the future -- not used
+      LISTED, // after the loan have been created --> the next status will be APPROVED
+      APPROVED, // in this status the loan has a lender -- will be set after approveLoan()
+      DEFAULTED, // will be removed in the future -- not used
+      LIQUIDATED, // the loan will have this status after all installments have been paid
+      CANCELLED, // only if loan is LISTED 
+      WITHDRAWN // the final status, the collateral returned to the borrower or to the lender
+  }
   enum TokenType{ ERC721, ERC1155 }
   struct Loan {
     address[] nftAddressArray; // the adderess of the ERC721
@@ -70,10 +91,10 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
     TokenType[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
   }
 
-  /// @notice Mapping for all the loans
+  // @notice Mapping for all the loans
   mapping(uint256 => Loan) public loans;
 
-  /// @notice Mapping for all the loans that are approved by the owner in order to be used in the promissory note
+  // @notice Mapping for all the loans that are approved by the owner in order to be used in the promissory note
   mapping(uint256 => address) public promissoryPermissions;
 
   /**
@@ -95,7 +116,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
    * @notice The borrower creates the loan using the NFT as collateral
    * @param loanAmount The amount of the loan
    * @param nrOfInstallments Loan's number of installments
-   * @param currency 
+   * @param currency ETH or custom ERC20
    * @param assetsValue The value of the assets
    * @param nftAddressArray
    * @param nftTokenIdArray
@@ -353,7 +374,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   }
 
   /**
-   * @notice
+   * @notice This function returns total price (+ fees)
    * @param loanId The id of the loan
    */
   function getLoanApprovalCost(uint256 loanId) external view returns(uint256) {
@@ -397,16 +418,13 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   }
   
   /**
-   * @notice
+   * @notice This function checks for unpaid installments
    * @param loanId The id of the loan
    */
   function lackOfPayment(uint256 loanId) public view returns(bool) {
     return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(generateInstallmentFrequency())) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(generateInstallmentFrequency()));
   }
 
-  /**
-   * @notice
-   */
   function generateInstallmentFrequency() public view returns(uint256){
     if (installmentTimeScale == TimeScale.MINUTES) {
       return 1 minutes;  
