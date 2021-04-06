@@ -5,9 +5,7 @@ import "../core/StaterCore.sol";
 
 contract LendingCore is StaterCore {
     using SafeMath for uint256;
-    bytes32 constant promissorySignature = "PROMISSORY_NOTE";
     bytes32 constant lendingMethodsSignature = "LENDING_SETTERS";
-    bytes32 constant lendingPoolSignature = "LENDING_POOL";
 
     constructor(
         address _nftAddress, 
@@ -18,9 +16,9 @@ contract LendingCore is StaterCore {
         address _lendingPoolContract
     ) {
         
-        permissions[promissorySignature] = _promissoryNoteContractAddress;
+        permissions["PROMISSORY_NOTE"] = _promissoryNoteContractAddress;
         permissions[lendingMethodsSignature] = _lendingMethodsContract;
-        permissions[lendingPoolSignature] = _lendingPoolContract;
+        permissions["LENDING_POOL"] = _lendingPoolContract;
         
         addDiscount(uint8(1),_nftAddress,uint8(50),_staterNftTokenIdArray);
         uint256[] memory emptyArray;
@@ -32,13 +30,13 @@ contract LendingCore is StaterCore {
     // Borrower creates a loan
     function createLoan(
         uint256 loanAmount,
-        uint256 nrOfInstallments,
+        uint16 nrOfInstallments,
         address currency,
         uint256 assetsValue, 
         address[] calldata nftAddressArray, 
         uint256[] calldata nftTokenIdArray,
         string calldata creationId,
-        uint32[] calldata nftTokenTypeArray
+        uint8[] calldata nftTokenTypeArray
     ) public payable returns(string memory){
         // For 8 or more parameters via delegatecall >> Remix raises an error with no error message
         loans[id].assetsValue = assetsValue;
@@ -173,7 +171,6 @@ contract LendingCore is StaterCore {
 
   
     function setGlobalVariables(
-        address _promissoryNoteContractAddress, 
         uint256 _ltv, 
         uint256 _interestRate, 
         uint256 _interestRateToStater, 
@@ -182,7 +179,7 @@ contract LendingCore is StaterCore {
         (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "setGlobalVariables(address,uint256,uint256,uint256,uint32)",
-                _promissoryNoteContractAddress,_ltv,_interestRate,_interestRateToStater,_lenderFee
+                _ltv,_interestRate,_interestRateToStater,_lenderFee
             )
         );
         require(success,"Failed to setGlobalVariables via delegatecall");

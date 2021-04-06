@@ -8,30 +8,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "discounts",
-				"outputs": [
-					{
-						"internalType": "uint32",
-						"name": "",
-						"type": "uint32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "bytes32",
 						"name": "",
 						"type": "bytes32"
@@ -46,29 +22,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_contract",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_index",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_discount",
-						"type": "uint32"
-					}
-				],
-				"name": "setDiscounts",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -103,7 +56,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"../nft-lending-contracts/contracts/core/StaterPermissions.sol": "StaterDiplomat"
+			"../test/contracts/core/StaterDiplomat.sol": "StaterDiplomat"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -111,18 +64,18 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
-		"../nft-lending-contracts/contracts/core/StaterPermissions.sol": {
-			"keccak256": "0xd93f715ad01f81cbba584807a489f406698824cb2f205750611a8d9880fb5357",
+		"../test/contracts/core/StaterDiplomat.sol": {
+			"keccak256": "0xcc51c8712804bb6171074472892803d55a2d80737c523d3d0cad177ab4f344f3",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://7aecb0992f75dcb02d3783950bb74528d0eb5ccd3c905c825f15a4212a1d0170",
-				"dweb:/ipfs/QmUxPTxcL5BfXZ5oSJ2c59pCihScp92mwt3J5VuiQj4mvP"
+				"bzz-raw://2c314572496fb69b2cfbccd1b2d389190b396bb19cdd19bc1417b1f5fb572095",
+				"dweb:/ipfs/QmcYkxhDJjZcEhevPBEDapqsCUsBo25J32aAogcFVFL58H"
 			]
 		}
 	},

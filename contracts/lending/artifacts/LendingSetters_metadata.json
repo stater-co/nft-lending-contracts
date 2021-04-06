@@ -6,42 +6,6 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_nftAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_promissoryNoteContractAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "address[]",
-						"name": "_geyserAddressArray",
-						"type": "address[]"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "_staterNftTokenIdArray",
-						"type": "uint256[]"
-					},
-					{
-						"internalType": "address",
-						"name": "_lendingMethodsContract",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_lendingPoolContract",
-						"type": "address"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "constructor"
-			},
-			{
 				"anonymous": false,
 				"inputs": [
 					{
@@ -242,6 +206,30 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "numerator",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "denominator",
+						"type": "uint256"
+					}
+				],
+				"name": "_percent",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "from",
 						"type": "address"
@@ -401,11 +389,6 @@
 						"type": "address"
 					},
 					{
-						"internalType": "uint256",
-						"name": "assetsValue",
-						"type": "uint256"
-					},
-					{
 						"internalType": "address[]",
 						"name": "nftAddressArray",
 						"type": "address[]"
@@ -427,13 +410,7 @@
 					}
 				],
 				"name": "createLoan",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
+				"outputs": [],
 				"stateMutability": "payable",
 				"type": "function"
 			},
@@ -523,9 +500,9 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "uint256",
+						"internalType": "uint16",
 						"name": "nrOfInstallments",
-						"type": "uint256"
+						"type": "uint16"
 					},
 					{
 						"internalType": "address",
@@ -563,38 +540,13 @@
 						"internalType": "uint256",
 						"name": "loanId",
 						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "nrOfInstallments",
-						"type": "uint256"
 					}
 				],
-				"name": "getLoanInstallmentCost",
+				"name": "getLoanPaymentFrequency",
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "overallInstallmentAmount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "interestPerInstallement",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "interestDiscounted",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "interestToStaterPerInstallement",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amountPaidAsInstallmentToLender",
+						"name": "",
 						"type": "uint256"
 					}
 				],
@@ -654,6 +606,25 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					}
+				],
+				"name": "lackOfPayment",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -929,24 +900,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256[]",
-						"name": "loanIds",
-						"type": "uint256[]"
-					},
-					{
-						"internalType": "address payable",
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "promissoryExchange",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
@@ -1014,19 +967,6 @@
 				"name": "setPermission",
 				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256[]",
-						"name": "loanIds",
-						"type": "uint256[]"
-					}
-				],
-				"name": "setPromissoryPermissions",
-				"outputs": [],
-				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -1104,7 +1044,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"../test/contracts/lending/LendingCore.sol": "LendingCore"
+			"../test/contracts/lending/LendingSetters.sol": "LendingSetters"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -1150,12 +1090,20 @@
 				"dweb:/ipfs/QmPcAsCt1Hfk9TWzvk2iPVYKnLer3Kv1y84dVRTEEqpWZ9"
 			]
 		},
-		"../test/contracts/lending/LendingCore.sol": {
-			"keccak256": "0x23d9aa3629b547325cb67a92f15ace0c4dd00bd4052c2c3911e79084e0d3226f",
+		"../test/contracts/lending/LendingSetters.sol": {
+			"keccak256": "0x13bd729d8645aa9b36d322ecbcfe0f0531431058e52d960efd256f98c1917416",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d7f43364adddb87e572e2e481564e6aaf9ad059c89cc07de3d8d550e65d977f4",
-				"dweb:/ipfs/Qmc9KZmFebut7oXcmn63gJnSEJgigLyEQLDGLTuRpscCkw"
+				"bzz-raw://35f33dc29daf5995601398d3d60143660e912140be85087a5ddea5449c681b65",
+				"dweb:/ipfs/QmTgLHiLqnmhsfhK3eL2L1CY4VXAwubATcH8tG9FE3mDRh"
+			]
+		},
+		"../test/contracts/lending/LendingUtils.sol": {
+			"keccak256": "0x35e6256b565505e0c4e65e8920501381f52e824d6441342a9a08038f1d8cc457",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b268d468193243f29da57bf188c05121f8eb82dfb9f45d88efd3db9a556d7a37",
+				"dweb:/ipfs/QmVFhSsn3TtNiQSzmQYHb6EYS5Ay8DSDzSF3gpdUzbsgBC"
 			]
 		},
 		"../test/contracts/multi-token-standard/contracts/interfaces/IERC1155.sol": {

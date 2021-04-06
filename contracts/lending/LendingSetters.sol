@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
 import "../core/StaterCore.sol";
+import "../openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./LendingUtils.sol";
 
-contract LendingSetters is StaterCore {
- 
+contract LendingSetters is StaterCore, LendingUtils {
+    using SafeMath for uint256;
+    using SafeMath for uint16;
     
     function setGlobalVariables(
-        address _promissoryNoteContractAddress, 
         uint256 _ltv,  
         uint256 _interestRate, 
         uint256 _interestRateToStater, 
@@ -16,18 +18,17 @@ contract LendingSetters is StaterCore {
         interestRate = _interestRate;
         interestRateToStater = _interestRateToStater;
         lenderFee = _lenderFee;
-        promissoryNoteContractAddress = _promissoryNoteContractAddress;
     }
     
     // Borrower creates a loan
     function createLoan(
         uint256 loanAmount,
-        uint256 nrOfInstallments,
+        uint16 nrOfInstallments,
         address currency,
         address[] calldata nftAddressArray, 
         uint256[] calldata nftTokenIdArray,
         string calldata creationId,
-        uint32[] calldata nftTokenTypeArray
+        uint8[] calldata nftTokenTypeArray
     ) public payable {
         require(nrOfInstallments > 0, "Loan must have at least 1 installment");
         require(loanAmount > 0, "Loan amount must be higher than 0");
@@ -59,8 +60,7 @@ contract LendingSetters is StaterCore {
         loans[id].borrower = msg.sender;
         loans[id].currency = currency;
         loans[id].nftTokenTypeArray = nftTokenTypeArray;
-        loans[id].timescale = 1 weeks;
-        loans[id].installmentFrequency = 1;
+        loans[id].installmentsTimeHandler[1 weeks] = nrOfInstallments;
         
         // Transfer the items from lender to stater contract
         _transferItems(
@@ -85,7 +85,7 @@ contract LendingSetters is StaterCore {
         uint256 loanId,
         uint256 assetsValue,
         uint256 loanAmount,
-        uint256 nrOfInstallments,
+        uint16 nrOfInstallments,
         address currency
     ) external {
         require(nrOfInstallments > 0, "Loan must have at least 1 installment");
@@ -93,7 +93,7 @@ contract LendingSetters is StaterCore {
         require(loans[loanId].borrower == msg.sender,"You're not the owner of this loan");
         require(loans[loanId].status < Status.APPROVED,"Loan can no longer be modified");
         require(_percent(loanAmount, assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
-        loans[loanId].nrOfInstallments = nrOfInstallments;
+        loans[loanId].installmentsTimeHandler[1 weeks] = nrOfInstallments;
         loans[loanId].loanAmount = loanAmount;
         loans[loanId].amountDue = loanAmount.mul(interestRate.add(100)).div(100);
         loans[loanId].installmentAmount = loans[loanId].amountDue.mod(nrOfInstallments) > 0 ? loans[loanId].amountDue.div(nrOfInstallments).add(1) : loans[loanId].amountDue.div(nrOfInstallments);
@@ -122,12 +122,25 @@ contract LendingSetters is StaterCore {
 
         // Borrower assigned , status is 1 , first installment ( payment ) completed
         loans[loanId].lender = msg.sender;
-        loans[loanId].loanEnd = block.timestamp.add(loans[loanId].nrOfInstallments.mul(loans[loanId].installmentFrequency));
+        loans[loanId].loanEnd = block.timestamp.add(
+            loans[loanId].nrOfInstallments.mul(
+                getLoanPaymentFrequency(loanId).div(
+                    loans[loanId].nrOfInstallments
+                )
+            )
+        );
         loans[loanId].status = Status.APPROVED;
         loans[loanId].loanStart = block.timestamp;
 
         // We send the tokens here
-        _transferTokens(msg.sender,loans[loanId].borrower,loans[loanId].currency,loans[loanId].loanAmount,loans[loanId].loanAmount.div(lenderFee).div(discount));
+        _transferTokens(
+            msg.sender,
+            loans[loanId].borrower,
+            loans[loanId].currency,
+            loans[loanId].loanAmount,
+            loans[loanId].loanAmount.div(lenderFee).div(discount),
+            payable(address(this))
+        );
 
         emit LoanApproved(
         loanId,
@@ -189,13 +202,24 @@ contract LendingSetters is StaterCore {
         amountPaidAsInstallmentToLender = amountPaidAsInstallmentToLender.sub(interestToStaterPerInstallement);
 
         loans[loanId].paidAmount = loans[loanId].paidAmount.add(paidByBorrower);
-        loans[loanId].nrOfPayments = loans[loanId].nrOfPayments.add(paidByBorrower.div(loans[loanId].installmentAmount));
+        loans[loanId].nrOfPayments = uint16(loans[loanId].nrOfPayments.add(
+            paidByBorrower.div(
+                loans[loanId].installmentAmount
+            )
+        ));
 
         if (loans[loanId].paidAmount >= loans[loanId].amountDue)
         loans[loanId].status = Status.LIQUIDATED;
 
         // We transfer the tokens to borrower here
-        _transferTokens(msg.sender,loans[loanId].lender,loans[loanId].currency,amountPaidAsInstallmentToLender,interestToStaterPerInstallement);
+        _transferTokens(
+            msg.sender,
+            loans[loanId].lender,
+            loans[loanId].currency,
+            amountPaidAsInstallmentToLender,
+            interestToStaterPerInstallement,
+            payable(address(this))
+        );
 
         emit LoanPayment(
         loanId,
@@ -256,36 +280,6 @@ contract LendingSetters is StaterCore {
         msg.sender,
         loans[loanId].status
         );
-    }
-
-    function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) public payable {
-        require(msg.sender == promissoryNoteContractAddress, "You're not whitelisted to access this method");
-        for (uint256 i = 0; i < loanIds.length; ++i) {
-            require(loans[loanIds[i]].lender != address(0), "One of the loans is not approved yet");
-            require(promissoryPermissions[loanIds[i]] == msg.sender, "You're not allowed to perform this operation on loan");
-            loans[loanIds[i]].lender = newOwner;
-        }
-    }
-
-    function setPromissoryPermissions(uint256[] calldata loanIds) public payable {
-        for (uint256 i = 0; i < loanIds.length; ++i) {
-            require(loans[loanIds[i]].lender == msg.sender, "You're not the lender of this loan");
-            promissoryPermissions[loanIds[i]] = promissoryNoteContractAddress;
-        }
-    }
-    
-    /*
-    * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
-    * @ => TRUE = Loan has exceed the maximum unpaid installments limit, lender can terminate the loan and get the NFTs
-    * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
-    */
-    function lackOfPayment(uint256 loanId) public view returns(bool) {
-        return loans[loanId].status == Status.APPROVED && loans[loanId].loanStart.add(loans[loanId].nrOfPayments.mul(loans[loanId].installmentFrequency)) <= block.timestamp.sub(loans[loanId].defaultingLimit.mul(loans[loanId].installmentFrequency));
-    }
-
-    // Calculates loan to value ratio
-    function _percent(uint256 numerator, uint256 denominator) internal pure returns(uint256) {
-        return numerator.mul(10000).div(denominator).add(5).div(10);
     }
     
 }

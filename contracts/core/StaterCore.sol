@@ -88,7 +88,7 @@ contract StaterCore is Ownable, StaterDiplomat, StaterTransfers, StaterDiscounts
         address payable lender; // the address who gives/offers the loan to the borrower
         address currency; // the token that the borrower lends, address(0) for ETH
         Status status; // the loan status
-        mapping(uint256 => uint8) installmentsTimeHandler; // installmentsTimeHandler[1 days] = 4 ; installmentsTimeHandler[1 hours] = 3; >> 1 installment per 4 days & 3 hours
+        mapping(uint256 => uint16) installmentsTimeHandler; // installmentsTimeHandler[1 days] = 4 ; installmentsTimeHandler[1 hours] = 3; >> 1 installment per 4 days & 3 hours
         uint256[] nftTokenIdArray; // the unique identifier of the NFT token that the borrower uses as collateral
         uint256 loanAmount; // the amount, denominated in tokens (see next struct entry), the borrower lends
         uint256 assetsValue; // important for determintng LTV which has to be under 50-60%

@@ -19,7 +19,7 @@ contract StaterTransfers is ERC721Holder, ERC1155Holder {
         uint256 qty1,
         uint256 qty2,
         address payable admin
-    ) external {
+    ) public {
       if ( currency != address(0) ){
           require(IERC20(currency).transferFrom(
               from,
@@ -46,8 +46,8 @@ contract StaterTransfers is ERC721Holder, ERC1155Holder {
         address to, 
         address[] memory nftAddressArray, 
         uint256[] memory nftTokenIdArray,
-        uint32[] memory nftTokenTypeArray
-    ) external {
+        uint8[] memory nftTokenTypeArray
+    ) public {
         uint256 length = nftAddressArray.length;
         require(length == nftTokenIdArray.length && nftTokenTypeArray.length == length, "Token infos provided are invalid");
         for(uint256 i = 0; i < length; ++i) 
