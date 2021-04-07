@@ -102,7 +102,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
    * @param _nftAddress The address of the Stater nft collection
    * @param _promissoryNoteContractAddress The address of the Stater Promissory Note contract
    * @param _geyserAddressArray The address of the Stater geyser contract
-   * @param _staterNftTokenIdArray
+   * @param _staterNftTokenIdArray Array of the stater nft token IDs
    */
   constructor(address _nftAddress, address _promissoryNoteContractAddress, address[] memory _geyserAddressArray, uint256[] memory _staterNftTokenIdArray) {
     nftAddress = _nftAddress;
@@ -118,9 +118,9 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
    * @param nrOfInstallments Loan's number of installments
    * @param currency ETH or custom ERC20
    * @param assetsValue The value of the assets
-   * @param nftAddressArray
-   * @param nftTokenIdArray
-   * @param creationId
+   * @param nftAddressArray Array of nft addresses in the loan bundle.
+   * @param nftTokenIdArray Array of nft token IDs in the loan bundle.
+   * @param creationId ID used to identify loan creation event in the stater database.
    * @param nftTokenTypeArray The token types : ERC721 , ERC115
    */
   function createLoan(
@@ -441,7 +441,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
    * @param _discountNft Discount value for the Stater NFT holders
    * @param _discountGeyser Discount value for the Stater liquidity mining participants
    * @param _geyserAddressArray List of the Stater Geyser contracts 
-   * @param _staterNftTokenIdArray
+   * @param _staterNftTokenIdArray Array of stater nft token IDs.
    * @param _nftAddress List of the Stater NFT collections
    */
   function setDiscounts(uint32 _discountNft, uint32 _discountGeyser, address[] calldata _geyserAddressArray, uint256[] calldata _staterNftTokenIdArray, address _nftAddress) external onlyOwner {
@@ -457,7 +457,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
    * @param _promissoryNoteContractAddress The address of the Stater promissory Note contract
    * @param _ltv Value of Loan to value 
    * @param _installmentFrequency Value of installment frequency
-   * @param _installmentTimeScale 
+   * @param _installmentTimeScale The timescale of all loans.
    * @param _interestRate Value of interest rate
    * @param _interestRateToStater Value of interest rate to stater
    * @param _lenderFee Value of the lender fee
@@ -490,8 +490,8 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
 
   /**
    * @notice Calculates loan to value ration
-   * @param numerator
-   * @param denominator
+   * @param numerator Numerator.
+   * @param denominator Denominator.
    */
   function _percent(uint256 numerator, uint256 denominator) internal pure returns(uint256) {
     return numerator.mul(10000).div(denominator).add(5).div(10);
@@ -499,11 +499,11 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
 
   /**
    * @notice Transfer items fron an account to another
-   * @param from
-   * @param to
-   * @param nftAddressArray
-   * @param nftTokenIdArray
-   * @param nftTokenTypeArray
+   * @param from From account address.
+   * @param to To account address.
+   * @param nftAddressArray Array of addresses of the nfts to be transfered.
+   * @param nftTokenIdArray Array of token IDs of the nfts to be transfered. 
+   * @param nftTokenTypeArray Array of token type of the nfts to be transfered.
    */
   function _transferItems(
     address from, 
@@ -530,7 +530,15 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
                 '0x00'
             );
   }
-
+  
+  /**
+   * @notice Transfer eth or erc20 tokens fron an account to another
+   * @param from From account address.
+   * @param to To account address.
+   * @param currency Address of erc20 token to be transfered, 0x00 for eth.
+   * @param qty1 Amount of tokens to be transfered to relevant party account.
+   * @param qty2 Amount of tokens to be transfered to this contract's author.
+   */
   function _transferTokens(
       address from,
       address payable to,
