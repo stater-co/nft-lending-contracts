@@ -60,7 +60,7 @@ contract LendingSetters is StaterCore, LendingUtils {
         loans[id].borrower = msg.sender;
         loans[id].currency = currency;
         loans[id].nftTokenTypeArray = nftTokenTypeArray;
-        loans[id].installmentsTimeHandler[1 weeks] = nrOfInstallments;
+        loans[id].installmentsTimeHandler[0] = nrOfInstallments;
         
         // Transfer the items from lender to stater contract
         _transferItems(
@@ -93,7 +93,7 @@ contract LendingSetters is StaterCore, LendingUtils {
         require(loans[loanId].borrower == msg.sender,"You're not the owner of this loan");
         require(loans[loanId].status < Status.APPROVED,"Loan can no longer be modified");
         require(_percent(loanAmount, assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
-        loans[loanId].installmentsTimeHandler[1 weeks] = nrOfInstallments;
+        loans[loanId].installmentsTimeHandler[0] = nrOfInstallments;
         loans[loanId].loanAmount = loanAmount;
         loans[loanId].amountDue = loanAmount.mul(interestRate.add(100)).div(100);
         loans[loanId].installmentAmount = loans[loanId].amountDue.mod(nrOfInstallments) > 0 ? loans[loanId].amountDue.div(nrOfInstallments).add(1) : loans[loanId].amountDue.div(nrOfInstallments);

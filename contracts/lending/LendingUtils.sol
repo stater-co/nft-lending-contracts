@@ -47,13 +47,9 @@ contract LendingUtils is StaterCore {
     }
     
     function getLoanPaymentFrequency(uint256 loanId) public view returns(uint256) {
-        return loans[loanId].installmentsTimeHandler[1 weeks].mul(1 weeks).add(
-            loans[loanId].installmentsTimeHandler[1 days].mul(1 days).add(
-                loans[loanId].installmentsTimeHandler[1 hours].mul(1 hours).add(
-                    loans[loanId].installmentsTimeHandler[1 minutes].mul(1 minutes).add(
-                        loans[loanId].installmentsTimeHandler[1 seconds].mul(1 seconds)
-                    )
-                )
+        return loans[loanId].installmentsTimeHandler[0].mul(1 weeks).add(
+            loans[loanId].installmentsTimeHandler[1].mul(1 days).add(
+                loans[loanId].installmentsTimeHandler[2].mul(1 hours)
             )
         );
     }
