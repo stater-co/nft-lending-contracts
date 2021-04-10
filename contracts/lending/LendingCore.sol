@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
-import "../openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../core/StaterCore.sol";
+import "../openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./LendingUtils.sol";
 
-contract LendingCore is StaterCore {
+
+contract LendingCore is StaterCore, LendingUtils {
     using SafeMath for uint256;
-    bytes32 constant lendingMethodsSignature = "LENDING_SETTERS";
+    using SafeMath for uint16;
 
     constructor(
         address _nftAddress, 
@@ -37,17 +39,16 @@ contract LendingCore is StaterCore {
         uint256[] calldata nftTokenIdArray,
         string calldata creationId,
         uint8[] calldata nftTokenTypeArray
-    ) public payable returns(string memory){
+    ) public payable {
         // For 8 or more parameters via delegatecall >> Remix raises an error with no error message
         loans[id].assetsValue = assetsValue;
-        (bool success, bytes memory result) = permissions[lendingMethodsSignature].delegatecall(
+        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "createLoan(uint256,uint256,address,address[],uint256[],string,uint32[])",
                 loanAmount,nrOfInstallments,currency,nftAddressArray,nftTokenIdArray,creationId,nftTokenTypeArray
             )
         );
         require(success,"Failed to createLoan via delegatecall");
-        return string(abi.encodePacked(result));
     }
 
     function editLoan(
@@ -135,16 +136,6 @@ contract LendingCore is StaterCore {
             )
         );
         require(success,"Failed to setPromissoryPermissions via delegatecall");
-    }
-
-
-    function getLoanApprovalCost(uint256 loanId) external view returns(uint256) {
-        return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(calculateDiscount(msg.sender)));
-    }
-
-
-    function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {
-        return loans[loanId].amountDue.sub(loans[loanId].paidAmount);
     }
 
   

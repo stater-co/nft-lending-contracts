@@ -8,6 +8,26 @@ contract LendingSetters is StaterCore, LendingUtils {
     using SafeMath for uint256;
     using SafeMath for uint16;
     
+    constructor(
+        address _nftAddress, 
+        address _promissoryNoteContractAddress, 
+        address[] memory _geyserAddressArray, 
+        uint256[] memory _staterNftTokenIdArray, 
+        address _lendingMethodsContract, 
+        address _lendingPoolContract
+    ) {
+        
+        permissions["PROMISSORY_NOTE"] = _promissoryNoteContractAddress;
+        permissions[lendingMethodsSignature] = _lendingMethodsContract;
+        permissions["LENDING_POOL"] = _lendingPoolContract;
+        
+        addDiscount(uint8(1),_nftAddress,uint8(50),_staterNftTokenIdArray);
+        uint256[] memory emptyArray;
+        for ( uint256 i = 0 ; i < _geyserAddressArray.length ; ++i )
+            addDiscount(uint8(2),_geyserAddressArray[i],uint8(50),emptyArray);
+            
+    }
+    
     function setGlobalVariables(
         uint256 _ltv,  
         uint256 _interestRate, 
@@ -32,7 +52,7 @@ contract LendingSetters is StaterCore, LendingUtils {
     ) public payable {
         require(nrOfInstallments > 0, "Loan must have at least 1 installment");
         require(loanAmount > 0, "Loan amount must be higher than 0");
-        require(nftAddressArray.length > 0, "Loan must have atleast 1 NFT");
+        //require(nftAddressArray.length > 0, "Loan must have atleast 1 NFT");
         require(nftAddressArray.length == nftTokenIdArray.length && nftTokenIdArray.length == nftTokenTypeArray.length, "NFT provided informations are missing or incomplete");
         
         /*
