@@ -103,10 +103,10 @@ contract LendingSetters is StaterCore, LendingUtils {
      */
     function editLoan(
         uint256 loanId,
-        uint256 assetsValue,
         uint256 loanAmount,
         uint16 nrOfInstallments,
-        address currency
+        address currency,
+        uint256 assetsValue
     ) external {
         require(nrOfInstallments > 0, "Loan must have at least 1 installment");
         require(loanAmount > 0, "Loan amount must be higher than 0");

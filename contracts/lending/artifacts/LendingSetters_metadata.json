@@ -527,11 +527,6 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "assetsValue",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
 						"name": "loanAmount",
 						"type": "uint256"
 					},
@@ -544,6 +539,11 @@
 						"internalType": "address",
 						"name": "currency",
 						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "assetsValue",
+						"type": "uint256"
 					}
 				],
 				"name": "editLoan",
@@ -1127,11 +1127,11 @@
 			]
 		},
 		"../test/contracts/lending/LendingSetters.sol": {
-			"keccak256": "0x22b7356bcedf36726bb7b63c0e6b34388ac85842cb00cead187cd3748411b06f",
+			"keccak256": "0xa940d28944e8541abe139a1167508cf03a9dc04ed0d58bb8375210407eca6266",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://1eef691a7fa51d8757252ad065eef59129ea9152eb09462cab013bf11cf29314",
-				"dweb:/ipfs/QmWy1wjY3s7n1fu8GDhStFyen973tSveEU6Num7EdJDPRj"
+				"bzz-raw://93990b0d3b3df2eb25176e64f77cca781f900d3ed03c449306082c07d5a0b167",
+				"dweb:/ipfs/QmaBc6y1MxNfWiCUGsGE6X6g3mW875nhjVeBQ9wRqZQMMx"
 			]
 		},
 		"../test/contracts/lending/LendingUtils.sol": {

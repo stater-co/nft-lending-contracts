@@ -532,23 +532,23 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "assetsValue",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
 						"name": "loanAmount",
 						"type": "uint256"
 					},
 					{
-						"internalType": "uint256",
+						"internalType": "uint16",
 						"name": "nrOfInstallments",
-						"type": "uint256"
+						"type": "uint16"
 					},
 					{
 						"internalType": "address",
 						"name": "currency",
 						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "assetsValue",
+						"type": "uint256"
 					}
 				],
 				"name": "editLoan",
@@ -1207,11 +1207,11 @@
 			]
 		},
 		"../test/contracts/lending/LendingCore.sol": {
-			"keccak256": "0x73e099b9ed2f1b35a1447bbbc94e8a5d0cd8763aec25d1f4c3dc4726f4edcc23",
+			"keccak256": "0x89dd8dc216dafbcef4e74c3411fff0f844fadf4ac8c7765358d52285f83975c0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://99bc1b33f378c60e057b84dee882e0fabc9a17d522074f97c893a9d7658a2096",
-				"dweb:/ipfs/QmcQJv6noWPucv3oC1JqGPXtNxEMBb28zfcYDNk24nRBBu"
+				"bzz-raw://d3d40b27151ed477393f5fa51b7485a071b2e0be08e2acd03539c52e8c8af9bc",
+				"dweb:/ipfs/QmV1yaxyqoaU6eVYHpxXbvu5xPtD7QGxeTim92q5zcRoUX"
 			]
 		},
 		"../test/contracts/lending/LendingUtils.sol": {

@@ -44,7 +44,7 @@ contract LendingCore is StaterCore, LendingUtils {
         loans[id].assetsValue = assetsValue;
         (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
-                "createLoan(uint256,uint256,address,address[],uint256[],string,uint32[])",
+                "createLoan(uint256,uint16,address,address[],uint256[],string,uint8[])",
                 loanAmount,nrOfInstallments,currency,nftAddressArray,nftTokenIdArray,creationId,nftTokenTypeArray
             )
         );
@@ -53,15 +53,15 @@ contract LendingCore is StaterCore, LendingUtils {
 
     function editLoan(
         uint256 loanId,
-        uint256 assetsValue,
         uint256 loanAmount,
-        uint256 nrOfInstallments,
-        address currency
+        uint16 nrOfInstallments,
+        address currency,
+        uint256 assetsValue
     ) external {
         (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
-                "editLoan(uint256,uint256,uint256,uint256,address)",
-                loanId,assetsValue,loanAmount,nrOfInstallments,currency
+                "editLoan(uint256,uint256,uint16,address,uint256)",
+                loanId,loanAmount,nrOfInstallments,currency,assetsValue
             )
         );
         require(success,"Failed to editLoan via delegatecall");
