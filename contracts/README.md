@@ -1,18 +1,3 @@
-## Loans.sol 
-### Debugged ✓
-### Errors : 0
-### Warnings : 0
-### Debugging date : 03.01.2021
-### Truffle tests
-
-### How to reproduce the tests :
-#### truffle develop
-#### truffle test ( from the repo root )
-##### ( Optional ) For using a custom network check the truffle-config.js
-
-
-
-
 # Documentation
 
 <br />
@@ -86,3 +71,17 @@
 #### Stater Pooling :
 
 ##### In progress
+
+<br />
+<br />
+<br />
+
+## 3. Back-end configuration
+
+<br />
+
+#### Truffle tests :
+
+##### `truffle develop`
+##### `test` ( from the repo root )
+##### ( Optional ) For using a custom network check the truffle-config.js
