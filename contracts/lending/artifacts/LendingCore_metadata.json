@@ -1202,11 +1202,11 @@
 			]
 		},
 		"../test/contracts/lending/LendingCore.sol": {
-			"keccak256": "0x030849eaef4cee6101f64e1c561eeedb31b5954667ff6b11ea4348d581a888eb",
+			"keccak256": "0x801b29d4efa346e024e41029648aa700f811f8510035b158a29d060c4ed89d11",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://daef999bf92b82c431c963dcdeb837da173d89994401312a9333b63e98e4e88a",
-				"dweb:/ipfs/QmSZbrwREJ9Wkx1iDYZVsYBAxDy8ZEwTxmkRefcvM5d4cB"
+				"bzz-raw://8ee516323c9210062c94f6216e18da5f28070dd43e3a5ed5f2c2ac68c92bb7b6",
+				"dweb:/ipfs/QmR8ytRezYMerDKfzMGP6pxG1x9KxuYCVULyFNv2ESrXMe"
 			]
 		},
 		"../test/contracts/lending/LendingUtils.sol": {

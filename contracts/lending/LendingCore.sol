@@ -7,7 +7,6 @@ import "./LendingUtils.sol";
 
 contract LendingCore is StaterCore, LendingUtils {
     using SafeMath for uint256;
-    using SafeMath for uint16;
 
     constructor(
         address _nftAddress, 
