@@ -905,6 +905,11 @@
 						"internalType": "uint256",
 						"name": "loanId",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
 					}
 				],
 				"name": "payLoan",
@@ -1222,11 +1227,11 @@
 			]
 		},
 		"../test/contracts/lending/LendingCore.sol": {
-			"keccak256": "0x632f75ea1ef95732d53911e6c68ac100d91600a857f36c0e07e2b90ccc38173e",
+			"keccak256": "0xde7776a59b9dc64124051484bc0abfcbe2e05ec31e1ae8b261a5cd9dc9cfd0e7",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f7afe0f7a96227cf68b5aa337bc1740e3ece9f037ca1f5db781667131121dfda",
-				"dweb:/ipfs/QmPTnCXtmEHxdSEdQRdfvxjQLWhHA2vdPTGfzWWb9juaER"
+				"bzz-raw://ba9e79ef2027f5e7038222368acd1ede8eb2b2cf7563f682c95151bf8dd25cbc",
+				"dweb:/ipfs/QmPyYcvcZLnzRsTbiSdzyu1JfNEvroqgo5hfZnRLsrEpmw"
 			]
 		},
 		"../test/contracts/lending/LendingUtils.sol": {

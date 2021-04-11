@@ -210,13 +210,13 @@ contract LendingSetters is StaterCore, LendingUtils {
 
     // Borrower pays installment for loan
     // Multiple installments : OK
-    function payLoan(uint256 loanId) external payable {
+    function payLoan(uint256 loanId,uint256 amount) external payable {
         require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
         require(loans[loanId].status == Status.APPROVED, "This loan is no longer in the approval phase, check its status");
         require(loans[loanId].loanEnd >= block.timestamp, "Loan validity expired");
-        require((msg.value > 0 && loans[loanId].currency == address(0) ) || ( loans[loanId].currency != address(0) && msg.value == 0), "Insert the correct tokens");
+        require((msg.value > 0 && loans[loanId].currency == address(0) && msg.value == amount) || (loans[loanId].currency != address(0) && msg.value == 0 && amount > 0), "Insert the correct tokens");
         
-        uint256 paidByBorrower = msg.value > 0 ? msg.value : loans[loanId].installmentAmount;
+        uint256 paidByBorrower = msg.value > 0 ? msg.value : amount;
         uint256 amountPaidAsInstallmentToLender = paidByBorrower; // >> amount of installment that goes to lender
         uint256 interestPerInstallement = paidByBorrower.mul(interestRate).div(100); // entire interest for installment
         uint256 discount = calculateDiscount(msg.sender);

@@ -93,11 +93,11 @@ contract LendingCore is StaterCore, LendingUtils {
   
     // Borrower pays installment for loan
     // Multiple installments : OK
-    function payLoan(uint256 loanId) external payable {
+    function payLoan(uint256 loanId,uint256 amount) external payable {
         (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
-                "payLoan(uint256)",
-                loanId
+                "payLoan(uint256,uint256)",
+                loanId,amount
             )
         );
         require(success,"Failed to payLoan via delegatecall");
