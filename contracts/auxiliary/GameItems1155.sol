@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
 
-import "openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol";
-import "openzeppelin-solidity/contracts/access/Ownable.sol";
-import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
+import "../openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol";
+import "../openzeppelin-solidity/contracts/access/Ownable.sol";
+import "../openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 
 contract GameItems1155 is ERC1155, Ownable, ReentrancyGuard {
     uint256 public constant STATER_COMMUNITY_EDITION = 0;

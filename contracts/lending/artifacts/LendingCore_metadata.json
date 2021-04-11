@@ -499,6 +499,26 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -1202,19 +1222,19 @@
 			]
 		},
 		"../test/contracts/lending/LendingCore.sol": {
-			"keccak256": "0x801b29d4efa346e024e41029648aa700f811f8510035b158a29d060c4ed89d11",
+			"keccak256": "0x632f75ea1ef95732d53911e6c68ac100d91600a857f36c0e07e2b90ccc38173e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8ee516323c9210062c94f6216e18da5f28070dd43e3a5ed5f2c2ac68c92bb7b6",
-				"dweb:/ipfs/QmR8ytRezYMerDKfzMGP6pxG1x9KxuYCVULyFNv2ESrXMe"
+				"bzz-raw://f7afe0f7a96227cf68b5aa337bc1740e3ece9f037ca1f5db781667131121dfda",
+				"dweb:/ipfs/QmPTnCXtmEHxdSEdQRdfvxjQLWhHA2vdPTGfzWWb9juaER"
 			]
 		},
 		"../test/contracts/lending/LendingUtils.sol": {
-			"keccak256": "0x96f355331856ebbee5c256bdd48415936a6432558054e28e411ab8a2998f25aa",
+			"keccak256": "0x9baeda4c90a8e2ee8112f43b42cc6116ad95d8d7305bbf54d4a81be4ce758711",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://53e5cb9142fc5a14d584c6af4ae6cc6d46276e23dbc51af05089f11972eeb3fe",
-				"dweb:/ipfs/QmVQWHns7ebPZWYssADCoJSVA2TaZ3F7QKuVj3WXhXcDTC"
+				"bzz-raw://9f8818e098622e066507b075c4f1e321c402c6dd4125e86a4b2f86b17d76ded2",
+				"dweb:/ipfs/QmPPyhd3DsS3QFeWEr6P2y3vtog5V9yPTaq3usCmqryQ3p"
 			]
 		},
 		"../test/contracts/multi-token-standard/contracts/interfaces/IERC1155.sol": {

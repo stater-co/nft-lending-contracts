@@ -24,7 +24,7 @@ contract LendingCore is StaterCore, LendingUtils {
         addDiscount(uint8(1),_nftAddress,uint8(50),_staterNftTokenIdArray);
         uint256[] memory emptyArray;
         for ( uint256 i = 0 ; i < _geyserAddressArray.length ; ++i )
-            addDiscount(uint8(2),_geyserAddressArray[i],uint8(50),emptyArray);
+            addDiscount(uint8(2),_geyserAddressArray[i],uint8(2),emptyArray);
             
     }
 

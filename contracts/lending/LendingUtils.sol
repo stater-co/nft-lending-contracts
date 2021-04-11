@@ -8,8 +8,14 @@ contract LendingUtils is StaterCore {
     using SafeMath for uint16;
     using SafeMath for uint8;
 
-    function getLoanApprovalCost(uint256 loanId) public view returns(uint256) {
-        return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(calculateDiscount(msg.sender)));
+    function getLoanApprovalCost(uint256 loanId) public view returns(uint256,uint256,uint256,uint256,address) {
+        return (
+            loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(calculateDiscount(msg.sender))),
+            loans[loanId].loanAmount,
+            lenderFee,
+            calculateDiscount(msg.sender),
+            msg.sender
+        );
     }
 
 
