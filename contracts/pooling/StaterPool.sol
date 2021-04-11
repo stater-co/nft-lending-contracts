@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
-import "./StaterCore.sol";
+import "../core/StaterCore.sol";
 
 
 contract StaterPool is StaterCore {
@@ -17,7 +17,18 @@ contract StaterPool is StaterCore {
     mapping(uint256 => Pool) public pools;
 
     function createPool(address currency,uint256 quantity) external payable {
+        if ( currency == address(0) || msg.value > 0 ){
+            pools[poolID].currency = address(0);
+            msg.value > 0 ? pools[poolID].funds[msg.sender] = msg.value : pools[poolID].funds[msg.sender] = quantity;
+        }else{
+            /*
+             * @DIIMIIM : Transfer tokens from send to this here 
+             */
+            pools[poolID].currency = currency;
+        }
+            
         pools[poolID].participants = 1;
+        ++poolID;
     }
 
 }
