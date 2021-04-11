@@ -4,7 +4,7 @@
 <br />
 <br />
 
-#### 1. Total code refactoring
+#### 1. Total code refactorization
 
 ##### The Stater Smart Contracts have been refactored thus we can use them as external modules for other future products.
 ##### There is now core modules & lending modules.
