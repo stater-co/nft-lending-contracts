@@ -38,7 +38,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"../nft-lending-contracts/contracts/core/StaterDiscounts.sol": "Geyser"
+			"../test/contracts/core/StaterDiscounts.sol": "Geyser"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -46,13 +46,13 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
-		"../nft-lending-contracts/contracts/core/StaterDiscounts.sol": {
+		"../test/contracts/core/StaterDiscounts.sol": {
 			"keccak256": "0x9a6d3a4833800f243b4ebf9f840e1d691e7a9d0b930a5f110e701cb318f14665",
 			"license": "MIT",
 			"urls": [
@@ -60,27 +60,28 @@
 				"dweb:/ipfs/QmeQK9XS6yeK4ejfRYsWeUYAeM8ZT8UfezzoPGvKzACncU"
 			]
 		},
-		"../nft-lending-contracts/contracts/multi-token-standard/contracts/interfaces/IERC1155.sol": {
-			"keccak256": "0xc251318c3b0b1aa2b19ef4b18dc8c96efef0d10b9f1f84075734a5de83955bab",
-			"urls": [
-				"bzz-raw://d697504b5d68d07f03e7b749a594259d0bb9dc1da925e4bcd5182276090bae30",
-				"dweb:/ipfs/QmV5TwWJMdgV81LxdEpASGatnvJUxmdvXk2oHCeUa79zUM"
-			]
-		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/introspection/IERC165.sol": {
-			"keccak256": "0xf70bc25d981e4ec9673a995ad2995d5d493ea188d3d8f388bba9c227ce09fb82",
+		"../test/contracts/multi-token-standard/contracts/interfaces/IERC1155.sol": {
+			"keccak256": "0x4de965e4d3457269fa670aceb315bc6c57194b7cca08798176d39cc0ad841814",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://bd970f51e3a77790c2f02b5b1759827c3b897c3d98c407b3631e8af32e3dc93c",
-				"dweb:/ipfs/QmPF85Amgbqjk3SNZKsPCsqCw8JfwYEPMnnhvMJUyX58je"
+				"bzz-raw://f0222db296984586ea87c35aece19e23c0ebc16505aed17c4427b8e3bc6a5b43",
+				"dweb:/ipfs/QmU1zSHN31CPKNe9d24w2jFk9nwjSRfeakPcsCi1tmaenw"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol": {
-			"keccak256": "0x5a9f5c29bd7cf0b345e14d97d5f685f68c07e1e5bfdd47e5bcec045e81b0b6ac",
+		"../test/contracts/openzeppelin-solidity/contracts/introspection/IERC165.sol": {
+			"keccak256": "0x22116311560662337f33d16c2400d88bbccd4d1e0c0ba9a1a6114ad584bdaa3c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://321cbaa1412fc8d013d8ad3fb5f98c0db7401ddacfb09b70828ea2cebe37397e",
-				"dweb:/ipfs/Qmd3Hoc71w6rmxAR6A5VKW9at677VP1L5KDcJnyvu4ksu3"
+				"bzz-raw://bf79efae0fb2cce7162afa1ad592f30653afbc3e2629ee9418bf367e969304fd",
+				"dweb:/ipfs/QmWCMw6itHRC4ZFyBfLjzqJea65WYLhc98NCTBGALEPXDT"
+			]
+		},
+		"../test/contracts/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol": {
+			"keccak256": "0x772e5a3984c1ceb3affeff7f20ea06394bb5a7f65301aac225ca2a8b512dff2e",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a9e5549f4580b42973c89e9d5c9760919c7b4e611640ba617dd5024ab3d87cbf",
+				"dweb:/ipfs/QmbbzBjPZ8ffJPJEkU9mRouPVGLKifVdHesMpYUXfMJMCd"
 			]
 		}
 	},

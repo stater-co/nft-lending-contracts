@@ -39,7 +39,7 @@ contract LendingCore is StaterCore, LendingUtils {
         uint256[] calldata nftTokenIdArray,
         string calldata creationId,
         uint8[] calldata nftTokenTypeArray
-    ) public payable {
+    ) external {
         // For 8 or more parameters via delegatecall >> Remix raises an error with no error message
         loans[id].assetsValue = assetsValue;
         (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
@@ -67,20 +67,21 @@ contract LendingCore is StaterCore, LendingUtils {
         require(success,"Failed to editLoan via delegatecall");
     }
 
+
     // Lender approves a loan
-    function approveLoan(uint256 loanId) public payable {
-            (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
-                abi.encodeWithSignature(
-                    "approveLoan(uint256)",
-                    loanId
-                )
-            );
-            require(success,"Failed to approveLoan via delegatecall");
+    function approveLoan(uint256 loanId) external payable {
+        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
+            abi.encodeWithSignature(
+                "approveLoan(uint256)",
+                loanId
+            )
+        );
+        require(success,"Failed to approveLoan via delegatecall");
     }
     
 
     // Borrower cancels a loan
-    function cancelLoan(uint256 loanId) public payable {
+    function cancelLoan(uint256 loanId) external {
         (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "cancelLoan(uint256)",
@@ -93,7 +94,7 @@ contract LendingCore is StaterCore, LendingUtils {
   
     // Borrower pays installment for loan
     // Multiple installments : OK
-    function payLoan(uint256 loanId) public payable {
+    function payLoan(uint256 loanId) external payable {
         (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "payLoan(uint256)",
@@ -106,7 +107,7 @@ contract LendingCore is StaterCore, LendingUtils {
 
     // Borrower can withdraw loan items if loan is LIQUIDATED
     // Lender can withdraw loan item is loan is DEFAULTED
-    function terminateLoan(uint256 loanId) public payable {
+    function terminateLoan(uint256 loanId) external {
         (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "terminateLoan(uint256)",
@@ -117,7 +118,7 @@ contract LendingCore is StaterCore, LendingUtils {
     }
 
   
-    function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) public payable {
+    function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external {
         (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "promissoryExchange(uint256[],address)",
@@ -128,7 +129,7 @@ contract LendingCore is StaterCore, LendingUtils {
     }
 
   
-    function setPromissoryPermissions(uint256[] calldata loanIds) public payable {
+    function setPromissoryPermissions(uint256[] calldata loanIds) external {
         (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "setPromissoryPermissions(uint256[])",
@@ -166,7 +167,7 @@ contract LendingCore is StaterCore, LendingUtils {
         uint256 _interestRate, 
         uint256 _interestRateToStater, 
         uint32 _lenderFee
-    ) public payable onlyOwner {
+    ) external onlyOwner {
         (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
             abi.encodeWithSignature(
                 "setGlobalVariables(address,uint256,uint256,uint256,uint32)",

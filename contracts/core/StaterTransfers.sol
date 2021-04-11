@@ -1,24 +1,24 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
+import "../openzeppelin-solidity/contracts/access/Ownable.sol";
 import "../openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "../openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
-import "../openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
 import "../multi-token-standard/contracts/interfaces/IERC1155.sol";
+import "../openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
 import "../openzeppelin-solidity/contracts/token/ERC1155/ERC1155Holder.sol";
 
-contract StaterTransfers is ERC721Holder, ERC1155Holder {
+contract StaterTransfers is Ownable, ERC721Holder, ERC1155Holder {
     
 
     /*
      * @DIIMIIM : standard method to send tokens from an account to another ( + payment fee to admin )
      */
-    function _transferTokens(
+    function transferTokens(
         address from,
         address payable to,
         address currency,
         uint256 qty1,
-        uint256 qty2,
-        address payable admin
+        uint256 qty2
     ) public {
       if ( currency != address(0) ){
           require(IERC20(currency).transferFrom(
@@ -28,12 +28,12 @@ contract StaterTransfers is ERC721Holder, ERC1155Holder {
           ), "Transfer of tokens to receiver failed");
           require(IERC20(currency).transferFrom(
               from,
-              admin, 
+              owner(), 
               qty2
           ), "Transfer of tokens to Stater failed");
       }else{
           require(to.send(qty1), "Transfer of ETH to receiver failed");
-          require(admin.send(qty2), "Transfer of ETH to Stater failed");
+          require(payable(owner()).send(qty2), "Transfer of ETH to Stater failed");
       }
     }
 
@@ -41,7 +41,7 @@ contract StaterTransfers is ERC721Holder, ERC1155Holder {
     /*
      * @DIIMIIM : standard method to send items from an account to another
      */
-    function _transferItems(
+    function transferItems(
         address from, 
         address to, 
         address[] memory nftAddressArray, 

@@ -266,77 +266,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "from",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
-					},
-					{
-						"internalType": "address[]",
-						"name": "nftAddressArray",
-						"type": "address[]"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "nftTokenIdArray",
-						"type": "uint256[]"
-					},
-					{
-						"internalType": "uint8[]",
-						"name": "nftTokenTypeArray",
-						"type": "uint8[]"
-					}
-				],
-				"name": "_transferItems",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "from",
-						"type": "address"
-					},
-					{
-						"internalType": "address payable",
-						"name": "to",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "currency",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "qty1",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "qty2",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address payable",
-						"name": "admin",
-						"type": "address"
-					}
-				],
-				"name": "_transferTokens",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "uint8",
 						"name": "_tokenType",
 						"type": "uint8"
@@ -404,7 +333,7 @@
 				],
 				"name": "cancelLoan",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -452,7 +381,7 @@
 				],
 				"name": "createLoan",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -997,7 +926,7 @@
 				],
 				"name": "promissoryExchange",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -1051,7 +980,7 @@
 				],
 				"name": "setGlobalVariables",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -1082,7 +1011,7 @@
 				],
 				"name": "setPromissoryPermissions",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -1114,7 +1043,40 @@
 				],
 				"name": "terminateLoan",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "address[]",
+						"name": "nftAddressArray",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "nftTokenIdArray",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint8[]",
+						"name": "nftTokenTypeArray",
+						"type": "uint8[]"
+					}
+				],
+				"name": "transferItems",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -1126,6 +1088,39 @@
 					}
 				],
 				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "address payable",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "currency",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "qty1",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "qty2",
+						"type": "uint256"
+					}
+				],
+				"name": "transferTokens",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -1175,11 +1170,11 @@
 	},
 	"sources": {
 		"../test/contracts/core/StaterCore.sol": {
-			"keccak256": "0x69cc4bb5805f03dbc3e9884ce727c1cbf46b3dbc288cd99d1d33c77440fc43f5",
+			"keccak256": "0x196423b32c33dd9a9aaa18347abe668e73ae43cabe0991b0b29326acd0412909",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://04cf17b01abea8dcfbce4f0b33ac6c4b1961b0d56e3ea9bc6494966561727a06",
-				"dweb:/ipfs/QmTKgzSvxwjX8MNc3VqXyWwNjw1cbue6kSXbo7dKDSAk32"
+				"bzz-raw://122c70860505824fa373e072dd068893124374715ee4a2af1392182900095067",
+				"dweb:/ipfs/QmbcSATYjmUjUt4Q4o8MrZs6dcFmrJiN9Q6jXMgc2iFTC5"
 			]
 		},
 		"../test/contracts/core/StaterDiplomat.sol": {
@@ -1199,19 +1194,19 @@
 			]
 		},
 		"../test/contracts/core/StaterTransfers.sol": {
-			"keccak256": "0xc3c2adeedf371b28baa7af1a3ef1d51160bc655412442dd3cf1f71a2e803c120",
+			"keccak256": "0x19ef5c1185f83f1dc977f8e2954666a89d5232c422ab39cf3cd1db76571eda4b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://59b52b7bd88570fc628ce4cb39bdbb6a87137f221cc72294748a4816e0b4ae54",
-				"dweb:/ipfs/QmPcAsCt1Hfk9TWzvk2iPVYKnLer3Kv1y84dVRTEEqpWZ9"
+				"bzz-raw://3c352006b9d2a0cf7b38966a2ac1e1dd4dce2f7b6940d60625921262f38edae0",
+				"dweb:/ipfs/QmTiVEv72qNcgQkJ9j3nXkbYseA1RUUXgZCZGc7tBMjbjW"
 			]
 		},
 		"../test/contracts/lending/LendingCore.sol": {
-			"keccak256": "0x89dd8dc216dafbcef4e74c3411fff0f844fadf4ac8c7765358d52285f83975c0",
+			"keccak256": "0x030849eaef4cee6101f64e1c561eeedb31b5954667ff6b11ea4348d581a888eb",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d3d40b27151ed477393f5fa51b7485a071b2e0be08e2acd03539c52e8c8af9bc",
-				"dweb:/ipfs/QmV1yaxyqoaU6eVYHpxXbvu5xPtD7QGxeTim92q5zcRoUX"
+				"bzz-raw://daef999bf92b82c431c963dcdeb837da173d89994401312a9333b63e98e4e88a",
+				"dweb:/ipfs/QmSZbrwREJ9Wkx1iDYZVsYBAxDy8ZEwTxmkRefcvM5d4cB"
 			]
 		},
 		"../test/contracts/lending/LendingUtils.sol": {

@@ -4,6 +4,7 @@ import "../core/StaterCore.sol";
 import "../openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./LendingUtils.sol";
 
+
 contract LendingSetters is StaterCore, LendingUtils {
     using SafeMath for uint256;
     using SafeMath for uint16;
@@ -28,6 +29,7 @@ contract LendingSetters is StaterCore, LendingUtils {
             
     }
     
+    
     function setGlobalVariables(
         uint256 _ltv,  
         uint256 _interestRate, 
@@ -49,7 +51,7 @@ contract LendingSetters is StaterCore, LendingUtils {
         uint256[] calldata nftTokenIdArray,
         string calldata creationId,
         uint8[] calldata nftTokenTypeArray
-    ) public payable {
+    ) external {
         require(nrOfInstallments > 0, "Loan must have at least 1 installment");
         require(loanAmount > 0, "Loan amount must be higher than 0");
         //require(nftAddressArray.length > 0, "Loan must have atleast 1 NFT");
@@ -83,7 +85,7 @@ contract LendingSetters is StaterCore, LendingUtils {
         loans[id].installmentsTimeHandler[0] = nrOfInstallments;
         
         // Transfer the items from lender to stater contract
-        _transferItems(
+        transferItems(
             msg.sender, 
             address(this), 
             nftAddressArray, 
@@ -129,7 +131,8 @@ contract LendingSetters is StaterCore, LendingUtils {
     }
     
     // Lender approves a loan
-    function approveLoan(uint256 loanId) public payable {
+    function approveLoan(uint256 loanId) external payable {
+        
         require(loans[loanId].lender == address(0), "Someone else payed for this loan before you");
         require(loans[loanId].paidAmount == 0, "This loan is currently not ready for lenders");
         require(loans[loanId].status == Status.LISTED, "This loan is not currently ready for lenders, check later");
@@ -138,7 +141,8 @@ contract LendingSetters is StaterCore, LendingUtils {
         
         // We check if currency is ETH
         if ( loans[loanId].currency == address(0) )
-        require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discount)),"Not enough currency");
+            require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discount)),"Not enough currency");
+        
 
         // Borrower assigned , status is 1 , first installment ( payment ) completed
         loans[loanId].lender = msg.sender;
@@ -153,26 +157,26 @@ contract LendingSetters is StaterCore, LendingUtils {
         loans[loanId].loanStart = block.timestamp;
 
         // We send the tokens here
-        _transferTokens(
+        transferTokens(
             msg.sender,
-            loans[loanId].borrower,
+            payable(loans[loanId].borrower),
             loans[loanId].currency,
             loans[loanId].loanAmount,
-            loans[loanId].loanAmount.div(lenderFee).div(discount),
-            payable(address(this))
+            loans[loanId].loanAmount.div(lenderFee).div(discount)
         );
 
         emit LoanApproved(
-        loanId,
-        msg.sender,
-        block.timestamp,
-        loans[loanId].loanEnd,
-        Status.APPROVED
+            loanId,
+            msg.sender,
+            block.timestamp,
+            loans[loanId].loanEnd,
+            Status.APPROVED
         );
+
     }
 
     // Borrower cancels a loan
-    function cancelLoan(uint256 loanId) public payable {
+    function cancelLoan(uint256 loanId) external {
         require(loans[loanId].lender == address(0), "The loan has a lender , it cannot be cancelled");
         require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
         require(loans[loanId].status != Status.CANCELLED, "This loan is already cancelled");
@@ -183,24 +187,24 @@ contract LendingSetters is StaterCore, LendingUtils {
         loans[loanId].status = Status.CANCELLED;
 
         // We send the items back to him
-        _transferItems(
+        transferItems(
         address(this), 
-        loans[loanId].borrower, 
-        loans[loanId].nftAddressArray, 
-        loans[loanId].nftTokenIdArray,
-        loans[loanId].nftTokenTypeArray
+            loans[loanId].borrower, 
+            loans[loanId].nftAddressArray, 
+            loans[loanId].nftTokenIdArray,
+            loans[loanId].nftTokenTypeArray
         );
 
         emit LoanCancelled(
-        loanId,
-        block.timestamp,
-        Status.CANCELLED
+            loanId,
+            block.timestamp,
+            Status.CANCELLED
         );
     }
 
     // Borrower pays installment for loan
     // Multiple installments : OK
-    function payLoan(uint256 loanId) public payable {
+    function payLoan(uint256 loanId) external payable {
         require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
         require(loans[loanId].status == Status.APPROVED, "This loan is no longer in the approval phase, check its status");
         require(loans[loanId].loanEnd >= block.timestamp, "Loan validity expired");
@@ -232,29 +236,28 @@ contract LendingSetters is StaterCore, LendingUtils {
         loans[loanId].status = Status.LIQUIDATED;
 
         // We transfer the tokens to borrower here
-        _transferTokens(
+        transferTokens(
             msg.sender,
             loans[loanId].lender,
             loans[loanId].currency,
             amountPaidAsInstallmentToLender,
-            interestToStaterPerInstallement,
-            payable(address(this))
+            interestToStaterPerInstallement
         );
 
         emit LoanPayment(
-        loanId,
-        block.timestamp,
-        msg.value,
-        amountPaidAsInstallmentToLender,
-        interestPerInstallement,
-        interestToStaterPerInstallement,
-        loans[loanId].status
+            loanId,
+            block.timestamp,
+            msg.value,
+            amountPaidAsInstallmentToLender,
+            interestPerInstallement,
+            interestToStaterPerInstallement,
+            loans[loanId].status
         );
     }
 
     // Borrower can withdraw loan items if loan is LIQUIDATED
     // Lender can withdraw loan item is loan is DEFAULTED
-    function terminateLoan(uint256 loanId) public payable {
+    function terminateLoan(uint256 loanId) external {
         require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender, "You can't access this loan");
         require((block.timestamp >= loans[loanId].loanEnd || loans[loanId].paidAmount >= loans[loanId].amountDue) || lackOfPayment(loanId), "Not possible to finish this loan yet");
         require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
@@ -264,7 +267,7 @@ contract LendingSetters is StaterCore, LendingUtils {
             loans[loanId].status = Status.WITHDRAWN;
             loans[loanId].loanEnd = block.timestamp;
             // We send the items back to lender
-            _transferItems(
+            transferItems(
                 address(this),
                 loans[loanId].lender,
                 loans[loanId].nftAddressArray,
@@ -275,22 +278,22 @@ contract LendingSetters is StaterCore, LendingUtils {
             if ( block.timestamp >= loans[loanId].loanEnd && loans[loanId].paidAmount < loans[loanId].amountDue ) {
                 loans[loanId].status = Status.WITHDRAWN;
                 // We send the items back to lender
-                _transferItems(
-                address(this),
-                loans[loanId].lender,
-                loans[loanId].nftAddressArray,
-                loans[loanId].nftTokenIdArray,
-                loans[loanId].nftTokenTypeArray
+                transferItems(
+                    address(this),
+                    loans[loanId].lender,
+                    loans[loanId].nftAddressArray,
+                    loans[loanId].nftTokenIdArray,
+                    loans[loanId].nftTokenTypeArray
                 );
             } else if ( loans[loanId].paidAmount >= loans[loanId].amountDue ){
                 loans[loanId].status = Status.WITHDRAWN;
                 // We send the items back to borrower
-                _transferItems(
-                address(this),
-                loans[loanId].borrower,
-                loans[loanId].nftAddressArray,
-                loans[loanId].nftTokenIdArray,
-                loans[loanId].nftTokenTypeArray
+                transferItems(
+                    address(this),
+                    loans[loanId].borrower,
+                    loans[loanId].nftAddressArray,
+                    loans[loanId].nftTokenIdArray,
+                    loans[loanId].nftTokenTypeArray
                 );
             }
         }
