@@ -116,10 +116,7 @@ contract StaterCore is StaterDiplomat, StaterDiscounts, StaterTransfers {
     /*
      * @DIIMIIM : public mappings
      *   loans - the loans mapping
-     *   promissoryPermissions - used to implement the promissory feature
      */
     mapping(uint256 => Loan) public loans;
-    mapping(uint256 => address) public promissoryPermissions;
-
 
 }

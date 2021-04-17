@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "openzeppelin-solidity/contracts/GSN/Context.sol";
-import "openzeppelin-solidity/contracts/access/Ownable.sol";
+import "../openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "../openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "../openzeppelin-solidity/contracts/GSN/Context.sol";
+import "../openzeppelin-solidity/contracts/access/Ownable.sol";
 
 
 /**
@@ -15,9 +15,9 @@ contract IStaking {
     event Staked(address indexed user, uint256 amount, uint256 total, bytes data);
     event Unstaked(address indexed user, uint256 amount, uint256 total, bytes data);
 
-    function stake(uint256 amount, bytes calldata data) virtual external {}
-    function stakeFor(address user, uint256 amount, bytes calldata data) virtual external {}
-    function unstake(uint256 amount, bytes calldata data) virtual external {}
+    function stake(uint256 amount) virtual external {}
+    function stakeFor(address user, uint256 amount) virtual external {}
+    function unstake(uint256 amount) virtual external {}
     function totalStakedFor(address addr) virtual public view returns (uint256) {}
     function totalStaked() virtual public view returns (uint256) {}
     function token() virtual external view returns (address) {}
@@ -197,9 +197,8 @@ contract TokenGeyser is IStaking, Ownable {
     /**
      * @dev Transfers amount of deposit tokens from the user.
      * @param amount Number of deposit tokens to stake.
-     * @param data Not used.
      */
-    function stake(uint256 amount, bytes calldata data) override external {
+    function stake(uint256 amount) override external {
         _stakeFor(msg.sender, msg.sender, amount);
     }
 
@@ -207,9 +206,8 @@ contract TokenGeyser is IStaking, Ownable {
      * @dev Transfers amount of deposit tokens from the caller on behalf of user.
      * @param user User address who gains credit for this stake operation.
      * @param amount Number of deposit tokens to stake.
-     * @param data Not used.
      */
-    function stakeFor(address user, uint256 amount, bytes calldata data) override external onlyOwner {
+    function stakeFor(address user, uint256 amount) override external onlyOwner {
         _stakeFor(msg.sender, user, amount);
     }
 
@@ -256,9 +254,8 @@ contract TokenGeyser is IStaking, Ownable {
      * @dev Unstakes a certain amount of previously deposited tokens. User also receives their
      * alotted number of distribution tokens.
      * @param amount Number of deposit tokens to unstake / withdraw.
-     * @param data Not used.
      */
-    function unstake(uint256 amount, bytes calldata data) override external {
+    function unstake(uint256 amount) override external {
         _unstake(amount);
     }
 

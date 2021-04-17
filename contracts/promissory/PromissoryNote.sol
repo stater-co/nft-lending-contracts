@@ -37,11 +37,10 @@ contract StaterPromissoryNote is ERC1155, Ownable {
     /* ********* */
     
     string constant public name = "Stater Promissory Note";
-    address private lendingDataAddress = 0x41e3718C49ae1b0F784dfE0BbDCbA56afFD3bb3F;
-    LendingData lendingData;
+    LendingData public lendingData;
 
 	//TODO: change the uri after the api implementation
-    constructor() ERC1155("https://abcoathup.github.io/SampleERC1155/api/token/{id}.json") {
+    constructor(address lendingDataAddress) ERC1155("https://abcoathup.github.io/SampleERC1155/api/token/{id}.json") {
         lendingData = LendingData(lendingDataAddress);
     }
     
@@ -96,8 +95,7 @@ contract StaterPromissoryNote is ERC1155, Ownable {
      * @param _lendingDataAddress The address of the stater lending contract
      */ 
     function setLendingDataAddress(address _lendingDataAddress) external onlyOwner {
-        lendingDataAddress = _lendingDataAddress;
-        lendingData = LendingData(lendingDataAddress);
+        lendingData = LendingData(_lendingDataAddress);
     }
     
 }
@@ -107,7 +105,7 @@ contract StaterPromissoryNote is ERC1155, Ownable {
  * @notice Interface for interacting with the Stater Lending Core contract.
  *@author Stater
  */
-contract LendingData {
-    function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external {}
-    function setPromissoryPermissions(uint256[] calldata loanIds) external {}
+interface LendingData {
+    function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external;
+    function setPromissoryPermissions(uint256[] calldata loanIds) external;
 }

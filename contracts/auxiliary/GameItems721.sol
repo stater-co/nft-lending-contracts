@@ -5,11 +5,11 @@
  */
 pragma solidity 0.7.4;
 
-import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
-import "openzeppelin-solidity/contracts/utils/Counters.sol";
-import "openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
-import "openzeppelin-solidity/contracts/access/Ownable.sol";
-import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
+import "../openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
+import "../openzeppelin-solidity/contracts/utils/Counters.sol";
+import "../openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
+import "../openzeppelin-solidity/contracts/access/Ownable.sol";
+import "../openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 
 contract GameItems721 is ERC721, Ownable, ReentrancyGuard {
 
