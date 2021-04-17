@@ -8,87 +8,17 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint8",
-						"name": "_tokenType",
-						"type": "uint8"
-					},
-					{
 						"internalType": "address",
-						"name": "_tokenContract",
-						"type": "address"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_discount",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "_tokenIds",
-						"type": "uint256[]"
-					}
-				],
-				"name": "addDiscount",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "requester",
+						"name": "addr",
 						"type": "address"
 					}
 				],
-				"name": "calculateDiscount",
+				"name": "totalStakedFor",
 				"outputs": [
 					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "discountId",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "discounts",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "tokenType",
-						"type": "uint8"
-					},
-					{
-						"internalType": "address",
-						"name": "tokenContract",
-						"type": "address"
-					},
-					{
-						"internalType": "uint8",
-						"name": "discount",
-						"type": "uint8"
 					}
 				],
 				"stateMutability": "view",
@@ -108,7 +38,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"../nft-lending-contracts/contracts/core/StaterDiscounts.sol": "StaterDiscounts"
+			"../nft-lending-contracts/contracts/newConcept/StaterDiscount.sol": "Geyser"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -122,20 +52,36 @@
 		"remappings": []
 	},
 	"sources": {
-		"../nft-lending-contracts/contracts/core/StaterDiscounts.sol": {
-			"keccak256": "0x9a6d3a4833800f243b4ebf9f840e1d691e7a9d0b930a5f110e701cb318f14665",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://3d26a073f3fd6639c9680dec0c2c0d6c3014c8853ef4fed1c0090abcc9f7c5ca",
-				"dweb:/ipfs/QmeQK9XS6yeK4ejfRYsWeUYAeM8ZT8UfezzoPGvKzACncU"
-			]
-		},
 		"../nft-lending-contracts/contracts/multi-token-standard/contracts/interfaces/IERC1155.sol": {
 			"keccak256": "0x4de965e4d3457269fa670aceb315bc6c57194b7cca08798176d39cc0ad841814",
 			"license": "MIT",
 			"urls": [
 				"bzz-raw://f0222db296984586ea87c35aece19e23c0ebc16505aed17c4427b8e3bc6a5b43",
 				"dweb:/ipfs/QmU1zSHN31CPKNe9d24w2jFk9nwjSRfeakPcsCi1tmaenw"
+			]
+		},
+		"../nft-lending-contracts/contracts/newConcept/StaterDiscount.sol": {
+			"keccak256": "0x194c2106ff267cda8619312decc4d8d530a7caa00f9719606ae3744d1ced4895",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f657cb31e92d4ff464dcf1d5821d9cb3f7adcc1aecc92dafb626ac07b9c20e41",
+				"dweb:/ipfs/QmUdQzWCPdhcR6Doff3Eydq5U5Sveo8XR7LoqnEMvgYY5s"
+			]
+		},
+		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/GSN/Context.sol": {
+			"keccak256": "0xbc7f2f08b805e299fa2d5e702051171f670ded2808044dfeb6fab4357f167138",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://53f7f10bb120dca002788bc57a82cb2b17178312ed95c55a378a77f9a0803ee3",
+				"dweb:/ipfs/QmYPMCJo9HA9WuvkTaCHJVGipyXNUr3skeEVSXj3QJgc8U"
+			]
+		},
+		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/access/Ownable.sol": {
+			"keccak256": "0x336031c76d8248a1a0f0f474d38e49b7858652453a98b7ff5c76d8f7d8528a13",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://33b3b61915ec3e5c1367646630c7e164337be87ee79b0a1d94a39daac19c92ed",
+				"dweb:/ipfs/QmZozz8CQ3Dc94CdLowLb7q2JsxfuNbKMkBjDxczSYNPUU"
 			]
 		},
 		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/introspection/IERC165.sol": {

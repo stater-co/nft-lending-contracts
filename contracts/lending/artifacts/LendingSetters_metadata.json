@@ -1145,11 +1145,11 @@
 			]
 		},
 		"../nft-lending-contracts/contracts/lending/LendingSetters.sol": {
-			"keccak256": "0x7893de8ee891eef42891d31c16434ac077ef01d3196d6a0180da78e7b7ba5aa5",
+			"keccak256": "0x01ca1064f453748c9ac6b3fb0fa89b4cef7519f766c877aa8bb42213ffdcb61d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://291457390eee6ef8534109c00faadeae1ddd6f53e101664bbb7391f52c92e1c7",
-				"dweb:/ipfs/QmPauoMNhVaAY8npC35pkqZuKVr3tZJTrvyGYEEFEbTdJw"
+				"bzz-raw://2e92f3e39db94f52a2b790cf3ddc175c5d5feac26b2718046d3e9205b38237df",
+				"dweb:/ipfs/QmUoj4vvaeqRXowsxWi9PGd4kFjvT4yveaCHhdLQbYCdCz"
 			]
 		},
 		"../nft-lending-contracts/contracts/lending/LendingUtils.sol": {

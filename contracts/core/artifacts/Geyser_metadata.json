@@ -38,7 +38,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"../test/contracts/core/StaterDiscounts.sol": "Geyser"
+			"../nft-lending-contracts/contracts/core/StaterDiscounts.sol": "Geyser"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -52,7 +52,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"../test/contracts/core/StaterDiscounts.sol": {
+		"../nft-lending-contracts/contracts/core/StaterDiscounts.sol": {
 			"keccak256": "0x9a6d3a4833800f243b4ebf9f840e1d691e7a9d0b930a5f110e701cb318f14665",
 			"license": "MIT",
 			"urls": [
@@ -60,7 +60,7 @@
 				"dweb:/ipfs/QmeQK9XS6yeK4ejfRYsWeUYAeM8ZT8UfezzoPGvKzACncU"
 			]
 		},
-		"../test/contracts/multi-token-standard/contracts/interfaces/IERC1155.sol": {
+		"../nft-lending-contracts/contracts/multi-token-standard/contracts/interfaces/IERC1155.sol": {
 			"keccak256": "0x4de965e4d3457269fa670aceb315bc6c57194b7cca08798176d39cc0ad841814",
 			"license": "MIT",
 			"urls": [
@@ -68,7 +68,7 @@
 				"dweb:/ipfs/QmU1zSHN31CPKNe9d24w2jFk9nwjSRfeakPcsCi1tmaenw"
 			]
 		},
-		"../test/contracts/openzeppelin-solidity/contracts/introspection/IERC165.sol": {
+		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/introspection/IERC165.sol": {
 			"keccak256": "0x22116311560662337f33d16c2400d88bbccd4d1e0c0ba9a1a6114ad584bdaa3c",
 			"license": "MIT",
 			"urls": [
@@ -76,7 +76,7 @@
 				"dweb:/ipfs/QmWCMw6itHRC4ZFyBfLjzqJea65WYLhc98NCTBGALEPXDT"
 			]
 		},
-		"../test/contracts/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol": {
+		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol": {
 			"keccak256": "0x772e5a3984c1ceb3affeff7f20ea06394bb5a7f65301aac225ca2a8b512dff2e",
 			"license": "MIT",
 			"urls": [

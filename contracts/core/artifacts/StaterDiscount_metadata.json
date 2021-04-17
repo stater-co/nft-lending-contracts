@@ -108,7 +108,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"../nft-lending-contracts/contracts/core/StaterDiscounts.sol": "StaterDiscounts"
+			"../nft-lending-contracts/contracts/core/StaterDiscounts.sol": "StaterDiscount"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -123,11 +123,11 @@
 	},
 	"sources": {
 		"../nft-lending-contracts/contracts/core/StaterDiscounts.sol": {
-			"keccak256": "0x9a6d3a4833800f243b4ebf9f840e1d691e7a9d0b930a5f110e701cb318f14665",
+			"keccak256": "0x30613d8e4d805355d96a5b6d359ccd2bd0518ca38328ac91874bbbe015f76d3d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3d26a073f3fd6639c9680dec0c2c0d6c3014c8853ef4fed1c0090abcc9f7c5ca",
-				"dweb:/ipfs/QmeQK9XS6yeK4ejfRYsWeUYAeM8ZT8UfezzoPGvKzACncU"
+				"bzz-raw://68aa6e6f492f05ad6bb127fd16a5c3290698d20e824ee79d6d2aa0df47919706",
+				"dweb:/ipfs/QmPVg2vPgm1Poz1Rzh9GbhBuQmmner8KDrcPTXEvUdisQw"
 			]
 		},
 		"../nft-lending-contracts/contracts/multi-token-standard/contracts/interfaces/IERC1155.sol": {
