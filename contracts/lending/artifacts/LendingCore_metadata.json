@@ -31,11 +31,6 @@
 						"internalType": "address",
 						"name": "_lendingMethodsContract",
 						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_lendingPoolContract",
-						"type": "address"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -955,25 +950,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "promissoryPermissions",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "renounceOwnership",
 				"outputs": [],
@@ -1195,11 +1171,11 @@
 	},
 	"sources": {
 		"../nft-lending-contracts/contracts/core/StaterCore.sol": {
-			"keccak256": "0x196423b32c33dd9a9aaa18347abe668e73ae43cabe0991b0b29326acd0412909",
+			"keccak256": "0xa519cf3b328d6c9dc79f5de2287ee4a14f22157d170c90d95e01a132df4ad548",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://122c70860505824fa373e072dd068893124374715ee4a2af1392182900095067",
-				"dweb:/ipfs/QmbcSATYjmUjUt4Q4o8MrZs6dcFmrJiN9Q6jXMgc2iFTC5"
+				"bzz-raw://387db13eae1858c1018fdc6e9e2a78bd9c941ebfc5d4263492c7c5381112d530",
+				"dweb:/ipfs/QmNQS8Jo9KHs2JDAesXFs9scchc3VW3y5N9iJWU1HNay5Y"
 			]
 		},
 		"../nft-lending-contracts/contracts/core/StaterDiplomat.sol": {
@@ -1227,11 +1203,11 @@
 			]
 		},
 		"../nft-lending-contracts/contracts/lending/LendingCore.sol": {
-			"keccak256": "0xde7776a59b9dc64124051484bc0abfcbe2e05ec31e1ae8b261a5cd9dc9cfd0e7",
+			"keccak256": "0x7b37e89149fac1fbc5fcae1f6a417dfa6c918c9465191d79d8a124da2d3cd866",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ba9e79ef2027f5e7038222368acd1ede8eb2b2cf7563f682c95151bf8dd25cbc",
-				"dweb:/ipfs/QmPyYcvcZLnzRsTbiSdzyu1JfNEvroqgo5hfZnRLsrEpmw"
+				"bzz-raw://43dd68252a35dfcd20370bd68281bca6ee77cf522c72f3560c990abb0b8ffd64",
+				"dweb:/ipfs/QmZxWuvQhARgVn6C63M9ZpVYxfpJZhbZepHHRMDsQ7GtkU"
 			]
 		},
 		"../nft-lending-contracts/contracts/lending/LendingUtils.sol": {

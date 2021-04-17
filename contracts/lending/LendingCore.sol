@@ -13,13 +13,11 @@ contract LendingCore is StaterCore, LendingUtils {
         address _promissoryNoteContractAddress, 
         address[] memory _geyserAddressArray, 
         uint256[] memory _staterNftTokenIdArray, 
-        address _lendingMethodsContract, 
-        address _lendingPoolContract
+        address _lendingMethodsContract
     ) {
         
         permissions["PROMISSORY_NOTE"] = _promissoryNoteContractAddress;
         permissions[lendingMethodsSignature] = _lendingMethodsContract;
-        permissions["LENDING_POOL"] = _lendingPoolContract;
         
         addDiscount(uint8(1),_nftAddress,uint8(50),_staterNftTokenIdArray);
         uint256[] memory emptyArray;

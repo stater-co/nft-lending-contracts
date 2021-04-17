@@ -14,13 +14,11 @@ contract LendingSetters is StaterCore, LendingUtils {
         address _promissoryNoteContractAddress, 
         address[] memory _geyserAddressArray, 
         uint256[] memory _staterNftTokenIdArray, 
-        address _lendingMethodsContract, 
-        address _lendingPoolContract
+        address _lendingMethodsContract
     ) {
         
         permissions["PROMISSORY_NOTE"] = _promissoryNoteContractAddress;
         permissions[lendingMethodsSignature] = _lendingMethodsContract;
-        permissions["LENDING_POOL"] = _lendingPoolContract;
         
         /*
          * @DIIMIIM : Here the initial discount assigned for marketing will be the NFT1155 tokens
@@ -309,6 +307,17 @@ contract LendingSetters is StaterCore, LendingUtils {
         msg.sender,
         loans[loanId].status
         );
+    }
+    
+   /**
+    * @notice Used by the Promissory Note contract to approve a list of loans to be used as a Promissory Note NFT
+    * @param loanIds The ids of the loans that will be approved
+    */
+    function setPromissoryPermissions(uint256[] calldata loanIds) external {
+        for (uint256 i = 0; i < loanIds.length; ++i) {
+        //require(loans[loanIds[i]].lender == msg.sender, "You're not the lender of this loan");
+        //promissoryPermissions[loanIds[i]] = permissions["PROMISSORY_NOTE"];
+        }
     }
     
 }

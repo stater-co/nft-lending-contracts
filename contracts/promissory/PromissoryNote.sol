@@ -30,7 +30,7 @@ contract StaterPromissoryNote is ERC1155, Ownable {
         address payable owner;
     }
     mapping(uint256 => PromissoryNote) public promissoryNotes;
-    uint256 private promissoryNoteId;
+    uint256 public promissoryNoteId;
     
     /* ********* */
     /* CONSTANTS */
@@ -92,10 +92,16 @@ contract StaterPromissoryNote is ERC1155, Ownable {
     
     /**
      * @notice Setter function for the main Stater lending contract
-     * @param _lendingDataAddress The address of the stater lending contract
+     * @param lendingDataAddress The address of the stater lending contract
      */ 
-    function setLendingDataAddress(address _lendingDataAddress) external onlyOwner {
-        lendingData = LendingData(_lendingDataAddress);
+    function setLendingDataAddress(address lendingDataAddress) external onlyOwner {
+        lendingData = LendingData(lendingDataAddress);
+    }
+    
+    function burnPromissoryNote(uint256 _promissoryNoteId) external {
+        require(promissoryNotes[_promissoryNoteId].owner == msg.sender, "You're not the owner of this promissory note");
+        delete promissoryNotes[_promissoryNoteId].owner;
+        delete promissoryNotes[_promissoryNoteId].loans;
     }
     
 }
@@ -103,7 +109,7 @@ contract StaterPromissoryNote is ERC1155, Ownable {
 /**
  * @title StaterLendingCore
  * @notice Interface for interacting with the Stater Lending Core contract.
- *@author Stater
+ * @author Stater
  */
 interface LendingData {
     function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external;
