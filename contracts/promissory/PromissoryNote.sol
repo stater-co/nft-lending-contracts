@@ -100,8 +100,7 @@ contract StaterPromissoryNote is ERC1155, Ownable {
     
     function burnPromissoryNote(uint256 _promissoryNoteId) external {
         require(promissoryNotes[_promissoryNoteId].owner == msg.sender, "You're not the owner of this promissory note");
-        delete promissoryNotes[_promissoryNoteId].owner;
-        delete promissoryNotes[_promissoryNoteId].loans;
+        delete promissoryNotes[_promissoryNoteId];
     }
     
 }
