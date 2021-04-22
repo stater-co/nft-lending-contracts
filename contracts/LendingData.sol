@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
-import "openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
-import "multi-token-standard/contracts/interfaces/IERC1155.sol";
-import "openzeppelin-solidity/contracts/token/ERC1155/ERC1155Holder.sol";
-import "openzeppelin-solidity/contracts/access/Ownable.sol";
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "./openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
+import "./openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
+import "./multi-token-standard/contracts/interfaces/IERC1155.sol";
+import "./openzeppelin-solidity/contracts/token/ERC1155/ERC1155Holder.sol";
+import "./openzeppelin-solidity/contracts/access/Ownable.sol";
+import "./openzeppelin-solidity/contracts/math/SafeMath.sol";
 interface Geyser{ function totalStakedFor(address addr) external view returns(uint256); }
 
 /**
@@ -55,12 +55,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
   // 40=40% out of intersetRate
   uint256 public interestRateToStater = 40;
 
-  event NewLoan(uint256 indexed loanId, address indexed owner, uint256 creationDate, address indexed currency, Status status, string creationId);
-  event LoanApproved(uint256 indexed loanId, address indexed lender, uint256 approvalDate, uint256 loanPaymentEnd, Status status);
-  event LoanCancelled(uint256 indexed loanId, uint256 cancellationDate, Status status);
-  event ItemsWithdrawn(uint256 indexed loanId, address indexed requester, Status status);
-  event LoanPayment(uint256 indexed loanId, uint256 paymentDate, uint256 installmentAmount, uint256 amountPaidAsInstallmentToLender, uint256 interestPerInstallement, uint256 interestToStaterPerInstallement, Status status);
-  
   enum Status{
       UNINITIALIZED, // will be removed in the future -- not used
       LISTED, // after the loan have been created --> the next status will be APPROVED
@@ -71,6 +65,44 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
       WITHDRAWN // the final status, the collateral returned to the borrower or to the lender
   }
   enum TokenType{ ERC721, ERC1155 }
+
+  event NewLoan(
+    uint256 indexed loanId, 
+    address indexed owner, 
+    uint256 creationDate, 
+    address indexed currency, 
+    Status status, 
+    address[] nftAddressArray, 
+    uint256[] nftTokenIdArray,
+    TokenType[] nftTokenTypeArray
+  );
+  event LoanApproved(
+    uint256 indexed loanId, 
+    address indexed lender, 
+    uint256 approvalDate, 
+    uint256 loanPaymentEnd, 
+    Status status
+  );
+  event LoanCancelled(
+    uint256 indexed loanId, 
+    uint256 cancellationDate, 
+    Status status
+  );
+  event ItemsWithdrawn(
+    uint256 indexed loanId, 
+    address indexed requester, 
+    Status status
+  );
+  event LoanPayment(
+    uint256 indexed loanId, 
+    uint256 paymentDate, 
+    uint256 installmentAmount, 
+    uint256 amountPaidAsInstallmentToLender, 
+    uint256 interestPerInstallement, 
+    uint256 interestToStaterPerInstallement, 
+    Status status
+  );
+
   struct Loan {
     address[] nftAddressArray; // the adderess of the ERC721
     address payable borrower; // the address who receives the loan
@@ -120,7 +152,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
    * @param assetsValue The value of the assets
    * @param nftAddressArray Array of nft addresses in the loan bundle.
    * @param nftTokenIdArray Array of nft token IDs in the loan bundle.
-   * @param creationId ID used to identify loan creation event in the stater database.
    * @param nftTokenTypeArray The token types : ERC721 , ERC115
    */
   function createLoan(
@@ -130,7 +161,6 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
     uint256 assetsValue, 
     address[] calldata nftAddressArray, 
     uint256[] calldata nftTokenIdArray,
-    string calldata creationId,
     TokenType[] memory nftTokenTypeArray
   ) external {
     require(nrOfInstallments > 0, "Loan must have at least 1 installment");
@@ -172,7 +202,7 @@ contract LendingData is ERC721Holder, ERC1155Holder, Ownable {
     );
 
     // Fire event
-    emit NewLoan(loanID, msg.sender, block.timestamp, currency, Status.LISTED, creationId);
+    emit NewLoan(loanID, msg.sender, block.timestamp, currency, Status.LISTED, nftAddressArray, nftTokenIdArray, nftTokenTypeArray);
     ++loanID;
   }
 
