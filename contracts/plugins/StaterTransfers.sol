@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
-import "../openzeppelin-solidity/contracts/access/Ownable.sol";
-import "../openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "../openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
-import "../multi-token-standard/contracts/interfaces/IERC1155.sol";
-import "../openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
-import "../openzeppelin-solidity/contracts/token/ERC1155/ERC1155Holder.sol";
+import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
+import "../libs/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "../libs/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
+import "../libs/multi-token-standard/contracts/interfaces/IERC1155.sol";
+import "../libs/openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
+import "../libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Holder.sol";
 
 contract StaterTransfers is Ownable, ERC721Holder, ERC1155Holder {
     
@@ -66,6 +66,5 @@ contract StaterTransfers is Ownable, ERC721Holder, ERC1155Holder {
                     '0x00'
                 );
     }
-    
 
 }

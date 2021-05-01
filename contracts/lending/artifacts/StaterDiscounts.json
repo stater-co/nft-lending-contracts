@@ -47,19 +47,48 @@
 		},
 		"gasEstimates": null,
 		"methodIdentifiers": {
-			"totalStakedFor(address)": "4b341aed"
+			"addDiscount(uint8,address,uint8,uint256[])": "ff1a48f7",
+			"calculateDiscount(address)": "ad6a8745"
 		}
 	},
 	"abi": [
 		{
 			"inputs": [
 				{
+					"internalType": "uint8",
+					"name": "_tokenType",
+					"type": "uint8"
+				},
+				{
 					"internalType": "address",
-					"name": "addr",
+					"name": "_tokenContract",
+					"type": "address"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_discount",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint256[]",
+					"name": "_tokenIds",
+					"type": "uint256[]"
+				}
+			],
+			"name": "addDiscount",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "requester",
 					"type": "address"
 				}
 			],
-			"name": "totalStakedFor",
+			"name": "calculateDiscount",
 			"outputs": [
 				{
 					"internalType": "uint256",

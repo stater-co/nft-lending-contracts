@@ -67,7 +67,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/GSN/Context.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/Context.sol": {
 			"keccak256": "0xbc7f2f08b805e299fa2d5e702051171f670ded2808044dfeb6fab4357f167138",
 			"license": "MIT",
 			"urls": [
@@ -75,7 +75,7 @@
 				"dweb:/ipfs/QmYPMCJo9HA9WuvkTaCHJVGipyXNUr3skeEVSXj3QJgc8U"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/access/Ownable.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/access/Ownable.sol": {
 			"keccak256": "0x336031c76d8248a1a0f0f474d38e49b7858652453a98b7ff5c76d8f7d8528a13",
 			"license": "MIT",
 			"urls": [
@@ -83,7 +83,7 @@
 				"dweb:/ipfs/QmZozz8CQ3Dc94CdLowLb7q2JsxfuNbKMkBjDxczSYNPUU"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/introspection/ERC165.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/ERC165.sol": {
 			"keccak256": "0xa75771101b8f1b3e0a10d93791ccc573c01759de9967a31305e18d759f048764",
 			"license": "MIT",
 			"urls": [
@@ -91,7 +91,7 @@
 				"dweb:/ipfs/QmNMvGyJHcUdQwdtDYZ1ybR6VBk6RLujig8hhub9TZkcsv"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/introspection/IERC165.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/IERC165.sol": {
 			"keccak256": "0x22116311560662337f33d16c2400d88bbccd4d1e0c0ba9a1a6114ad584bdaa3c",
 			"license": "MIT",
 			"urls": [
@@ -99,7 +99,7 @@
 				"dweb:/ipfs/QmWCMw6itHRC4ZFyBfLjzqJea65WYLhc98NCTBGALEPXDT"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/math/SafeMath.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/math/SafeMath.sol": {
 			"keccak256": "0x03e8ca0e478ad13a646ac950c1095903f565abf6914d9608f665b269a8239efe",
 			"license": "MIT",
 			"urls": [
@@ -107,7 +107,7 @@
 				"dweb:/ipfs/QmbbjLMnnLisxuJaPxoRJ8zSoQACk7dErtPKWWQ5Grkg66"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol": {
 			"keccak256": "0xe169af4ad808565cadbe1d8375b160efe6ee9b831cc9f395a46b797af48c1392",
 			"license": "MIT",
 			"urls": [
@@ -115,7 +115,7 @@
 				"dweb:/ipfs/QmT6FiLsDn2WxWzm4f8gUwMBSQ1wRs8iDiu2DMAvV1WsUE"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/token/ERC1155/IERC1155.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155.sol": {
 			"keccak256": "0xfde7a7eaf958792fce4e08cf50633013299bc0fea468f6f14dcdb855f4d7a326",
 			"license": "MIT",
 			"urls": [
@@ -123,7 +123,7 @@
 				"dweb:/ipfs/QmRv6DsHjxb767kgQ7bvkHcKWKzXAJYH57XK4PznJS7kUN"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/token/ERC1155/IERC1155MetadataURI.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155MetadataURI.sol": {
 			"keccak256": "0x04afdeee56286ace62163b244d18f32614384d1aab7903832cb99d63f7bcf118",
 			"license": "MIT",
 			"urls": [
@@ -131,7 +131,7 @@
 				"dweb:/ipfs/QmSoDA7LFs9WPk4vz1sRr7xN7s3UwYeri5ZKiwTqNp4vVb"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/token/ERC1155/IERC1155Receiver.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155Receiver.sol": {
 			"keccak256": "0x345e5c61672af34e95f44ad3457cf31359783c3230df2120205f8a1df5d7a889",
 			"license": "MIT",
 			"urls": [
@@ -139,7 +139,7 @@
 				"dweb:/ipfs/QmTVNpbiVZFLgKs1tjzKrKz8T3fZQAqKpaYoboqSB58zhb"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/utils/Address.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Address.sol": {
 			"keccak256": "0x018efd677e0db6f060248f6656fd998d9c659e15d03d98b469ad28ac17ca9708",
 			"license": "MIT",
 			"urls": [
@@ -148,11 +148,11 @@
 			]
 		},
 		"../nft-lending-contracts/contracts/promissory/PromissoryNote.sol": {
-			"keccak256": "0xbe9ce1f2516f1f4d617e661b1df49fb1def65d5ad57410a7e8a7e16dff0d9ee3",
+			"keccak256": "0x75ab46f1148456675f3857024349bbe6e10533bdf37dd00bf2e6b995a6eca77e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://46a9f34ff88c03eda163df34b80ee571219e4a3fc5477de47bf0b89018a2b6a4",
-				"dweb:/ipfs/QmYb9DR5i6EiNiKMhVpUAbajQ7XYqUBCSc1WkLnWVmVC1J"
+				"bzz-raw://ade0a98d039b1ce88f29bf59301f2d74ac789f52ebec7b1be2247f0cca5d7bfb",
+				"dweb:/ipfs/QmUrZHjmvrHwiJV8J7AZWgghobZpCQZQYngNVFWPBWHcug"
 			]
 		}
 	},

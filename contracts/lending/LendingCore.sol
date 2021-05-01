@@ -1,142 +1,182 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
-import "../core/StaterCore.sol";
-import "../openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./LendingUtils.sol";
+import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
+import "../plugins/StaterTransfers.sol";
+interface StaterDiscounts {
+    function addDiscount(uint8 _tokenType, address _tokenContract, uint8 _discount, uint256[] memory _tokenIds) external;
+    function calculateDiscount(address requester) external view returns(uint256);
+}
 
-
-contract LendingCore is StaterCore, LendingUtils {
+contract LendingCore is StaterTransfers {
     using SafeMath for uint256;
-
-    constructor(
-        address _nftAddress, 
-        address _promissoryNoteContractAddress, 
-        address[] memory _geyserAddressArray, 
-        uint256[] memory _staterNftTokenIdArray, 
-        address _lendingMethodsContract
-    ) {
-        
-        permissions["PROMISSORY_NOTE"] = _promissoryNoteContractAddress;
-        permissions[lendingMethodsSignature] = _lendingMethodsContract;
-        
-        addDiscount(uint8(1),_nftAddress,uint8(50),_staterNftTokenIdArray);
-        uint256[] memory emptyArray;
-        for ( uint256 i = 0 ; i < _geyserAddressArray.length ; ++i )
-            addDiscount(uint8(2),_geyserAddressArray[i],uint8(2),emptyArray);
-            
-    }
-
-    // Borrower creates a loan
-    function createLoan(
-        uint256 loanAmount,
-        uint16 nrOfInstallments,
-        address currency,
-        uint256 assetsValue, 
-        address[] calldata nftAddressArray, 
-        uint256[] calldata nftTokenIdArray,
-        string calldata creationId,
-        uint8[] calldata nftTokenTypeArray
-    ) external {
-        // For 8 or more parameters via delegatecall >> Remix raises an error with no error message
-        loans[id].assetsValue = assetsValue;
-        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
-            abi.encodeWithSignature(
-                "createLoan(uint256,uint16,address,address[],uint256[],string,uint8[])",
-                loanAmount,nrOfInstallments,currency,nftAddressArray,nftTokenIdArray,creationId,nftTokenTypeArray
-            )
-        );
-        require(success,"Failed to createLoan via delegatecall");
-    }
-
-    function editLoan(
-        uint256 loanId,
-        uint256 loanAmount,
-        uint16 nrOfInstallments,
-        address currency,
-        uint256 assetsValue
-    ) external {
-        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
-            abi.encodeWithSignature(
-                "editLoan(uint256,uint256,uint16,address,uint256)",
-                loanId,loanAmount,nrOfInstallments,currency,assetsValue
-            )
-        );
-        require(success,"Failed to editLoan via delegatecall");
-    }
-
-
-    // Lender approves a loan
-    function approveLoan(uint256 loanId) external payable {
-        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
-            abi.encodeWithSignature(
-                "approveLoan(uint256)",
-                loanId
-            )
-        );
-        require(success,"Failed to approveLoan via delegatecall");
+    using SafeMath for uint16;
+    using SafeMath for uint8;
+    
+    /*
+     * @DIIMIIM Public & global variables for the lending contract
+     * id : the loan ID, id will be the actual loans mapping length
+     * ltv : max allowed 60%
+     * interestRate : 20% of the payment
+     * interestRateToStater : 40% of interestRate
+     * discountNft : 50% discount
+     * discountGeyser : 5% discount
+     * lenderFee : 1%
+     * Status : provides the loans status 
+     *   LISTED - loan is created and visible on lending.stater.co
+     *   APPROVED - lender found and assigned to loan
+     *   LIQUIDATED - all loan payments are paid
+     *   CANCELLED - loan is cancelled before a lender to be assigned
+     *   WITHDRAWN - loan is LIQUIDATED and items are withdrawn to either lender or borrower
+     */
+    address public promissoryNoteAddress;
+    address public lendingMethodsAddress;
+    address public lendingDiscountsAddress;
+    StaterDiscounts discounts;
+    uint256 public id; // the loan ID
+    uint256 public ltv = 600; // 60%
+    uint256 public interestRate = 20;
+    uint256 public interestRateToStater = 40;
+    uint32 public discountNft = 50;
+    uint32 public discountGeyser = 5;
+    uint32 public lenderFee = 100;
+    bytes32 constant lendingMethodsSignature = "LENDING_SETTERS";
+    enum Status{ 
+        LISTED, 
+        APPROVED, 
+        LIQUIDATED, 
+        CANCELLED, 
+        WITHDRAWN 
     }
     
+    
+    /*
+     * @DIIMIIM : The loan events
+     */
+    event NewLoan(
+        address indexed owner,
+        address indexed currency,
+        uint256 indexed loanId,
+        Status status
+    );
+    event LoanApproved(
+        address indexed lender,
+        uint256 indexed loanId,
+        uint256 loanPaymentEnd,
+        Status status
+    );
+    event LoanCancelled(
+        uint256 indexed loanId,
+        Status status
+    );
+    event ItemsWithdrawn(
+        address indexed requester,
+        uint256 indexed loanId,
+        Status status
+    );
+    event LoanPayment(
+        uint256 indexed loanId,
+        uint256 installmentAmount,
+        uint256 amountPaidAsInstallmentToLender,
+        uint256 interestPerInstallement,
+        uint256 interestToStaterPerInstallement,
+        Status status
+    );
+    
+    
+    /*
+     * @DIIMIIM : The loan structure
+     */
+    struct Loan {
+        address[] nftAddressArray; // the adderess of the ERC721
+        address payable borrower; // the address who receives the loan
+        address payable lender; // the address who gives/offers the loan to the borrower
+        address currency; // the token that the borrower lends, address(0) for ETH
+        Status status; // the loan status
+    
+        /*
+         * @DIIMIIM : A fixed size array used to calculate the loan installment time
+         * On position 0 will be the number of weeks an installment time has
+         * On position 1 will be the number of days an installment time has
+         * On position 2 will be the number of hours an installment time has
+         * Ex of usage : installmentsTimeHandler[0] = 2 ; installmentsTimeHandler[1] = 3 ; installmentsTimeHandler[2] = 4 >> the installment time will be 2 weeks 3 days and 4 hours
+         */    
+        uint256[3] installmentsTimeHandler;
+        
+        
+        uint256[] nftTokenIdArray; // the unique identifier of the NFT token that the borrower uses as collateral
+        uint256 loanAmount; // the amount, denominated in tokens (see next struct entry), the borrower lends
+        uint256 assetsValue; // important for determintng LTV which has to be under 50-60%
+        uint256 loanStart; // the point when the loan is approved
+        uint256 loanEnd; // the point when the loan is approved to the point when it must be paid back to the lender
+        uint256 installmentAmount; // amount expected for each installment
+        uint256 amountDue; // loanAmount + interest that needs to be paid back by borrower
+        uint256 paidAmount; // the amount that has been paid back to the lender to date
+        uint16 nrOfInstallments; // the number of installments that the borrower must pay.
+        uint16 nrOfPayments; // the number of installments paid
+        uint8 defaultingLimit; // the number of installments allowed to be missed without getting defaulted
+        uint8[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
+    }
+    
+    /*
+     * @DIIMIIM : public mappings
+     *   loans - the loans mapping
+     */
+    mapping(uint256 => Loan) public loans;
+    
+    
+    function getLoanApprovalCost(uint256 loanId) public view returns(uint256,uint256,uint256,uint256,address) {
+        return (
+            loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discounts.calculateDiscount(msg.sender))),
+            loans[loanId].loanAmount,
+            lenderFee,
+            discounts.calculateDiscount(msg.sender),
+            msg.sender
+        );
+    }
 
-    // Borrower cancels a loan
-    function cancelLoan(uint256 loanId) external {
-        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
-            abi.encodeWithSignature(
-                "cancelLoan(uint256)",
-                loanId
+
+    function getLoanRemainToPay(uint256 loanId) public view returns(uint256) {
+        return loans[loanId].amountDue.sub(loans[loanId].paidAmount);
+    }
+
+    /*
+    * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
+    * @ => TRUE = Loan has exceed the maximum unpaid installments limit, lender can terminate the loan and get the NFTs
+    * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
+    */
+    function lackOfPayment(uint256 loanId) public view returns(bool) {
+        return 
+            loans[loanId].status == Status.APPROVED 
+                && 
+            loans[loanId].loanStart.add(
+                loans[loanId].nrOfPayments.mul(
+                    getLoanPaymentFrequency(loanId).div(
+                        loans[loanId].nrOfInstallments
+                    )
+                )
+            ) <= block.timestamp.sub(
+                loans[loanId].defaultingLimit.mul(
+                    getLoanPaymentFrequency(loanId).div(
+                        loans[loanId].nrOfInstallments
+                    )
+                )
+            );
+    }
+
+    // Calculates loan to value ratio
+    function _percent(uint256 numerator, uint256 denominator) public pure returns(uint256) {
+        return numerator.mul(10000).div(denominator).add(5).div(10);
+    }
+    
+    function getLoanPaymentFrequency(uint256 loanId) public view returns(uint256) {
+        return loans[loanId].installmentsTimeHandler[0].mul(1 weeks).add(
+            loans[loanId].installmentsTimeHandler[1].mul(1 days).add(
+                loans[loanId].installmentsTimeHandler[2].mul(1 hours)
             )
         );
-        require(success,"Failed to approveLoan via delegatecall");
     }
-  
-  
-    // Borrower pays installment for loan
-    // Multiple installments : OK
-    function payLoan(uint256 loanId,uint256 amount) external payable {
-        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
-            abi.encodeWithSignature(
-                "payLoan(uint256,uint256)",
-                loanId,amount
-            )
-        );
-        require(success,"Failed to payLoan via delegatecall");
-    }
-
-
-    // Borrower can withdraw loan items if loan is LIQUIDATED
-    // Lender can withdraw loan item is loan is DEFAULTED
-    function terminateLoan(uint256 loanId) external {
-        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
-            abi.encodeWithSignature(
-                "terminateLoan(uint256)",
-                loanId
-            )
-        );
-        require(success,"Failed to terminateLoan via delegatecall");
-    }
-
-  
-    function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external {
-        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
-            abi.encodeWithSignature(
-                "promissoryExchange(uint256[],address)",
-                loanIds,newOwner
-            )
-        );
-        require(success,"Failed to promissoryExchange via delegatecall");
-    }
-
-  
-    function setPromissoryPermissions(uint256[] calldata loanIds) external {
-        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
-            abi.encodeWithSignature(
-                "setPromissoryPermissions(uint256[])",
-                loanIds
-            )
-        );
-        require(success,"Failed to setPromissoryPermissions via delegatecall");
-    }
-
-  
+    
     function getLoanInstallmentCost(
         uint256 loanId,
         uint256 nrOfInstallments
@@ -148,7 +188,7 @@ contract LendingCore is StaterCore, LendingUtils {
         uint256 amountPaidAsInstallmentToLender
     ) {
         require(nrOfInstallments <= loans[loanId].nrOfInstallments, "Number of installments too high");
-        uint256 discount = calculateDiscount(msg.sender);
+        uint256 discount = discounts.calculateDiscount(msg.sender);
         interestDiscounted = 0;
         
         overallInstallmentAmount = uint256(loans[loanId].installmentAmount.mul(nrOfInstallments));
@@ -158,20 +198,4 @@ contract LendingCore is StaterCore, LendingUtils {
         amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); 
     }
 
-  
-    function setGlobalVariables(
-        uint256 _ltv, 
-        uint256 _interestRate, 
-        uint256 _interestRateToStater, 
-        uint32 _lenderFee
-    ) external onlyOwner {
-        (bool success, ) = permissions[lendingMethodsSignature].delegatecall(
-            abi.encodeWithSignature(
-                "setGlobalVariables(address,uint256,uint256,uint256,uint32)",
-                _ltv,_interestRate,_interestRateToStater,_lenderFee
-            )
-        );
-        require(success,"Failed to setGlobalVariables via delegatecall");
-    }
-  
 }

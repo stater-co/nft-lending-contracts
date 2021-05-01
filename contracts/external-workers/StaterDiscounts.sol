@@ -1,14 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
-import "../openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
-import "../multi-token-standard/contracts/interfaces/IERC1155.sol";
-import "../openzeppelin-solidity/contracts/access/Ownable.sol";
+import "../libs/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
+import "../libs/multi-token-standard/contracts/interfaces/IERC1155.sol";
+interface Geyser{ function totalStakedFor(address addr) external view returns(uint256); }
 
-interface Geyser { 
-    function totalStakedFor(address addr) external view returns(uint256);
-}
-
-contract StaterDiscount is Ownable {
+contract StaterDiscounts {
 
 
     uint256 public discountId;
@@ -26,7 +22,7 @@ contract StaterDiscount is Ownable {
     mapping(uint256 => Discount) public discounts;
     
     
-    function addDiscount(uint8 _tokenType, address _tokenContract, uint8 _discount, uint256[] memory _tokenIds) external onlyOwner {
+    function addDiscount(uint8 _tokenType, address _tokenContract, uint8 _discount, uint256[] memory _tokenIds) public {
         discounts[discountId].tokenType = _tokenType;
         discounts[discountId].tokenContract = _tokenContract;
         discounts[discountId].discount = _discount;
@@ -37,7 +33,7 @@ contract StaterDiscount is Ownable {
     /*
      * @DIIMIIM To discuss this method with @Matei
      */
-    function calculateDiscount(address requester) external view returns(uint256){
+    function calculateDiscount(address requester) public view returns(uint256){
         for (uint i = 0; i < discountId; ++i){
             
             // token type 1 is first to check to ensure the biggest discount will be applied

@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
-import "../core/StaterCore.sol";
-import "../openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./LendingUtils.sol";
+import "./LendingCore.sol";
+import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 
-contract LendingSetters is StaterCore, LendingUtils {
+contract LendingSetters is LendingCore {
     using SafeMath for uint256;
     using SafeMath for uint16;
     
@@ -14,11 +13,14 @@ contract LendingSetters is StaterCore, LendingUtils {
         address _promissoryNoteContractAddress, 
         address[] memory _geyserAddressArray, 
         uint256[] memory _staterNftTokenIdArray, 
-        address _lendingMethodsContract
+        address _lendingMethodsContract,
+        address _lendingDiscountsAddress
     ) {
         
-        permissions["PROMISSORY_NOTE"] = _promissoryNoteContractAddress;
-        permissions[lendingMethodsSignature] = _lendingMethodsContract;
+        promissoryNoteAddress = _promissoryNoteContractAddress;
+        lendingMethodsAddress = _lendingMethodsContract;
+        lendingDiscountsAddress = _lendingDiscountsAddress;
+        discounts = StaterDiscounts(lendingDiscountsAddress);
         
         /*
          * @DIIMIIM : Here the initial discount assigned for marketing will be the NFT1155 tokens
@@ -26,10 +28,10 @@ contract LendingSetters is StaterCore, LendingUtils {
          * Other technical explanations : We store it as 2 ( for 50% ) and not 50 ( for 50% , more intuitive ) because this discount value it's saved into 
          * a separated structure and used later. This will create a problem if the global lenderFee value changes, the discounts will differ in this case.
          */
-        addDiscount(uint8(1),_nftAddress,uint8(2),_staterNftTokenIdArray);
+        discounts.addDiscount(uint8(1),_nftAddress,uint8(2),_staterNftTokenIdArray);
         uint256[] memory emptyArray;
         for ( uint256 i = 0 ; i < _geyserAddressArray.length ; ++i )
-            addDiscount(uint8(2),_geyserAddressArray[i],uint8(50),emptyArray);
+            discounts.addDiscount(uint8(2),_geyserAddressArray[i],uint8(50),emptyArray);
             
     }
     
@@ -39,7 +41,7 @@ contract LendingSetters is StaterCore, LendingUtils {
         uint256 _interestRate, 
         uint256 _interestRateToStater, 
         uint32 _lenderFee
-    ) public payable {
+    ) external onlyOwner {
         ltv = _ltv;
         interestRate = _interestRate;
         interestRateToStater = _interestRateToStater;
@@ -51,16 +53,17 @@ contract LendingSetters is StaterCore, LendingUtils {
         uint256 loanAmount,
         uint16 nrOfInstallments,
         address currency,
+        uint256 assetsValue,
         address[] calldata nftAddressArray, 
         uint256[] calldata nftTokenIdArray,
-        string calldata creationId,
         uint8[] calldata nftTokenTypeArray
     ) external {
         require(nrOfInstallments > 0, "Loan must have at least 1 installment");
         require(loanAmount > 0, "Loan amount must be higher than 0");
-        //require(nftAddressArray.length > 0, "Loan must have atleast 1 NFT");
+        require(nftAddressArray.length > 0, "Loan must have atleast 1 NFT");
         require(nftAddressArray.length == nftTokenIdArray.length && nftTokenIdArray.length == nftTokenTypeArray.length, "NFT provided informations are missing or incomplete");
         
+        loans[id].assetsValue = assetsValue;
         /*
          * @ Side note : _percent is missing from the LendingCore contract , in case of any error
          */
@@ -76,6 +79,7 @@ contract LendingSetters is StaterCore, LendingUtils {
             loans[id].defaultingLimit = 3;
         
         // Set loan fields
+        
         loans[id].nftTokenIdArray = nftTokenIdArray;
         loans[id].loanAmount = loanAmount;
         loans[id].amountDue = loanAmount.mul(interestRate.add(100)).div(100); // interest rate >> 20%
@@ -98,7 +102,12 @@ contract LendingSetters is StaterCore, LendingUtils {
         );
         
         // Fire event
-        emit NewLoan(id, msg.sender, block.timestamp, currency, Status.LISTED, creationId);
+        emit NewLoan(
+            msg.sender, 
+            currency, 
+            id, 
+            Status.LISTED
+        );
         ++id;
     }
 
@@ -141,7 +150,7 @@ contract LendingSetters is StaterCore, LendingUtils {
         require(loans[loanId].paidAmount == 0, "This loan is currently not ready for lenders");
         require(loans[loanId].status == Status.LISTED, "This loan is not currently ready for lenders, check later");
         
-        uint256 discount = calculateDiscount(msg.sender);
+        uint256 discount = discounts.calculateDiscount(msg.sender);
         
         // We check if currency is ETH
         if ( loans[loanId].currency == address(0) )
@@ -170,9 +179,8 @@ contract LendingSetters is StaterCore, LendingUtils {
         );
 
         emit LoanApproved(
-            loanId,
             msg.sender,
-            block.timestamp,
+            loanId,
             loans[loanId].loanEnd,
             Status.APPROVED
         );
@@ -201,7 +209,6 @@ contract LendingSetters is StaterCore, LendingUtils {
 
         emit LoanCancelled(
             loanId,
-            block.timestamp,
             Status.CANCELLED
         );
     }
@@ -217,7 +224,7 @@ contract LendingSetters is StaterCore, LendingUtils {
         uint256 paidByBorrower = msg.value > 0 ? msg.value : amount;
         uint256 amountPaidAsInstallmentToLender = paidByBorrower; // >> amount of installment that goes to lender
         uint256 interestPerInstallement = paidByBorrower.mul(interestRate).div(100); // entire interest for installment
-        uint256 discount = calculateDiscount(msg.sender);
+        uint256 discount = discounts.calculateDiscount(msg.sender);
         uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100);
 
         if ( discount != 1 ){
@@ -250,7 +257,6 @@ contract LendingSetters is StaterCore, LendingUtils {
 
         emit LoanPayment(
             loanId,
-            block.timestamp,
             msg.value,
             amountPaidAsInstallmentToLender,
             interestPerInstallement,
@@ -303,21 +309,10 @@ contract LendingSetters is StaterCore, LendingUtils {
         }
         
         emit ItemsWithdrawn(
-        loanId,
-        msg.sender,
-        loans[loanId].status
+            msg.sender,
+            loanId,
+            loans[loanId].status
         );
-    }
-    
-   /**
-    * @notice Used by the Promissory Note contract to approve a list of loans to be used as a Promissory Note NFT
-    * @param loanIds The ids of the loans that will be approved
-    */
-    function setPromissoryPermissions(uint256[] calldata loanIds) external {
-        for (uint256 i = 0; i < loanIds.length; ++i) {
-        //require(loans[loanIds[i]].lender == msg.sender, "You're not the lender of this loan");
-        //promissoryPermissions[loanIds[i]] = permissions["PROMISSORY_NOTE"];
-        }
     }
     
 }

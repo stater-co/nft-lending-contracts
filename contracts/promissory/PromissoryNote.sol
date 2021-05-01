@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity 0.7.4;
-import "../openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol";
-import "../openzeppelin-solidity/contracts/access/Ownable.sol";
+import "../libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol";
+import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 
 /**
  * @title StaterPromissoryNote
@@ -80,14 +80,6 @@ contract StaterPromissoryNote is ERC1155, Ownable {
         override
     {
         //TODO: get loan ids and call lending data function
-    }
-    
-    
-    /**
-     * @notice Returns the name of the contract
-     */  
-    function getName() public pure returns(string memory) {
-        return name;
     }
     
     /**

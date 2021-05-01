@@ -108,7 +108,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"../nft-lending-contracts/contracts/core/StaterDiscounts.sol": "StaterDiscounts"
+			"../nft-lending-contracts/contracts/external-workers/StaterDiscounts.sol": "StaterDiscounts"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -122,15 +122,15 @@
 		"remappings": []
 	},
 	"sources": {
-		"../nft-lending-contracts/contracts/core/StaterDiscounts.sol": {
-			"keccak256": "0x9a6d3a4833800f243b4ebf9f840e1d691e7a9d0b930a5f110e701cb318f14665",
+		"../nft-lending-contracts/contracts/external-workers/StaterDiscounts.sol": {
+			"keccak256": "0xf3efb9992c6ac829380c58de45ebd6b73a11bc7a2cb6f0be9ee969fcf20c7dc6",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3d26a073f3fd6639c9680dec0c2c0d6c3014c8853ef4fed1c0090abcc9f7c5ca",
-				"dweb:/ipfs/QmeQK9XS6yeK4ejfRYsWeUYAeM8ZT8UfezzoPGvKzACncU"
+				"bzz-raw://2530d5eb90527e9cb11cba736d11f2ead26319a92a557735737930a2d1071449",
+				"dweb:/ipfs/QmXNMdzr4yaoAWYoPvBv2kzFq1AEMD6evT8wgELQ3jh62w"
 			]
 		},
-		"../nft-lending-contracts/contracts/multi-token-standard/contracts/interfaces/IERC1155.sol": {
+		"../nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {
 			"keccak256": "0x4de965e4d3457269fa670aceb315bc6c57194b7cca08798176d39cc0ad841814",
 			"license": "MIT",
 			"urls": [
@@ -138,7 +138,7 @@
 				"dweb:/ipfs/QmU1zSHN31CPKNe9d24w2jFk9nwjSRfeakPcsCi1tmaenw"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/introspection/IERC165.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/IERC165.sol": {
 			"keccak256": "0x22116311560662337f33d16c2400d88bbccd4d1e0c0ba9a1a6114ad584bdaa3c",
 			"license": "MIT",
 			"urls": [
@@ -146,7 +146,7 @@
 				"dweb:/ipfs/QmWCMw6itHRC4ZFyBfLjzqJea65WYLhc98NCTBGALEPXDT"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol": {
 			"keccak256": "0x772e5a3984c1ceb3affeff7f20ea06394bb5a7f65301aac225ca2a8b512dff2e",
 			"license": "MIT",
 			"urls": [

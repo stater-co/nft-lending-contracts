@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
-import "../core/StaterCore.sol";
 
 
-contract StaterPool is StaterCore {
+contract StaterPool {
 
     uint256 public poolID;
     struct Pool {
