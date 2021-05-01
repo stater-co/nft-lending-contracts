@@ -40,7 +40,6 @@ contract LendingCore is StaterTransfers {
     uint32 public discountNft = 50;
     uint32 public discountGeyser = 5;
     uint32 public lenderFee = 100;
-    bytes32 constant lendingMethodsSignature = "LENDING_SETTERS";
     enum Status{ 
         LISTED, 
         APPROVED, 

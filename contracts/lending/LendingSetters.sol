@@ -8,33 +8,6 @@ contract LendingSetters is LendingCore {
     using SafeMath for uint256;
     using SafeMath for uint16;
     
-    constructor(
-        address _nftAddress, 
-        address _promissoryNoteContractAddress, 
-        address[] memory _geyserAddressArray, 
-        uint256[] memory _staterNftTokenIdArray, 
-        address _lendingMethodsContract,
-        address _lendingDiscountsAddress
-    ) {
-        
-        promissoryNoteAddress = _promissoryNoteContractAddress;
-        lendingMethodsAddress = _lendingMethodsContract;
-        lendingDiscountsAddress = _lendingDiscountsAddress;
-        discounts = StaterDiscounts(lendingDiscountsAddress);
-        
-        /*
-         * @DIIMIIM : Here the initial discount assigned for marketing will be the NFT1155 tokens
-         * The discount will be 50%
-         * Other technical explanations : We store it as 2 ( for 50% ) and not 50 ( for 50% , more intuitive ) because this discount value it's saved into 
-         * a separated structure and used later. This will create a problem if the global lenderFee value changes, the discounts will differ in this case.
-         */
-        discounts.addDiscount(uint8(1),_nftAddress,uint8(2),_staterNftTokenIdArray);
-        uint256[] memory emptyArray;
-        for ( uint256 i = 0 ; i < _geyserAddressArray.length ; ++i )
-            discounts.addDiscount(uint8(2),_geyserAddressArray[i],uint8(50),emptyArray);
-            
-    }
-    
     
     function setGlobalVariables(
         uint256 _ltv,  

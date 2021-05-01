@@ -187,14 +187,14 @@
 	},
 	"sources": {
 		"../nft-lending-contracts/contracts/auxiliary/TokenGeyser.sol": {
-			"keccak256": "0xbfe43c1cdb7ce0f42541772954917ac1ec1485db38a169666038389da2c7831f",
+			"keccak256": "0x13340fe9ed8f48c9d92122f44feeb761c622a78c4fced72b58e2d4ca4483a31d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://983f33e12f4b4d03befdbbbf6fec6320e9cbc86d8791b230e9fcbadf608c1e42",
-				"dweb:/ipfs/QmQZnFprXL8smpiu3WAB2DeB7GGGhaZddkQ9jUaCcN8wEA"
+				"bzz-raw://6af6ce5c956c6e827cab0bce8fd1fda0e3c1d594ffffb1865a95b02245ff2bcc",
+				"dweb:/ipfs/QmVytt2GZEQDyKS1RiXLKp6wkHEvukDeJwd56LW8P76c5g"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/GSN/Context.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/Context.sol": {
 			"keccak256": "0xbc7f2f08b805e299fa2d5e702051171f670ded2808044dfeb6fab4357f167138",
 			"license": "MIT",
 			"urls": [
@@ -202,7 +202,7 @@
 				"dweb:/ipfs/QmYPMCJo9HA9WuvkTaCHJVGipyXNUr3skeEVSXj3QJgc8U"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/access/Ownable.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/access/Ownable.sol": {
 			"keccak256": "0x336031c76d8248a1a0f0f474d38e49b7858652453a98b7ff5c76d8f7d8528a13",
 			"license": "MIT",
 			"urls": [
@@ -210,7 +210,7 @@
 				"dweb:/ipfs/QmZozz8CQ3Dc94CdLowLb7q2JsxfuNbKMkBjDxczSYNPUU"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/math/SafeMath.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/math/SafeMath.sol": {
 			"keccak256": "0x03e8ca0e478ad13a646ac950c1095903f565abf6914d9608f665b269a8239efe",
 			"license": "MIT",
 			"urls": [
@@ -218,7 +218,7 @@
 				"dweb:/ipfs/QmbbjLMnnLisxuJaPxoRJ8zSoQACk7dErtPKWWQ5Grkg66"
 			]
 		},
-		"../nft-lending-contracts/contracts/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
 			"keccak256": "0xb1b439fbc95b6285b8a37a7c25bbfe77644b4706d8405709bd575a0e6d67191b",
 			"license": "MIT",
 			"urls": [
