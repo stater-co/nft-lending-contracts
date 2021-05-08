@@ -87,7 +87,25 @@ contract StaterPromissoryNote is ERC1155, Ownable {
         virtual
         override
     {
-        //TODO: get loan ids and call lending data function
+     
+        require(id < promissoryNoteId, "Promissory Note: Invalid promissory ID");
+        require(to != address(0), "ERC1155: transfer to the zero address");
+        require(
+            from == _msgSender() || isApprovedForAll(from, _msgSender()),
+            "ERC1155: caller is not owner nor approved"
+        );
+
+        //Allow loans to be used in the Promissory Note
+        require(lendingDataAddress != address(0),"Lending contract not established");
+            
+        (bool success, ) = lendingDataAddress.delegatecall(
+            abi.encodeWithSignature(
+                "promissoryExchange(uint256[],address)",
+                promissoryNotes[id].loans,to
+            )
+        );
+        require(success,"Failed to setPromissoryPermissions via delegatecall");
+
     }
     
     /**

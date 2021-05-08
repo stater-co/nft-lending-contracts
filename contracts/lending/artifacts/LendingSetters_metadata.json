@@ -932,7 +932,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"../nft-lending-contracts/contracts/lending/LendingSetters.sol": "LendingSetters"
+			"../nft-lending-contracts/contracts/lending/LendingMethods.sol": "LendingSetters"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -954,7 +954,7 @@
 				"dweb:/ipfs/Qmbu57QE5Vd7oUDmwSv5yBTDrPj7TNMgnNsz9UG8GvUGou"
 			]
 		},
-		"../nft-lending-contracts/contracts/lending/LendingSetters.sol": {
+		"../nft-lending-contracts/contracts/lending/LendingMethods.sol": {
 			"keccak256": "0x88653fcfc40efd5aaebec92b0cceef97b4b5efc98330729ef945b64d1c81f119",
 			"license": "MIT",
 			"urls": [
