@@ -15,7 +15,7 @@ contract LendingTemplate is LendingCore {
     ) {
         promissoryNoteAddress = _promissoryNoteContractAddress;
         lendingSettersAddress = _lendingMethodsContract;
-        lendingDiscountsAddress = _lendingDiscountsAddress;
+        discounts = StaterDiscounts(_lendingDiscountsAddress);
     }
 
     // Borrower creates a loan
@@ -160,6 +160,42 @@ contract LendingTemplate is LendingCore {
             )
         );
         require(success,"Failed to setPromissoryPermissions via delegatecall");
+    }
+    
+    function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {
+        return loans[loanId].amountDue.sub(loans[loanId].paidAmount);
+    }
+
+    
+    function getLoanApprovalCost(uint256 loanId) external view returns(uint256,uint256,uint256,uint256,address) {
+        return (
+            loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discounts.calculateDiscount(msg.sender))),
+            loans[loanId].loanAmount,
+            lenderFee,
+            discounts.calculateDiscount(msg.sender),
+            msg.sender
+        );
+    }
+    
+    function getLoanInstallmentCost(
+        uint256 loanId,
+        uint256 nrOfInstallments
+    ) external view returns(
+        uint256 overallInstallmentAmount,
+        uint256 interestPerInstallement,
+        uint256 interestDiscounted,
+        uint256 interestToStaterPerInstallement,
+        uint256 amountPaidAsInstallmentToLender
+    ) {
+        require(nrOfInstallments <= loans[loanId].nrOfInstallments, "Number of installments too high");
+        uint256 discount = discounts.calculateDiscount(msg.sender);
+        interestDiscounted = 0;
+        
+        overallInstallmentAmount = uint256(loans[loanId].installmentAmount.mul(nrOfInstallments));
+        interestPerInstallement = uint256(overallInstallmentAmount.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments));
+        interestDiscounted = interestPerInstallement.mul(interestRateToStater).div(100).div(discount); // amount of interest saved per installment
+        interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100).sub(interestDiscounted);
+        amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); 
     }
   
 }

@@ -24,7 +24,7 @@ contract LendingSetters is LendingCore {
         lenderFee = _lenderFee;
         promissoryNoteAddress = _promissoryNoteAddress;
         lendingSettersAddress = _lendingSettersAddress;
-        lendingDiscountsAddress = _lendingDiscountsAddress;
+        discounts = StaterDiscounts(_lendingDiscountsAddress);
     }
     
     // Borrower creates a loan
@@ -310,4 +310,28 @@ contract LendingSetters is LendingCore {
         );
     }
     
+    /**
+     * @notice Used by the Promissory Note contract to change the ownership of the loan when the Promissory Note NFT is sold 
+     * @param loanIds The ids of the loans that will be transferred to the new owner
+     * @param newOwner The address of the new owner
+     */
+    function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external {
+        require(msg.sender == promissoryNoteAddress, "You're not whitelisted to access this method");
+        for (uint256 i = 0; i < loanIds.length; ++i) {
+            require(loans[loanIds[i]].lender != address(0), "One of the loans is not approved yet");
+            require(promissoryPermissions[loanIds[i]] == msg.sender, "You're not allowed to perform this operation on loan");
+            loans[loanIds[i]].lender = newOwner;
+        }
+    }
+  
+     /**
+      * @notice Used by the Promissory Note contract to approve a list of loans to be used as a Promissory Note NFT
+      * @param loanIds The ids of the loans that will be approved
+      */
+      function setPromissoryPermissions(uint256[] calldata loanIds) external {
+        for (uint256 i = 0; i < loanIds.length; ++i) {
+            require(loans[loanIds[i]].lender == msg.sender, "You're not the lender of this loan");
+            promissoryPermissions[loanIds[i]] = promissoryNoteAddress;
+        }
+    }
 }

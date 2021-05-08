@@ -288,6 +288,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "discounts",
+				"outputs": [
+					{
+						"internalType": "contract StaterDiscounts",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -512,19 +525,6 @@
 						"internalType": "uint32",
 						"name": "",
 						"type": "uint32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "lendingDiscountsAddress",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -815,6 +815,25 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "promissoryPermissions",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "renounceOwnership",
 				"outputs": [],
@@ -1033,19 +1052,19 @@
 	},
 	"sources": {
 		"../nft-lending-contracts/contracts/lending/LendingCore.sol": {
-			"keccak256": "0x6863dff59a963cf6975af56712a459fb1d84f98f734c6d3f3610bd5f8e7134db",
+			"keccak256": "0x570bd867dac33b0f072241fcfa2d773529e50052029d697b8be31a1c51753cb6",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c684aab737a5c0eea62dc31e39490a7fad5034eb503002819fc1462a8e725d63",
-				"dweb:/ipfs/QmRPdtGZsXVCfVw9ZXgV1juPKASPzaZ6Nz6GRKXhkLvA4X"
+				"bzz-raw://2b21b5e67ab76c006bea0437d3699a9cdc2a37682653992ff12f07e130136612",
+				"dweb:/ipfs/QmPhmwBM76UeUx9MW7kvY4ynTSz1phN1WQhicKvaeLvYzA"
 			]
 		},
 		"../nft-lending-contracts/contracts/lending/LendingTemplate.sol": {
-			"keccak256": "0x5eea02e49f4dd5eaab0d45d192ca16526d10d5e1012947b259a6a9d1037934b5",
+			"keccak256": "0x85e9c32f59ce07a9cf44dc11761a803e41c748b9bcec1fcedf0b3a964a56f966",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9193f157f2ccbe836150cd1edd83ad7df4e118acbe3ab47df4b50dff8db3a6fe",
-				"dweb:/ipfs/QmSxmo626PG8pExT6G5UoT8RYMfD2uhG48VVjXUwfZtHd5"
+				"bzz-raw://69856602819899357e55924307e1ffe722b8cdd2f639cee2709e5b33c3a10015",
+				"dweb:/ipfs/QmaD5En34zsBMFRRDUfxs5uboFPEszDcKsrathPtzqAHCA"
 			]
 		},
 		"../nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {

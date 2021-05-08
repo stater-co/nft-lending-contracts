@@ -198,83 +198,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "loanId",
-						"type": "uint256"
-					}
-				],
-				"name": "getLoanApprovalCost",
+				"inputs": [],
+				"name": "discounts",
 				"outputs": [
 					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
+						"internalType": "contract StaterDiscounts",
 						"name": "",
 						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "loanId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "nrOfInstallments",
-						"type": "uint256"
-					}
-				],
-				"name": "getLoanInstallmentCost",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "overallInstallmentAmount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "interestPerInstallement",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "interestDiscounted",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "interestToStaterPerInstallement",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amountPaidAsInstallmentToLender",
-						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -289,25 +219,6 @@
 					}
 				],
 				"name": "getLoanPaymentFrequency",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "loanId",
-						"type": "uint256"
-					}
-				],
-				"name": "getLoanRemainToPay",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -384,19 +295,6 @@
 						"internalType": "uint32",
 						"name": "",
 						"type": "uint32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "lendingDiscountsAddress",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -651,6 +549,25 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "promissoryPermissions",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "renounceOwnership",
 				"outputs": [],
@@ -800,11 +717,11 @@
 	},
 	"sources": {
 		"../nft-lending-contracts/contracts/lending/LendingCore.sol": {
-			"keccak256": "0x6863dff59a963cf6975af56712a459fb1d84f98f734c6d3f3610bd5f8e7134db",
+			"keccak256": "0x570bd867dac33b0f072241fcfa2d773529e50052029d697b8be31a1c51753cb6",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c684aab737a5c0eea62dc31e39490a7fad5034eb503002819fc1462a8e725d63",
-				"dweb:/ipfs/QmRPdtGZsXVCfVw9ZXgV1juPKASPzaZ6Nz6GRKXhkLvA4X"
+				"bzz-raw://2b21b5e67ab76c006bea0437d3699a9cdc2a37682653992ff12f07e130136612",
+				"dweb:/ipfs/QmPhmwBM76UeUx9MW7kvY4ynTSz1phN1WQhicKvaeLvYzA"
 			]
 		},
 		"../nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {

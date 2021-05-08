@@ -4,7 +4,6 @@ import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 import "../plugins/StaterTransfers.sol";
 interface StaterDiscounts {
-    function addDiscount(uint8 _tokenType, address _tokenContract, uint8 _discount, uint256[] memory _tokenIds) external;
     function calculateDiscount(address requester) external view returns(uint256);
 }
 
@@ -31,8 +30,7 @@ contract LendingCore is StaterTransfers {
      */
     address public promissoryNoteAddress;
     address public lendingSettersAddress;
-    address public lendingDiscountsAddress;
-    StaterDiscounts discounts;
+    StaterDiscounts public discounts;
     uint256 public id; // the loan ID
     uint256 public ltv = 600; // 60%
     uint256 public interestRate = 20;
@@ -121,21 +119,9 @@ contract LendingCore is StaterTransfers {
      */
     mapping(uint256 => Loan) public loans;
     
+    // @notice Mapping for all the loans that are approved by the owner in order to be used in the promissory note
+    mapping(uint256 => address) public promissoryPermissions;
     
-    function getLoanApprovalCost(uint256 loanId) public view returns(uint256,uint256,uint256,uint256,address) {
-        return (
-            loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discounts.calculateDiscount(msg.sender))),
-            loans[loanId].loanAmount,
-            lenderFee,
-            discounts.calculateDiscount(msg.sender),
-            msg.sender
-        );
-    }
-
-
-    function getLoanRemainToPay(uint256 loanId) public view returns(uint256) {
-        return loans[loanId].amountDue.sub(loans[loanId].paidAmount);
-    }
 
     /*
     * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
@@ -172,27 +158,6 @@ contract LendingCore is StaterTransfers {
                 loans[loanId].installmentsTimeHandler[2].mul(1 hours)
             )
         );
-    }
-    
-    function getLoanInstallmentCost(
-        uint256 loanId,
-        uint256 nrOfInstallments
-    ) external view returns(
-        uint256 overallInstallmentAmount,
-        uint256 interestPerInstallement,
-        uint256 interestDiscounted,
-        uint256 interestToStaterPerInstallement,
-        uint256 amountPaidAsInstallmentToLender
-    ) {
-        require(nrOfInstallments <= loans[loanId].nrOfInstallments, "Number of installments too high");
-        uint256 discount = discounts.calculateDiscount(msg.sender);
-        interestDiscounted = 0;
-        
-        overallInstallmentAmount = uint256(loans[loanId].installmentAmount.mul(nrOfInstallments));
-        interestPerInstallement = uint256(overallInstallmentAmount.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments));
-        interestDiscounted = interestPerInstallement.mul(interestRateToStater).div(100).div(discount); // amount of interest saved per installment
-        interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100).sub(interestDiscounted);
-        amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); 
     }
 
 }

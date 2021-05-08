@@ -267,6 +267,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "discounts",
+				"outputs": [
+					{
+						"internalType": "contract StaterDiscounts",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -312,109 +325,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "getLoanApprovalCost",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "loanId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "nrOfInstallments",
-						"type": "uint256"
-					}
-				],
-				"name": "getLoanInstallmentCost",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "overallInstallmentAmount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "interestPerInstallement",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "interestDiscounted",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "interestToStaterPerInstallement",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amountPaidAsInstallmentToLender",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "loanId",
-						"type": "uint256"
-					}
-				],
 				"name": "getLoanPaymentFrequency",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "loanId",
-						"type": "uint256"
-					}
-				],
-				"name": "getLoanRemainToPay",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -491,19 +402,6 @@
 						"internalType": "uint32",
 						"name": "",
 						"type": "uint32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "lendingDiscountsAddress",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -763,8 +661,45 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "loanIds",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "address payable",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "promissoryExchange",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "promissoryNoteAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "promissoryPermissions",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -821,6 +756,19 @@
 					}
 				],
 				"name": "setGlobalVariables",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "loanIds",
+						"type": "uint256[]"
+					}
+				],
+				"name": "setPromissoryPermissions",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -946,8 +894,19 @@
 				"owner()": {
 					"details": "Returns the address of the current owner."
 				},
+				"promissoryExchange(uint256[],address)": {
+					"params": {
+						"loanIds": "The ids of the loans that will be transferred to the new owner",
+						"newOwner": "The address of the new owner"
+					}
+				},
 				"renounceOwnership()": {
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				},
+				"setPromissoryPermissions(uint256[])": {
+					"params": {
+						"loanIds": "The ids of the loans that will be approved"
+					}
 				},
 				"supportsInterface(bytes4)": {
 					"details": "See {IERC165-supportsInterface}. Time complexity O(1), guaranteed to always use less than 30 000 gas."
@@ -960,7 +919,14 @@
 		},
 		"userdoc": {
 			"kind": "user",
-			"methods": {},
+			"methods": {
+				"promissoryExchange(uint256[],address)": {
+					"notice": "Used by the Promissory Note contract to change the ownership of the loan when the Promissory Note NFT is sold "
+				},
+				"setPromissoryPermissions(uint256[])": {
+					"notice": "Used by the Promissory Note contract to approve a list of loans to be used as a Promissory Note NFT"
+				}
+			},
 			"version": 1
 		}
 	},
@@ -981,19 +947,19 @@
 	},
 	"sources": {
 		"../nft-lending-contracts/contracts/lending/LendingCore.sol": {
-			"keccak256": "0x6863dff59a963cf6975af56712a459fb1d84f98f734c6d3f3610bd5f8e7134db",
+			"keccak256": "0x570bd867dac33b0f072241fcfa2d773529e50052029d697b8be31a1c51753cb6",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c684aab737a5c0eea62dc31e39490a7fad5034eb503002819fc1462a8e725d63",
-				"dweb:/ipfs/QmRPdtGZsXVCfVw9ZXgV1juPKASPzaZ6Nz6GRKXhkLvA4X"
+				"bzz-raw://2b21b5e67ab76c006bea0437d3699a9cdc2a37682653992ff12f07e130136612",
+				"dweb:/ipfs/QmPhmwBM76UeUx9MW7kvY4ynTSz1phN1WQhicKvaeLvYzA"
 			]
 		},
 		"../nft-lending-contracts/contracts/lending/LendingSetters.sol": {
-			"keccak256": "0xd1db50bf474fcc3ed79dfd422fce85802e77b34bc0357428a2ec0738f860c1ce",
+			"keccak256": "0x65816ebad0c8c863fb4052f402f170237b3a0162803b92cf6d12815f90be193a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://19d495c227b73311bd05b1b682cd55d64f01b24fa2ab2e19dbee779187ff855b",
-				"dweb:/ipfs/QmcoZD21Hj3qzkyPmHuWHrfZUWMEHbwuxUoRKPf8CR1xe1"
+				"bzz-raw://b9c9b98622aaa3e76a8a016da48d0fd2349be62874fd15b04f3da2dc8e2021ec",
+				"dweb:/ipfs/QmUeMrSLi16s4DqotWsqNqRhdB7FioQ3cjNnCFTcXSGagM"
 			]
 		},
 		"../nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {
