@@ -53,11 +53,11 @@
 	},
 	"sources": {
 		"../nft-lending-contracts/contracts/external-workers/StaterDiscounts.sol": {
-			"keccak256": "0xf3efb9992c6ac829380c58de45ebd6b73a11bc7a2cb6f0be9ee969fcf20c7dc6",
+			"keccak256": "0xf68ee351ccd1643fe61cc88e2ff6e3f733374f347cb37051edc2382db70ec368",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://2530d5eb90527e9cb11cba736d11f2ead26319a92a557735737930a2d1071449",
-				"dweb:/ipfs/QmXNMdzr4yaoAWYoPvBv2kzFq1AEMD6evT8wgELQ3jh62w"
+				"bzz-raw://7ca2010c5667ba78fe159b44143bd7b0e7797be01184872411165121a107d543",
+				"dweb:/ipfs/QmW6k66hQEXWKT6QviN9tKGgjoQoNpkavnWniY6KE1F752"
 			]
 		},
 		"../nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {
@@ -66,6 +66,22 @@
 			"urls": [
 				"bzz-raw://f0222db296984586ea87c35aece19e23c0ebc16505aed17c4427b8e3bc6a5b43",
 				"dweb:/ipfs/QmU1zSHN31CPKNe9d24w2jFk9nwjSRfeakPcsCi1tmaenw"
+			]
+		},
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/Context.sol": {
+			"keccak256": "0xbc7f2f08b805e299fa2d5e702051171f670ded2808044dfeb6fab4357f167138",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://53f7f10bb120dca002788bc57a82cb2b17178312ed95c55a378a77f9a0803ee3",
+				"dweb:/ipfs/QmYPMCJo9HA9WuvkTaCHJVGipyXNUr3skeEVSXj3QJgc8U"
+			]
+		},
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/access/Ownable.sol": {
+			"keccak256": "0x336031c76d8248a1a0f0f474d38e49b7858652453a98b7ff5c76d8f7d8528a13",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://33b3b61915ec3e5c1367646630c7e164337be87ee79b0a1d94a39daac19c92ed",
+				"dweb:/ipfs/QmZozz8CQ3Dc94CdLowLb7q2JsxfuNbKMkBjDxczSYNPUU"
 			]
 		},
 		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/IERC165.sol": {

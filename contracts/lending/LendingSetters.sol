@@ -13,12 +13,18 @@ contract LendingSetters is LendingCore {
         uint256 _ltv,  
         uint256 _interestRate, 
         uint256 _interestRateToStater, 
-        uint32 _lenderFee
+        uint32 _lenderFee,
+        address _promissoryNoteAddress,
+        address _lendingSettersAddress,
+        address _lendingDiscountsAddress
     ) external onlyOwner {
         ltv = _ltv;
         interestRate = _interestRate;
         interestRateToStater = _interestRateToStater;
         lenderFee = _lenderFee;
+        promissoryNoteAddress = _promissoryNoteAddress;
+        lendingSettersAddress = _lendingSettersAddress;
+        lendingDiscountsAddress = _lendingDiscountsAddress;
     }
     
     // Borrower creates a loan
@@ -94,20 +100,36 @@ contract LendingSetters is LendingCore {
         uint256 loanAmount,
         uint16 nrOfInstallments,
         address currency,
-        uint256 assetsValue
+        uint256 assetsValue,
+        uint256[3] memory intallmentTime
     ) external {
         require(nrOfInstallments > 0, "Loan must have at least 1 installment");
         require(loanAmount > 0, "Loan amount must be higher than 0");
         require(loans[loanId].borrower == msg.sender,"You're not the owner of this loan");
         require(loans[loanId].status < Status.APPROVED,"Loan can no longer be modified");
         require(_percent(loanAmount, assetsValue) <= ltv, "LTV exceeds maximum limit allowed");
-        loans[loanId].installmentsTimeHandler[0] = nrOfInstallments;
+        
+        /*
+         * @ Update the loan installment time handler
+         * installmentsTimeHandler[0] : number of weeks
+         * installmentsTimeHandler[1] : number of days
+         * installmentsTimeHandler[2] : number of hours
+         */
+        loans[loanId].installmentsTimeHandler[0] = intallmentTime[0];
+        loans[loanId].installmentsTimeHandler[1] = intallmentTime[1];
+        loans[loanId].installmentsTimeHandler[2] = intallmentTime[2];
+        
+        
         loans[loanId].loanAmount = loanAmount;
         loans[loanId].amountDue = loanAmount.mul(interestRate.add(100)).div(100);
         loans[loanId].installmentAmount = loans[loanId].amountDue.mod(nrOfInstallments) > 0 ? loans[loanId].amountDue.div(nrOfInstallments).add(1) : loans[loanId].amountDue.div(nrOfInstallments);
         loans[loanId].assetsValue = assetsValue;
         loans[loanId].currency = currency;
-        // Computing the defaulting limit
+        
+        
+        /*
+         * Computing the defaulting limit
+         */
         if ( nrOfInstallments <= 3 )
             loans[loanId].defaultingLimit = 1;
         else if ( nrOfInstallments <= 5 )

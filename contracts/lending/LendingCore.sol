@@ -30,15 +30,13 @@ contract LendingCore is StaterTransfers {
      *   WITHDRAWN - loan is LIQUIDATED and items are withdrawn to either lender or borrower
      */
     address public promissoryNoteAddress;
-    address public lendingMethodsAddress;
+    address public lendingSettersAddress;
     address public lendingDiscountsAddress;
     StaterDiscounts discounts;
     uint256 public id; // the loan ID
     uint256 public ltv = 600; // 60%
     uint256 public interestRate = 20;
     uint256 public interestRateToStater = 40;
-    uint32 public discountNft = 50;
-    uint32 public discountGeyser = 5;
     uint32 public lenderFee = 100;
     enum Status{ 
         LISTED, 

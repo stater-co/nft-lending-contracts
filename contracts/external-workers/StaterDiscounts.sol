@@ -2,9 +2,10 @@
 pragma solidity 0.7.4;
 import "../libs/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
 import "../libs/multi-token-standard/contracts/interfaces/IERC1155.sol";
+import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 interface Geyser{ function totalStakedFor(address addr) external view returns(uint256); }
 
-contract StaterDiscounts {
+contract StaterDiscounts is Ownable {
 
 
     uint256 public discountId;
@@ -28,6 +29,21 @@ contract StaterDiscounts {
         discounts[discountId].discount = _discount;
         discounts[discountId].tokenIds = _tokenIds;
         ++discountId;
+    }
+    
+    function getDiscountTokenId(uint256 _discountId, uint256 tokenIdIndex) external view returns(uint256) {
+        return discounts[_discountId].tokenIds[tokenIdIndex];
+    }
+    
+    function editDiscount(uint256 _discountId, address _tokenContract, uint8 _discount, uint256[] calldata _tokenIds) external onlyOwner {
+        discounts[_discountId].tokenContract = _tokenContract;
+        discounts[_discountId].discount = _discount;
+        uint256 l = discounts[_discountId].tokenIds.length;
+        for (uint256 i = 0; i < _tokenIds.length && i < l; ++i)
+            discounts[_discountId].tokenIds[i] = _tokenIds[i];
+        if ( _tokenIds.length > l )
+            for ( uint256 i = l; i < _tokenIds.length; ++i )
+                discounts[_discountId].tokenIds.push(_tokenIds[i]);
     }
     
     /*
