@@ -9,12 +9,12 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_promissoryNoteContractAddress",
+						"name": "_promissoryNoteAddress",
 						"type": "address"
 					},
 					{
 						"internalType": "address",
-						"name": "_lendingMethodsContract",
+						"name": "_lendingMethodsAddress",
 						"type": "address"
 					},
 					{
@@ -532,7 +532,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "lendingSettersAddress",
+				"name": "lendingMethodsAddress",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -869,7 +869,7 @@
 					},
 					{
 						"internalType": "address",
-						"name": "_lendingSettersAddress",
+						"name": "_lendingMethodsAddress",
 						"type": "address"
 					},
 					{
@@ -1052,19 +1052,19 @@
 	},
 	"sources": {
 		"../nft-lending-contracts/contracts/lending/LendingCore.sol": {
-			"keccak256": "0x570bd867dac33b0f072241fcfa2d773529e50052029d697b8be31a1c51753cb6",
+			"keccak256": "0xfd53afd05f05bdeac7fe49d6c20640b8c204fe2d48905e885bc609157678ab49",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://2b21b5e67ab76c006bea0437d3699a9cdc2a37682653992ff12f07e130136612",
-				"dweb:/ipfs/QmPhmwBM76UeUx9MW7kvY4ynTSz1phN1WQhicKvaeLvYzA"
+				"bzz-raw://1fb7d8a0766d1157146d815b33df193520ddb9fa7b103ca196d83d138077a668",
+				"dweb:/ipfs/Qmbu57QE5Vd7oUDmwSv5yBTDrPj7TNMgnNsz9UG8GvUGou"
 			]
 		},
 		"../nft-lending-contracts/contracts/lending/LendingTemplate.sol": {
-			"keccak256": "0x85e9c32f59ce07a9cf44dc11761a803e41c748b9bcec1fcedf0b3a964a56f966",
+			"keccak256": "0x06330788502400b3b2f71897f976b0acfaf44c2e8114592128aa5eb54571f8b3",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://69856602819899357e55924307e1ffe722b8cdd2f639cee2709e5b33c3a10015",
-				"dweb:/ipfs/QmaD5En34zsBMFRRDUfxs5uboFPEszDcKsrathPtzqAHCA"
+				"bzz-raw://5b38f54da0618ac13c8d1e6875ed85a73d89a3a3f33790cf9d7ef5aacc8bc0b2",
+				"dweb:/ipfs/QmXSdeyhVrcitzf6H77wBqpsDQhSJ31V2mHuwstc4h5AiW"
 			]
 		},
 		"../nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {

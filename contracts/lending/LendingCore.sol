@@ -29,7 +29,7 @@ contract LendingCore is StaterTransfers {
      *   WITHDRAWN - loan is LIQUIDATED and items are withdrawn to either lender or borrower
      */
     address public promissoryNoteAddress;
-    address public lendingSettersAddress;
+    address public lendingMethodsAddress;
     StaterDiscounts public discounts;
     uint256 public id; // the loan ID
     uint256 public ltv = 600; // 60%

@@ -9,12 +9,12 @@ contract LendingTemplate is LendingCore {
     using SafeMath for uint16;
 
     constructor(
-        address _promissoryNoteContractAddress,
-        address _lendingMethodsContract,
+        address _promissoryNoteAddress,
+        address _lendingMethodsAddress,
         address _lendingDiscountsAddress
     ) {
-        promissoryNoteAddress = _promissoryNoteContractAddress;
-        lendingSettersAddress = _lendingMethodsContract;
+        promissoryNoteAddress = _promissoryNoteAddress;
+        lendingMethodsAddress = _lendingMethodsAddress;
         discounts = StaterDiscounts(_lendingDiscountsAddress);
     }
 
@@ -28,10 +28,10 @@ contract LendingTemplate is LendingCore {
         uint256[] calldata nftTokenIdArray,
         uint8[] calldata nftTokenTypeArray
     ) external {
-        require(lendingSettersAddress != address(0),"Lending methods contract not established");
+        require(lendingMethodsAddress != address(0),"Lending methods contract not established");
         
         // For 8 or more parameters via delegatecall >> Remix raises an error with no error message
-        (bool success, ) = lendingSettersAddress.delegatecall(
+        (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
                 "createLoan(uint256,uint16,address,uint256,address[],uint256[],uint8[])",
                 loanAmount,nrOfInstallments,currency,assetsValue,nftAddressArray,nftTokenIdArray,nftTokenTypeArray
@@ -48,9 +48,9 @@ contract LendingTemplate is LendingCore {
         uint256 assetsValue,
         uint256[3] memory intallmentTime
     ) external {
-        require(lendingSettersAddress != address(0),"Lending methods contract not established");
+        require(lendingMethodsAddress != address(0),"Lending methods contract not established");
         
-        (bool success, ) = lendingSettersAddress.delegatecall(
+        (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
                 "editLoan(uint256,uint256,uint16,address,uint256,uint256[3])",
                 loanId,loanAmount,nrOfInstallments,currency,assetsValue,intallmentTime
@@ -62,9 +62,9 @@ contract LendingTemplate is LendingCore {
 
     // Lender approves a loan
     function approveLoan(uint256 loanId) external payable {
-        require(lendingSettersAddress != address(0),"Lending methods contract not established");
+        require(lendingMethodsAddress != address(0),"Lending methods contract not established");
         
-        (bool success, ) = lendingSettersAddress.delegatecall(
+        (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
                 "approveLoan(uint256)",
                 loanId
@@ -76,9 +76,9 @@ contract LendingTemplate is LendingCore {
 
     // Borrower cancels a loan
     function cancelLoan(uint256 loanId) external {
-        require(lendingSettersAddress != address(0),"Lending methods contract not established");
+        require(lendingMethodsAddress != address(0),"Lending methods contract not established");
         
-        (bool success, ) = lendingSettersAddress.delegatecall(
+        (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
                 "cancelLoan(uint256)",
                 loanId
@@ -91,9 +91,9 @@ contract LendingTemplate is LendingCore {
     // Borrower pays installment for loan
     // Multiple installments : OK
     function payLoan(uint256 loanId,uint256 amount) external payable {
-        require(lendingSettersAddress != address(0),"Lending methods contract not established");
+        require(lendingMethodsAddress != address(0),"Lending methods contract not established");
         
-        (bool success, ) = lendingSettersAddress.delegatecall(
+        (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
                 "payLoan(uint256,uint256)",
                 loanId,amount
@@ -106,9 +106,9 @@ contract LendingTemplate is LendingCore {
     // Borrower can withdraw loan items if loan is LIQUIDATED
     // Lender can withdraw loan item is loan is DEFAULTED
     function terminateLoan(uint256 loanId) external {
-        require(lendingSettersAddress != address(0),"Lending methods contract not established");
+        require(lendingMethodsAddress != address(0),"Lending methods contract not established");
         
-        (bool success, ) = lendingSettersAddress.delegatecall(
+        (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
                 "terminateLoan(uint256)",
                 loanId
@@ -124,24 +124,24 @@ contract LendingTemplate is LendingCore {
         uint256 _interestRateToStater, 
         uint32 _lenderFee,
         address _promissoryNoteAddress,
-        address _lendingSettersAddress,
+        address _lendingMethodsAddress,
         address _lendingDiscountsAddress
     ) external onlyOwner {
-        require(lendingSettersAddress != address(0),"Lending methods contract not established");
+        require(lendingMethodsAddress != address(0),"Lending methods contract not established");
         
-        (bool success, ) = lendingSettersAddress.delegatecall(
+        (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
                 "setGlobalVariables(uint256,uint256,uint256,uint32,address,address,address)",
-                _ltv,_interestRate,_interestRateToStater,_lenderFee,_promissoryNoteAddress,_lendingSettersAddress,_lendingDiscountsAddress
+                _ltv,_interestRate,_interestRateToStater,_lenderFee,_promissoryNoteAddress,_lendingMethodsAddress,_lendingDiscountsAddress
             )
         );
         require(success,"Failed to setGlobalVariables via delegatecall");
     }
     
     function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external {
-        require(promissoryNoteAddress != address(0),"Promissory Note contract not established");
+        require(lendingMethodsAddress != address(0),"Lending methods contract not established");
         
-        (bool success, ) = promissoryNoteAddress.delegatecall(
+        (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
                 "promissoryExchange(uint256[],address)",
                 loanIds,newOwner
@@ -151,9 +151,9 @@ contract LendingTemplate is LendingCore {
     }
   
     function setPromissoryPermissions(uint256[] calldata loanIds) external {
-        require(promissoryNoteAddress != address(0),"Promissory Note contract not established");
+        require(lendingMethodsAddress != address(0),"Lending methods contract not established");
         
-        (bool success, ) = promissoryNoteAddress.delegatecall(
+        (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
                 "setPromissoryPermissions(uint256[])",
                 loanIds

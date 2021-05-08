@@ -31,17 +31,17 @@ contract StaterPromissoryNote is ERC1155, Ownable {
     }
     mapping(uint256 => PromissoryNote) public promissoryNotes;
     uint256 public promissoryNoteId;
+    address public lendingDataAddress;
     
     /* ********* */
     /* CONSTANTS */
     /* ********* */
     
     string constant public name = "Stater Promissory Note";
-    LendingData public lendingData;
 
 	//TODO: change the uri after the api implementation
-    constructor(address lendingDataAddress) ERC1155("https://abcoathup.github.io/SampleERC1155/api/token/{id}.json") {
-        lendingData = LendingData(lendingDataAddress);
+    constructor(address _lendingDataAddress) ERC1155("https://abcoathup.github.io/SampleERC1155/api/token/{id}.json") {
+        lendingDataAddress = _lendingDataAddress;
     }
     
     /* ********* */
@@ -55,7 +55,15 @@ contract StaterPromissoryNote is ERC1155, Ownable {
         require(loanIds.length > 0, 'you must submit an array with at least one element');
         
         //Allow loans to be used in the Promissory Note
-        lendingData.setPromissoryPermissions(loanIds);
+        require(lendingDataAddress != address(0),"Lending contract not established");
+        
+        (bool success, ) = lendingDataAddress.delegatecall(
+            abi.encodeWithSignature(
+                "setPromissoryPermissions(uint256[])",
+                loanIds
+            )
+        );
+        require(success,"Failed to setPromissoryPermissions via delegatecall");
         
         //Set promissory note fields
         promissoryNotes[promissoryNoteId].loans = loanIds;
@@ -84,10 +92,10 @@ contract StaterPromissoryNote is ERC1155, Ownable {
     
     /**
      * @notice Setter function for the main Stater lending contract
-     * @param lendingDataAddress The address of the stater lending contract
+     * @param _lendingDataAddress The address of the stater lending contract
      */ 
-    function setLendingDataAddress(address lendingDataAddress) external onlyOwner {
-        lendingData = LendingData(lendingDataAddress);
+    function setLendingDataAddress(address _lendingDataAddress) external onlyOwner {
+        lendingDataAddress = _lendingDataAddress;
     }
     
     function burnPromissoryNote(uint256 _promissoryNoteId) external {
@@ -95,14 +103,4 @@ contract StaterPromissoryNote is ERC1155, Ownable {
         delete promissoryNotes[_promissoryNoteId];
     }
     
-}
-
-/**
- * @title StaterLendingCore
- * @notice Interface for interacting with the Stater Lending Core contract.
- * @author Stater
- */
-interface LendingData {
-    function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external;
-    function setPromissoryPermissions(uint256[] calldata loanIds) external;
 }

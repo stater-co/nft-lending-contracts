@@ -15,7 +15,7 @@ contract LendingSetters is LendingCore {
         uint256 _interestRateToStater, 
         uint32 _lenderFee,
         address _promissoryNoteAddress,
-        address _lendingSettersAddress,
+        address _lendingMethodsAddress,
         address _lendingDiscountsAddress
     ) external onlyOwner {
         ltv = _ltv;
@@ -23,7 +23,7 @@ contract LendingSetters is LendingCore {
         interestRateToStater = _interestRateToStater;
         lenderFee = _lenderFee;
         promissoryNoteAddress = _promissoryNoteAddress;
-        lendingSettersAddress = _lendingSettersAddress;
+        lendingMethodsAddress = _lendingMethodsAddress;
         discounts = StaterDiscounts(_lendingDiscountsAddress);
     }
     

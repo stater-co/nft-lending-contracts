@@ -53,11 +53,11 @@
 	},
 	"sources": {
 		"../nft-lending-contracts/contracts/lending/LendingCore.sol": {
-			"keccak256": "0x570bd867dac33b0f072241fcfa2d773529e50052029d697b8be31a1c51753cb6",
+			"keccak256": "0xfd53afd05f05bdeac7fe49d6c20640b8c204fe2d48905e885bc609157678ab49",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://2b21b5e67ab76c006bea0437d3699a9cdc2a37682653992ff12f07e130136612",
-				"dweb:/ipfs/QmPhmwBM76UeUx9MW7kvY4ynTSz1phN1WQhicKvaeLvYzA"
+				"bzz-raw://1fb7d8a0766d1157146d815b33df193520ddb9fa7b103ca196d83d138077a668",
+				"dweb:/ipfs/Qmbu57QE5Vd7oUDmwSv5yBTDrPj7TNMgnNsz9UG8GvUGou"
 			]
 		},
 		"../nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {

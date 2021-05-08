@@ -9,7 +9,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "lendingDataAddress",
+						"name": "_lendingDataAddress",
 						"type": "address"
 					}
 				],
@@ -279,10 +279,10 @@
 			},
 			{
 				"inputs": [],
-				"name": "lendingData",
+				"name": "lendingDataAddress",
 				"outputs": [
 					{
-						"internalType": "contract LendingData",
+						"internalType": "address",
 						"name": "",
 						"type": "address"
 					}
@@ -443,7 +443,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "lendingDataAddress",
+						"name": "_lendingDataAddress",
 						"type": "address"
 					}
 				],
@@ -546,7 +546,7 @@
 				},
 				"setLendingDataAddress(address)": {
 					"params": {
-						"lendingDataAddress": "The address of the stater lending contract"
+						"_lendingDataAddress": "The address of the stater lending contract"
 					}
 				},
 				"supportsInterface(bytes4)": {
@@ -669,11 +669,11 @@
 			]
 		},
 		"../nft-lending-contracts/contracts/promissory/PromissoryNote.sol": {
-			"keccak256": "0x75ab46f1148456675f3857024349bbe6e10533bdf37dd00bf2e6b995a6eca77e",
+			"keccak256": "0x992097ce1657c2f96f491e397b316ca2283d6f4696e437cfb0f61a69d415b74c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ade0a98d039b1ce88f29bf59301f2d74ac789f52ebec7b1be2247f0cca5d7bfb",
-				"dweb:/ipfs/QmUrZHjmvrHwiJV8J7AZWgghobZpCQZQYngNVFWPBWHcug"
+				"bzz-raw://f52ecf84e4d135473dcb2ef954ef4ba8d88244be566254b1de87a8ca0b2f2a39",
+				"dweb:/ipfs/QmattXqg5DZpuC1mk8cLxPXuUU5UgzMrLuqbdSWicrTD1b"
 			]
 		}
 	},

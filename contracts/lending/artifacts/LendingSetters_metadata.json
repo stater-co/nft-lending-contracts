@@ -409,7 +409,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "lendingSettersAddress",
+				"name": "lendingMethodsAddress",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -746,7 +746,7 @@
 					},
 					{
 						"internalType": "address",
-						"name": "_lendingSettersAddress",
+						"name": "_lendingMethodsAddress",
 						"type": "address"
 					},
 					{
@@ -947,19 +947,19 @@
 	},
 	"sources": {
 		"../nft-lending-contracts/contracts/lending/LendingCore.sol": {
-			"keccak256": "0x570bd867dac33b0f072241fcfa2d773529e50052029d697b8be31a1c51753cb6",
+			"keccak256": "0xfd53afd05f05bdeac7fe49d6c20640b8c204fe2d48905e885bc609157678ab49",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://2b21b5e67ab76c006bea0437d3699a9cdc2a37682653992ff12f07e130136612",
-				"dweb:/ipfs/QmPhmwBM76UeUx9MW7kvY4ynTSz1phN1WQhicKvaeLvYzA"
+				"bzz-raw://1fb7d8a0766d1157146d815b33df193520ddb9fa7b103ca196d83d138077a668",
+				"dweb:/ipfs/Qmbu57QE5Vd7oUDmwSv5yBTDrPj7TNMgnNsz9UG8GvUGou"
 			]
 		},
 		"../nft-lending-contracts/contracts/lending/LendingSetters.sol": {
-			"keccak256": "0x65816ebad0c8c863fb4052f402f170237b3a0162803b92cf6d12815f90be193a",
+			"keccak256": "0x88653fcfc40efd5aaebec92b0cceef97b4b5efc98330729ef945b64d1c81f119",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b9c9b98622aaa3e76a8a016da48d0fd2349be62874fd15b04f3da2dc8e2021ec",
-				"dweb:/ipfs/QmUeMrSLi16s4DqotWsqNqRhdB7FioQ3cjNnCFTcXSGagM"
+				"bzz-raw://4b03af873efee002f806ab4bf037a58a8886ad8aa3414a9ba9c78d3ef66c8873",
+				"dweb:/ipfs/QmZntT2AUHrt2s4PNJoEe8NEXYepNcJV87VaQv1EkU8WHD"
 			]
 		},
 		"../nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {
