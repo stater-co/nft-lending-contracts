@@ -138,28 +138,30 @@ contract LendingTemplate is LendingCore {
         require(success,"Failed to setGlobalVariables via delegatecall");
     }
     
-    function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external {
-        require(lendingMethodsAddress != address(0),"Lending methods contract not established");
+    function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external {
+        require(lendingMethodsAddress != address(0),"Lending Template: Lending methods contract address not established");
+        require(promissoryNoteAddress == msg.sender,"Lending Template: This method can be called by Stater promissory note contract only!");
         
         (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
-                "promissoryExchange(uint256[],address)",
-                loanIds,newOwner
+                "promissoryExchange(address,address,uint256[])",
+                from,to,loanIds
             )
         );
-        require(success,"Failed to promissoryExchange via delegatecall");
+        require(success,"Lending Template: Failed to execute promissoryExchange via delegatecall");
     }
   
-    function setPromissoryPermissions(uint256[] calldata loanIds) external {
-        require(lendingMethodsAddress != address(0),"Lending methods contract not established");
+    function setPromissoryPermissions(uint256[] calldata loanIds, address sender) external {
+        require(lendingMethodsAddress != address(0),"Lending Template: Lending methods contract address not established");
+        require(promissoryNoteAddress == msg.sender,"Lending Template: This method can be called by Stater promissory note contract only!");
         
         (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
-                "setPromissoryPermissions(uint256[])",
-                loanIds
+                "setPromissoryPermissions(uint256[],address)",
+                loanIds,sender
             )
         );
-        require(success,"Failed to setPromissoryPermissions via delegatecall");
+        require(success,"Lending Template: Failed to execute setPromissoryPermissions via delegatecall");
     }
     
     function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {

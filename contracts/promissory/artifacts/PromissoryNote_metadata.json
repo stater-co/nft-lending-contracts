@@ -9,7 +9,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "lendingDataAddress",
+						"name": "_lendingDataAddress",
 						"type": "address"
 					}
 				],
@@ -279,10 +279,10 @@
 			},
 			{
 				"inputs": [],
-				"name": "lendingData",
+				"name": "lendingDataAddress",
 				"outputs": [
 					{
-						"internalType": "contract LendingData",
+						"internalType": "address",
 						"name": "",
 						"type": "address"
 					}
@@ -443,7 +443,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "lendingDataAddress",
+						"name": "_lendingDataAddress",
 						"type": "address"
 					}
 				],
@@ -546,7 +546,7 @@
 				},
 				"setLendingDataAddress(address)": {
 					"params": {
-						"lendingDataAddress": "The address of the stater lending contract"
+						"_lendingDataAddress": "The address of the stater lending contract"
 					}
 				},
 				"supportsInterface(bytes4)": {
@@ -559,7 +559,7 @@
 					"details": "See {IERC1155MetadataURI-uri}. This implementation returns the same URI for *all* token types. It relies on the token type ID substitution mechanism https://eips.ethereum.org/EIPS/eip-1155#metadata[defined in the EIP]. Clients calling this function must replace the `\\{id\\}` substring with the actual token type ID."
 				}
 			},
-			"title": "StaterPromissoryNote",
+			"title": "PromissoryNote",
 			"version": 1
 		},
 		"userdoc": {
@@ -669,11 +669,11 @@
 			]
 		},
 		"../nft-lending-contracts/contracts/promissory/PromissoryNote.sol": {
-			"keccak256": "0x296c4bc69f116712a77eb3d586cb82dd4cc5b050076e4d7fd5f193fdc37eed70",
+			"keccak256": "0x2e34d65491cbc7c80beaff6d8b35a188fddeac2bc86174510edc34b3a83ed806",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f0ce9c8238b917d73de193903433e4a9e71c10e60ebaadfcd5c6dd05d0a89ace",
-				"dweb:/ipfs/QmWW99muhaW1BLJSaNeK5cfZtz1SWTmPhxckimjxs2B6FD"
+				"bzz-raw://877a05e488cd510d70d9a71f52369cbddd223414cc9a31e3472ac3227231254e",
+				"dweb:/ipfs/Qmb3eA9oSQuLJoQ7XE9x2AfTX7fhvarAtGh79rRYkPQHT4"
 			]
 		}
 	},

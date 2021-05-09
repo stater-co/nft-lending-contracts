@@ -11,6 +11,16 @@
 						"internalType": "address",
 						"name": "_lendingDataAddress",
 						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "symbol",
+						"type": "string"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -22,7 +32,32 @@
 					{
 						"indexed": true,
 						"internalType": "address",
-						"name": "account",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "approved",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "Approval",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
 						"type": "address"
 					},
 					{
@@ -66,12 +101,6 @@
 					{
 						"indexed": true,
 						"internalType": "address",
-						"name": "operator",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
 						"name": "from",
 						"type": "address"
 					},
@@ -82,75 +111,13 @@
 						"type": "address"
 					},
 					{
-						"indexed": false,
-						"internalType": "uint256[]",
-						"name": "ids",
-						"type": "uint256[]"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256[]",
-						"name": "values",
-						"type": "uint256[]"
-					}
-				],
-				"name": "TransferBatch",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
 						"indexed": true,
-						"internalType": "address",
-						"name": "operator",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "from",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
-					},
-					{
-						"indexed": false,
 						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "value",
+						"name": "tokenId",
 						"type": "uint256"
 					}
 				],
-				"name": "TransferSingle",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "string",
-						"name": "value",
-						"type": "string"
-					},
-					{
-						"indexed": true,
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					}
-				],
-				"name": "URI",
+				"name": "Transfer",
 				"type": "event"
 			},
 			{
@@ -183,13 +150,26 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "account",
+						"name": "to",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "id",
+						"name": "tokenId",
 						"type": "uint256"
+					}
+				],
+				"name": "approve",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
 					}
 				],
 				"name": "balanceOf",
@@ -204,24 +184,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address[]",
-						"name": "accounts",
-						"type": "address[]"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "ids",
-						"type": "uint256[]"
-					}
-				],
-				"name": "balanceOfBatch",
+				"inputs": [],
+				"name": "baseURI",
 				"outputs": [
 					{
-						"internalType": "uint256[]",
+						"internalType": "string",
 						"name": "",
-						"type": "uint256[]"
+						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -256,8 +225,27 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "getApproved",
+				"outputs": [
+					{
 						"internalType": "address",
-						"name": "account",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
 						"type": "address"
 					},
 					{
@@ -279,10 +267,10 @@
 			},
 			{
 				"inputs": [],
-				"name": "lendingDataAddress",
+				"name": "lendingDataTemplate",
 				"outputs": [
 					{
-						"internalType": "address",
+						"internalType": "contract LendingTemplate",
 						"name": "",
 						"type": "address"
 					}
@@ -306,6 +294,25 @@
 			{
 				"inputs": [],
 				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "ownerOf",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -368,22 +375,12 @@
 						"type": "address"
 					},
 					{
-						"internalType": "uint256[]",
-						"name": "ids",
-						"type": "uint256[]"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "amounts",
-						"type": "uint256[]"
-					},
-					{
-						"internalType": "bytes",
-						"name": "data",
-						"type": "bytes"
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
 					}
 				],
-				"name": "safeBatchTransferFrom",
+				"name": "safeTransferFrom",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -406,13 +403,8 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					},
-					{
 						"internalType": "bytes",
-						"name": "data",
+						"name": "_data",
 						"type": "bytes"
 					}
 				],
@@ -472,6 +464,117 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "symbol",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "tokenByIndex",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "tokenOfOwnerByIndex",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "tokenURI",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalSupply",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"name": "transferFrom",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -482,25 +585,6 @@
 				"name": "transferOwnership",
 				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "uri",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -517,32 +601,38 @@
 			},
 			"kind": "dev",
 			"methods": {
-				"balanceOf(address,uint256)": {
-					"details": "See {IERC1155-balanceOf}. Requirements: - `account` cannot be the zero address."
+				"approve(address,uint256)": {
+					"details": "See {IERC721-approve}."
 				},
-				"balanceOfBatch(address[],uint256[])": {
-					"details": "See {IERC1155-balanceOfBatch}. Requirements: - `accounts` and `ids` must have the same length."
+				"balanceOf(address)": {
+					"details": "See {IERC721-balanceOf}."
+				},
+				"baseURI()": {
+					"details": "Returns the base URI set via {_setBaseURI}. This will be automatically added as a prefix in {tokenURI} to each token's URI, or to the token ID if no specific URI is set for that token ID."
 				},
 				"createPromissoryNote(uint256[])": {
 					"details": "Allows a user to lock approved loans in the contract and mint a new Promissory Note "
 				},
+				"getApproved(uint256)": {
+					"details": "See {IERC721-getApproved}."
+				},
 				"isApprovedForAll(address,address)": {
-					"details": "See {IERC1155-isApprovedForAll}."
+					"details": "See {IERC721-isApprovedForAll}."
+				},
+				"name()": {
+					"details": "See {IERC721Metadata-name}."
 				},
 				"owner()": {
 					"details": "Returns the address of the current owner."
 				},
+				"ownerOf(uint256)": {
+					"details": "See {IERC721-ownerOf}."
+				},
 				"renounceOwnership()": {
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
 				},
-				"safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)": {
-					"details": "See {IERC1155-safeBatchTransferFrom}."
-				},
-				"safeTransferFrom(address,address,uint256,uint256,bytes)": {
-					"details": "See {IERC1155-safeTransferFrom}."
-				},
 				"setApprovalForAll(address,bool)": {
-					"details": "See {IERC1155-setApprovalForAll}."
+					"details": "See {IERC721-setApprovalForAll}."
 				},
 				"setLendingDataAddress(address)": {
 					"params": {
@@ -552,11 +642,23 @@
 				"supportsInterface(bytes4)": {
 					"details": "See {IERC165-supportsInterface}. Time complexity O(1), guaranteed to always use less than 30 000 gas."
 				},
+				"symbol()": {
+					"details": "See {IERC721Metadata-symbol}."
+				},
+				"tokenByIndex(uint256)": {
+					"details": "See {IERC721Enumerable-tokenByIndex}."
+				},
+				"tokenOfOwnerByIndex(address,uint256)": {
+					"details": "See {IERC721Enumerable-tokenOfOwnerByIndex}."
+				},
+				"tokenURI(uint256)": {
+					"details": "See {IERC721Metadata-tokenURI}."
+				},
+				"totalSupply()": {
+					"details": "See {IERC721Enumerable-totalSupply}."
+				},
 				"transferOwnership(address)": {
 					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
-				},
-				"uri(uint256)": {
-					"details": "See {IERC1155MetadataURI-uri}. This implementation returns the same URI for *all* token types. It relies on the token type ID substitution mechanism https://eips.ethereum.org/EIPS/eip-1155#metadata[defined in the EIP]. Clients calling this function must replace the `\\{id\\}` substring with the actual token type ID."
 				}
 			},
 			"title": "StaterPromissoryNote",
@@ -628,36 +730,44 @@
 				"dweb:/ipfs/QmbbjLMnnLisxuJaPxoRJ8zSoQACk7dErtPKWWQ5Grkg66"
 			]
 		},
-		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol": {
-			"keccak256": "0xe169af4ad808565cadbe1d8375b160efe6ee9b831cc9f395a46b797af48c1392",
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/ERC721.sol": {
+			"keccak256": "0x710b15ec5793ff2c5a8eb411a9f1076b5836ba826412789397cec9793beb8509",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://90b9207625b7a01f3750ec569e62e29794192e28e948c4b527016dd065b162c1",
-				"dweb:/ipfs/QmT6FiLsDn2WxWzm4f8gUwMBSQ1wRs8iDiu2DMAvV1WsUE"
+				"bzz-raw://3cd195ef1f7ea17034156b81752d1da1150db1ee52d927181484cec36c822a6b",
+				"dweb:/ipfs/QmUvu6Eis5RznraRDEaL1ySdBTAxxPpDkjTAEGKj3FzQBj"
 			]
 		},
-		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155.sol": {
-			"keccak256": "0xfde7a7eaf958792fce4e08cf50633013299bc0fea468f6f14dcdb855f4d7a326",
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol": {
+			"keccak256": "0x772e5a3984c1ceb3affeff7f20ea06394bb5a7f65301aac225ca2a8b512dff2e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://e46a8a7f4bacf386e6d9547428f4d9d3b5b408bb35cd84b9e94a23c0da84f50d",
-				"dweb:/ipfs/QmRv6DsHjxb767kgQ7bvkHcKWKzXAJYH57XK4PznJS7kUN"
+				"bzz-raw://a9e5549f4580b42973c89e9d5c9760919c7b4e611640ba617dd5024ab3d87cbf",
+				"dweb:/ipfs/QmbbzBjPZ8ffJPJEkU9mRouPVGLKifVdHesMpYUXfMJMCd"
 			]
 		},
-		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155MetadataURI.sol": {
-			"keccak256": "0x04afdeee56286ace62163b244d18f32614384d1aab7903832cb99d63f7bcf118",
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721Enumerable.sol": {
+			"keccak256": "0xceee8ed97ac236b8804b69192a19b9c7bb486620a5d679ed9d9ef35ba0606855",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://e192b044ab65dec23fd914e0fe3c2b85ad55884c1e48de67516a61710395d363",
-				"dweb:/ipfs/QmSoDA7LFs9WPk4vz1sRr7xN7s3UwYeri5ZKiwTqNp4vVb"
+				"bzz-raw://34b3595d083b9efc91d77f38cbbc26f0a7e9f05a2f5e45cf5921a3709620a93d",
+				"dweb:/ipfs/QmdDPq8KkAYxhQzoBBXqzJiqohPiUJwr1tsUzz5RBypKwU"
 			]
 		},
-		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155Receiver.sol": {
-			"keccak256": "0x345e5c61672af34e95f44ad3457cf31359783c3230df2120205f8a1df5d7a889",
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721Metadata.sol": {
+			"keccak256": "0x64363008ef2673a491864c9f467b62408baa4f063ade0812a9926cc57d2184be",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d547cda5f975dd2ac2c64a1c99cebd8400b3307ada04dfe2c800f9524689fe58",
-				"dweb:/ipfs/QmTVNpbiVZFLgKs1tjzKrKz8T3fZQAqKpaYoboqSB58zhb"
+				"bzz-raw://d33964ab48d7f2d26e0f22fea3e83333466249f1cd89297fd7d04e656cf12c0f",
+				"dweb:/ipfs/QmRvKs4QL32hcgtS2A4Wb2QUaC871xCXNroyHPh4nAKHHp"
+			]
+		},
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721Receiver.sol": {
+			"keccak256": "0x0ff2458cb6f8e5be6e8aadf81e3b58c1a4e37653e3f0e624316670d7a012aba7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9a9737b848ca3c1ca3d742d34fb4cb1a6d8a334da564fbacd762b7b270999458",
+				"dweb:/ipfs/QmcmyhdqbFcHsL3UUNcE7ZvFzRfYBkpif8STsSvFoFLBK1"
 			]
 		},
 		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Address.sol": {
@@ -668,12 +778,36 @@
 				"dweb:/ipfs/QmQv5E4vEuguNuMPbRscMgaaKfhTc7th5pj6QVjGDo7x4c"
 			]
 		},
-		"../nft-lending-contracts/contracts/promissory/PromissoryNote.sol": {
-			"keccak256": "0x87f92ffb1f7c5b844639d3d5278c4ace83f60668f2ff11d45dc0f40e7b61c550",
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/EnumerableMap.sol": {
+			"keccak256": "0x7970422009027f1346c50ab4afb730406253e79a1c711a5a9a6f66724fc86088",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://e2c7654b9a7ee2d0550cab5636e14b7cbd1ad670b472d70c2ce5fcb7c35e5bba",
-				"dweb:/ipfs/QmVAYtygrDr9qXNJdSSQ5Zy6dUPBcNYNYbzfBJmrg24swj"
+				"bzz-raw://4e689b35ebe8ce1549ef655967c0d280a7f83fa58ff935a6e35b281a04b0cc3e",
+				"dweb:/ipfs/QmQZ2yD5tTtbLss9a8RV8LTLdtNmYnPVsXZNZCgQ4upV5C"
+			]
+		},
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/EnumerableSet.sol": {
+			"keccak256": "0xf07d0f3f22e77aba03f94c1a6216516532d73139be6699d010867c1ccf70e133",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1f6d6cfbc0ebbd6714ef455bf156580c05f9c9caec369c28b9d42dd2d385da26",
+				"dweb:/ipfs/QmQZiUBva7J1M68LqatFHx5T7QJq4YyoJrDZ4Sc5JHUDt8"
+			]
+		},
+		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Strings.sol": {
+			"keccak256": "0x2b57d19e25b45eb4d011c613c05c43ff61f294ce9ced753e7036f593c67161c3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://35e70453fd12d37eb2a5cb3ba64ddf3dd9f6b01fef99db370a934876d2b5b6e5",
+				"dweb:/ipfs/QmYr9AiqN2kaFiJKaKCKpABA2c2FqVZ92sicCXYbv62kDb"
+			]
+		},
+		"../nft-lending-contracts/contracts/promissory/PromissoryNote.sol": {
+			"keccak256": "0x89e0ae204b4fe5c512180fbb9e9a3aaa21ffed6fda7f7837ae7f16d76ba8e138",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://8585dcb6ab4fb79de13ff715ecd0b627bdcd86397301074cce5043ab9b26cc35",
+				"dweb:/ipfs/QmQGGsjB3kMXnGtk9suggx1pkXo3rqwAiodq7qWzNrL52B"
 			]
 		}
 	},

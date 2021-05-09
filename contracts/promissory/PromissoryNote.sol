@@ -1,15 +1,20 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity 0.7.4;
-import "../libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol";
+import "../libs/openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
+
+interface LendingTemplate {
+    function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external;
+    function setPromissoryPermissions(uint256[] calldata loanIds, address sender) external;
+}
 
 /**
  * @title StaterPromissoryNote
  * @dev Implementats wrapping/unwrapping process of stater loans
  * @author Stater
  */ 
-contract StaterPromissoryNote is ERC1155, Ownable {
+contract StaterPromissoryNote is ERC721, Ownable {
     
         
     /* ****** */
@@ -31,17 +36,15 @@ contract StaterPromissoryNote is ERC1155, Ownable {
     }
     mapping(uint256 => PromissoryNote) public promissoryNotes;
     uint256 public promissoryNoteId;
-    address public lendingDataAddress;
+    LendingTemplate public lendingDataTemplate;
     
     /* ********* */
     /* CONSTANTS */
     /* ********* */
-    
-    string constant public name = "Stater Promissory Note";
 
 	//TODO: change the uri after the api implementation
-    constructor(address _lendingDataAddress) ERC1155("https://abcoathup.github.io/SampleERC1155/api/token/{id}.json") {
-        lendingDataAddress = _lendingDataAddress;
+    constructor(address _lendingDataAddress, string memory name, string memory symbol) ERC721(name,symbol) {
+        lendingDataTemplate = LendingTemplate(_lendingDataAddress);
     }
     
     /* ********* */
@@ -52,25 +55,19 @@ contract StaterPromissoryNote is ERC1155, Ownable {
      * @dev Allows a user to lock approved loans in the contract and mint a new Promissory Note 
      */ 
     function createPromissoryNote(uint256[] calldata loanIds) external {
-        require(loanIds.length > 0, 'you must submit an array with at least one element');
+        require(loanIds.length > 0, "Promissory Note: You must submit an array with at least one element");
         
         //Allow loans to be used in the Promissory Note
-        require(lendingDataAddress != address(0),"Lending contract not established");
+        require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
         
-        (bool success, ) = lendingDataAddress.delegatecall(
-            abi.encodeWithSignature(
-                "setPromissoryPermissions(uint256[])",
-                loanIds
-            )
-        );
-        require(success,"Failed to setPromissoryPermissions via delegatecall");
+        lendingDataTemplate.setPromissoryPermissions(loanIds,msg.sender);
         
         //Set promissory note fields
         promissoryNotes[promissoryNoteId].loans = loanIds;
         promissoryNotes[promissoryNoteId].owner = msg.sender;
         
         //mint promissory note
-        _mint(msg.sender, promissoryNoteId, 1, "");
+        _safeMint(msg.sender, promissoryNoteId, "");
     
         emit WrapLoansAndMintPromissoryNote(promissoryNoteId);
         promissoryNoteId++;
@@ -79,9 +76,52 @@ contract StaterPromissoryNote is ERC1155, Ownable {
     function safeTransferFrom(
         address from,
         address to,
+        uint256 id
+    )
+        public
+        virtual
+        override
+    {
+        require(id < promissoryNoteId, "Promissory Note: Invalid promissory ID");
+        require(
+            from == _msgSender() || isApprovedForAll(from, _msgSender()),
+            "ERC1155: caller is not owner nor approved"
+        );
+
+        //Allow loans to be used in the Promissory Note
+        require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
+        lendingDataTemplate.promissoryExchange(from,payable(to),promissoryNotes[id].loans);
+        safeTransferFrom(from,to,id);
+        promissoryNotes[id].owner = payable(to);
+    }
+    
+    function safeTransferFrom(
+        address from,
+        address to,
         uint256 id,
-        uint256 amount,
-        bytes memory data
+        bytes memory _data
+    )
+        public
+        virtual
+        override
+    {
+        require(id < promissoryNoteId, "Promissory Note: Invalid promissory ID");
+        require(
+            from == _msgSender() || isApprovedForAll(from, _msgSender()),
+            "ERC1155: caller is not owner nor approved"
+        );
+
+        //Allow loans to be used in the Promissory Note
+        require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
+        lendingDataTemplate.promissoryExchange(from,payable(to),promissoryNotes[id].loans);
+        safeTransferFrom(from,to,id,_data);
+        promissoryNotes[id].owner = payable(to);
+    }
+    
+    function transferFrom(
+        address from,
+        address to,
+        uint256 id
     )
         public
         virtual
@@ -89,23 +129,16 @@ contract StaterPromissoryNote is ERC1155, Ownable {
     {
      
         require(id < promissoryNoteId, "Promissory Note: Invalid promissory ID");
-        require(to != address(0), "ERC1155: transfer to the zero address");
         require(
             from == _msgSender() || isApprovedForAll(from, _msgSender()),
             "ERC1155: caller is not owner nor approved"
         );
 
         //Allow loans to be used in the Promissory Note
-        require(lendingDataAddress != address(0),"Lending contract not established");
-            
-        (bool success, ) = lendingDataAddress.delegatecall(
-            abi.encodeWithSignature(
-                "promissoryExchange(uint256[],address)",
-                promissoryNotes[id].loans,to
-            )
-        );
-        require(success,"Failed to setPromissoryPermissions via delegatecall");
-
+        require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
+        lendingDataTemplate.promissoryExchange(from,payable(to),promissoryNotes[id].loans);
+        _transfer(from,to,id);
+        promissoryNotes[id].owner = payable(to);
     }
     
     /**
@@ -113,12 +146,25 @@ contract StaterPromissoryNote is ERC1155, Ownable {
      * @param _lendingDataAddress The address of the stater lending contract
      */ 
     function setLendingDataAddress(address _lendingDataAddress) external onlyOwner {
-        lendingDataAddress = _lendingDataAddress;
+        lendingDataTemplate = LendingTemplate(_lendingDataAddress);
     }
     
     function burnPromissoryNote(uint256 _promissoryNoteId) external {
         require(promissoryNotes[_promissoryNoteId].owner == msg.sender, "You're not the owner of this promissory note");
         delete promissoryNotes[_promissoryNoteId];
+        address owner = ownerOf(_promissoryNoteId);
+
+        _beforeTokenTransfer(owner, address(0), _promissoryNoteId);
+
+        // Clear approvals
+        approve(address(0), _promissoryNoteId);
+
+        // Clear metadata (if any)
+        _setTokenURI(_promissoryNoteId,"");
+
+        _transfer(msg.sender,address(0),_promissoryNoteId);
+
+        emit Transfer(owner, address(0), _promissoryNoteId);
     }
     
 }
