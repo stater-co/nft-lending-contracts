@@ -82,16 +82,13 @@ contract StaterPromissoryNote is ERC721, Ownable {
         virtual
         override
     {
+    	require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
         require(id < promissoryNoteId, "Promissory Note: Invalid promissory ID");
-        require(
-            from == _msgSender() || isApprovedForAll(from, _msgSender()),
-            "ERC1155: caller is not owner nor approved"
-        );
-
+	
         //Allow loans to be used in the Promissory Note
-        require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
+	safeTransferFrom(from,to,id);
+        
         lendingDataTemplate.promissoryExchange(from,payable(to),promissoryNotes[id].loans);
-        safeTransferFrom(from,to,id);
         promissoryNotes[id].owner = payable(to);
     }
     
@@ -105,16 +102,13 @@ contract StaterPromissoryNote is ERC721, Ownable {
         virtual
         override
     {
+    	require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
         require(id < promissoryNoteId, "Promissory Note: Invalid promissory ID");
-        require(
-            from == _msgSender() || isApprovedForAll(from, _msgSender()),
-            "ERC1155: caller is not owner nor approved"
-        );
 
-        //Allow loans to be used in the Promissory Note
-        require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
+	//Allow loans to be used in the Promissory Note
+	safeTransferFrom(from,to,id,_data);
+
         lendingDataTemplate.promissoryExchange(from,payable(to),promissoryNotes[id].loans);
-        safeTransferFrom(from,to,id,_data);
         promissoryNotes[id].owner = payable(to);
     }
     
@@ -127,17 +121,13 @@ contract StaterPromissoryNote is ERC721, Ownable {
         virtual
         override
     {
-     
+     	require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
         require(id < promissoryNoteId, "Promissory Note: Invalid promissory ID");
-        require(
-            from == _msgSender() || isApprovedForAll(from, _msgSender()),
-            "ERC1155: caller is not owner nor approved"
-        );
 
         //Allow loans to be used in the Promissory Note
-        require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
+	_transfer(from,to,id);
+        
         lendingDataTemplate.promissoryExchange(from,payable(to),promissoryNotes[id].loans);
-        _transfer(from,to,id);
         promissoryNotes[id].owner = payable(to);
     }
     
