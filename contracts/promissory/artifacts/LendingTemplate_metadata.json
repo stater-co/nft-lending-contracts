@@ -187,11 +187,11 @@
 			]
 		},
 		"../nft-lending-contracts/contracts/promissory/PromissoryNote.sol": {
-			"keccak256": "0x89e0ae204b4fe5c512180fbb9e9a3aaa21ffed6fda7f7837ae7f16d76ba8e138",
+			"keccak256": "0x0c1054678aaa68cbd596324f6d9d78afaf98a6996693e1bb645949fe5234770b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8585dcb6ab4fb79de13ff715ecd0b627bdcd86397301074cce5043ab9b26cc35",
-				"dweb:/ipfs/QmQGGsjB3kMXnGtk9suggx1pkXo3rqwAiodq7qWzNrL52B"
+				"bzz-raw://ec7860fc55271fc9342a481a1673419c160c5b7aca75b7d75c8e86a5036047ee",
+				"dweb:/ipfs/QmXGnWstBUrtyQzwtURhnvS9WTCpsCoo9xDjGDZ2PW9bKt"
 			]
 		}
 	},

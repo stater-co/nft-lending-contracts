@@ -3,11 +3,8 @@ pragma solidity 0.7.4;
 
 import "../libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol";
 import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
-import "../libs/openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 
-contract GameItems1155 is ERC1155, Ownable, ReentrancyGuard {
-    uint256 public constant STATER_COMMUNITY_EDITION = 0;
-    uint256 public constant STATER_FOUNDER_EDITION = 1;
+contract GameItems1155 is ERC1155, Ownable {
     
     event ItemCreation(uint256 indexed itemId, uint256 indexed tokenId, address indexed owner, string name, string description, string image_url);
 

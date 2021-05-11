@@ -739,11 +739,11 @@
 	},
 	"sources": {
 		"../nft-lending-contracts/contracts/auxiliary/GameItems721.sol": {
-			"keccak256": "0x6e9b077003808633eb39207f4d27f7d06cd87a24ecc1d99101fb03279c818239",
+			"keccak256": "0x1d14c11389643cc8a381c39f18708cbb9536ed0b26793b1be451475b6feaee40",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://2b2a1796ad040774003e1b5ff926c1067b2fdd127aa5c26fc5cecd748bac9dfb",
-				"dweb:/ipfs/QmZaatWoFSTapMwNW3XXbmTy9oDwZ61KeMrZXckbStb973"
+				"bzz-raw://8269429f33f56889f17d1e1fc1a65a8458fc7a3f23bf2df5e024e4cf1462acff",
+				"dweb:/ipfs/QmeNNTh9EaEiE9SAexKDFrCR4h6EJ8H54VqNX468LLLtTq"
 			]
 		},
 		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/Context.sol": {
@@ -864,14 +864,6 @@
 			"urls": [
 				"bzz-raw://1f6d6cfbc0ebbd6714ef455bf156580c05f9c9caec369c28b9d42dd2d385da26",
 				"dweb:/ipfs/QmQZiUBva7J1M68LqatFHx5T7QJq4YyoJrDZ4Sc5JHUDt8"
-			]
-		},
-		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol": {
-			"keccak256": "0x97148f03b12e38e98e5adf06e2cc541066a4f5933568297a474c57e937e5b450",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://37348d27b3a53542a48fbac1ee9bde947305b03eeddf1e5e60d0876119b42af4",
-				"dweb:/ipfs/QmZjp3DV7rHnAp8zdw925ykwSJwAeDeKC98LdPq1n3DKK7"
 			]
 		},
 		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Strings.sol": {

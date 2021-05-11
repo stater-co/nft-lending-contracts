@@ -332,6 +332,7 @@ contract LendingMethods is LendingCore {
      */
      function setPromissoryPermissions(uint256[] calldata loanIds, address sender) external {
         for (uint256 i = 0; i < loanIds.length; ++i){
+            require(loans[loanIds[i]].status == Status.APPROVED, "Lending Methods: One of the loans isn't in approval state, rejected.");
             require(loans[loanIds[i]].lender == sender, "Lending Methods: You're not the lender of this loan");
             promissoryPermissions[loanIds[i]] = sender;
         }

@@ -197,32 +197,6 @@
 				"type": "event"
 			},
 			{
-				"inputs": [],
-				"name": "STATER_COMMUNITY_EDITION",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "STATER_FOUNDER_EDITION",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -604,11 +578,11 @@
 	},
 	"sources": {
 		"../nft-lending-contracts/contracts/auxiliary/GameItems1155.sol": {
-			"keccak256": "0xafe9d36ae85394298216b97c5ed92327d069bc674c0daee30abdce752af61699",
+			"keccak256": "0xead1f3c00061de8b27b03e7fb1eeb2fc4fad7cd376da666c17303e8c53901375",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ebf5c6046cb79ee5bfa68c462b73e8f0f502d4193df17e7fa85704cd22c9664b",
-				"dweb:/ipfs/Qmb7xCgCMBJU4jS3JNdtGLTaxZC5icZpD5RqTjxXoRVKDy"
+				"bzz-raw://73302e11432019f4392e1e7db8e57b0e6a9832e619c8e5dc064cf4c04d33002d",
+				"dweb:/ipfs/QmWVeZgzEJhfwseAZsJrcsVcTig5Ws5HAkHb8D8MZeC84J"
 			]
 		},
 		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/Context.sol": {
@@ -689,14 +663,6 @@
 			"urls": [
 				"bzz-raw://62ec243e005e808793e59bf6a0344fabd3c34b4ab788f295aa2c798ff175fe81",
 				"dweb:/ipfs/QmQv5E4vEuguNuMPbRscMgaaKfhTc7th5pj6QVjGDo7x4c"
-			]
-		},
-		"../nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol": {
-			"keccak256": "0x97148f03b12e38e98e5adf06e2cc541066a4f5933568297a474c57e937e5b450",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://37348d27b3a53542a48fbac1ee9bde947305b03eeddf1e5e60d0876119b42af4",
-				"dweb:/ipfs/QmZjp3DV7rHnAp8zdw925ykwSJwAeDeKC98LdPq1n3DKK7"
 			]
 		}
 	},
