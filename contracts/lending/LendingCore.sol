@@ -84,18 +84,8 @@ contract LendingCore is StaterTransfers {
         address payable lender; // the address who gives/offers the loan to the borrower
         address currency; // the token that the borrower lends, address(0) for ETH
         Status status; // the loan status
-    
-        /*
-         * @DIIMIIM : A fixed size array used to calculate the loan installment time
-         * On position 0 will be the number of weeks an installment time has
-         * On position 1 will be the number of days an installment time has
-         * On position 2 will be the number of hours an installment time has
-         * Ex of usage : installmentsTimeHandler[0] = 2 ; installmentsTimeHandler[1] = 3 ; installmentsTimeHandler[2] = 4 >> the installment time will be 2 weeks 3 days and 4 hours
-         */    
-        uint256[3] installmentsTimeHandler;
-        
-        
         uint256[] nftTokenIdArray; // the unique identifier of the NFT token that the borrower uses as collateral
+        uint256 installmentTime;
         uint256 loanAmount; // the amount, denominated in tokens (see next struct entry), the borrower lends
         uint256 assetsValue; // important for determintng LTV which has to be under 50-60%
         uint256 loanStart; // the point when the loan is approved
@@ -104,7 +94,6 @@ contract LendingCore is StaterTransfers {
         uint256 amountDue; // loanAmount + interest that needs to be paid back by borrower
         uint256 paidAmount; // the amount that has been paid back to the lender to date
         uint16 nrOfInstallments; // the number of installments that the borrower must pay.
-        uint16 nrOfPayments; // the number of installments paid
         uint8 defaultingLimit; // the number of installments allowed to be missed without getting defaulted
         uint8[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
     }
@@ -129,14 +118,14 @@ contract LendingCore is StaterTransfers {
             loans[loanId].status == Status.APPROVED 
                 && 
             loans[loanId].loanStart.add(
-                loans[loanId].nrOfPayments.mul(
-                    getLoanPaymentFrequency(loanId).div(
+                loans[loanId].amountDue.div(loans[loanId].paidAmount).mul(
+                    loans[loanId].installmentTime.div(
                         loans[loanId].nrOfInstallments
                     )
                 )
             ) <= block.timestamp.sub(
                 loans[loanId].defaultingLimit.mul(
-                    getLoanPaymentFrequency(loanId).div(
+                    loans[loanId].installmentTime.div(
                         loans[loanId].nrOfInstallments
                     )
                 )
@@ -146,14 +135,6 @@ contract LendingCore is StaterTransfers {
     // Calculates loan to value ratio
     function _percent(uint256 numerator, uint256 denominator) public pure returns(uint256) {
         return numerator.mul(10000).div(denominator).add(5).div(10);
-    }
-    
-    function getLoanPaymentFrequency(uint256 loanId) public view returns(uint256) {
-        return loans[loanId].installmentsTimeHandler[0].mul(1 weeks).add(
-            loans[loanId].installmentsTimeHandler[1].mul(1 days).add(
-                loans[loanId].installmentsTimeHandler[2].mul(1 hours)
-            )
-        );
     }
 
 }

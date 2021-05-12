@@ -69,7 +69,7 @@ contract LendingMethods is LendingCore {
         loans[id].borrower = msg.sender;
         loans[id].currency = currency;
         loans[id].nftTokenTypeArray = nftTokenTypeArray;
-        loans[id].installmentsTimeHandler[0] = nrOfInstallments;
+        loans[id].installmentTime = 1 weeks;
         
         // Transfer the items from lender to stater contract
         transferItems(
@@ -100,7 +100,7 @@ contract LendingMethods is LendingCore {
         uint16 nrOfInstallments,
         address currency,
         uint256 assetsValue,
-        uint256[3] memory intallmentTime
+        uint256 intallmentTime
     ) external {
         require(nrOfInstallments > 0, "Loan must have at least 1 installment");
         require(loanAmount > 0, "Loan amount must be higher than 0");
@@ -114,9 +114,7 @@ contract LendingMethods is LendingCore {
          * installmentsTimeHandler[1] : number of days
          * installmentsTimeHandler[2] : number of hours
          */
-        loans[loanId].installmentsTimeHandler[0] = intallmentTime[0];
-        loans[loanId].installmentsTimeHandler[1] = intallmentTime[1];
-        loans[loanId].installmentsTimeHandler[2] = intallmentTime[2];
+        loans[loanId].installmentTime = intallmentTime;
         
         
         loans[loanId].loanAmount = loanAmount;
@@ -155,7 +153,7 @@ contract LendingMethods is LendingCore {
         loans[loanId].lender = msg.sender;
         loans[loanId].loanEnd = block.timestamp.add(
             loans[loanId].nrOfInstallments.mul(
-                getLoanPaymentFrequency(loanId).div(
+                loans[loanId].installmentTime.div(
                     loans[loanId].nrOfInstallments
                 )
             )
@@ -229,11 +227,6 @@ contract LendingMethods is LendingCore {
         amountPaidAsInstallmentToLender = amountPaidAsInstallmentToLender.sub(interestToStaterPerInstallement);
 
         loans[loanId].paidAmount = loans[loanId].paidAmount.add(paidByBorrower);
-        loans[loanId].nrOfPayments = uint16(loans[loanId].nrOfPayments.add(
-            paidByBorrower.div(
-                loans[loanId].installmentAmount
-            )
-        ));
 
         if (loans[loanId].paidAmount >= loans[loanId].amountDue)
         loans[loanId].status = Status.LIQUIDATED;

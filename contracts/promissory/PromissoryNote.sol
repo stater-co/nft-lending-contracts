@@ -24,8 +24,6 @@ contract StaterPromissoryNote is ERC721, Ownable {
     /// @dev This event is fired when a user creates a new promissory note
     event WrapLoansAndMintPromissoryNote(uint256 indexed promissoryNoteId);
     
-    /// @dev This event is fired when a user unwrap a promissory note
-    event UnwrapPromissoryNote(uint256 indexed promissoryNoteId);
     
     /* ******* */
     /* STORAGE */
@@ -35,6 +33,7 @@ contract StaterPromissoryNote is ERC721, Ownable {
         address payable owner;
     }
     mapping(uint256 => PromissoryNote) public promissoryNotes;
+    mapping(uint256 => uint256) public promissoryLoans;
     
     /// @dev It needs to start with 1 so 0 can be used as "no promissory note assigned" status on the lending smart contract
     uint256 public promissoryNoteId = 1;
@@ -67,6 +66,11 @@ contract StaterPromissoryNote is ERC721, Ownable {
         //Set promissory note fields
         promissoryNotes[promissoryNoteId].loans = loanIds;
         promissoryNotes[promissoryNoteId].owner = msg.sender;
+        
+        for (uint i = 0; i < loanIds.length; ++i){
+            require(promissoryLoans[loanIds[i]] == 0,"Promissory Note: One of the loans is already used by another promissory note");
+            promissoryLoans[loanIds[i]] = promissoryNoteId;
+        }
         
         //mint promissory note
         _safeMint(msg.sender, promissoryNoteId, "");
