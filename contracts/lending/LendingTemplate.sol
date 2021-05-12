@@ -2,11 +2,11 @@
 pragma solidity 0.7.4;
 import "./LendingCore.sol";
 import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 
 
-contract LendingTemplate is LendingCore {
+contract LendingTemplate is Ownable, LendingCore {
     using SafeMath for uint256;
-    using SafeMath for uint16;
 
     constructor(
         address _promissoryNoteAddress,
@@ -162,6 +162,19 @@ contract LendingTemplate is LendingCore {
             )
         );
         require(success,"Lending Template: Failed to execute setPromissoryPermissions via delegatecall");
+    }
+    
+    function unsetPromissoryPermissions(uint256[] calldata loanIds, address sender) external {
+        require(lendingMethodsAddress != address(0),"Lending Template: Lending methods contract address not established");
+        require(promissoryNoteAddress == msg.sender,"Lending Template: This method can be called by Stater promissory note contract only!");
+        
+        (bool success, ) = lendingMethodsAddress.delegatecall(
+            abi.encodeWithSignature(
+                "unsetPromissoryPermissions(uint256[],address)",
+                loanIds,sender
+            )
+        );
+        require(success,"Lending Template: Failed to execute unsetPromissoryPermissions via delegatecall");
     }
     
     function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {

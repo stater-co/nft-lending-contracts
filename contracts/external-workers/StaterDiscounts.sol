@@ -23,7 +23,7 @@ contract StaterDiscounts is Ownable {
     mapping(uint256 => Discount) public discounts;
     
     
-    function addDiscount(uint8 _tokenType, address _tokenContract, uint8 _discount, uint256[] memory _tokenIds) public {
+    function addDiscount(uint8 _tokenType, address _tokenContract, uint8 _discount, uint256[] memory _tokenIds) external onlyOwner {
         discounts[discountId].tokenType = _tokenType;
         discounts[discountId].tokenContract = _tokenContract;
         discounts[discountId].discount = _discount;
@@ -35,9 +35,10 @@ contract StaterDiscounts is Ownable {
         return discounts[_discountId].tokenIds[tokenIdIndex];
     }
     
-    function editDiscount(uint256 _discountId, address _tokenContract, uint8 _discount, uint256[] calldata _tokenIds) external onlyOwner {
+    function editDiscount(uint256 _discountId, address _tokenContract, uint8 _discount, uint256[] calldata _tokenIds, uint8 _tokenType) external onlyOwner {
         discounts[_discountId].tokenContract = _tokenContract;
         discounts[_discountId].discount = _discount;
+        discounts[_tokenType].tokenType = _tokenType;
         uint256 l = discounts[_discountId].tokenIds.length;
         for (uint256 i = 0; i < _tokenIds.length && i < l; ++i)
             discounts[_discountId].tokenIds[i] = _tokenIds[i];

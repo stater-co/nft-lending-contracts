@@ -7,6 +7,7 @@ import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 interface LendingTemplate {
     function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external;
     function setPromissoryPermissions(uint256[] calldata loanIds, address sender) external;
+    function unsetPromissoryPermissions(uint256[] calldata loanIds, address sender) external;
 }
 
 /**
@@ -87,14 +88,7 @@ contract StaterPromissoryNote is ERC721, Ownable {
         public
         override
     {
-    	require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
-        require(id < promissoryNoteId, "Promissory Note: Invalid promissory ID");
-	
-        //Allow loans to be used in the Promissory Note
-	    super.safeTransferFrom(from,to,id);
-        
-        lendingDataTemplate.promissoryExchange(from,payable(to),promissoryNotes[id].loans);
-        promissoryNotes[id].owner = payable(to);
+        safeTransferFrom(from,to,id,"");
     }
     
     function safeTransferFrom(
@@ -142,22 +136,17 @@ contract StaterPromissoryNote is ERC721, Ownable {
         lendingDataTemplate = LendingTemplate(_lendingDataAddress);
     }
     
+    function _burn(uint256 _promissoryNoteId) internal override {
+        super._burn(_promissoryNoteId);
+    }
+    
     function burnPromissoryNote(uint256 _promissoryNoteId) external {
         require(promissoryNotes[_promissoryNoteId].owner == msg.sender, "You're not the owner of this promissory note");
+        _burn(_promissoryNoteId);
+        lendingDataTemplate.unsetPromissoryPermissions(promissoryNotes[_promissoryNoteId].loans,msg.sender);
+        for (uint i = 0; i < promissoryNotes[_promissoryNoteId].loans.length; ++i)
+            promissoryLoans[promissoryNotes[_promissoryNoteId].loans[i]] = 0;
         delete promissoryNotes[_promissoryNoteId];
-        address owner = ownerOf(_promissoryNoteId);
-
-        _beforeTokenTransfer(owner, address(0), _promissoryNoteId);
-
-        // Clear approvals
-        approve(address(0), _promissoryNoteId);
-
-        // Clear metadata (if any)
-        _setTokenURI(_promissoryNoteId,"");
-
-        transferFrom(msg.sender,address(0),_promissoryNoteId);
-
-        emit Transfer(owner, address(0), _promissoryNoteId);
     }
     
 }

@@ -8,7 +8,6 @@ interface StaterDiscounts {
 
 contract LendingCore is StaterTransfers {
     using SafeMath for uint256;
-    using SafeMath for uint16;
     using SafeMath for uint8;
     
     /*

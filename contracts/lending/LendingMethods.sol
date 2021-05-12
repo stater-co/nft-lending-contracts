@@ -2,9 +2,10 @@
 pragma solidity 0.7.4;
 import "./LendingCore.sol";
 import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 
 
-contract LendingMethods is LendingCore {
+contract LendingMethods is Ownable, LendingCore {
     using SafeMath for uint256;
     using SafeMath for uint16;
     
@@ -325,6 +326,18 @@ contract LendingMethods is LendingCore {
             require(loans[loanIds[i]].status == Status.APPROVED, "Lending Methods: One of the loans isn't in approval state, rejected.");
             require(loans[loanIds[i]].lender == sender, "Lending Methods: You're not the lender of this loan");
             promissoryPermissions[loanIds[i]] = sender;
+        }
+    }
+    
+    /**
+     * @notice Used by the Promissory Note contract to unset a list of loans when their promissory note has been burned
+     * @param loanIds The ids of the loans that will be unset
+     */
+     function unsetPromissoryPermissions(uint256[] calldata loanIds, address sender) external {
+        for (uint256 i = 0; i < loanIds.length; ++i){
+            require(loans[loanIds[i]].status == Status.APPROVED, "Lending Methods: One of the loans isn't in approval state, rejected.");
+            require(loans[loanIds[i]].lender == sender, "Lending Methods: You're not the lender of this loan");
+            promissoryPermissions[loanIds[i]] = address(0);
         }
     }
 }
