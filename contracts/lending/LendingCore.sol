@@ -138,9 +138,5 @@ contract LendingCore is StaterTransfers {
     function _percent(uint256 numerator, uint256 denominator) public pure returns(uint256) {
         return numerator.mul(10000).div(denominator).add(5).div(10);
     }
-    
-    function getLoanStartEnd(uint256 loanId) external view returns(uint256[2] memory) {
-        return loans[loanId].startEnd;
-    }
 
 }

@@ -40,7 +40,7 @@ contract LendingMethods is Ownable, LendingCore {
     ) external {
         require(nrOfInstallments > 0, "Loan must have at least 1 installment");
         require(loanAmount > 0, "Loan amount must be higher than 0");
-        //require(nftAddressArray.length > 0, "Loan must have atleast 1 NFT");
+        require(nftAddressArray.length > 0, "Loan must have atleast 1 NFT");
         require(nftAddressArray.length == nftTokenIdArray.length && nftTokenIdArray.length == nftTokenTypeArray.length, "NFT provided informations are missing or incomplete");
         
         loans[id].assetsValue = assetsValue;

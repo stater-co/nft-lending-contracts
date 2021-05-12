@@ -199,5 +199,9 @@ contract LendingTemplate is Ownable, LendingCore {
         interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100).sub(interestDiscounted);
         amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); 
     }
+    
+    function getLoanStartEnd(uint256 loanId) external view returns(uint256[2] memory) {
+        return loans[loanId].startEnd;
+    }
   
 }
