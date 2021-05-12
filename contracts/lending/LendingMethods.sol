@@ -40,7 +40,7 @@ contract LendingMethods is Ownable, LendingCore {
     ) external {
         require(nrOfInstallments > 0, "Loan must have at least 1 installment");
         require(loanAmount > 0, "Loan amount must be higher than 0");
-        require(nftAddressArray.length > 0, "Loan must have atleast 1 NFT");
+        //require(nftAddressArray.length > 0, "Loan must have atleast 1 NFT");
         require(nftAddressArray.length == nftTokenIdArray.length && nftTokenIdArray.length == nftTokenTypeArray.length, "NFT provided informations are missing or incomplete");
         
         loans[id].assetsValue = assetsValue;
@@ -85,7 +85,10 @@ contract LendingMethods is Ownable, LendingCore {
         emit NewLoan(
             msg.sender, 
             currency, 
-            id
+            id,
+            nftAddressArray,
+            nftTokenIdArray,
+            nftTokenTypeArray
         );
         ++id;
     }
@@ -152,7 +155,7 @@ contract LendingMethods is Ownable, LendingCore {
 
         // Borrower assigned , status is 1 , first installment ( payment ) completed
         loans[loanId].lender = msg.sender;
-        loans[loanId].loanEnd = block.timestamp.add(
+        loans[loanId].startEnd[1] = block.timestamp.add(
             loans[loanId].nrOfInstallments.mul(
                 loans[loanId].installmentTime.div(
                     loans[loanId].nrOfInstallments
@@ -160,7 +163,7 @@ contract LendingMethods is Ownable, LendingCore {
             )
         );
         loans[loanId].status = Status.APPROVED;
-        loans[loanId].loanStart = block.timestamp;
+        loans[loanId].startEnd[0] = block.timestamp;
 
         // We send the tokens here
         transferTokens(
@@ -174,7 +177,7 @@ contract LendingMethods is Ownable, LendingCore {
         emit LoanApproved(
             msg.sender,
             loanId,
-            loans[loanId].loanEnd
+            loans[loanId].startEnd[1]
         );
 
     }
@@ -187,7 +190,7 @@ contract LendingMethods is Ownable, LendingCore {
         require(loans[loanId].status == Status.LISTED, "This loan is no longer cancellable");
         
         // We set its validity date as block.timestamp
-        loans[loanId].loanEnd = block.timestamp;
+        loans[loanId].startEnd[1] = block.timestamp;
         loans[loanId].status = Status.CANCELLED;
 
         // We send the items back to him
@@ -209,7 +212,7 @@ contract LendingMethods is Ownable, LendingCore {
     function payLoan(uint256 loanId,uint256 amount) external payable {
         require(loans[loanId].borrower == msg.sender, "You're not the borrower of this loan");
         require(loans[loanId].status == Status.APPROVED, "This loan is no longer in the approval phase, check its status");
-        require(loans[loanId].loanEnd >= block.timestamp, "Loan validity expired");
+        require(loans[loanId].startEnd[1] >= block.timestamp, "Loan validity expired");
         require((msg.value > 0 && loans[loanId].currency == address(0) && msg.value == amount) || (loans[loanId].currency != address(0) && msg.value == 0 && amount > 0), "Insert the correct tokens");
         
         uint256 paidByBorrower = msg.value > 0 ? msg.value : amount;
@@ -228,6 +231,7 @@ contract LendingMethods is Ownable, LendingCore {
         amountPaidAsInstallmentToLender = amountPaidAsInstallmentToLender.sub(interestToStaterPerInstallement);
 
         loans[loanId].paidAmount = loans[loanId].paidAmount.add(paidByBorrower);
+        loans[loanId].nrOfPayments = loans[loanId].nrOfPayments.add(paidByBorrower.div(loans[loanId].installmentAmount));
 
         if (loans[loanId].paidAmount >= loans[loanId].amountDue)
         loans[loanId].status = Status.LIQUIDATED;
@@ -255,13 +259,13 @@ contract LendingMethods is Ownable, LendingCore {
     // Lender can withdraw loan item is loan is DEFAULTED
     function terminateLoan(uint256 loanId) external {
         require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender, "You can't access this loan");
-        require((block.timestamp >= loans[loanId].loanEnd || loans[loanId].paidAmount >= loans[loanId].amountDue) || lackOfPayment(loanId), "Not possible to finish this loan yet");
+        require((block.timestamp >= loans[loanId].startEnd[1] || loans[loanId].paidAmount >= loans[loanId].amountDue) || lackOfPayment(loanId), "Not possible to finish this loan yet");
         require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
         require(loans[loanId].status != Status.WITHDRAWN, "Loan NFTs already withdrawn");
 
         if ( lackOfPayment(loanId) ) {
             loans[loanId].status = Status.WITHDRAWN;
-            loans[loanId].loanEnd = block.timestamp;
+            loans[loanId].startEnd[1] = block.timestamp;
             // We send the items back to lender
             transferItems(
                 address(this),
@@ -271,7 +275,7 @@ contract LendingMethods is Ownable, LendingCore {
                 loans[loanId].nftTokenTypeArray
             );
         } else {
-            if ( block.timestamp >= loans[loanId].loanEnd && loans[loanId].paidAmount < loans[loanId].amountDue ) {
+            if ( block.timestamp >= loans[loanId].startEnd[1] && loans[loanId].paidAmount < loans[loanId].amountDue ) {
                 loans[loanId].status = Status.WITHDRAWN;
                 // We send the items back to lender
                 transferItems(
@@ -321,23 +325,12 @@ contract LendingMethods is Ownable, LendingCore {
      * @notice Used by the Promissory Note contract to approve a list of loans to be used as a Promissory Note NFT
      * @param loanIds The ids of the loans that will be approved
      */
-     function setPromissoryPermissions(uint256[] calldata loanIds, address sender) external {
+     function setPromissoryPermissions(uint256[] calldata loanIds, address sender, address allowed) external {
         for (uint256 i = 0; i < loanIds.length; ++i){
-            require(loans[loanIds[i]].status == Status.APPROVED, "Lending Methods: One of the loans isn't in approval state, rejected.");
             require(loans[loanIds[i]].lender == sender, "Lending Methods: You're not the lender of this loan");
-            promissoryPermissions[loanIds[i]] = sender;
-        }
-    }
-    
-    /**
-     * @notice Used by the Promissory Note contract to unset a list of loans when their promissory note has been burned
-     * @param loanIds The ids of the loans that will be unset
-     */
-     function unsetPromissoryPermissions(uint256[] calldata loanIds, address sender) external {
-        for (uint256 i = 0; i < loanIds.length; ++i){
-            require(loans[loanIds[i]].status == Status.APPROVED, "Lending Methods: One of the loans isn't in approval state, rejected.");
-            require(loans[loanIds[i]].lender == sender, "Lending Methods: You're not the lender of this loan");
-            promissoryPermissions[loanIds[i]] = address(0);
+            if (allowed != address(0))
+                require(loans[loanIds[i]].status == Status.APPROVED, "Lending Methods: One of the loans isn't in approval state, rejected.");
+            promissoryPermissions[loanIds[i]] = allowed;
         }
     }
 }

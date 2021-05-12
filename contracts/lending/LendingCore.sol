@@ -49,7 +49,10 @@ contract LendingCore is StaterTransfers {
     event NewLoan(
         address indexed owner,
         address indexed currency,
-        uint256 indexed loanId
+        uint256 indexed loanId,
+        address[] nftAddressArray,
+        uint256[] nftTokenIdArray,
+        uint8[] nftTokenTypeArray
     );
     event LoanApproved(
         address indexed lender,
@@ -84,11 +87,11 @@ contract LendingCore is StaterTransfers {
         address currency; // the token that the borrower lends, address(0) for ETH
         Status status; // the loan status
         uint256[] nftTokenIdArray; // the unique identifier of the NFT token that the borrower uses as collateral
-        uint256 installmentTime;
+        uint256 installmentTime; // the installment unix timestamp
+        uint256 nrOfPayments; // the number of installments paid
         uint256 loanAmount; // the amount, denominated in tokens (see next struct entry), the borrower lends
         uint256 assetsValue; // important for determintng LTV which has to be under 50-60%
-        uint256 loanStart; // the point when the loan is approved
-        uint256 loanEnd; // the point when the loan is approved to the point when it must be paid back to the lender
+        uint256[2] startEnd; // startEnd[0] loan start date , startEnd[1] loan end date
         uint256 installmentAmount; // amount expected for each installment
         uint256 amountDue; // loanAmount + interest that needs to be paid back by borrower
         uint256 paidAmount; // the amount that has been paid back to the lender to date
@@ -116,8 +119,8 @@ contract LendingCore is StaterTransfers {
         return 
             loans[loanId].status == Status.APPROVED 
                 && 
-            loans[loanId].loanStart.add(
-                loans[loanId].amountDue.div(loans[loanId].paidAmount).mul(
+            loans[loanId].startEnd[0].add(
+                loans[loanId].nrOfPayments.mul(
                     loans[loanId].installmentTime.div(
                         loans[loanId].nrOfInstallments
                     )
@@ -134,6 +137,10 @@ contract LendingCore is StaterTransfers {
     // Calculates loan to value ratio
     function _percent(uint256 numerator, uint256 denominator) public pure returns(uint256) {
         return numerator.mul(10000).div(denominator).add(5).div(10);
+    }
+    
+    function getLoanStartEnd(uint256 loanId) external view returns(uint256[2] memory) {
+        return loans[loanId].startEnd;
     }
 
 }

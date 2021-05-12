@@ -151,30 +151,17 @@ contract LendingTemplate is Ownable, LendingCore {
         require(success,"Lending Template: Failed to execute promissoryExchange via delegatecall");
     }
   
-    function setPromissoryPermissions(uint256[] calldata loanIds, address sender) external {
+    function setPromissoryPermissions(uint256[] calldata loanIds, address sender, address allowed) external {
         require(lendingMethodsAddress != address(0),"Lending Template: Lending methods contract address not established");
         require(promissoryNoteAddress == msg.sender,"Lending Template: This method can be called by Stater promissory note contract only!");
         
         (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
-                "setPromissoryPermissions(uint256[],address)",
-                loanIds,sender
+                "setPromissoryPermissions(uint256[],address,address)",
+                loanIds,sender,allowed
             )
         );
         require(success,"Lending Template: Failed to execute setPromissoryPermissions via delegatecall");
-    }
-    
-    function unsetPromissoryPermissions(uint256[] calldata loanIds, address sender) external {
-        require(lendingMethodsAddress != address(0),"Lending Template: Lending methods contract address not established");
-        require(promissoryNoteAddress == msg.sender,"Lending Template: This method can be called by Stater promissory note contract only!");
-        
-        (bool success, ) = lendingMethodsAddress.delegatecall(
-            abi.encodeWithSignature(
-                "unsetPromissoryPermissions(uint256[],address)",
-                loanIds,sender
-            )
-        );
-        require(success,"Lending Template: Failed to execute unsetPromissoryPermissions via delegatecall");
     }
     
     function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {

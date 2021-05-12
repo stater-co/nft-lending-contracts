@@ -6,8 +6,7 @@ import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 
 interface LendingTemplate {
     function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external;
-    function setPromissoryPermissions(uint256[] calldata loanIds, address sender) external;
-    function unsetPromissoryPermissions(uint256[] calldata loanIds, address sender) external;
+    function setPromissoryPermissions(uint256[] calldata loanIds, address sender, address allowed) external;
 }
 
 /**
@@ -62,7 +61,7 @@ contract StaterPromissoryNote is ERC721, Ownable {
         //Allow loans to be used in the Promissory Note
         require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
         
-        lendingDataTemplate.setPromissoryPermissions(loanIds,msg.sender);
+        lendingDataTemplate.setPromissoryPermissions(loanIds,msg.sender,msg.sender);
         
         //Set promissory note fields
         promissoryNotes[promissoryNoteId].loans = loanIds;
@@ -143,7 +142,7 @@ contract StaterPromissoryNote is ERC721, Ownable {
     function burnPromissoryNote(uint256 _promissoryNoteId) external {
         require(promissoryNotes[_promissoryNoteId].owner == msg.sender, "You're not the owner of this promissory note");
         _burn(_promissoryNoteId);
-        lendingDataTemplate.unsetPromissoryPermissions(promissoryNotes[_promissoryNoteId].loans,msg.sender);
+        lendingDataTemplate.setPromissoryPermissions(promissoryNotes[_promissoryNoteId].loans,msg.sender,address(0));
         for (uint i = 0; i < promissoryNotes[_promissoryNoteId].loans.length; ++i)
             promissoryLoans[promissoryNotes[_promissoryNoteId].loans[i]] = 0;
         delete promissoryNotes[_promissoryNoteId];
