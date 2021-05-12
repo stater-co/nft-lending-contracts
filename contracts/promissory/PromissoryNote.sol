@@ -35,7 +35,9 @@ contract StaterPromissoryNote is ERC721, Ownable {
         address payable owner;
     }
     mapping(uint256 => PromissoryNote) public promissoryNotes;
-    uint256 public promissoryNoteId;
+    
+    /// @dev It needs to start with 1 so 0 can be used as "no promissory note assigned" status on the lending smart contract
+    uint256 public promissoryNoteId = 1;
     LendingTemplate public lendingDataTemplate;
     
     /* ********* */
@@ -79,14 +81,13 @@ contract StaterPromissoryNote is ERC721, Ownable {
         uint256 id
     )
         public
-        virtual
         override
     {
     	require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
         require(id < promissoryNoteId, "Promissory Note: Invalid promissory ID");
 	
         //Allow loans to be used in the Promissory Note
-	safeTransferFrom(from,to,id);
+	    super.safeTransferFrom(from,to,id);
         
         lendingDataTemplate.promissoryExchange(from,payable(to),promissoryNotes[id].loans);
         promissoryNotes[id].owner = payable(to);
@@ -99,14 +100,13 @@ contract StaterPromissoryNote is ERC721, Ownable {
         bytes memory _data
     )
         public
-        virtual
         override
     {
     	require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
         require(id < promissoryNoteId, "Promissory Note: Invalid promissory ID");
 
-	//Allow loans to be used in the Promissory Note
-	safeTransferFrom(from,to,id,_data);
+	    //Allow loans to be used in the Promissory Note
+	    super.safeTransferFrom(from,to,id,_data);
 
         lendingDataTemplate.promissoryExchange(from,payable(to),promissoryNotes[id].loans);
         promissoryNotes[id].owner = payable(to);
@@ -118,14 +118,13 @@ contract StaterPromissoryNote is ERC721, Ownable {
         uint256 id
     )
         public
-        virtual
         override
     {
      	require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
         require(id < promissoryNoteId, "Promissory Note: Invalid promissory ID");
 
         //Allow loans to be used in the Promissory Note
-	_transfer(from,to,id);
+	    super.transferFrom(from,to,id);
         
         lendingDataTemplate.promissoryExchange(from,payable(to),promissoryNotes[id].loans);
         promissoryNotes[id].owner = payable(to);
@@ -152,7 +151,7 @@ contract StaterPromissoryNote is ERC721, Ownable {
         // Clear metadata (if any)
         _setTokenURI(_promissoryNoteId,"");
 
-        _transfer(msg.sender,address(0),_promissoryNoteId);
+        transferFrom(msg.sender,address(0),_promissoryNoteId);
 
         emit Transfer(owner, address(0), _promissoryNoteId);
     }

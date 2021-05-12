@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.4;
 import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 import "../plugins/StaterTransfers.sol";
 interface StaterDiscounts {
     function calculateDiscount(address requester) external view returns(uint256);
