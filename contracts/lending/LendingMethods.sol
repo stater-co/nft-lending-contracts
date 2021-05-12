@@ -312,6 +312,7 @@ contract LendingMethods is Ownable, LendingCore {
      * @param loanIds The ids of the loans that will be transferred to the new owner
      */
     function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external {
+        require(promissoryNoteAddress == msg.sender, "Lending Methods: Access denied");
         for (uint256 i = 0; i < loanIds.length; ++i) {
             require(loans[loanIds[i]].lender == from, "Lending Methods: One of the loans doesn't belong to you, rejected.");
             require(loans[loanIds[i]].status == Status.APPROVED, "Lending Methods: One of the loans isn't in approval state, rejected.");
@@ -326,6 +327,7 @@ contract LendingMethods is Ownable, LendingCore {
      * @param loanIds The ids of the loans that will be approved
      */
      function setPromissoryPermissions(uint256[] calldata loanIds, address sender, address allowed) external {
+        require(promissoryNoteAddress == msg.sender, "Lending Methods: Access denied");
         for (uint256 i = 0; i < loanIds.length; ++i){
             require(loans[loanIds[i]].lender == sender, "Lending Methods: You're not the lender of this loan");
             if (allowed != address(0))
