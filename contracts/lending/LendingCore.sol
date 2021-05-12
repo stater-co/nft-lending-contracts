@@ -50,18 +50,15 @@ contract LendingCore is StaterTransfers {
     event NewLoan(
         address indexed owner,
         address indexed currency,
-        uint256 indexed loanId,
-        Status status
+        uint256 indexed loanId
     );
     event LoanApproved(
         address indexed lender,
         uint256 indexed loanId,
-        uint256 loanPaymentEnd,
-        Status status
+        uint256 loanPaymentEnd
     );
     event LoanCancelled(
-        uint256 indexed loanId,
-        Status status
+        uint256 indexed loanId
     );
     event ItemsWithdrawn(
         address indexed requester,

@@ -84,8 +84,7 @@ contract LendingMethods is LendingCore {
         emit NewLoan(
             msg.sender, 
             currency, 
-            id, 
-            Status.LISTED
+            id
         );
         ++id;
     }
@@ -176,8 +175,7 @@ contract LendingMethods is LendingCore {
         emit LoanApproved(
             msg.sender,
             loanId,
-            loans[loanId].loanEnd,
-            Status.APPROVED
+            loans[loanId].loanEnd
         );
 
     }
@@ -203,8 +201,7 @@ contract LendingMethods is LendingCore {
         );
 
         emit LoanCancelled(
-            loanId,
-            Status.CANCELLED
+            loanId
         );
     }
 
