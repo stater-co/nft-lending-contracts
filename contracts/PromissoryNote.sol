@@ -5,8 +5,7 @@ import "./openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "./openzeppelin-solidity/contracts/access/Ownable.sol";
 
 interface LendingTemplate {
-    function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external;
-    function setPromissoryPermissions(uint256[] calldata loanIds, address sender, address allowed) external;
+    function promissoryExchange(uint256[] calldata loanIds, address payable newOwner) external;
 }
 
 /**
@@ -61,8 +60,6 @@ contract StaterPromissoryNote is ERC721, Ownable {
         //Allow loans to be used in the Promissory Note
         require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
         
-        lendingDataTemplate.setPromissoryPermissions(loanIds,msg.sender,msg.sender);
-        
         //Set promissory note fields
         promissoryNotes[promissoryNoteId].loans = loanIds;
         promissoryNotes[promissoryNoteId].owner = msg.sender;
@@ -105,7 +102,7 @@ contract StaterPromissoryNote is ERC721, Ownable {
 	    //Allow loans to be used in the Promissory Note
 	    super.safeTransferFrom(from,to,id,_data);
 
-        lendingDataTemplate.promissoryExchange(from,payable(to),promissoryNotes[id].loans);
+        lendingDataTemplate.promissoryExchange(promissoryNotes[id].loans,payable(to));
         promissoryNotes[id].owner = payable(to);
     }
     
@@ -123,7 +120,7 @@ contract StaterPromissoryNote is ERC721, Ownable {
         //Allow loans to be used in the Promissory Note
 	    super.transferFrom(from,to,id);
         
-        lendingDataTemplate.promissoryExchange(from,payable(to),promissoryNotes[id].loans);
+        lendingDataTemplate.promissoryExchange(promissoryNotes[id].loans,payable(to));
         promissoryNotes[id].owner = payable(to);
     }
     
@@ -133,19 +130,6 @@ contract StaterPromissoryNote is ERC721, Ownable {
      */ 
     function setLendingDataAddress(address _lendingDataAddress) external onlyOwner {
         lendingDataTemplate = LendingTemplate(_lendingDataAddress);
-    }
-    
-    function _burn(uint256 _promissoryNoteId) internal override {
-        super._burn(_promissoryNoteId);
-    }
-    
-    function burnPromissoryNote(uint256 _promissoryNoteId) external {
-        require(promissoryNotes[_promissoryNoteId].owner == msg.sender, "You're not the owner of this promissory note");
-        _burn(_promissoryNoteId);
-        lendingDataTemplate.setPromissoryPermissions(promissoryNotes[_promissoryNoteId].loans,msg.sender,address(0));
-        for (uint i = 0; i < promissoryNotes[_promissoryNoteId].loans.length; ++i)
-            promissoryLoans[promissoryNotes[_promissoryNoteId].loans[i]] = 0;
-        delete promissoryNotes[_promissoryNoteId];
     }
     
 }
