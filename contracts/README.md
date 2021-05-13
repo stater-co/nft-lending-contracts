@@ -1,32 +1,21 @@
-## Loans.sol 
-### Debugged ✓
-### Errors : 0
-### Warnings : 0
-### Debugging date : 03.01.2021
-### Truffle tests
-
-### How to reproduce the tests :
-#### truffle develop
-#### truffle test ( from the repo root )
-##### ( Optional ) For using a custom network check the truffle-config.js
-
-
-
-
 # Documentation
+
+<br />
+<br />
+<br />
 
 ## 1. Loan status
 
+<br />
 
+#### Status LISTED :
 
-### Status LISTED :
+##### The loan has been created
+##### SHOULD BE : listed on the website
+##### Waiting for a lender ( / approvement )
+##### Can be cancelled
 
-#### The loan has been created
-#### SHOULD BE : listed on the website
-#### Waiting for a lender ( / approvement )
-#### Can be cancelled
-
-
+<br />
 
 ### Status APPROVED :
 
@@ -35,7 +24,7 @@
 #### No longer waiting for a lender ( / approvement )
 #### Can't be cancelled anymore
 
-
+<br />
 
 ### Status LIQUIDATED :
 
@@ -47,7 +36,7 @@
 #### Available for items withdraw by Borrower
 #### Loan is finished
 
-
+<br />
 
 ### Status DEFAULTED :
 
@@ -56,3 +45,43 @@
 #### No longer available for a lender ( / approvement )
 #### Available for items withdraw by Lender
 #### Can't be cancelled anymore
+
+<br />
+<br />
+<br />
+
+## 2. Smart Contracts deploy
+
+<br />
+
+#### Stater Loans :
+
+##### Deploy the core/LendingSetters.sol
+
+##### Deploy the core/LendingCore.sol and use the LendingSetters smart contract address in its constructor
+
+<br />
+
+#### Promissory note :
+
+##### To be added
+
+<br />
+
+#### Stater Pooling :
+
+##### In progress
+
+<br />
+<br />
+<br />
+
+## 3. Back-end configuration
+
+<br />
+
+#### Truffle tests :
+
+##### `truffle develop`
+##### `test` ( from the repo root )
+##### ( Optional ) For using a custom network check the truffle-config.js

@@ -10,3 +10,10 @@ package-lock.json
 .vscode
 
 **/contracts/artifacts/
+**/contracts/auxiliary/artifacts/
+**/contracts/lending/artifacts/
+**/contracts/external-workers/artifacts/
+**/contracts/libs/artifacts/
+**/contracts/plugins/artifacts/
+**/contracts/pooling/artifacts/
+**/contracts/promissory/artifacts/
