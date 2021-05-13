@@ -109,6 +109,11 @@ contract LendingCore is StaterTransfers {
     // @notice Mapping for all the loans that are approved by the owner in order to be used in the promissory note
     mapping(uint256 => address) public promissoryPermissions;
     
+    modifier isPromissoryNote {
+        require(msg.sender == promissoryNoteAddress, "Lending Methods: Access denied");
+        _;
+    }
+    
 
     /*
     * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not

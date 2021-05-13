@@ -258,10 +258,10 @@ contract LendingMethods is Ownable, LendingCore {
     // Borrower can withdraw loan items if loan is LIQUIDATED
     // Lender can withdraw loan item is loan is DEFAULTED
     function terminateLoan(uint256 loanId) external {
-        require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender, "You can't access this loan");
+        require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender);
+        require(loans[loanId].status != Status.WITHDRAWN);
         require((block.timestamp >= loans[loanId].startEnd[1] || loans[loanId].paidAmount >= loans[loanId].amountDue) || lackOfPayment(loanId), "Not possible to finish this loan yet");
         require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED, "Incorrect state of loan");
-        require(loans[loanId].status != Status.WITHDRAWN, "Loan NFTs already withdrawn");
 
         if ( lackOfPayment(loanId) ) {
             loans[loanId].status = Status.WITHDRAWN;
@@ -311,8 +311,7 @@ contract LendingMethods is Ownable, LendingCore {
      * @param to The address of the new owner
      * @param loanIds The ids of the loans that will be transferred to the new owner
      */
-    function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external {
-        require(promissoryNoteAddress == msg.sender, "Lending Methods: Access denied");
+    function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external isPromissoryNote {
         for (uint256 i = 0; i < loanIds.length; ++i) {
             require(loans[loanIds[i]].lender == from, "Lending Methods: One of the loans doesn't belong to you, rejected.");
             require(loans[loanIds[i]].status == Status.APPROVED, "Lending Methods: One of the loans isn't in approval state, rejected.");
@@ -326,8 +325,7 @@ contract LendingMethods is Ownable, LendingCore {
      * @notice Used by the Promissory Note contract to approve a list of loans to be used as a Promissory Note NFT
      * @param loanIds The ids of the loans that will be approved
      */
-     function setPromissoryPermissions(uint256[] calldata loanIds, address sender, address allowed) external {
-        require(promissoryNoteAddress == msg.sender, "Lending Methods: Access denied");
+     function setPromissoryPermissions(uint256[] calldata loanIds, address sender, address allowed) external isPromissoryNote {
         for (uint256 i = 0; i < loanIds.length; ++i){
             require(loans[loanIds[i]].lender == sender, "Lending Methods: You're not the lender of this loan");
             if (allowed != address(0))
