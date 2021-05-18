@@ -4,7 +4,7 @@ DEPLOY_TRANSACTION=$(erdpy data load --key=deployTransaction-testnet)
 PROXY=https://testnet-api.elrond.com
 
 deploy() {
-    erdpy --verbose contract deploy --project=${PROJECT} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --arguments 0 --send --outfile="deploy-testnet.interaction.json" --proxy=${PROXY} --chain=T || return
+    erdpy --verbose contract deploy --project=${PROJECT} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --send --outfile="deploy-testnet.interaction.json" --proxy=${PROXY} --chain=T || return
 
     TRANSACTION=$(erdpy data parse --file="deploy-testnet.interaction.json" --expression="data['emitted_tx']['hash']")
     ADDRESS=$(erdpy data parse --file="deploy-testnet.interaction.json" --expression="data['emitted_tx']['address']")
@@ -21,6 +21,15 @@ setDiscountNft() {
     erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=5000000 --function="set_discount_nft" --arguments ${NUMBER} --send --proxy=${PROXY} --chain=T
 }
 
-getDiscountNft() {
-    erdpy --verbose contract query ${ADDRESS} --function="getDiscountNft" --proxy=${PROXY}
+discountNft() {
+    erdpy --verbose contract query ${ADDRESS} --function="discountNft" --proxy=${PROXY}
+}
+
+setLenderFee() {
+    read -p "Enter lender fee: " NUMBER
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=5000000 --function="set_lender_fee" --arguments ${NUMBER} --send --proxy=${PROXY} --chain=T
+}
+
+lenderFee() {
+    erdpy --verbose contract query ${ADDRESS} --function="lenderFee" --proxy=${PROXY}
 }

@@ -18,19 +18,19 @@ pub trait LendingData {
 	 * discount_nft
 	 * @DIIMIIM: This will be set with 50 on smart contract constructor
 	 */
-	#[view(getDiscountNft)]
+	#[view(discountNft)]
 	#[storage_get("discount_nft")]
-	fn get_discount_nft(&self) -> BigInt;
+	fn get_discount_nft(&self) -> u8;
 
 	#[storage_set("discount_nft")]
-	fn set_discount_nft_internal(&self, discount_nft: &BigInt);
+	fn set_discount_nft_internal(&self, discount_nft: &u8);
 
 	/*
 	 * discount nft setter
 	 * @DIIMIIM: This will set the discount nft value
 	 */
 	#[endpoint]
-	fn set_discount_nft(&self, value: &BigInt) -> SCResult<()> {
+	fn set_discount_nft(&self, value: &u8) -> SCResult<()> {
 		self.set_discount_nft_internal(&value);
 		Ok(())
 	}
@@ -101,7 +101,7 @@ pub trait LendingData {
 
 
 	/*
-	 * lenderFee
+	 * lender_fee
 	 * will be set on smart contract constructor
 	 */
 	#[view(lenderFee)]
@@ -109,8 +109,17 @@ pub trait LendingData {
 	fn get_lender_fee(&self) -> u8;
 
 	#[storage_set("lender_fee")]
-	fn set_lender_fee(&self, lender_fee: &u8);
+	fn set_lender_fee_internal(&self, lender_fee: &u8);
 
+	/*
+	 * discount nft setter
+	 * @DIIMIIM: This will set the discount nft value
+	 */
+	#[endpoint]
+	fn set_lender_fee(&self, value: &u8) -> SCResult<()> {
+		self.set_lender_fee_internal(&value);
+		Ok(())
+	}
 
 
 	/*
@@ -169,12 +178,15 @@ pub trait LendingData {
 	 * constructor
 	 * will be set on smart contract constructor
 	 */
-
-	/*
 	#[init]
-	fn init(&self, erc20_contract_address: Address) {
+	fn init(&self
+		/*, erc20_contract_address: Address*/
+	) {
+		let discount_nft_constructor: u8 = 50;
+		let lender_fee_internal: u8 = 100;
+		self.set_discount_nft_internal(&discount_nft_constructor);
+		self.set_lender_fee_internal(&lender_fee_internal);
 		//self.set_erc20_contract_address(&erc20_contract_address);
 	}
-	*/
 
 }
