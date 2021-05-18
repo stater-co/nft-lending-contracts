@@ -2,6 +2,9 @@
 
 imports!();
 
+mod time_scale;
+use time_scale::TimeScale;
+
 /*
  * STATER.CO - Lending smart contract Rust implementation
  * @DIIMIIM, created on 17 May 2021
@@ -9,18 +12,6 @@ imports!();
 
 #[elrond_wasm_derive::contract(AdderImpl)]
 pub trait LendingData {
-
-
-
-	/*
-	enum TimeScale {
-		MINUTES, 
-		HOURS, 
-		DAYS, 
-		WEEKS
-	}
-	*/
-
 
 
 	/*
@@ -35,6 +26,22 @@ pub trait LendingData {
 	#[storage_set("discount_nft")]
 	fn set_discount_nft(&self, discount_nft: &u64);
 
+
+
+	//TimeScale public installmentTimeScale = TimeScale.WEEKS;
+
+	/*
+	 * installmentTimeScale
+	 * will be set with 50 on smart contract constructor
+	 */
+	 
+	#[public]
+	#[view(installmentTimeScale)]
+	#[storage_get("installment_time_scale")]
+	fn get_installment_time_scale(&self) -> TimeScale;
+
+	#[storage_set("installment_time_scale")]
+	fn set_installment_time_scale(&self, installment_time_scale: &TimeScale);
 
 
 	/*
