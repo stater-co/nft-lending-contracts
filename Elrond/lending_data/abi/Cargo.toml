@@ -1,5 +1,5 @@
 [package]
-name = "LendingData-abi"
+name = "lending_data-abi"
 version = "0.0.0"
 authors = [ "you",]
 edition = "2018"
@@ -7,7 +7,7 @@ publish = false
 
 [dev-dependencies]
 
-[dependencies.LendingData]
+[dependencies.lending_data]
 path = ".."
 
 [dependencies.elrond-wasm]

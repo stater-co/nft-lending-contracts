@@ -1,5 +1,5 @@
 [package]
-name = "LendingData-wasm"
+name = "lending_data-wasm"
 version = "0.0.0"
 authors = [ "you",]
 edition = "2018"
@@ -20,7 +20,7 @@ lto = true
 debug = false
 panic = "abort"
 
-[dependencies.LendingData]
+[dependencies.lending_data]
 features = [ "wasm-output-mode",]
 default-features = false
 path = ".."
