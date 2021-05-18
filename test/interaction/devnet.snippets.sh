@@ -15,11 +15,11 @@ deploy() {
     echo "Smart contract address: ${ADDRESS}"
 }
 
-setDiscountNft() {
+add() {
     read -p "Enter number: " NUMBER
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=5000000 --function="set_discount_nft" --arguments ${NUMBER} --send
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --function="add" --arguments ${NUMBER} --send
 }
 
-getDiscountNft() {
-    erdpy --verbose contract query ${ADDRESS} --function="get_discount_nft"
+getSum() {
+    erdpy --verbose contract query ${ADDRESS} --function="getSum"
 }

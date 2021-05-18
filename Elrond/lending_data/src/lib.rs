@@ -15,27 +15,33 @@ pub trait LendingData {
 
 
 	/*
-	 * discountNft
-	 * will be set with 50 on smart contract constructor
+	 * discount_nft
+	 * @DIIMIIM: This will be set with 50 on smart contract constructor
 	 */
-	#[public]
-	#[view(discountNft)]
+	#[view(getDiscountNft)]
 	#[storage_get("discount_nft")]
-	fn get_discount_nft(&self) -> u64;
+	fn get_discount_nft(&self) -> BigInt;
 
+	#[internal(set_discount_nft_internal)]
 	#[storage_set("discount_nft")]
-	fn set_discount_nft(&self, discount_nft: &u64);
+	fn set_discount_nft_internal(&self, discount_nft: &BigInt);
 
+	/*
+	 * discount nft setter
+	 * @DIIMIIM: This will set the discount nft value
+	 */
+	#[public(setDiscountNft)]
+	#[endpoint]
+	fn set_discount_nft(&self, value: &BigInt) -> SCResult<()> {
+		self.set_discount_nft_internal(&value);
+		Ok(())
+	}
 
-
-	//TimeScale public installmentTimeScale = TimeScale.WEEKS;
 
 	/*
 	 * installmentTimeScale
 	 * will be set with 50 on smart contract constructor
 	 */
-	 
-	#[public]
 	#[view(installmentTimeScale)]
 	#[storage_get("installment_time_scale")]
 	fn get_installment_time_scale(&self) -> TimeScale;
@@ -48,13 +54,12 @@ pub trait LendingData {
 	 * loanID
 	 * The loan ID
 	 */
-	#[public]
 	#[view(loanID)]
 	#[storage_get("loan_id")]
-	fn get_loan_id(&self) -> u64;
+	fn get_loan_id(&self) -> BigInt;
 
 	#[storage_set("loan_id")]
-	fn set_loan_id(&self, loan_id: &u64);
+	fn set_loan_id(&self, loan_id: &BigInt);
 
 
 
@@ -62,7 +67,6 @@ pub trait LendingData {
 	 * nftAddress
 	 * will be set on smart contract constructor
 	 */
-	#[public]
 	#[view(nftAdress)]
 	#[storage_get("nft_address")]
 	fn get_nft_address(&self) -> Address;
@@ -76,7 +80,6 @@ pub trait LendingData {
 	 * promissoryNoteContractAddress
 	 * will be set on smart contract constructor
 	 */
-	#[public]
 	#[view(promissoryNoteContractAddress)]
 	#[storage_get("promissory_note_contract_address")]
 	fn get_promissory_note_contract_address(&self) -> Address;
@@ -90,13 +93,12 @@ pub trait LendingData {
 	 * staterNftTokenIdArray
 	 * will be set on smart contract constructor
 	 */
-	#[public]
 	#[view(staterNftTokenIdArray)]
 	#[storage_get("stater_nft_token_id_array")]
-	fn get_stater_nft_token_id_array(&self) -> Vec<u64>;
+	fn get_stater_nft_token_id_array(&self) -> Vec<BigInt>;
 
 	#[storage_set("stater_nft_token_id_array")]
-	fn set_stater_nft_token_id_array(&self, stater_nft_token_id_array: &Vec<u64>);
+	fn set_stater_nft_token_id_array(&self, stater_nft_token_id_array: &Vec<BigInt>);
 
 
 
@@ -104,7 +106,6 @@ pub trait LendingData {
 	 * lenderFee
 	 * will be set on smart contract constructor
 	 */
-	#[public]
 	#[view(lenderFee)]
 	#[storage_get("lender_fee")]
 	fn get_lender_fee(&self) -> u8;
@@ -118,7 +119,6 @@ pub trait LendingData {
 	 * ltv
 	 * will be set on smart contract constructor with 600
 	 */
-	#[public]
 	#[view(ltv)]
 	#[storage_get("ltv")]
 	fn get_ltv(&self) -> u16;
@@ -132,7 +132,6 @@ pub trait LendingData {
 	 * installmentFrequency
 	 * will be set on smart contract constructor with 1
 	 */
-	#[public]
 	#[view(installmentFrequency)]
 	#[storage_get("installment_frequency")]
 	fn get_installment_frequency(&self) -> u16;
@@ -146,7 +145,6 @@ pub trait LendingData {
 	 * interestRate
 	 * will be set on smart contract constructor
 	 */
-	#[public]
 	#[view(interestRate)]
 	#[storage_get("interest_rate")]
 	fn get_interest_rate(&self) -> u8;
@@ -160,7 +158,6 @@ pub trait LendingData {
 	 * interestRateToStater
 	 * will be set on smart contract constructor
 	 */
-	#[public]
 	#[view(interestRateToStater)]
 	#[storage_get("interest_rate_to_stater")]
 	fn get_interest_rate_to_stater(&self) -> u8;
@@ -174,9 +171,35 @@ pub trait LendingData {
 	 * constructor
 	 * will be set on smart contract constructor
 	 */
+
+	/*
 	#[init]
-	fn init(/*&self, erc20_contract_address: Address*/) {
+	fn init(&self, erc20_contract_address: Address) {
 		//self.set_erc20_contract_address(&erc20_contract_address);
+	}
+	*/
+
+
+	#[view(getSum)]
+	#[storage_get("sum")]
+	fn get_sum(&self) -> BigInt;
+
+	#[storage_set("sum")]
+	fn set_sum(&self, sum: &BigInt);
+
+	#[init]
+	fn init(&self, initial_value: &BigInt) {
+		self.set_sum(initial_value);
+	}
+
+	/// Add desired amount to the storage variable.
+	#[endpoint]
+	fn add(&self, value: &BigInt) -> SCResult<()> {
+		let mut sum = self.get_sum();
+		sum += value;
+		self.set_sum(&sum);
+
+		Ok(())
 	}
 
 }
