@@ -22,7 +22,6 @@ pub trait LendingData {
 	#[storage_get("discount_nft")]
 	fn get_discount_nft(&self) -> BigInt;
 
-	#[internal(set_discount_nft_internal)]
 	#[storage_set("discount_nft")]
 	fn set_discount_nft_internal(&self, discount_nft: &BigInt);
 
@@ -30,7 +29,6 @@ pub trait LendingData {
 	 * discount nft setter
 	 * @DIIMIIM: This will set the discount nft value
 	 */
-	#[public(setDiscountNft)]
 	#[endpoint]
 	fn set_discount_nft(&self, value: &BigInt) -> SCResult<()> {
 		self.set_discount_nft_internal(&value);
@@ -178,28 +176,5 @@ pub trait LendingData {
 		//self.set_erc20_contract_address(&erc20_contract_address);
 	}
 	*/
-
-
-	#[view(getSum)]
-	#[storage_get("sum")]
-	fn get_sum(&self) -> BigInt;
-
-	#[storage_set("sum")]
-	fn set_sum(&self, sum: &BigInt);
-
-	#[init]
-	fn init(&self, initial_value: &BigInt) {
-		self.set_sum(initial_value);
-	}
-
-	/// Add desired amount to the storage variable.
-	#[endpoint]
-	fn add(&self, value: &BigInt) -> SCResult<()> {
-		let mut sum = self.get_sum();
-		sum += value;
-		self.set_sum(&sum);
-
-		Ok(())
-	}
 
 }
