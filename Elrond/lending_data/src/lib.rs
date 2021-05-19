@@ -3,7 +3,31 @@
 imports!();
 
 mod time_scale;
+mod loan_status;
+mod token_type;
+use token_type::TokenType;
 use time_scale::TimeScale;
+use loan_status::LoanStatus;
+
+pub struct Loan<BigUint: BigUintApi> {
+    pub nft_address_array: Vec<Address>,
+    pub borrower: Address,
+    pub lender: Address,
+    pub currency: Address,
+	pub status: LoanStatus,
+    pub nft_token_id_array: Vec<BigUint>,
+    pub loan_amount: BigUint,
+    pub assets_value: BigUint,
+    pub loan_start: BigUint,
+    pub loan_end: BigUint,
+    pub nr_of_installments: u16,
+    pub installment_amount: BigUint,
+    pub amount_due: BigUint,
+    pub paid_amount: BigUint,
+    pub defaulting_limit: u8,
+    pub nr_of_payments: u16,
+    pub nft_token_type_array: Vec<TokenType>
+}
 
 /*
  * STATER.CO - Lending smart contract Rust implementation
@@ -12,6 +36,16 @@ use time_scale::TimeScale;
 
 #[elrond_wasm_derive::contract(AdderImpl)]
 pub trait LendingData {
+
+
+
+	#[view(owner)]
+	#[storage_get("owner")]
+	fn get_owner(&self) -> Address;
+
+	#[storage_set("owner")]
+	fn set_owner(&self, owner: &Address);
+
 
 
 	/*
@@ -34,6 +68,7 @@ pub trait LendingData {
 		self.set_discount_nft_internal(&value);
 		Ok(())
 	}
+
 
 
 	/*
@@ -132,6 +167,7 @@ pub trait LendingData {
 		Ok(())
 	}
 
+	
 
 	/*
 	 * ltv
@@ -188,7 +224,17 @@ pub trait LendingData {
 	fn get_interest_rate(&self) -> u8;
 
 	#[storage_set("interest_rate")]
-	fn set_interest_rate(&self, interest_rate: &u8);
+	fn set_interest_rate_internal(&self, interest_rate: &u8);
+
+	/*
+	 * interest rate setter
+	 * @DIIMIIM: This will set the interest rate value
+	 */
+	#[endpoint]
+	fn set_interest_rate(&self, value: &u8) -> SCResult<()> {
+		self.set_interest_rate_internal(&value);
+		Ok(())
+	}  
 
 
 
@@ -201,7 +247,17 @@ pub trait LendingData {
 	fn get_interest_rate_to_stater(&self) -> u8;
 
 	#[storage_set("interest_rate_to_stater")]
-	fn set_interest_rate_to_stater(&self, interest_rate_to_stater: &u8);
+	fn set_interest_rate_to_stater_internal(&self, interest_rate_to_stater: &u8);
+
+	/*
+	 * interest rate setter
+	 * @DIIMIIM: This will set the interest rate value
+	 */
+	#[endpoint]
+	fn set_interest_rate_to_stater(&self, value: &u8) -> SCResult<()> {
+		self.set_interest_rate_to_stater_internal(&value);
+		Ok(())
+	}  
 
 
 
@@ -213,17 +269,29 @@ pub trait LendingData {
 	fn init(&self
 		/*, erc20_contract_address: Address*/
 	) {
+		/*
+		 * @DIIMIIM: Set the smart contract global parameters
+		 * subject of improvement
+		 */
 		let discount_nft_constructor: u8 = 50;
 		let lender_fee_internal: u8 = 100;
 		let ltv_constructor: u16 = 600;
 		let installment_frequency_constructor: u16 = 1;
 		let installment_time_scale_constructor: TimeScale = TimeScale::Weeks;
+		let interest_rate_constructor: u8 = 20;
+		let interest_rate_to_stater_constructor: u8 = 40;
 		self.set_discount_nft_internal(&discount_nft_constructor);
 		self.set_lender_fee_internal(&lender_fee_internal);
 		self.set_ltv_internal(&ltv_constructor);
 		self.set_installment_frequency_internal(&installment_frequency_constructor);
 		self.set_installment_time_scale_internal(&installment_time_scale_constructor);
+		self.set_interest_rate_internal(&interest_rate_constructor);
+		self.set_interest_rate_to_stater_internal(&interest_rate_to_stater_constructor);
 		//self.set_erc20_contract_address(&erc20_contract_address);
+
+		let owner = self.get_caller();
+
+		self.set_owner(&owner);
 	}
 
 }

@@ -50,3 +50,11 @@ setInstallmentTimeScale() {
     read -p "Enter time scale index: " NUMBER
     erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=5000000 --function="set_installment_time_scale" --arguments ${NUMBER} --send --proxy=${PROXY} --chain=T
 }
+
+interestRate() {
+    erdpy --verbose contract query ${ADDRESS} --function="interestRate" --proxy=${PROXY}
+}
+
+interestRateToStater() {
+    erdpy --verbose contract query ${ADDRESS} --function="interestRateToStater" --proxy=${PROXY}
+}
