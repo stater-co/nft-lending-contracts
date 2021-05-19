@@ -3,37 +3,18 @@
 imports!();
 
 mod time_scale;
-mod loan_status;
-mod token_type;
-use token_type::TokenType;
+mod loan;
 use time_scale::TimeScale;
-use loan_status::LoanStatus;
-
-pub struct Loan<BigUint: BigUintApi> {
-	pub nft_address_array: Vec<Address>,
-	pub borrower: Address,
-	pub lender: Address,
-	pub currency: Address,
-	pub status: LoanStatus,
-	pub nft_token_id_array: Vec<BigUint>,
-	pub loan_amount: BigUint,
-	pub assets_value: BigUint,
-	pub loan_start: BigUint,
-	pub loan_end: BigUint,
-	pub nr_of_installments: u16,
-	pub installment_amount: BigUint,
-	pub amount_due: BigUint,
-	pub paid_amount: BigUint,
-	pub defaulting_limit: u8,
-	pub nr_of_payments: u16,
-	pub nft_token_type_array: Vec<TokenType>
-}
+use loan::Loan;
 
 /*
  * STATER.CO - Lending smart contract Rust implementation
  * @DIIMIIM, created on 17 May 2021
+ * rustc --explain E0204:
+ * The `Copy` trait is implemented by default only on primitive types. If your
+ * type only contains primitive types, you'll be able to implement `Copy` on it.
+ * Otherwise, it won't be possible.
  */
-
 #[elrond_wasm_derive::contract(AdderImpl)]
 pub trait LendingData {
 	
@@ -52,19 +33,15 @@ pub trait LendingData {
 
 
 	/*
-	 * owner
+	 * push loan
 	 * @DIIMIIM: This will be set on smart contract constructor
 	 */
-	/*
-	#[storage_push("loans")]
-	fn push_loan_internal(&self, loan: &Loan);
-	*/
+	#[storage_set("loans")]
+	fn push_loan_internal(&self, loan_id: &BigUint, loan: &Loan<BigUint>);
 
-	/*
 	#[view(loans)]
 	#[storage_get("loans")]
-	fn get_loans(&self) -> Loan<BigUint>;
-	*/
+	fn get_loans(&self, loan_id: &BigUint) -> Loan<BigUint>;
 
 
 	/*
