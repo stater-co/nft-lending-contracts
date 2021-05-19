@@ -33,3 +33,20 @@ setLenderFee() {
 lenderFee() {
     erdpy --verbose contract query ${ADDRESS} --function="lenderFee" --proxy=${PROXY}
 }
+
+ltv() {
+    erdpy --verbose contract query ${ADDRESS} --function="ltv" --proxy=${PROXY}
+}
+
+installmentFrequency() {
+    erdpy --verbose contract query ${ADDRESS} --function="installmentFrequency" --proxy=${PROXY}
+}
+
+installmentTimeScale() {
+    erdpy --verbose contract query ${ADDRESS} --function="installmentTimeScale" --proxy=${PROXY}
+}
+
+setInstallmentTimeScale() {
+    read -p "Enter time scale index: " NUMBER
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=5000000 --function="set_installment_time_scale" --arguments ${NUMBER} --send --proxy=${PROXY} --chain=T
+}

@@ -45,7 +45,18 @@ pub trait LendingData {
 	fn get_installment_time_scale(&self) -> TimeScale;
 
 	#[storage_set("installment_time_scale")]
-	fn set_installment_time_scale(&self, installment_time_scale: &TimeScale);
+	fn set_installment_time_scale_internal(&self, installment_time_scale: &TimeScale);
+
+	/*
+	 * installment time scale setter
+	 * @DIIMIIM: This will set the installment time scale value
+	 */
+	#[endpoint]
+	fn set_installment_time_scale(&self, value: &TimeScale) -> SCResult<()> {
+		self.set_installment_time_scale_internal(&value);
+		Ok(())
+	}
+
 
 
 	/*
@@ -131,7 +142,17 @@ pub trait LendingData {
 	fn get_ltv(&self) -> u16;
 
 	#[storage_set("ltv")]
-	fn set_ltv(&self, ltv: &u16);
+	fn set_ltv_internal(&self, ltv: &u16);
+
+	/*
+	 * discount ltv setter
+	 * @DIIMIIM: This will set the ltv value
+	 */
+	#[endpoint]
+	fn set_ltv(&self, value: &u16) -> SCResult<()> {
+		self.set_ltv_internal(&value);
+		Ok(())
+	} 
 
 
 
@@ -144,7 +165,17 @@ pub trait LendingData {
 	fn get_installment_frequency(&self) -> u16;
 
 	#[storage_set("installment_frequency")]
-	fn set_installment_frequency(&self, installment_frequency: &u16);
+	fn set_installment_frequency_internal(&self, installment_frequency: &u16);
+
+	/*
+	 * installment frequency setter
+	 * @DIIMIIM: This will set the ltv value
+	 */
+	#[endpoint]
+	fn set_installment_frequency(&self, value: &u16) -> SCResult<()> {
+		self.set_installment_frequency_internal(&value);
+		Ok(())
+	} 
 
 
 
@@ -184,8 +215,14 @@ pub trait LendingData {
 	) {
 		let discount_nft_constructor: u8 = 50;
 		let lender_fee_internal: u8 = 100;
+		let ltv_constructor: u16 = 600;
+		let installment_frequency_constructor: u16 = 1;
+		let installment_time_scale_constructor: TimeScale = TimeScale::Weeks;
 		self.set_discount_nft_internal(&discount_nft_constructor);
 		self.set_lender_fee_internal(&lender_fee_internal);
+		self.set_ltv_internal(&ltv_constructor);
+		self.set_installment_frequency_internal(&installment_frequency_constructor);
+		self.set_installment_time_scale_internal(&installment_time_scale_constructor);
 		//self.set_erc20_contract_address(&erc20_contract_address);
 	}
 
