@@ -7,6 +7,7 @@ mod loan;
 use time_scale::TimeScale;
 use loan::Loan;
 
+
 /*
  * STATER.CO - Lending smart contract Rust implementation
  * @DIIMIIM, created on 17 May 2021
@@ -17,7 +18,6 @@ use loan::Loan;
  */
 #[elrond_wasm_derive::contract(AdderImpl)]
 pub trait LendingData {
-	
 
 	/*
 	 * owner
@@ -42,6 +42,7 @@ pub trait LendingData {
 	#[view(loans)]
 	#[storage_get("loans")]
 	fn get_loans(&self, loan_id: &BigUint) -> Loan<BigUint>;
+
 
 
 	/*
@@ -96,11 +97,10 @@ pub trait LendingData {
 	 */
 	#[view(loanID)]
 	#[storage_get("loan_id")]
-	fn get_loan_id(&self) -> BigInt;
+	fn get_loan_id(&self) -> BigUint;
 
 	#[storage_set("loan_id")]
-	fn set_loan_id(&self, loan_id: &BigInt);
-
+	fn set_loan_id(&self, loan_id: &BigUint);
 
 
 	/*
@@ -138,7 +138,7 @@ pub trait LendingData {
 	fn get_stater_nft_token_id_array(&self) -> Vec<BigInt>;
 
 	#[storage_set("stater_nft_token_id_array")]
-	fn set_stater_nft_token_id_array_internal(&self, stater_nft_token_id_array: &Vec<BigUint>);
+	fn set_stater_nft_token_id_array_internal(&self, stater_nft_token_id_array: &Vec<u64>);
 
 
 
@@ -264,7 +264,7 @@ pub trait LendingData {
 	#[init]
 	fn init(&self
 		, nft_address_constructor: Address
-		, stater_nft_token_id_array_constructor: Vec<BigUint>
+		, stater_nft_token_id_array_constructor: Vec<u64>
 		, promissory_note_contract_address_constructor: Address
 	) {
 		/*
@@ -285,7 +285,6 @@ pub trait LendingData {
 		self.set_installment_time_scale_internal(&installment_time_scale_constructor);
 		self.set_interest_rate_internal(&interest_rate_constructor);
 		self.set_interest_rate_to_stater_internal(&interest_rate_to_stater_constructor);
-		//self.set_erc20_contract_address(&erc20_contract_address);
 
 		/*
 		 * @DIIMIIM:
@@ -309,14 +308,21 @@ pub trait LendingData {
 	 */
 	 #[endpoint]
 	 fn create_loan(&self
-		, loan_amount: &BigUint
+		, loan_amount: &u64
 		, nr_of_installments: &u16
 		, currency: &Address 
-		, assets_value: &BigUint
+		, assets_value: &u64
 		, nft_address_array: &Vec<Address>
-		, nft_token_id_array: &Vec<BigUint>
+		, nft_token_id_array: &Vec<u64>
 		, nft_token_type_array: &Vec<u8>
 	) -> SCResult<()> {
+
+		/*
+		require!(
+			$nr_of_installments > 0,
+			"Loan must have at least 1 installment"
+		);
+		*/
 
 		/*
 		let new_loan = Loan {
@@ -328,7 +334,7 @@ pub trait LendingData {
 			prize_distribution,
 			whitelist,
 			current_ticket_number: 0u32,
-			prize_pool: BigUint::zero(),
+			prize_pool: u64::zero(),
 		};
 
 		self.push_loan_internal(&get_loan_id(), &newLoan);
