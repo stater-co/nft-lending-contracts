@@ -10,23 +10,23 @@ use time_scale::TimeScale;
 use loan_status::LoanStatus;
 
 pub struct Loan<BigUint: BigUintApi> {
-    pub nft_address_array: Vec<Address>,
-    pub borrower: Address,
-    pub lender: Address,
-    pub currency: Address,
+	pub nft_address_array: Vec<Address>,
+	pub borrower: Address,
+	pub lender: Address,
+	pub currency: Address,
 	pub status: LoanStatus,
-    pub nft_token_id_array: Vec<BigUint>,
-    pub loan_amount: BigUint,
-    pub assets_value: BigUint,
-    pub loan_start: BigUint,
-    pub loan_end: BigUint,
-    pub nr_of_installments: u16,
-    pub installment_amount: BigUint,
-    pub amount_due: BigUint,
-    pub paid_amount: BigUint,
-    pub defaulting_limit: u8,
-    pub nr_of_payments: u16,
-    pub nft_token_type_array: Vec<TokenType>
+	pub nft_token_id_array: Vec<BigUint>,
+	pub loan_amount: BigUint,
+	pub assets_value: BigUint,
+	pub loan_start: BigUint,
+	pub loan_end: BigUint,
+	pub nr_of_installments: u16,
+	pub installment_amount: BigUint,
+	pub amount_due: BigUint,
+	pub paid_amount: BigUint,
+	pub defaulting_limit: u8,
+	pub nr_of_payments: u16,
+	pub nft_token_type_array: Vec<TokenType>
 }
 
 /*
@@ -36,9 +36,12 @@ pub struct Loan<BigUint: BigUintApi> {
 
 #[elrond_wasm_derive::contract(AdderImpl)]
 pub trait LendingData {
+	
 
-
-
+	/*
+	 * owner
+	 * @DIIMIIM: This will be set on smart contract constructor
+	 */
 	#[view(owner)]
 	#[storage_get("owner")]
 	fn get_owner(&self) -> Address;
@@ -46,6 +49,22 @@ pub trait LendingData {
 	#[storage_set("owner")]
 	fn set_owner(&self, owner: &Address);
 
+
+
+	/*
+	 * owner
+	 * @DIIMIIM: This will be set on smart contract constructor
+	 */
+	/*
+	#[storage_push("loans")]
+	fn push_loan_internal(&self, loan: &Loan);
+	*/
+
+	/*
+	#[view(loans)]
+	#[storage_get("loans")]
+	fn get_loans(&self) -> Loan<BigUint>;
+	*/
 
 
 	/*
