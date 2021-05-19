@@ -112,7 +112,7 @@ pub trait LendingData {
 	fn get_nft_address(&self) -> Address;
 
 	#[storage_set("nft_address")]
-	fn set_nft_address(&self, nft_address: &Address);
+	fn set_nft_address_internal(&self, nft_address: &Address);
 
 
 
@@ -125,7 +125,7 @@ pub trait LendingData {
 	fn get_promissory_note_contract_address(&self) -> Address;
 
 	#[storage_set("promissory_note_contract_address")]
-	fn set_promissory_note_contract_address(&self, promissory_note_contract_address: &Address);
+	fn set_promissory_note_contract_address_internal(&self, promissory_note_contract_address: &Address);
 
 
 
@@ -138,7 +138,7 @@ pub trait LendingData {
 	fn get_stater_nft_token_id_array(&self) -> Vec<BigInt>;
 
 	#[storage_set("stater_nft_token_id_array")]
-	fn set_stater_nft_token_id_array(&self, stater_nft_token_id_array: &Vec<BigInt>);
+	fn set_stater_nft_token_id_array_internal(&self, stater_nft_token_id_array: &Vec<BigUint>);
 
 
 
@@ -263,7 +263,9 @@ pub trait LendingData {
 	 */
 	#[init]
 	fn init(&self
-		/*, erc20_contract_address: Address*/
+		, nft_address_constructor: Address
+		, stater_nft_token_id_array_constructor: Vec<BigUint>
+		, promissory_note_contract_address_constructor: Address
 	) {
 		/*
 		 * @DIIMIIM: Set the smart contract global parameters
@@ -285,9 +287,53 @@ pub trait LendingData {
 		self.set_interest_rate_to_stater_internal(&interest_rate_to_stater_constructor);
 		//self.set_erc20_contract_address(&erc20_contract_address);
 
+		/*
+		 * @DIIMIIM:
+		 * Here we set the smart contract owner
+		 */
 		let owner = self.get_caller();
-
 		self.set_owner(&owner);
+
+		/*
+		 * @DIIMIIM:
+		 * Set the constructor parameters
+		 */
+		self.set_nft_address_internal(&nft_address_constructor);
+		self.set_stater_nft_token_id_array_internal(&stater_nft_token_id_array_constructor);
+		self.set_promissory_note_contract_address_internal(&promissory_note_contract_address_constructor);
 	}
+
+	/*
+	 * create loan
+	 * @DIIMIIM: Call this to create a loan
+	 */
+	 #[endpoint]
+	 fn create_loan(&self
+		, loan_amount: &BigUint
+		, nr_of_installments: &u16
+		, currency: &Address 
+		, assets_value: &BigUint
+		, nft_address_array: &Vec<Address>
+		, nft_token_id_array: &Vec<BigUint>
+		, nft_token_type_array: &Vec<u8>
+	) -> SCResult<()> {
+
+		/*
+		let new_loan = Loan {
+			esdt_token_name,
+			ticket_price,
+			tickets_left: total_tickets,
+			deadline,
+			max_entries_per_user,
+			prize_distribution,
+			whitelist,
+			current_ticket_number: 0u32,
+			prize_pool: BigUint::zero(),
+		};
+
+		self.push_loan_internal(&get_loan_id(), &newLoan);
+		*/
+		 Ok(())
+	 }  
 
 }
