@@ -308,38 +308,77 @@ pub trait LendingData {
 	 */
 	 #[endpoint]
 	 fn create_loan(&self
-		, loan_amount: &u64
-		, nr_of_installments: &u16
-		, currency: &Address 
-		, assets_value: &u64
-		, nft_address_array: &Vec<Address>
-		, nft_token_id_array: &Vec<u64>
-		, nft_token_type_array: &Vec<u8>
+		, loan_amount: u64
+		, nr_of_installments: u16
+		, currency: Address 
+		, assets_value: u64
+		, nft_address_array: Vec<Address>
+		, nft_token_id_array: Vec<u64>
+		, nft_token_type_array: Vec<u8>
 	) -> SCResult<()> {
 
-		/*
 		require!(
-			$nr_of_installments > 0,
+			nr_of_installments > 0,
 			"Loan must have at least 1 installment"
 		);
-		*/
 
-		/*
+		require!(
+			loan_amount > 0, 
+			"Loan amount must be higher than 0"
+		);
+
+		require!(
+			nft_address_array.len() > 0, 
+			"Loan must have atleast 1 NFT"
+		);
+
+		require!(
+			nft_address_array.len() == nft_token_id_array.len() && nft_token_id_array.len() == nft_token_type_array.len(), 
+			"NFT provided informations are missing or incomplete"
+		);
+
+		let the_amount_due: u64 = ( loan_amount * ( u64::from(self.get_interest_rate()) + 100 ) ) / 100;
+		let the_installment_amount: u64;
+		if the_amount_due % u64::from(nr_of_installments) > 0 {
+			the_installment_amount = the_amount_due / u64::from(nr_of_installments) + 1;
+		} else {
+			the_installment_amount = the_amount_due / u64::from(nr_of_installments);
+		}
+		let mut the_defaulting_limit: u8 = 1;
+
+		// Computing the defaulting limit
+		if nr_of_installments <= 3 {
+			the_defaulting_limit = 1;
+		} else if nr_of_installments <= 5 {
+			the_defaulting_limit = 2;
+		} else if nr_of_installments >= 6 {
+			the_defaulting_limit = 3;
+		}
+
 		let new_loan = Loan {
-			esdt_token_name,
-			ticket_price,
-			tickets_left: total_tickets,
-			deadline,
-			max_entries_per_user,
-			prize_distribution,
-			whitelist,
-			current_ticket_number: 0u32,
-			prize_pool: u64::zero(),
+			loan_id: self.get_loan_id(),
+			nft_address_array,
+			borrower: self.get_caller(),
+			lender: self.get_caller(),
+			currency,
+			status: 0u8,
+			nft_token_id_array,
+			loan_amount,
+			assets_value,
+			loan_start: 0u64,
+			loan_end: 0u64,
+			nr_of_installments,
+			installment_amount: the_installment_amount,
+			amount_due: the_amount_due,
+			paid_amount: 0u64,
+			defaulting_limit: the_defaulting_limit,
+			nr_of_payments: 0u16,
+			nft_token_type_array
 		};
 
-		self.push_loan_internal(&get_loan_id(), &newLoan);
-		*/
-		 Ok(())
-	 }  
+		self.push_loan_internal(&self.get_loan_id(), &new_loan);
+
+		Ok(())
+	}
 
 }

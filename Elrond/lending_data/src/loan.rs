@@ -21,5 +21,5 @@ pub struct Loan<BigUint: BigUintApi> {
     pub paid_amount: u64,
     pub defaulting_limit: u8,
     pub nr_of_payments: u16,
-    pub nft_token_type_array: Vec<u8>,
+    pub nft_token_type_array: Vec<u8>
 }
