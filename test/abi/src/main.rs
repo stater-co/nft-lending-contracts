@@ -1,7 +1,7 @@
-use elrond_wasm_debug::*;
 use test::*;
+use elrond_wasm_debug::*;
 
 fn main() {
-	let contract = LotteryImpl::new(TxContext::dummy());
+	let contract = CrowdfundingImpl::new(TxContext::dummy());
 	print!("{}", abi_json::contract_abi(&contract));
 }

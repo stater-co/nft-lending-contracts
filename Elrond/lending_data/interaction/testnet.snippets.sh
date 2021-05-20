@@ -58,3 +58,13 @@ interestRate() {
 interestRateToStater() {
     erdpy --verbose contract query ${ADDRESS} --function="interestRateToStater" --proxy=${PROXY}
 }
+
+createLoan() {
+    # LOAN_ARGUMENTS : 6000000 5 erd1qqqqqqqqqqqqqpgqn7kmy58sfnx2x5h7gxvlc20jnskcmy62d8ss9vk98j 10000000 [] [] []
+    read -p "Enter the loan amount: " LOAN_ARGUMENTS
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=5000000 --function="tessting" --arguments ${LOAN_ARGUMENTS} --send --proxy=${PROXY} --chain=T
+}
+
+loans() {
+    erdpy --verbose contract query ${ADDRESS} --function="loans" --proxy=${PROXY}
+}
