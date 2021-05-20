@@ -4,7 +4,8 @@ DEPLOY_TRANSACTION=$(erdpy data load --key=deployTransaction-testnet)
 PROXY=https://testnet-api.elrond.com
 
 deploy() {
-    erdpy --verbose contract deploy --project=${PROJECT} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --send --outfile="deploy-testnet.interaction.json" --proxy=${PROXY} --chain=T || return
+    read -p "Enter the smart contract nft address ' ' stater nft id array ' ' promissory note address : " PARAMS
+    erdpy --verbose contract deploy --project=${PROJECT} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --arguments ${PARAMS}--send --outfile="deploy-testnet.interaction.json" --proxy=${PROXY} --chain=T || return
 
     TRANSACTION=$(erdpy data parse --file="deploy-testnet.interaction.json" --expression="data['emitted_tx']['hash']")
     ADDRESS=$(erdpy data parse --file="deploy-testnet.interaction.json" --expression="data['emitted_tx']['address']")
@@ -62,9 +63,13 @@ interestRateToStater() {
 createLoan() {
     # LOAN_ARGUMENTS : 6000000 5 erd1qqqqqqqqqqqqqpgqn7kmy58sfnx2x5h7gxvlc20jnskcmy62d8ss9vk98j 10000000 [] [] []
     read -p "Enter the loan amount: " LOAN_ARGUMENTS
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=5000000 --function="tessting" --arguments ${LOAN_ARGUMENTS} --send --proxy=${PROXY} --chain=T
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=5000000 --function="createLoan" --arguments ${LOAN_ARGUMENTS} --send --proxy=${PROXY} --chain=T
 }
 
 loans() {
     erdpy --verbose contract query ${ADDRESS} --function="loans" --proxy=${PROXY}
+}
+
+id() {
+    erdpy --verbose contract query ${ADDRESS} --function="loanID" --proxy=${PROXY}
 }

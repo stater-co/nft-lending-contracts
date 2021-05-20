@@ -9,6 +9,11 @@ use loan::Loan;
 
 
 /*
+ * @DIIMIIM: erd1deaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaqtv0gag [elrond] == address(0) [ethereum]
+ */
+
+
+/*
  * STATER.CO - Lending smart contract Rust implementation
  * @DIIMIIM, created on 17 May 2021
  * rustc --explain E0204:
@@ -37,11 +42,11 @@ pub trait LendingData {
 	 * @DIIMIIM: This will be set on smart contract constructor
 	 */
 	#[storage_set("loans")]
-	fn push_loan_internal(&self, loan_id: &BigUint, loan: &Loan<BigUint>);
+	fn push_loan_internal(&self, loan: &Loan);
 
 	#[view(loans)]
 	#[storage_get("loans")]
-	fn get_loans(&self, loan_id: &BigUint) -> Loan<BigUint>;
+	fn get_loans(&self) -> Loan;
 
 
 
@@ -313,8 +318,8 @@ pub trait LendingData {
 	 * create loan
 	 * @DIIMIIM: Call this to create a loan
 	 */
-	 #[endpoint]
-	 fn create_loan(&self
+	 #[endpoint(createLoan)]
+	fn create_loan(&self
 		, loan_amount: u64
 		, nr_of_installments: u16
 		, currency: Address 
@@ -368,7 +373,6 @@ pub trait LendingData {
 		}
 
 		let new_loan = Loan {
-			loan_id: self.get_loan_id(),
 			nft_address_array,
 			borrower: self.get_caller(),
 			lender: self.get_caller(),
@@ -388,7 +392,7 @@ pub trait LendingData {
 			nft_token_type_array
 		};
 
-		self.push_loan_internal(&self.get_loan_id(), &new_loan);
+		self.push_loan_internal(&new_loan);
 
 		Ok(())
 	}

@@ -1,10 +1,9 @@
-use elrond_wasm::{Address, BigUintApi, Vec};
+use elrond_wasm::{Address, Vec};
 
 derive_imports!();
 
 #[derive(NestedEncode, NestedDecode, TopEncode, TopDecode, TypeAbi)]
-pub struct Loan<BigUint: BigUintApi> {
-	pub loan_id: BigUint,
+pub struct Loan {
     pub nft_address_array: Vec<Address>,
     pub borrower: Address,
     pub lender: Address,

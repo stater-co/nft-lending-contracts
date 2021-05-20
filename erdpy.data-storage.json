@@ -1,7 +1,7 @@
 {
     "*": {
-        "address-testnet": "erd1qqqqqqqqqqqqqpgq200zfjlwhgr750zfme6u70wwrlxytvw7d8sswh9h00",
-        "deployTransaction-testnet": "b9f1bd4759d21fc35cc3e354a6bc7d1646c050f01282567fe620566d78e17bd4",
+        "address-testnet": "erd1qqqqqqqqqqqqqpgqruqkece0dtdvtxuejnrm52sads8eu6q8d8sswp62gr",
+        "deployTransaction-testnet": "0720a816d61ac99333e50d0f1005e1ddfc8c9ea42137221b3a5c4bc6643b5188",
         "address-devnet": "erd1qqqqqqqqqqqqqpgqp5jjhf7hqwm0h7rtw88qndp8dhv7cy5vd8ssn33qfm",
         "deployTransaction-devnet": "f4946f2eed0d13ccba80dab5a0ad2b1918ba358ee1619bec9753624b7d47a906"
     }
