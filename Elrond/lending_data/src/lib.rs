@@ -257,6 +257,13 @@ pub trait LendingData {
 
 
 
+	#[endpoint]
+	fn percent(&self, numerator: u64, denominator: u64) -> u64 {
+		return numerator * 10000 / denominator + 5 / 10;
+	}  
+
+
+
 	/*
 	 * constructor
 	 * will be set on smart contract constructor
@@ -335,6 +342,11 @@ pub trait LendingData {
 		require!(
 			nft_address_array.len() == nft_token_id_array.len() && nft_token_id_array.len() == nft_token_type_array.len(), 
 			"NFT provided informations are missing or incomplete"
+		);
+
+		require!(
+			self.percent(loan_amount,assets_value) <= u64::from(self.get_ltv()),
+			"LTV exceeds maximum limit allowed"
 		);
 
 		let the_amount_due: u64 = ( loan_amount * ( u64::from(self.get_interest_rate()) + 100 ) ) / 100;
