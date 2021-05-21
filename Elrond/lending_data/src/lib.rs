@@ -119,6 +119,16 @@ pub trait LendingData {
 	#[storage_set("nft_address")]
 	fn set_nft_address_internal(&self, nft_address: &Address);
 
+	/*
+	 * nft address setter
+	 * @DIIMIIM: This will set the nft address value
+	 */
+	#[endpoint]
+	fn set_nft_address(&self, value: &Address) -> SCResult<()> {
+		self.set_nft_address_internal(&value);
+		Ok(())
+	}
+
 
 
 	/*
@@ -132,6 +142,16 @@ pub trait LendingData {
 	#[storage_set("promissory_note_contract_address")]
 	fn set_promissory_note_contract_address_internal(&self, promissory_note_contract_address: &Address);
 
+	/*
+	 * stater promissory note address setter
+	 * @DIIMIIM: This will set the promissory note address value
+	 */
+	#[endpoint]
+	fn set_promissory_note_contract_address(&self, value: &Address) -> SCResult<()> {
+		self.set_promissory_note_contract_address_internal(&value);
+		Ok(())
+	}
+
 
 
 	/*
@@ -144,6 +164,16 @@ pub trait LendingData {
 
 	#[storage_set("stater_nft_token_id_array")]
 	fn set_stater_nft_token_id_array_internal(&self, stater_nft_token_id_array: &Vec<u64>);
+
+	/*
+	 * stater nft token id array setter
+	 * @DIIMIIM: This will set the stater nft token id array values
+	 */
+	#[endpoint]
+	fn set_stater_nft_token_id_array(&self, value: &Vec<u64>) -> SCResult<()> {
+		self.set_stater_nft_token_id_array_internal(&value);
+		Ok(())
+	}
 
 
 
@@ -274,11 +304,7 @@ pub trait LendingData {
 	 * will be set on smart contract constructor
 	 */
 	#[init]
-	fn init(&self
-		, nft_address_constructor: Address
-		, stater_nft_token_id_array_constructor: Vec<u64>
-		, promissory_note_contract_address_constructor: Address
-	) {
+	fn init(&self) {
 		/*
 		 * @DIIMIIM: Set the smart contract global parameters
 		 * subject of improvement
@@ -304,14 +330,6 @@ pub trait LendingData {
 		 */
 		let owner = self.get_caller();
 		self.set_owner(&owner);
-
-		/*
-		 * @DIIMIIM:
-		 * Set the constructor parameters
-		 */
-		self.set_nft_address_internal(&nft_address_constructor);
-		self.set_stater_nft_token_id_array_internal(&stater_nft_token_id_array_constructor);
-		self.set_promissory_note_contract_address_internal(&promissory_note_contract_address_constructor);
 	}
 
 	/*
