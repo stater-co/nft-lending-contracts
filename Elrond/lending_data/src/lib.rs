@@ -3,15 +3,19 @@
 imports!();
 
 mod time_scale;
-mod loan;
+//mod loan;
+//mod linked_list_mapper;
 use time_scale::TimeScale;
-use loan::Loan;
+//use loan::Loan;
 
 
 /*
  * @DIIMIIM: erd1deaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaqtv0gag [elrond] == address(0) [ethereum]
  */
 
+/*
+ * @DIIMIIM: CRITICAL:cli:Cannot handle non-hex, non-number arguments yet: "ERD1DEADDEADDEADDEADDEADDEADDEADDEADDEADDEADDEADDEADDEAQTV0GAG".
+ */
 
 /*
  * STATER.CO - Lending smart contract Rust implementation
@@ -41,36 +45,14 @@ pub trait LendingData {
 	 * push loan
 	 * @DIIMIIM: This will be set on smart contract constructor
 	 */
+	/*
 	#[storage_set("loans")]
-	fn push_loan_internal(&self, loan: &Loan);
+	fn push_loan_internal(&self, loan_id: &u64, loan: &Loan<u64>);
 
 	#[view(loans)]
 	#[storage_get("loans")]
-	fn get_loans(&self) -> Loan;
-
-
-
-	/*
-	 * discount_nft
-	 * @DIIMIIM: This will be set with 50 on smart contract constructor
-	 */
-	#[view(discountNft)]
-	#[storage_get("discount_nft")]
-	fn get_discount_nft(&self) -> u8;
-
-	#[storage_set("discount_nft")]
-	fn set_discount_nft_internal(&self, discount_nft: &u8);
-
-	/*
-	 * discount nft setter
-	 * @DIIMIIM: This will set the discount nft value
-	 */
-	#[endpoint]
-	fn set_discount_nft(&self, value: &u8) -> SCResult<()> {
-		self.set_discount_nft_internal(&value);
-		Ok(())
-	}
-
+	fn get_loans(&self, loan_id: &u64) -> Loan<u64>;
+	*/
 
 
 	/*
@@ -106,74 +88,6 @@ pub trait LendingData {
 
 	#[storage_set("loan_id")]
 	fn set_loan_id(&self, loan_id: &BigUint);
-
-
-	/*
-	 * nftAddress
-	 * will be set on smart contract constructor
-	 */
-	#[view(nftAdress)]
-	#[storage_get("nft_address")]
-	fn get_nft_address(&self) -> Address;
-
-	#[storage_set("nft_address")]
-	fn set_nft_address_internal(&self, nft_address: &Address);
-
-	/*
-	 * nft address setter
-	 * @DIIMIIM: This will set the nft address value
-	 */
-	#[endpoint]
-	fn set_nft_address(&self, value: &Address) -> SCResult<()> {
-		self.set_nft_address_internal(&value);
-		Ok(())
-	}
-
-
-
-	/*
-	 * promissoryNoteContractAddress
-	 * will be set on smart contract constructor
-	 */
-	#[view(promissoryNoteContractAddress)]
-	#[storage_get("promissory_note_contract_address")]
-	fn get_promissory_note_contract_address(&self) -> Address;
-
-	#[storage_set("promissory_note_contract_address")]
-	fn set_promissory_note_contract_address_internal(&self, promissory_note_contract_address: &Address);
-
-	/*
-	 * stater promissory note address setter
-	 * @DIIMIIM: This will set the promissory note address value
-	 */
-	#[endpoint]
-	fn set_promissory_note_contract_address(&self, value: &Address) -> SCResult<()> {
-		self.set_promissory_note_contract_address_internal(&value);
-		Ok(())
-	}
-
-
-
-	/*
-	 * staterNftTokenIdArray
-	 * will be set on smart contract constructor
-	 */
-	#[view(staterNftTokenIdArray)]
-	#[storage_get("stater_nft_token_id_array")]
-	fn get_stater_nft_token_id_array(&self) -> Vec<BigInt>;
-
-	#[storage_set("stater_nft_token_id_array")]
-	fn set_stater_nft_token_id_array_internal(&self, stater_nft_token_id_array: &Vec<u64>);
-
-	/*
-	 * stater nft token id array setter
-	 * @DIIMIIM: This will set the stater nft token id array values
-	 */
-	#[endpoint]
-	fn set_stater_nft_token_id_array(&self, value: &Vec<u64>) -> SCResult<()> {
-		self.set_stater_nft_token_id_array_internal(&value);
-		Ok(())
-	}
 
 
 
@@ -309,14 +223,12 @@ pub trait LendingData {
 		 * @DIIMIIM: Set the smart contract global parameters
 		 * subject of improvement
 		 */
-		let discount_nft_constructor: u8 = 50;
 		let lender_fee_internal: u8 = 100;
 		let ltv_constructor: u16 = 600;
 		let installment_frequency_constructor: u16 = 1;
 		let installment_time_scale_constructor: TimeScale = TimeScale::Weeks;
 		let interest_rate_constructor: u8 = 20;
 		let interest_rate_to_stater_constructor: u8 = 40;
-		self.set_discount_nft_internal(&discount_nft_constructor);
 		self.set_lender_fee_internal(&lender_fee_internal);
 		self.set_ltv_internal(&ltv_constructor);
 		self.set_installment_frequency_internal(&installment_frequency_constructor);
@@ -331,6 +243,8 @@ pub trait LendingData {
 		let owner = self.get_caller();
 		self.set_owner(&owner);
 	}
+
+
 
 	/*
 	 * create loan
@@ -389,8 +303,14 @@ pub trait LendingData {
 		} else if nr_of_installments >= 6 {
 			the_defaulting_limit = 3;
 		}
+		
+		let the_new_loan_id: BigUint = self.get_loan_id();
+		//let incrementer = BigUint::from(1);
+		//self.set_loan_id(self.get_loan_id() + incrementer.to_biguint());
 
+		/*
 		let new_loan = Loan {
+			loan_id: the_new_loan_id,
 			nft_address_array,
 			borrower: self.get_caller(),
 			lender: self.get_caller(),
@@ -410,9 +330,12 @@ pub trait LendingData {
 			nft_token_type_array
 		};
 
-		self.push_loan_internal(&new_loan);
+		self.push_loan_internal(&new_loan.loan_id, &new_loan);
+		*/
 
 		Ok(())
 	}
+
+
 
 }
