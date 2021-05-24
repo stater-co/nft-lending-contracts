@@ -27,7 +27,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1288631b4a787425de1a7086c772a4ff5ebc3ed490e528996965d9d8f077b53b"
 dependencies = [
  "arrayvec",
- "elrond-codec-derive",
+ "elrond-codec-derive 0.4.2",
+ "wee_alloc",
+]
+
+[[package]]
+name = "elrond-codec"
+version = "0.5.3"
+dependencies = [
+ "arrayvec",
+ "elrond-codec-derive 0.5.3",
  "wee_alloc",
 ]
 
@@ -44,22 +53,41 @@ dependencies = [
 ]
 
 [[package]]
+name = "elrond-codec-derive"
+version = "0.5.3"
+dependencies = [
+ "hex",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "elrond-wasm"
 version = "0.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2546b45ab266a42f722bd20f56b0f5e21fc55918da65385416d9fe13868128aa"
 dependencies = [
  "arrayvec",
- "elrond-codec",
+ "elrond-codec 0.4.2",
  "hashbrown",
  "wee_alloc",
 ]
 
 [[package]]
+name = "elrond-wasm"
+version = "0.16.2"
+dependencies = [
+ "arrayvec",
+ "elrond-codec 0.5.3",
+ "hashbrown",
+ "hex-literal",
+ "wee_alloc",
+]
+
+[[package]]
 name = "elrond-wasm-derive"
-version = "0.10.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a5561e94b3e1a7270feb836e19f7314644ba93fb50f946081ac4b43124c551cc"
+version = "0.16.2"
 dependencies = [
  "hex",
  "proc-macro2",
@@ -73,7 +101,14 @@ version = "0.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "98af6b29c75debb63483a7cc368ab447e6c186778b17c7fb2359feeb471b5390"
 dependencies = [
- "elrond-wasm",
+ "elrond-wasm 0.10.5",
+]
+
+[[package]]
+name = "elrond-wasm-node"
+version = "0.16.2"
+dependencies = [
+ "elrond-wasm 0.16.2",
 ]
 
 [[package]]
@@ -82,7 +117,7 @@ version = "0.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "546cb9698275acb334cd88d123ba74023ae00ec9a525de94236f34b6e00c2d6f"
 dependencies = [
- "elrond-wasm-node",
+ "elrond-wasm-node 0.10.5",
  "wee_alloc",
 ]
 
@@ -102,12 +137,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
 
 [[package]]
+name = "hex-literal"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5af1f635ef1bc545d78392b136bfe1c9809e029023c84a3638a864a10b8819c8"
+
+[[package]]
 name = "lending_data"
 version = "0.0.0"
 dependencies = [
- "elrond-wasm",
+ "elrond-wasm 0.16.2",
  "elrond-wasm-derive",
- "elrond-wasm-node",
+ "elrond-wasm-node 0.16.2",
 ]
 
 [[package]]

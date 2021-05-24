@@ -1,0 +1,30 @@
+[package]
+name = "elrond-codec"
+version = "0.5.3"
+edition = "2018"
+
+authors = ["Andrei Marinica <andrei.marinica@elrond.com>", "Elrond Network <contact@elrond.com>"]
+license = "GPL-3.0-only"
+readme = "README.md"
+repository = "https://github.com/ElrondNetwork/elrond-wasm-rs"
+homepage = "https://elrond.com/"
+documentation = "https://docs.elrond.com/"
+description = "Lightweight binary serializer/deserializer, written especially for Elrond smart contracts"
+keywords = ["elrond", "wasm", "webassembly", "blockchain", "contract"]
+categories = ["no-std", "wasm", "cryptography::cryptocurrencies", "development-tools"]
+
+[features]
+derive = ["elrond-codec-derive"]
+
+[dependencies.elrond-codec-derive]
+path = "../elrond-codec-derive"
+version = "0.5.3"
+optional = true
+
+[dependencies]
+wee_alloc = "0.4"
+arrayvec = { version = "0.5.2", default-features = false, features = ["array-sizes-33-128", "array-sizes-129-255"] }
+
+[dev-dependencies.elrond-codec-derive]
+path = "../elrond-codec-derive"
+version = "0.5.3"

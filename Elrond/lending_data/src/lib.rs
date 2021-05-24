@@ -1,12 +1,15 @@
 #![no_std]
 
-imports!();
+
+elrond_wasm::imports!();
+elrond_wasm::derive_imports!();
+
 
 mod time_scale;
-//mod loan;
-//mod linked_list_mapper;
+mod loan;
+//mod storage;
 use time_scale::TimeScale;
-//use loan::Loan;
+use loan::Loan;
 
 
 /*
@@ -17,6 +20,7 @@ use time_scale::TimeScale;
  * @DIIMIIM: CRITICAL:cli:Cannot handle non-hex, non-number arguments yet: "ERD1DEADDEADDEADDEADDEADDEADDEADDEADDEADDEADDEADDEADDEAQTV0GAG".
  */
 
+
 /*
  * STATER.CO - Lending smart contract Rust implementation
  * @DIIMIIM, created on 17 May 2021
@@ -25,7 +29,7 @@ use time_scale::TimeScale;
  * type only contains primitive types, you'll be able to implement `Copy` on it.
  * Otherwise, it won't be possible.
  */
-#[elrond_wasm_derive::contract(AdderImpl)]
+#[elrond_wasm_derive::contract()]
 pub trait LendingData {
 
 	/*
@@ -303,14 +307,9 @@ pub trait LendingData {
 		} else if nr_of_installments >= 6 {
 			the_defaulting_limit = 3;
 		}
-		
-		let the_new_loan_id: BigUint = self.get_loan_id();
-		//let incrementer = BigUint::from(1);
-		//self.set_loan_id(self.get_loan_id() + incrementer.to_biguint());
 
 		/*
-		let new_loan = Loan {
-			loan_id: the_new_loan_id,
+		self.loan_handler().set(&Loan {
 			nft_address_array,
 			borrower: self.get_caller(),
 			lender: self.get_caller(),
@@ -328,14 +327,17 @@ pub trait LendingData {
 			defaulting_limit: the_defaulting_limit,
 			nr_of_payments: 0u16,
 			nft_token_type_array
-		};
-
-		self.push_loan_internal(&new_loan.loan_id, &new_loan);
+		});
 		*/
 
 		Ok(())
 	}
 
 
+	/* Loans mapper */
+	#[storage_mapper("loans")]
+	fn loan_handler(
+		&self,
+	) -> SingleValueMapper<Self::Storage, Loan<Self::BigUint>>;
 
 }
