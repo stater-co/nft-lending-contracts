@@ -1,56 +1,20 @@
 #![no_std]
 
-
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
-
-
 /*
  * @DIIMIIM: erd1deaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaqtv0gag [elrond] == address(0) [ethereum]
  */
+elrond_wasm::imports!();
 
+//mod loan_status;
+//use loan_status::LoanStatus;
 
-#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi, PartialEq, Clone, Copy)]
-pub enum TimeScale {
-    Minutes, 
-    Hours, 
-    Days, 
-    Weeks
-}
+mod time_scale;
+use time_scale::TimeScale;
 
+mod loan;
+use loan::Loan;
 
-#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi, PartialEq, Clone, Copy)]
-pub enum LoanStatus {
-	Uninitialized,
-	Listed,
-	Approved,
-	Defaulted,
-	Liquidated,
-	Cancelled,
-	Withdrawn
-}
-
-
-#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi)]
-pub struct Loan<BigUint: BigUintApi> {
-    pub nft_address_array: Vec<Address>,
-    pub borrower: Address,
-    pub lender: Address,
-    pub currency: Address,
-	pub status: LoanStatus,
-    pub nft_token_id_array: Vec<u64>,
-    pub loan_amount: BigUint,
-    pub assets_value: BigUint,
-    pub loan_start: u64,
-    pub loan_end: u64,
-    pub nr_of_installments: u16,
-    pub installment_amount: u64,
-    pub amount_due: BigUint,
-    pub paid_amount: BigUint,
-    pub defaulting_limit: u8,
-    pub nr_of_payments: u16,
-    pub nft_token_type_array: Vec<u8>
-}
+pub const BASE_PRECISION: u32 = 1_000_000_000;
 
 
 
@@ -58,6 +22,7 @@ pub struct Loan<BigUint: BigUintApi> {
 
 #[elrond_wasm_derive::contract]
 pub trait StaterLending {
+
 
 	/*
 	 * owner
@@ -69,6 +34,34 @@ pub trait StaterLending {
 
 	#[storage_set("owner")]
 	fn set_owner(&self, owner: &Address);
+
+
+	/*
+	 * loan_id
+	 * will be set with 0 on smart contract constructor
+	 */
+	#[view(loanId)]
+	#[storage_get("loan_id")]
+	fn get_loan_id(&self) -> Self::BigUint;
+
+	#[storage_set("loan_id")]
+	fn set_loan_id_internal(&self, loan_id: &Self::BigUint);
+
+	/*
+	#[view(loanId)]
+	#[storage_get("loan_id")]
+	fn get_loan_id(&self) -> Self::BigUint;
+ 	*/
+
+	/*
+	 * loan_id setter
+	 * @DIIMIIM: This will set the loan id value
+	 */
+	#[endpoint]
+	fn set_loan_id(&self, value: &Self::BigUint) -> SCResult<()> {
+		self.set_loan_id_internal(&value);
+		Ok(())
+	}
 
 
 	/*
@@ -238,6 +231,7 @@ pub trait StaterLending {
 		*/
 		let owner = self.blockchain().get_caller();
 		self.set_owner(&owner);
+		self.set_loan_id_internal(&Self::BigUint::from(0u32));
 	}
 
 
@@ -249,12 +243,12 @@ pub trait StaterLending {
 	fn create_loan(&self
 		, loan_amount: u64
 		, nr_of_installments: u16
-		, currency: Address 
+		/* , currency: Address */ 
 		, assets_value: u64
 		, nft_address_array: Vec<Address>
 		, nft_token_id_array: Vec<u64>
 		, nft_token_type_array: Vec<u8>
-	) -> SCResult<()> {
+	) -> elrond_wasm::types::SCResult<()> {
 
 		require!(
 			nr_of_installments > 0,
@@ -299,29 +293,33 @@ pub trait StaterLending {
 			the_defaulting_limit = 3;
 		}
 
-		/*
-		self.loan_handler().set(&Loan {
-			nft_address_array,
-			borrower: self.get_caller(),
-			lender: self.get_caller(),
-			currency,
-			status: 0u8,
-			nft_token_id_array,
-			loan_amount,
-			assets_value,
+		let new_loan = Loan {
+			nft_token_id_array: nft_token_id_array,
+			loan_amount: Self::BigUint::from(loan_amount),
+			assets_value: Self::BigUint::from(assets_value),
 			loan_start: 0u64,
 			loan_end: 0u64,
-			nr_of_installments,
-			installment_amount: the_installment_amount,
-			amount_due: the_amount_due,
-			paid_amount: 0u64,
+			nr_of_installments: nr_of_installments,
+			installment_amount: Self::BigUint::from(the_installment_amount),
+			amount_due: Self::BigUint::from(the_amount_due),
+			paid_amount: Self::BigUint::from(0u32),
 			defaulting_limit: the_defaulting_limit,
 			nr_of_payments: 0u16,
-			nft_token_type_array
-		});
-		*/
+			nft_token_type_array: nft_token_type_array
+		};
+
+		let new_loan_id: Self::BigUint = self.get_loan_id() + Self::BigUint::from(1u32);
+		self.set_loan_id(&new_loan_id);
+		self.loan(new_loan_id).set(&new_loan);
 
 		Ok(())
 	}
+
+
+	#[storage_mapper("loans")]
+    fn loan(
+        &self,
+        loan_id: Self::BigUint,
+    ) -> SingleValueMapper<Self::Storage, Loan<Self::BigUint>>;
 
 }

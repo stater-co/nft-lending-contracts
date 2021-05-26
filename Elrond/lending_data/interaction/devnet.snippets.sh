@@ -2,6 +2,7 @@ ALICE="${USERS}/alice.pem"
 ADDRESS=$(erdpy data load --key=address-devnet)
 DEPLOY_TRANSACTION=$(erdpy data load --key=deployTransaction-devnet)
 
+: '
 deploy() {
     erdpy --verbose contract deploy --project=${PROJECT} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --send --outfile="deploy-devnet.interaction.json" || return
 
@@ -32,3 +33,4 @@ setLenderFee() {
 lenderFee() {
     erdpy --verbose contract query ${ADDRESS} --function="lenderFee"
 }
+'

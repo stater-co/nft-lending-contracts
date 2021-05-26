@@ -71,6 +71,11 @@ loans() {
     erdpy --verbose contract query ${ADDRESS} --function="loans" --arguments ${LOAN_ID} --proxy=${PROXY}
 }
 
+setLoanId() {
+    read -p "Enter the loan ID: " LOAN_ID
+    erdpy --verbose contract query ${ADDRESS} --function="set_loan_id" --arguments ${LOAN_ID} --proxy=${PROXY}
+}
+
 id() {
-    erdpy --verbose contract query ${ADDRESS} --function="loanID" --proxy=${PROXY}
+    erdpy --verbose contract query ${ADDRESS} --function="loanId" --proxy=${PROXY}
 }
