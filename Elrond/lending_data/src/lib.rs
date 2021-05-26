@@ -5,32 +5,59 @@ elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
 
-mod time_scale;
-mod loan;
-//mod storage;
-use time_scale::TimeScale;
-use loan::Loan;
-
-
 /*
  * @DIIMIIM: erd1deaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaqtv0gag [elrond] == address(0) [ethereum]
  */
 
-/*
- * @DIIMIIM: CRITICAL:cli:Cannot handle non-hex, non-number arguments yet: "ERD1DEADDEADDEADDEADDEADDEADDEADDEADDEADDEADDEADDEADDEAQTV0GAG".
- */
+
+#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi, PartialEq, Clone, Copy)]
+pub enum TimeScale {
+    Minutes, 
+    Hours, 
+    Days, 
+    Weeks
+}
 
 
-/*
- * STATER.CO - Lending smart contract Rust implementation
- * @DIIMIIM, created on 17 May 2021
- * rustc --explain E0204:
- * The `Copy` trait is implemented by default only on primitive types. If your
- * type only contains primitive types, you'll be able to implement `Copy` on it.
- * Otherwise, it won't be possible.
- */
-#[elrond_wasm_derive::contract()]
-pub trait LendingData {
+#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi, PartialEq, Clone, Copy)]
+pub enum LoanStatus {
+	Uninitialized,
+	Listed,
+	Approved,
+	Defaulted,
+	Liquidated,
+	Cancelled,
+	Withdrawn
+}
+
+
+#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi)]
+pub struct Loan<BigUint: BigUintApi> {
+    pub nft_address_array: Vec<Address>,
+    pub borrower: Address,
+    pub lender: Address,
+    pub currency: Address,
+	pub status: LoanStatus,
+    pub nft_token_id_array: Vec<u64>,
+    pub loan_amount: BigUint,
+    pub assets_value: BigUint,
+    pub loan_start: u64,
+    pub loan_end: u64,
+    pub nr_of_installments: u16,
+    pub installment_amount: u64,
+    pub amount_due: BigUint,
+    pub paid_amount: BigUint,
+    pub defaulting_limit: u8,
+    pub nr_of_payments: u16,
+    pub nft_token_type_array: Vec<u8>
+}
+
+
+
+
+
+#[elrond_wasm_derive::contract]
+pub trait StaterLending {
 
 	/*
 	 * owner
@@ -42,21 +69,6 @@ pub trait LendingData {
 
 	#[storage_set("owner")]
 	fn set_owner(&self, owner: &Address);
-
-
-
-	/*
-	 * push loan
-	 * @DIIMIIM: This will be set on smart contract constructor
-	 */
-	/*
-	#[storage_set("loans")]
-	fn push_loan_internal(&self, loan_id: &u64, loan: &Loan<u64>);
-
-	#[view(loans)]
-	#[storage_get("loans")]
-	fn get_loans(&self, loan_id: &u64) -> Loan<u64>;
-	*/
 
 
 	/*
@@ -81,20 +93,6 @@ pub trait LendingData {
 	}
 
 
-
-	/*
-	 * loanID
-	 * The loan ID
-	 */
-	#[view(loanID)]
-	#[storage_get("loan_id")]
-	fn get_loan_id(&self) -> BigUint;
-
-	#[storage_set("loan_id")]
-	fn set_loan_id(&self, loan_id: &BigUint);
-
-
-
 	/*
 	 * lender_fee
 	 * will be set on smart contract constructor
@@ -116,7 +114,6 @@ pub trait LendingData {
 		Ok(())
 	}
 
-	
 
 	/*
 	 * ltv
@@ -128,7 +125,7 @@ pub trait LendingData {
 
 	#[storage_set("ltv")]
 	fn set_ltv_internal(&self, ltv: &u16);
-
+ 
 	/*
 	 * discount ltv setter
 	 * @DIIMIIM: This will set the ltv value
@@ -137,8 +134,7 @@ pub trait LendingData {
 	fn set_ltv(&self, value: &u16) -> SCResult<()> {
 		self.set_ltv_internal(&value);
 		Ok(())
-	} 
-
+	}
 
 
 	/*
@@ -160,8 +156,7 @@ pub trait LendingData {
 	fn set_installment_frequency(&self, value: &u16) -> SCResult<()> {
 		self.set_installment_frequency_internal(&value);
 		Ok(())
-	} 
-
+	}
 
 
 	/*
@@ -174,7 +169,7 @@ pub trait LendingData {
 
 	#[storage_set("interest_rate")]
 	fn set_interest_rate_internal(&self, interest_rate: &u8);
-
+ 
 	/*
 	 * interest rate setter
 	 * @DIIMIIM: This will set the interest rate value
@@ -183,8 +178,7 @@ pub trait LendingData {
 	fn set_interest_rate(&self, value: &u8) -> SCResult<()> {
 		self.set_interest_rate_internal(&value);
 		Ok(())
-	}  
-
+	}
 
 
 	/*
@@ -197,7 +191,7 @@ pub trait LendingData {
 
 	#[storage_set("interest_rate_to_stater")]
 	fn set_interest_rate_to_stater_internal(&self, interest_rate_to_stater: &u8);
-
+ 
 	/*
 	 * interest rate setter
 	 * @DIIMIIM: This will set the interest rate value
@@ -206,15 +200,13 @@ pub trait LendingData {
 	fn set_interest_rate_to_stater(&self, value: &u8) -> SCResult<()> {
 		self.set_interest_rate_to_stater_internal(&value);
 		Ok(())
-	}  
-
+	}
 
 
 	#[endpoint]
 	fn percent(&self, numerator: u64, denominator: u64) -> u64 {
 		return numerator * 10000 / denominator + 5 / 10;
-	}  
-
+	}
 
 
 	/*
@@ -241,20 +233,19 @@ pub trait LendingData {
 		self.set_interest_rate_to_stater_internal(&interest_rate_to_stater_constructor);
 
 		/*
-		 * @DIIMIIM:
-		 * Here we set the smart contract owner
-		 */
+		* @DIIMIIM:
+		* Here we set the smart contract owner
+		*/
 		let owner = self.get_caller();
 		self.set_owner(&owner);
 	}
-
 
 
 	/*
 	 * create loan
 	 * @DIIMIIM: Call this to create a loan
 	 */
-	 #[endpoint(createLoan)]
+	#[endpoint(createLoan)]
 	fn create_loan(&self
 		, loan_amount: u64
 		, nr_of_installments: u16
@@ -332,12 +323,5 @@ pub trait LendingData {
 
 		Ok(())
 	}
-
-
-	/* Loans mapper */
-	#[storage_mapper("loans")]
-	fn loan_handler(
-		&self,
-	) -> SingleValueMapper<Self::Storage, Loan<Self::BigUint>>;
 
 }

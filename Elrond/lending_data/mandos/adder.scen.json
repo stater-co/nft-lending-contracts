@@ -1,5 +1,5 @@
 {
-    "name": "lending_data",
+    "name": "test",
     "comment": "add then check",
     "steps": [
         {
@@ -26,7 +26,7 @@
             "tx": {
                 "from": "address:owner",
                 "value": "0",
-                "contractCode": "file:../output/lending_data.wasm",
+                "contractCode": "file:../output/test.wasm",
                 "arguments": [
                     "0x05"
                 ],
@@ -100,7 +100,7 @@
                     "storage": {
                         "``sum": "0x08"
                     },
-                    "code": "file:../output/lending_data.wasm"
+                    "code": "file:../output/test.wasm"
                 }
             }
         }
