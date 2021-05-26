@@ -236,7 +236,7 @@ pub trait StaterLending {
 		* @DIIMIIM:
 		* Here we set the smart contract owner
 		*/
-		let owner = self.get_caller();
+		let owner = self.blockchain().get_caller();
 		self.set_owner(&owner);
 	}
 
