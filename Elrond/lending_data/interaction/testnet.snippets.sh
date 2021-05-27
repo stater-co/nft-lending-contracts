@@ -50,20 +50,42 @@ interestRateToStater() {
     erdpy --verbose contract query ${ADDRESS} --function="interestRateToStater" --proxy=${PROXY}
 }
 
-createLoan() {
+createTheLoan() {
+    : '
     # LOAN_ARGUMENTS : 6000000 5 erd1qqqqqqqqqqqqqpgqn7kmy58sfnx2x5h7gxvlc20jnskcmy62d8ss9vk98j 10000000 [] [] []
     read -p "Enter the loan amount: " LOAN_AMOUNT
     read -p "Enter the number of installments: " NR_OF_INSTALLMENTS
     read -p "Enter the currency: " CURRENCY
     read -p "Enter the assets value: " ASSETS_VALUE
-    read -p "Enter the NFT address array: " NFT_ADDRESS_ARRAY
-    read -p "Enter the NFT token ID array: " NFT_TOKEN_ID_ARRAY
-    read -p "Enter the NFT token type array: " NFT_TOKEN_TYPE_ARRAY
+    read -a "Enter the NFT address array: " NFT_ADDRESS_ARRAY
+    read -a "Enter the NFT token ID array: " NFT_TOKEN_ID_ARRAY
+    read -a "Enter the NFT token type array: " NFT_TOKEN_TYPE_ARRAY
     CURRENCY="0x$(erdpy wallet bech32 --decode ${CURRENCY})"
-    NFT_ADDRESS_ARRAY="0x$(erdpy wallet bech32 --decode ${NFT_ADDRESS_ARRAY})"
-    NFT_TOKEN_ID_ARRAY="0x$(erdpy wallet bech32 --decode ${NFT_TOKEN_ID_ARRAY})"
-    NFT_TOKEN_TYPE_ARRAY="0x$(erdpy wallet bech32 --decode ${NFT_TOKEN_TYPE_ARRAY})"
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=5000000 --function="createLoan" --arguments ${LOAN_AMOUNT} ${NR_OF_INSTALLMENTS} ${CURRENCY} ${ASSETS_VALUE} ${NFT_ADDRESS_ARRAY} ${NFT_TOKEN_ID_ARRAY} ${NFT_TOKEN_TYPE_ARRAY} --send --proxy=${PROXY} --chain=T
+    FORMATTED_NFT_ADDRESS_ARRAY = "0x"
+    FORMATTED_NFT_TOKEN_ID_ARRAY = "0x"
+    FORMATTED_NFT_TOKEN_TYPE_ARRAY = "0x"
+    '
+    : '
+    for i in $NFT_ADDRESS_ARRAY
+        FORMATTED_NFT_ADDRESS_ARRAY .= $(erdpy wallet bech32 --decode ${i})
+    for i in $NFT_TOKEN_ID_ARRAY
+        FORMATTED_NFT_TOKEN_ID_ARRAY .= $(erdpy wallet bech32 --encode ${i})
+    for i in $NFT_TOKEN_TYPE_ARRAY
+        FORMATTED_NFT_TOKEN_TYPE_ARRAY .= $(erdpy wallet bech32 --encode ${i})
+    '
+
+    : '
+    erdpy \
+    --verbose contract call ${ADDRESS} \
+    --recall-nonce \
+    --pem=${ALICE} \
+    --gas-limit=5000000 \
+    --function="createLoan" \
+    --arguments ${LOAN_AMOUNT} ${NR_OF_INSTALLMENTS} ${CURRENCY} ${ASSETS_VALUE} ${FORMATTED_NFT_ADDRESS_ARRAY} ${FORMATTED_NFT_TOKEN_ID_ARRAY} ${FORMATTED_NFT_TOKEN_TYPE_ARRAY} \
+    --send \
+    --proxy=${PROXY} \
+    --chain=T
+    '
 }
 
 loans() {
@@ -73,7 +95,7 @@ loans() {
 
 setLoanId() {
     read -p "Enter the loan ID: " LOAN_ID
-    erdpy --verbose contract query ${ADDRESS} --function="set_loan_id" --arguments ${LOAN_ID} --proxy=${PROXY}
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=5000000 --function="set_loan_id" --arguments ${LOAN_ID} --send --proxy=${PROXY} --chain=T
 }
 
 id() {

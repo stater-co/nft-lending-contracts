@@ -44,14 +44,11 @@ pub trait StaterLending {
 	#[storage_get("loan_id")]
 	fn get_loan_id(&self) -> Self::BigUint;
 
+	#[storage_get("loan_id")]
+	fn get_loan_id_internal(&self) -> Self::BigUint;
+
 	#[storage_set("loan_id")]
 	fn set_loan_id_internal(&self, loan_id: &Self::BigUint);
-
-	/*
-	#[view(loanId)]
-	#[storage_get("loan_id")]
-	fn get_loan_id(&self) -> Self::BigUint;
- 	*/
 
 	/*
 	 * loan_id setter
@@ -241,12 +238,12 @@ pub trait StaterLending {
 	 */
 	#[endpoint(createLoan)]
 	fn create_loan(&self
-		, loan_amount: u64
-		, nr_of_installments: u16
-		/* , currency: Address */ 
-		, assets_value: u64
-		, nft_address_array: Vec<Address>
-		, nft_token_id_array: Vec<u64>
+		, loan_amount: u64 
+		, nr_of_installments: u16 
+		, currency: Address 
+		, assets_value: u64 
+		, nft_address_array: Vec<Address> 
+		, nft_token_id_array: Vec<Self::BigUint> 
 		, nft_token_type_array: Vec<u8>
 	) -> elrond_wasm::types::SCResult<()> {
 
@@ -260,10 +257,12 @@ pub trait StaterLending {
 			"Loan amount must be higher than 0"
 		);
 
+		/*
 		require!(
 			nft_address_array.len() > 0, 
 			"Loan must have atleast 1 NFT"
 		);
+		*/
 
 		require!(
 			nft_address_array.len() == nft_token_id_array.len() && nft_token_id_array.len() == nft_token_type_array.len(), 
@@ -299,6 +298,7 @@ pub trait StaterLending {
 			assets_value: Self::BigUint::from(assets_value),
 			loan_start: 0u64,
 			loan_end: 0u64,
+			currency: currency,
 			nr_of_installments: nr_of_installments,
 			installment_amount: Self::BigUint::from(the_installment_amount),
 			amount_due: Self::BigUint::from(the_amount_due),
@@ -308,8 +308,8 @@ pub trait StaterLending {
 			nft_token_type_array: nft_token_type_array
 		};
 
-		let new_loan_id: Self::BigUint = self.get_loan_id() + Self::BigUint::from(1u32);
-		self.set_loan_id(&new_loan_id);
+		let new_loan_id: Self::BigUint = self.get_loan_id_internal() + Self::BigUint::from(1u32);
+		self.set_loan_id_internal(&new_loan_id);
 		self.loan(new_loan_id).set(&new_loan);
 
 		Ok(())
