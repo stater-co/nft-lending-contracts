@@ -257,12 +257,10 @@ pub trait StaterLending {
 			"Loan amount must be higher than 0"
 		);
 
-		/*
 		require!(
 			nft_address_array.len() > 0, 
 			"Loan must have atleast 1 NFT"
 		);
-		*/
 
 		require!(
 			nft_address_array.len() == nft_token_id_array.len() && nft_token_id_array.len() == nft_token_type_array.len(), 

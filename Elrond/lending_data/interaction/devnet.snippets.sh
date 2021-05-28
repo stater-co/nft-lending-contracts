@@ -49,10 +49,22 @@ interestRateToStater() {
     erdpy --verbose contract query ${ADDRESS} --function="interestRateToStater" 
 }
 
-createTheLoan() {
-    
-    echo "obase=16; 34" | bc
+numberToElrondHex() {
+    nr=$1;
+    x=$( printf "%x" $nr );
+    stringified="$(printf "%q " "${x}")";
+    thelength=${#stringified};
+    if [[ $((($thelength-1) % 2)) -eq 0 ]];
+    then 
+        formattedLength="$((($thelength-1)/2))";
+    else
+        formattedLength="$(((($thelength-1)/2)+1))";
+    fi 
+    finalFormatedHex=$formattedLength$x;
+}
 
+
+createTheLoan() {
     # LOAN_ARGUMENTS : 6000000 5 erd1qqqqqqqqqqqqqpgqn7kmy58sfnx2x5h7gxvlc20jnskcmy62d8ss9vk98j 10000000 [] [] []
     read -p "Enter the loan amount: " LOAN_AMOUNT
     read -p "Enter the number of installments: " NR_OF_INSTALLMENTS
@@ -82,27 +94,23 @@ createTheLoan() {
     
     for i in ${NFT_ADDRESS_ARRAY[@]};
     do
-        echo ">> "$i;
         FORMATTED_NFT_ADDRESS_ARRAY+="$(erdpy wallet bech32 --decode $i)";
     done
-
-    echo ">>> "$FORMATTED_NFT_ADDRESS_ARRAY;
 
     
     for i in ${NFT_TOKEN_ID_ARRAY[@]};
     do
-        echo ">> "$i;
-        FORMATTED_NFT_TOKEN_ID_ARRAY+="$(erdpy wallet bech32 --decode $i)";
+        numberToElrondHex $i
+        FORMATTED_NFT_TOKEN_ID_ARRAY+=$finalFormatedHex;
     done
 
-    echo ">>> "$FORMATTED_NFT_TOKEN_ID_ARRAY;
 
-    : '
-    for i in ${NFT_TOKEN_TYPE_ARRAY[@]}
+    for i in ${NFT_TOKEN_TYPE_ARRAY[@]};
     do
-        echo "The token type is >> "+$i
-        FORMATTED_NFT_TOKEN_TYPE_ARRAY+=$(erdpy wallet bech32 --encode ${i})
+        numberToElrondHex $i
+        FORMATTED_NFT_TOKEN_TYPE_ARRAY+=$finalFormatedHex;
     done
+
 
     erdpy \
     --verbose contract call ${ADDRESS} \
@@ -112,7 +120,6 @@ createTheLoan() {
     --function="createLoan" \
     --arguments ${LOAN_AMOUNT} ${NR_OF_INSTALLMENTS} ${CURRENCY} ${ASSETS_VALUE} ${FORMATTED_NFT_ADDRESS_ARRAY} ${FORMATTED_NFT_TOKEN_ID_ARRAY} ${FORMATTED_NFT_TOKEN_TYPE_ARRAY} \
     --send
-    '
 }
 
 loans() {
