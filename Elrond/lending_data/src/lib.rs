@@ -314,6 +314,51 @@ pub trait StaterLending {
 	}
 
 
+
+
+
+	#[view(nftAddressArray)]
+	#[storage_get("nft_address_array")]
+	fn get_nft_address_array(&self) -> Vec<Address>;
+ 
+	#[storage_set("nft_address_array")]
+	fn set_nft_address_array_internal(&self, nft_address_array: &Vec<Address>);
+
+	/*
+	#[view(getNftAddressArrayLength)]
+	#[storage_get("nft_address_array")]
+	fn get_nft_address_array_length(&self) -> nft_address_array.len();
+	*/
+
+	#[endpoint(setNftAddressArray)]
+	fn set_nft_address_array(&self,
+		nft_address_array: Vec<Address> 
+	) -> SCResult<()> {
+		self.set_nft_address_array_internal(&nft_address_array);
+		Ok(())
+	}
+
+
+	#[view(nftTokenIdArray)]
+	#[storage_get("nft_token_id_array")]
+	fn get_nft_token_id_array(&self) -> Vec<Self::BigUint>;
+ 
+	#[storage_set("nft_token_id_array")]
+	fn set_nft_token_id_array_internal(&self, nft_token_id_array: &Vec<Self::BigUint>);
+
+	#[endpoint(setNftTokenIdArray)]
+	fn set_nft_token_id_array(&self,
+		nft_token_id_array: Vec<Self::BigUint> 
+	) -> SCResult<()> {
+		self.set_nft_token_id_array_internal(&nft_token_id_array);
+		Ok(())
+	}
+
+
+
+
+
+
 	#[storage_mapper("loans")]
     fn loan(
         &self,
