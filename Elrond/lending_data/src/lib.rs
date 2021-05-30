@@ -5,8 +5,11 @@
  */
 elrond_wasm::imports!();
 
-//mod loan_status;
-//use loan_status::LoanStatus;
+/*
+mod loan_status;
+use loan_status::LoanStatus;
+*/
+
 
 mod time_scale;
 use time_scale::TimeScale;
@@ -14,10 +17,25 @@ use time_scale::TimeScale;
 mod loan;
 use loan::Loan;
 
+
 pub const BASE_PRECISION: u32 = 1_000_000_000;
 
 
+mod non_fungible_token_proxy {
+	elrond_wasm::imports!();
 
+	#[elrond_wasm_derive::proxy]
+	pub trait NonFungibleTokens {
+
+		#[endpoint]
+		fn transfer(&self, token_id: u64, to: Address);
+
+		#[view(tokenOwner)]
+		#[storage_get("tokenOwner")]
+		fn get_token_owner(&self, token_id: u64);
+
+	}
+}
 
 
 #[elrond_wasm_derive::contract]
@@ -316,19 +334,13 @@ pub trait StaterLending {
 
 
 
-
+	/*
 	#[view(nftAddressArray)]
 	#[storage_get("nft_address_array")]
 	fn get_nft_address_array(&self) -> Vec<Address>;
  
 	#[storage_set("nft_address_array")]
 	fn set_nft_address_array_internal(&self, nft_address_array: &Vec<Address>);
-
-	/*
-	#[view(getNftAddressArrayLength)]
-	#[storage_get("nft_address_array")]
-	fn get_nft_address_array_length(&self) -> nft_address_array.len();
-	*/
 
 	#[endpoint(setNftAddressArray)]
 	fn set_nft_address_array(&self,
@@ -353,8 +365,53 @@ pub trait StaterLending {
 		self.set_nft_token_id_array_internal(&nft_token_id_array);
 		Ok(())
 	}
+	*/
 
 
+
+
+	#[view]
+	#[storage_mapper("vec_mapper")]
+	fn vec_mapper(&self) -> VecMapper<Self::Storage, u32>;
+
+	#[endpoint]
+	fn vec_mapper_push(&self, item: u32) {
+		let mut vec_mapper = self.vec_mapper();
+		let _ = vec_mapper.push(&item);
+	}
+
+	#[view]
+	fn vec_mapper_get(&self, index: usize) -> u32 {
+		self.vec_mapper().get(index)
+	}
+
+	#[view]
+	fn vec_mapper_len(&self) -> usize {
+		self.vec_mapper().len()
+	}
+
+
+
+
+	#[view]
+	#[storage_mapper("biguint_mapper")]
+	fn biguint_mapper(&self) -> VecMapper<Self::Storage, Self::BigUint>;
+
+	#[endpoint]
+	fn biguint_mapper_push(&self, item: Self::BigUint) {
+		let mut biguint_mapper = self.biguint_mapper();
+		let _ = biguint_mapper.push(&item);
+	}
+
+	#[view]
+	fn biguint_mapper_get(&self, index: usize) -> Self::BigUint {
+		self.biguint_mapper().get(index)
+	}
+
+	#[view]
+	fn biguint_mapper_len(&self) -> usize {
+		self.biguint_mapper().len()
+	}
 
 
 
