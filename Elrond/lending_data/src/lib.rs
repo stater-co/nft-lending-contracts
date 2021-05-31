@@ -436,4 +436,11 @@ pub trait StaterLending {
 		self.loan(loan_id).get()
 	}
 
+
+	#[view(getLoanAmountByLoanId)]
+	fn get_loan_amount_by_loan_id(&self, loan_id: u64) -> SCResult<Self::BigUint> {
+		return Ok(self.loan(loan_id).get().loan_amount);
+	}
+
+
 }

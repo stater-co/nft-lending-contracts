@@ -133,9 +133,14 @@ createTheLoan() {
     --chain=T
 }
 
-loans() {
+getLoanById() {
     read -p "Enter the loan ID: " LOAN_ID
-    erdpy --verbose contract query ${ADDRESS} --function="loans" --arguments ${LOAN_ID} --proxy=${PROXY}
+    erdpy --verbose contract query ${ADDRESS} --function="getLoanById" --arguments ${LOAN_ID} --proxy=${PROXY}
+}
+
+getLoanAmountByLoanId() {
+    read -p "Enter the loan ID: " LOAN_ID
+    erdpy --verbose contract query ${ADDRESS} --function="getLoanAmountByLoanId" --arguments ${LOAN_ID} --proxy=${PROXY}
 }
 
 setLoanId() {
