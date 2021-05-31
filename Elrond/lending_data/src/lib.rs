@@ -326,13 +326,6 @@ pub trait StaterLending {
 		};
 
 		let new_loan_id: u64 = self.get_loan_id_internal() + 1u64;
-		
-		/*
-		require!(
-            !self.loan(new_loan_id).is_empty(),
-            "invalid loan generated id"
-        );
-		*/
 
 		self.set_loan_id_internal(&new_loan_id);
 		self.loan(new_loan_id).set(&new_loan);
@@ -340,10 +333,7 @@ pub trait StaterLending {
 		Ok(())
 	}
 
-
-
-
-	/*
+	
 	#[view(nftAddressArray)]
 	#[storage_get("nft_address_array")]
 	fn get_nft_address_array(&self) -> Vec<Address>;
@@ -374,54 +364,6 @@ pub trait StaterLending {
 		self.set_nft_token_id_array_internal(&nft_token_id_array);
 		Ok(())
 	}
-	*/
-
-
-
-
-	#[view]
-	#[storage_mapper("vec_mapper")]
-	fn vec_mapper(&self) -> VecMapper<Self::Storage, u32>;
-
-	#[endpoint]
-	fn vec_mapper_push(&self, item: u32) {
-		let mut vec_mapper = self.vec_mapper();
-		let _ = vec_mapper.push(&item);
-	}
-
-	#[view]
-	fn vec_mapper_get(&self, index: usize) -> u32 {
-		self.vec_mapper().get(index)
-	}
-
-	#[view]
-	fn vec_mapper_len(&self) -> usize {
-		self.vec_mapper().len()
-	}
-
-
-
-
-	#[view]
-	#[storage_mapper("biguint_mapper")]
-	fn biguint_mapper(&self) -> VecMapper<Self::Storage, Self::BigUint>;
-
-	#[endpoint]
-	fn biguint_mapper_push(&self, item: Self::BigUint) {
-		let mut biguint_mapper = self.biguint_mapper();
-		let _ = biguint_mapper.push(&item);
-	}
-
-	#[view]
-	fn biguint_mapper_get(&self, index: usize) -> Self::BigUint {
-		self.biguint_mapper().get(index)
-	}
-
-	#[view]
-	fn biguint_mapper_len(&self) -> usize {
-		self.biguint_mapper().len()
-	}
-
 
 
 
@@ -431,16 +373,38 @@ pub trait StaterLending {
         id: u64,
     ) -> SingleValueMapper<Self::Storage, Loan<Self::BigUint>>;
 
+	/*
+	 * @DIIMIIM: Loan getters
+	 */
+
 	#[view(getLoanById)]
 	fn get_loan_by_id(&self, loan_id: u64) -> Loan<Self::BigUint> {
 		self.loan(loan_id).get()
 	}
-
 
 	#[view(getLoanAmountByLoanId)]
 	fn get_loan_amount_by_loan_id(&self, loan_id: u64) -> SCResult<Self::BigUint> {
 		return Ok(self.loan(loan_id).get().loan_amount);
 	}
 
+	#[view(getLoanStartByLoanId)]
+	fn get_loan_start_by_loan_id(&self, loan_id: u64) -> SCResult<u64> {
+		return Ok(self.loan(loan_id).get().loan_start);
+	}
+
+	#[view(getLoanEndByLoanId)]
+	fn get_loan_end_by_loan_id(&self, loan_id: u64) -> SCResult<u64> {
+		return Ok(self.loan(loan_id).get().loan_end);
+	}
+
+	#[view(getLoanAssetsValueByLoanId)]
+	fn get_loan_assets_value_by_loan_id(&self, loan_id: u64) -> SCResult<Self::BigUint> {
+		return Ok(self.loan(loan_id).get().assets_value);
+	}
+
+	#[view(getLoanNftTokenIdArrayByLoanId)]
+	fn get_loan_nft_token_id_array_by_loan_id(&self, loan_id: u64) -> SCResult<Vec<Self::BigUint>> {
+		return Ok(self.loan(loan_id).get().nft_token_id_array);
+	}
 
 }

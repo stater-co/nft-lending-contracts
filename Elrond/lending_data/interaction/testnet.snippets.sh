@@ -133,6 +133,51 @@ createTheLoan() {
     --chain=T
 }
 
+id() {
+    erdpy --verbose contract query ${ADDRESS} --function="loanId" --proxy=${PROXY}
+}
+
+
+setNftAddressArray() {
+    read -p "Enter the NFT address array : " NFT_ADDRESS_ARRAY
+    FORMATTED_NFT_ADDRESS_ARRAY="0x"
+    
+    for i in ${NFT_ADDRESS_ARRAY[@]};
+    do
+        FORMATTED_NFT_ADDRESS_ARRAY+="$(erdpy wallet bech32 --decode $i)";
+    done
+
+    echo "ARRAY OF ADDRESS TO SET : "$FORMATTED_NFT_ADDRESS_ARRAY
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --function="setNftAddressArray" --arguments ${FORMATTED_NFT_ADDRESS_ARRAY} --send --proxy=${PROXY} --chain=T
+}
+
+nftAddressArray() {
+    erdpy --verbose contract query ${ADDRESS} --function="nftAddressArray" --proxy=${PROXY}
+}
+
+getNftAddressArrayLength() {
+    erdpy --verbose contract query ${ADDRESS} --function="getNftAddressArrayLength" --proxy=${PROXY}
+}
+
+setNftTokenIdArray() {
+    read -p "Enter the NFT token id array : " NFT_TOKEN_ID_ARRAY
+    FORMATTED_NFT_TOKEN_ID_ARRAY="0x"
+    
+    for i in ${NFT_TOKEN_ID_ARRAY[@]};
+    do
+        numberToElrondHex $i;
+        FORMATTED_NFT_TOKEN_ID_ARRAY+=$finalFormatedHex;
+    done
+
+    echo "ARRAY OF TOKEN IT ARRAY TO SET : "$FORMATTED_NFT_TOKEN_ID_ARRAY
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --function="setNftTokenIdArray" --arguments ${FORMATTED_NFT_TOKEN_ID_ARRAY} --send --proxy=${PROXY} --chain=T
+}
+
+nftTokenIdArray() {
+    erdpy --verbose contract query ${ADDRESS} --function="nftTokenIdArray" --proxy=${PROXY}
+}
+
+
 getLoanById() {
     read -p "Enter the loan ID: " LOAN_ID
     erdpy --verbose contract query ${ADDRESS} --function="getLoanById" --arguments ${LOAN_ID} --proxy=${PROXY}
@@ -143,111 +188,21 @@ getLoanAmountByLoanId() {
     erdpy --verbose contract query ${ADDRESS} --function="getLoanAmountByLoanId" --arguments ${LOAN_ID} --proxy=${PROXY}
 }
 
-setLoanId() {
+getLoanAssetsValueByLoanId() {
     read -p "Enter the loan ID: " LOAN_ID
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --function="set_loan_id" --arguments ${LOAN_ID} --send --proxy=${PROXY} --chain=T
+    erdpy --verbose contract query ${ADDRESS} --function="getLoanAssetsValueByLoanId" --arguments ${LOAN_ID} --proxy=${PROXY}
 }
 
-id() {
-    erdpy --verbose contract query ${ADDRESS} --function="loanId" --proxy=${PROXY}
-}
-
-
-
-
-: '
-    setNftAddressArray() {
-        read -p "Enter the NFT address array : " NFT_ADDRESS_ARRAY
-        FORMATTED_NFT_ADDRESS_ARRAY="0x"
-        
-        for i in ${NFT_ADDRESS_ARRAY[@]};
-        do
-            FORMATTED_NFT_ADDRESS_ARRAY+="$(erdpy wallet bech32 --decode $i)";
-        done
-
-        echo "ARRAY OF ADDRESS TO SET : "$FORMATTED_NFT_ADDRESS_ARRAY
-        erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --function="setNftAddressArray" --arguments ${FORMATTED_NFT_ADDRESS_ARRAY} --send --proxy=${PROXY} --chain=T
-    }
-
-    nftAddressArray() {
-        erdpy --verbose contract query ${ADDRESS} --function="nftAddressArray" --proxy=${PROXY}
-    }
-
-    getNftAddressArrayLength() {
-        erdpy --verbose contract query ${ADDRESS} --function="getNftAddressArrayLength" --proxy=${PROXY}
-    }
-
-    setNftTokenIdArray() {
-        read -p "Enter the NFT token id array : " NFT_TOKEN_ID_ARRAY
-        FORMATTED_NFT_TOKEN_ID_ARRAY="0x"
-        
-        for i in ${NFT_TOKEN_ID_ARRAY[@]};
-        do
-            numberToElrondHex $i;
-            FORMATTED_NFT_TOKEN_ID_ARRAY+=$finalFormatedHex;
-        done
-
-        echo "ARRAY OF TOKEN IT ARRAY TO SET : "$FORMATTED_NFT_TOKEN_ID_ARRAY
-        erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --function="setNftTokenIdArray" --arguments ${FORMATTED_NFT_TOKEN_ID_ARRAY} --send --proxy=${PROXY} --chain=T
-    }
-
-    nftTokenIdArray() {
-        erdpy --verbose contract query ${ADDRESS} --function="nftTokenIdArray" --proxy=${PROXY}
-    }
-'
-
-vecMapperPush() {
-    read -p "Enter the loan ID: " TO_PUSH
-    erdpy \ 
-        --verbose contract call ${ADDRESS} \ 
-        --recall-nonce \ 
-        --pem=${ALICE} \ 
-        --gas-limit=50000000 \ 
-        --function="vec_mapper_push" \ 
-        --arguments ${TO_PUSH} \ 
-        --send \ 
-        --proxy=${PROXY} \ 
-        --chain=T
-}
-
-vecMapper() {
-    erdpy --verbose contract query ${ADDRESS} --function="vec_mapper" --proxy=${PROXY}
-}
-
-vecMapperGet() {
-    read -p "Enter the loan ID: " INDEX
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --function="vec_mapper_get" --arguments ${INDEX} --send --proxy=${PROXY} --chain=T
-}
-
-vecMapperLen() {
-    erdpy --verbose contract query ${ADDRESS} --function="vec_mapper_len" --proxy=${PROXY}
-}
-
-
-
-
-
-biguintMapperPush() {
-    read -p "Enter the big uint: " TO_PUSH
-    TO_PUSH=$( printf "%x" $TO_PUSH );
-    LEN=$(echo ${#TO_PUSH});
-    if [[ $((($LEN) % 2)) -eq 1 ]];
-    then
-        TO_PUSH="0"$TO_PUSH;
-    fi
-    FORMATTED_TO_PUSH="0x"$TO_PUSH
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --function="biguint_mapper_push" --arguments ${FORMATTED_TO_PUSH} --send --proxy=${PROXY} --chain=T
-}
-
-biguintMapper() {
-    erdpy --verbose contract query ${ADDRESS} --function="biguint_mapper" --proxy=${PROXY}
-}
-
-biguintMapperGet() {
-    read -p "Enter the loan ID: " INDEX
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --function="biguint_mapper_get" --arguments ${INDEX} --send --proxy=${PROXY} --chain=T
-}
-
-biguintMapperLen() {
-    erdpy --verbose contract query ${ADDRESS} --function="biguint_mapper_len" --proxy=${PROXY}
+getLoanNftTokenIdArrayByLoanId() {
+    read -p "Enter the loan ID: " LOAN_ID;
+    #FORMATTED_NFT_TOKEN_ID_ARRAY=[];
+    erdpy --verbose contract query ${ADDRESS} --function="getLoanNftTokenIdArrayByLoanId" --arguments ${LOAN_ID} --proxy=${PROXY}
+    #declare -A SMART_CONTRACT_RESPONSE=$( erdpy --verbose contract query ${ADDRESS} --function="getLoanNftTokenIdArrayByLoanId" --arguments ${LOAN_ID} --proxy=${PROXY} );
+    #for i in ${SMART_CONTRACT_RESPONSE[@]};
+    #do
+    #    echo ">>> "$i;
+    #done
+    #if $SMART_CONTRACT_RESPONSE
+    #echo "The smart contract response >> "$SMART_CONTRACT_RESPONSE;
+    #CURRENCY="0x$(erdpy wallet bech32 --decode ${CURRENCY})"
 }
