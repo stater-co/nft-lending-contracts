@@ -4,7 +4,7 @@ DEPLOY_TRANSACTION=$(erdpy data load --key=deployTransaction-testnet)
 PROXY=https://testnet-api.elrond.com
 
 deploy() {
-    erdpy --verbose contract deploy --project=${PROJECT} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --send --outfile="deploy-testnet.interaction.json" --proxy=${PROXY} --chain=T || return
+    erdpy --verbose contract deploy --project=${PROJECT} --recall-nonce --pem=${ALICE} --gas-limit=99000000 --send --outfile="deploy-testnet.interaction.json" --proxy=${PROXY} --chain=T || return
 
     TRANSACTION=$(erdpy data parse --file="deploy-testnet.interaction.json" --expression="data['emitted_tx']['hash']")
     ADDRESS=$(erdpy data parse --file="deploy-testnet.interaction.json" --expression="data['emitted_tx']['address']")
@@ -193,7 +193,16 @@ id() {
 
 vecMapperPush() {
     read -p "Enter the loan ID: " TO_PUSH
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --function="vec_mapper_push" --arguments ${TO_PUSH} --send --proxy=${PROXY} --chain=T
+    erdpy \ 
+        --verbose contract call ${ADDRESS} \ 
+        --recall-nonce \ 
+        --pem=${ALICE} \ 
+        --gas-limit=50000000 \ 
+        --function="vec_mapper_push" \ 
+        --arguments ${TO_PUSH} \ 
+        --send \ 
+        --proxy=${PROXY} \ 
+        --chain=T
 }
 
 vecMapper() {
@@ -214,8 +223,15 @@ vecMapperLen() {
 
 
 biguintMapperPush() {
-    read -p "Enter the loan ID: " TO_PUSH
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --function="biguint_mapper_push" --arguments ${TO_PUSH} --send --proxy=${PROXY} --chain=T
+    read -p "Enter the big uint: " TO_PUSH
+    TO_PUSH=$( printf "%x" $TO_PUSH );
+    LEN=$(echo ${#TO_PUSH});
+    if [[ $((($LEN) % 2)) -eq 1 ]];
+    then
+        TO_PUSH="0"$TO_PUSH;
+    fi
+    FORMATTED_TO_PUSH="0x"$TO_PUSH
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --function="biguint_mapper_push" --arguments ${FORMATTED_TO_PUSH} --send --proxy=${PROXY} --chain=T
 }
 
 biguintMapper() {

@@ -280,13 +280,15 @@ pub trait StaterLending {
 			"Loan must have atleast 1 NFT"
 		);
 
+		/*
 		require!(
 			nft_address_array.len() == nft_token_id_array.len() && nft_token_id_array.len() == nft_token_type_array.len(), 
 			"NFT provided informations are missing or incomplete"
 		);
+		*/
 
 		require!(
-			self.percent(loan_amount,assets_value) <= u64::from(self.get_ltv()),
+			( ( loan_amount * 10000u64 / assets_value ) + 5u64 ) / 10u64 <= u64::from(self.get_ltv()),
 			"LTV exceeds maximum limit allowed"
 		);
 
@@ -325,6 +327,14 @@ pub trait StaterLending {
 		};
 
 		let new_loan_id: Self::BigUint = self.get_loan_id_internal() + Self::BigUint::from(1u32);
+		
+		/*
+		require!(
+            !self.loan(new_loan_id).is_empty(),
+            "invalid loan generated id"
+        );
+		*/
+
 		self.set_loan_id_internal(&new_loan_id);
 		self.loan(new_loan_id).set(&new_loan);
 
