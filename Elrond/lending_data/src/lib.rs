@@ -60,20 +60,20 @@ pub trait StaterLending {
 	 */
 	#[view(loanId)]
 	#[storage_get("loan_id")]
-	fn get_loan_id(&self) -> Self::BigUint;
+	fn get_loan_id(&self) -> u64;
 
 	#[storage_get("loan_id")]
-	fn get_loan_id_internal(&self) -> Self::BigUint;
+	fn get_loan_id_internal(&self) -> u64;
 
 	#[storage_set("loan_id")]
-	fn set_loan_id_internal(&self, loan_id: &Self::BigUint);
+	fn set_loan_id_internal(&self, loan_id: &u64);
 
 	/*
 	 * loan_id setter
 	 * @DIIMIIM: This will set the loan id value
 	 */
 	#[endpoint]
-	fn set_loan_id(&self, value: &Self::BigUint) -> SCResult<()> {
+	fn set_loan_id(&self, value: &u64) -> SCResult<()> {
 		self.set_loan_id_internal(&value);
 		Ok(())
 	}
@@ -246,7 +246,6 @@ pub trait StaterLending {
 		*/
 		let owner = self.blockchain().get_caller();
 		self.set_owner(&owner);
-		self.set_loan_id_internal(&Self::BigUint::from(0u32));
 	}
 
 
@@ -326,7 +325,7 @@ pub trait StaterLending {
 			nft_token_type_array: nft_token_type_array
 		};
 
-		let new_loan_id: Self::BigUint = self.get_loan_id_internal() + Self::BigUint::from(1u32);
+		let new_loan_id: u64 = self.get_loan_id_internal() + 1u64;
 		
 		/*
 		require!(
@@ -429,7 +428,12 @@ pub trait StaterLending {
 	#[storage_mapper("loans")]
     fn loan(
         &self,
-        loan_id: Self::BigUint,
+        id: u64,
     ) -> SingleValueMapper<Self::Storage, Loan<Self::BigUint>>;
+
+	#[view(getLoanById)]
+	fn get_loan_by_id(&self, loan_id: u64) -> Loan<Self::BigUint> {
+		self.loan(loan_id).get()
+	}
 
 }
