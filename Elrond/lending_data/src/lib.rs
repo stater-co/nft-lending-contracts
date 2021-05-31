@@ -407,4 +407,44 @@ pub trait StaterLending {
 		return Ok(self.loan(loan_id).get().nft_token_id_array);
 	}
 
+	#[view(getLoanCurrencyByLoanId)]
+	fn get_loan_currency_by_loan_id(&self, loan_id: u64) -> SCResult<Address> {
+		return Ok(self.loan(loan_id).get().currency);
+	}
+
+	#[view(getLoanNrOfInstallmentsByLoanId)]
+	fn get_loan_nr_of_installments_by_loan_id(&self, loan_id: u64) -> SCResult<u16> {
+		return Ok(self.loan(loan_id).get().nr_of_installments);
+	}
+
+	#[view(getLoanInstallmentAmountByLoanId)]
+	fn get_loan_installment_amount_by_loan_id(&self, loan_id: u64) -> SCResult<Self::BigUint> {
+		return Ok(self.loan(loan_id).get().installment_amount);
+	}
+
+	#[view(getLoanAmountDueByLoanId)]
+	fn get_loan_amount_due_by_loan_id(&self, loan_id: u64) -> SCResult<Self::BigUint> {
+		return Ok(self.loan(loan_id).get().amount_due);
+	}
+
+	#[view(getLoanPaidAmountByLoanId)]
+	fn get_loan_paid_amount_by_loan_id(&self, loan_id: u64) -> SCResult<Self::BigUint> {
+		return Ok(self.loan(loan_id).get().paid_amount);
+	}
+
+	#[view(getLoanDefaultingLimitByLoanId)]
+	fn get_loan_defaulting_limit_by_loan_id(&self, loan_id: u64) -> SCResult<u8> {
+		return Ok(self.loan(loan_id).get().defaulting_limit);
+	}
+
+	#[view(getLoanNrOfPaymentsByLoanId)]
+	fn get_loan_nr_of_payments_by_loan_id(&self, loan_id: u64) -> SCResult<u16> {
+		return Ok(self.loan(loan_id).get().nr_of_payments);
+	}
+
+	#[view(getLoanNftTokenTypeArrayByLoanId)]
+	fn get_loan_nft_token_type_array_by_loan_id(&self, loan_id: u64) -> SCResult<Vec<u8>> {
+		return Ok(self.loan(loan_id).get().nft_token_type_array);
+	}
+
 }
