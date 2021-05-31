@@ -12,6 +12,8 @@ pub struct Loan<BigUint: BigUintApi> {
     pub assets_value: BigUint,
     pub loan_start: u64,
     pub loan_end: u64,
+    pub borrower: super::Address,
+    pub lender: super::Address,
     pub currency: super::Address,
     pub nr_of_installments: u16,
     pub installment_amount: BigUint,
@@ -19,6 +21,6 @@ pub struct Loan<BigUint: BigUintApi> {
     pub paid_amount: BigUint,
     pub defaulting_limit: u8,
     pub nr_of_payments: u16,
-    pub nft_token_type_array: Vec<u8>,
+    pub nft_token_type_array: Vec<super::TokenType>,
     pub status: super::LoanStatus
 }
