@@ -5,11 +5,8 @@
  */
 elrond_wasm::imports!();
 
-/*
 mod loan_status;
 use loan_status::LoanStatus;
-*/
-
 
 mod time_scale;
 use time_scale::TimeScale;
@@ -322,7 +319,8 @@ pub trait StaterLending {
 			paid_amount: Self::BigUint::from(0u32),
 			defaulting_limit: the_defaulting_limit,
 			nr_of_payments: 0u16,
-			nft_token_type_array: nft_token_type_array
+			nft_token_type_array: nft_token_type_array,
+			status: LoanStatus::Listed
 		};
 
 		let new_loan_id: u64 = self.get_loan_id_internal() + 1u64;
@@ -445,6 +443,11 @@ pub trait StaterLending {
 	#[view(getLoanNftTokenTypeArrayByLoanId)]
 	fn get_loan_nft_token_type_array_by_loan_id(&self, loan_id: u64) -> SCResult<Vec<u8>> {
 		return Ok(self.loan(loan_id).get().nft_token_type_array);
+	}
+
+	#[view(getLoanStatusByLoanId)]
+	fn get_loan_status_by_loan_id(&self, loan_id: u64) -> SCResult<LoanStatus> {
+		return Ok(self.loan(loan_id).get().status);
 	}
 
 }
