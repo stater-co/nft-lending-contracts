@@ -25,7 +25,7 @@ mod non_fungible_token_proxy {
 	elrond_wasm::imports!();
 
 	#[elrond_wasm_derive::proxy]
-	pub trait NonFungibleTokens {
+	pub trait StaterNftFactory {
 
 		#[endpoint]
 		fn transfer(&self, token_id: u64, to: Address);
@@ -33,6 +33,19 @@ mod non_fungible_token_proxy {
 		#[view(tokenOwner)]
 		#[storage_get("tokenOwner")]
 		fn get_token_owner(&self, token_id: u64);
+
+	}
+}
+
+
+mod discounts_proxy {
+	elrond_wasm::imports!();
+
+	#[elrond_wasm_derive::proxy]
+	pub trait StaterDiscounts {
+
+		#[view(calculateDiscount)]
+		fn calculate_discount(&self, sender: Address) -> u8;
 
 	}
 }
@@ -337,6 +350,21 @@ pub trait StaterLending {
 
 		Ok(())
 	}
+
+
+	/*
+	 * approve loan
+	 * @DIIMIIM: Call this to approve a loan
+	 */
+	 #[endpoint(approveLoan)]
+	 fn approve_loan(&self
+		 , loan_id: Self::BigUint
+	 ) -> elrond_wasm::types::SCResult<()> {
+ 
+
+ 
+		 Ok(())
+	 }
 
 	
 	#[view(nftAddressArray)]
