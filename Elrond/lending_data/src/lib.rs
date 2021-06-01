@@ -356,17 +356,62 @@ pub trait StaterLending {
 	 * approve loan
 	 * @DIIMIIM: Call this to approve a loan
 	 */
-	 #[endpoint(approveLoan)]
-	 fn approve_loan(&self
-		 , loan_id: Self::BigUint
-	 ) -> elrond_wasm::types::SCResult<()> {
- 
+	#[endpoint(approveLoan)]
+	fn approve_loan(&self
+		, loan_id: Self::BigUint
+	) -> elrond_wasm::types::SCResult<()> {
 
- 
-		 Ok(())
-	 }
+
+
+		Ok(())
+	}
+
+
+	/*
+	 * cancel loan
+	 * @DIIMIIM: Call this to cancel a loan
+	 */
+	#[endpoint(cancelLoan)]
+	fn cancel_loan(&self
+		, loan_id: Self::BigUint
+	) -> elrond_wasm::types::SCResult<()> {
+
+
+
+		Ok(())
+	}
+
+
+	/*
+	 * pay loan
+	 * @DIIMIIM: Call this to pay a loan
+	 */
+	#[endpoint(payLoan)]
+	fn pay_loan(&self
+		, loan_id: Self::BigUint
+	) -> elrond_wasm::types::SCResult<()> {
+
+
+
+		Ok(())
+	}
 
 	
+	/*
+	 * terminate loan
+	 * @DIIMIIM: Call this to terminate a loan
+	 */
+	#[endpoint(terminateLoan)]
+	fn terminate_loan(&self
+		, loan_id: Self::BigUint
+	) -> elrond_wasm::types::SCResult<()> {
+
+
+
+		Ok(())
+	}
+
+
 	#[view(nftAddressArray)]
 	#[storage_get("nft_address_array")]
 	fn get_nft_address_array(&self) -> Vec<Address>;
