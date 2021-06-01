@@ -45,9 +45,9 @@ dependencies = [
 
 [[package]]
 name = "elrond-wasm"
-version = "0.16.2"
+version = "0.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "03c4fd8cca1cfc4e46fed1a3d1f907c7c2ff57e558d90d35b027b2c7d1ca74b7"
+checksum = "fec3331ca3be6cea8e02ffe43b3828c93d6ed02ed9316236186e0955838c0a40"
 dependencies = [
  "arrayvec",
  "elrond-codec",
@@ -58,9 +58,9 @@ dependencies = [
 
 [[package]]
 name = "elrond-wasm-derive"
-version = "0.16.2"
+version = "0.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "31a1b431ed3871b1e76a196a5bd390f63867b02b6dd4247467dcbf3fab1084df"
+checksum = "c9bbe82b96cc419ba64821319c222701170687f9fae3d5e464acfbf65228901f"
 dependencies = [
  "hex",
  "proc-macro2",
@@ -70,18 +70,18 @@ dependencies = [
 
 [[package]]
 name = "elrond-wasm-node"
-version = "0.16.2"
+version = "0.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "41a9027905abf02975b29cb12fb814d0678cea28547eecbbf9774473959bfb33"
+checksum = "19f3b65f245aff3e9013f6fe64d16edc93c5ee7e851a349a002c92b273823fa6"
 dependencies = [
  "elrond-wasm",
 ]
 
 [[package]]
 name = "elrond-wasm-output"
-version = "0.16.2"
+version = "0.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "653a78df112fe264ca32bf9d6c340ad3633823e833efcabdb99ef3781eadb3a6"
+checksum = "27d41b3c9959d09b2353a4ec9ee854c1123567597ee011a95090a28c349d0145"
 dependencies = [
  "elrond-wasm-node",
  "wee_alloc",
@@ -107,6 +107,14 @@ name = "hex-literal"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5af1f635ef1bc545d78392b136bfe1c9809e029023c84a3638a864a10b8819c8"
+
+[[package]]
+name = "lending_data"
+version = "0.0.0"
+dependencies = [
+ "elrond-wasm-output",
+ "test",
+]
 
 [[package]]
 name = "libc"
@@ -165,14 +173,6 @@ dependencies = [
  "elrond-wasm-derive",
  "elrond-wasm-node",
  "nft_generator",
-]
-
-[[package]]
-name = "test-wasm"
-version = "0.0.0"
-dependencies = [
- "elrond-wasm-output",
- "test",
 ]
 
 [[package]]

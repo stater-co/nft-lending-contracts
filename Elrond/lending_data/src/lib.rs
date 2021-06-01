@@ -484,7 +484,7 @@ pub trait StaterLending {
 	#[storage_get("discount_contract_address")]
 	fn get_discount_contract_address(&self) -> Address;
 
-	
+
 
 	#[storage_mapper("loans")]
     fn loan(
@@ -580,5 +580,22 @@ pub trait StaterLending {
 	fn get_loan_status_by_loan_id(&self, loan_id: u64) -> SCResult<LoanStatus> {
 		return Ok(self.loan(loan_id).get().status);
 	}
+
+
+	/*
+	#[event("NewLoan")]
+	fn new_loan(
+		&self,
+		#[indexed] loanId: u64, 
+		#[indexed] owner: &Address, 
+		creationDate: u64, 
+		#[indexed] currency: &Address, 
+		status: LoanStatus, 
+		nftAddressArray: Vec<&Address>, 
+		nftTokenIdArray: Vec<&Self::BigUint>,
+		nftTokenTypeArray: Vec<TokenType>
+	);
+	*/
+
 
 }
