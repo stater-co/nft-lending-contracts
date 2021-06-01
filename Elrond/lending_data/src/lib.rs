@@ -1,4 +1,6 @@
 #![no_std]
+// #![allow(clippy::string_lit_as_bytes)]
+
 
 /*
  * @DIIMIIM: erd1deaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaqtv0gag [elrond] == address(0) [ethereum]
@@ -18,44 +20,12 @@ mod loan;
 use loan::Loan;
 
 
-pub const BASE_PRECISION: u32 = 1_000_000_000;
-
-
-mod non_fungible_token_proxy {
-	elrond_wasm::imports!();
-
-	#[elrond_wasm_derive::proxy]
-	pub trait StaterNftFactory {
-
-		#[endpoint]
-		fn transfer(&self, token_id: u64, to: Address);
-
-		#[view(tokenOwner)]
-		#[storage_get("tokenOwner")]
-		fn get_token_owner(&self, token_id: u64);
-
-	}
-}
-
-
-mod discounts_proxy {
-	elrond_wasm::imports!();
-
-	#[elrond_wasm_derive::proxy]
-	pub trait StaterDiscounts {
-
-		#[view(calculateDiscount)]
-		fn calculate_discount(&self, sender: Address) -> u8;
-
-	}
-}
-
 
 #[elrond_wasm_derive::contract]
 pub trait StaterLending {
 
-	// #[proxy]
-	// fn transfer(&self, token_id: u64, to: Address) -> nft_generator::Proxy<Self::SendApi>;
+	#[proxy]
+	fn nft_generator_proxy(&self, to: Address) -> nft_generator::Proxy<Self::SendApi>;
 
 	/*
 	 * owner
@@ -363,9 +333,11 @@ pub trait StaterLending {
 	 * approve loan
 	 * @DIIMIIM: Call this to approve a loan
 	 */
+	#[payable("EGLD")]
 	#[endpoint(approveLoan)]
 	fn approve_loan(&self
 		, loan_id: u64
+		, #[payment] payment: Self::BigUint
 	) -> elrond_wasm::types::SCResult<()> {
 		let loan_obj: Loan<Self::BigUint> = self.loan(loan_id).get();
 
@@ -390,6 +362,7 @@ pub trait StaterLending {
 		 */
 		let discount: u8 = 1;
 
+		
 
 		Ok(())
 	}
@@ -484,6 +457,17 @@ pub trait StaterLending {
 	#[storage_get("discount_contract_address")]
 	fn get_discount_contract_address(&self) -> Address;
 
+
+	#[endpoint]
+	#[storage_set("nft_contract_address")]
+	fn set_nft_contract_address(&self, address: &Address);
+
+	#[storage_set("nft_contract_address")]
+	fn set_nft_contract_address_internal(&self, address: &Address);
+
+	#[view]
+	#[storage_get("nft_contract_address")]
+	fn get_nft_contract_address(&self) -> Address;
 
 
 	#[storage_mapper("loans")]
@@ -582,6 +566,7 @@ pub trait StaterLending {
 	}
 
 
+	
 	/*
 	#[event("NewLoan")]
 	fn new_loan(
@@ -596,6 +581,7 @@ pub trait StaterLending {
 		nftTokenTypeArray: Vec<TokenType>
 	);
 	*/
+	
 
 
 }
