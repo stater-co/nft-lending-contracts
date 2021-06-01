@@ -384,6 +384,11 @@ pub trait StaterLending {
 			"This loan is not currently ready for lenders, check later"
 		);
 
+		/*
+		 * @DIIMIIM: The discount smart contract
+		 * TO DO
+		 */
+		let discount: u8 = 1;
 
 
 		Ok(())
@@ -467,6 +472,19 @@ pub trait StaterLending {
 	}
 
 
+
+	#[endpoint]
+	#[storage_set("discount_contract_address")]
+	fn set_discount_contract_address(&self, address: &Address);
+
+	#[storage_set("discount_contract_address")]
+	fn set_discount_contract_address_internal(&self, address: &Address);
+
+	#[view]
+	#[storage_get("discount_contract_address")]
+	fn get_discount_contract_address(&self) -> Address;
+
+	
 
 	#[storage_mapper("loans")]
     fn loan(
