@@ -11,6 +11,9 @@ path = "src/lib.rs"
 [features]
 wasm-output-mode = [ "elrond-wasm-node",]
 
+[dependencies.nft_generator]
+path = "../nft_generator"
+
 [dependencies.elrond-wasm]
 version = "0.16.2"
 
