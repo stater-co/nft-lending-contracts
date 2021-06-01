@@ -331,7 +331,7 @@ pub trait StaterLending {
 			loan_start: 0u64,
 			loan_end: 0u64,
 			borrower: self.blockchain().get_caller(),
-			lender: self.blockchain().get_caller(), // To be changed in the future, elrond_wasm::types::Address,
+			lender: Address::zero(), //self.blockchain().get_caller(), // To be changed in the future, elrond_wasm::types::Address,
 			currency: currency,
 			nr_of_installments: nr_of_installments,
 			installment_amount: Self::BigUint::from(the_installment_amount),
@@ -365,8 +365,25 @@ pub trait StaterLending {
 	 */
 	#[endpoint(approveLoan)]
 	fn approve_loan(&self
-		, loan_id: Self::BigUint
+		, loan_id: u64
 	) -> elrond_wasm::types::SCResult<()> {
+		let loan_obj: Loan<Self::BigUint> = self.loan(loan_id).get();
+
+		require!(
+			loan_obj.lender == Address::zero(),
+			"Loan must have at least 1 installment"
+		);
+
+		require!(
+			loan_obj.paid_amount == 0, 
+			"This loan is currently not ready for lenders"
+		);
+
+		require!(
+			loan_obj.status == LoanStatus::Listed, 
+			"This loan is not currently ready for lenders, check later"
+		);
+
 
 
 		Ok(())
