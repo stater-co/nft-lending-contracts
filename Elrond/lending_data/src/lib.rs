@@ -54,6 +54,8 @@ mod discounts_proxy {
 #[elrond_wasm_derive::contract]
 pub trait StaterLending {
 
+	// #[proxy]
+	// fn transfer(&self, token_id: u64, to: Address) -> nft_generator::Proxy<Self::SendApi>;
 
 	/*
 	 * owner
@@ -341,6 +343,11 @@ pub trait StaterLending {
 			status: LoanStatus::Listed
 		};
 
+		/*
+		 *	@DIIMIIM: Send tokens here
+		 * TO DO
+		 */
+
 		let loan_id: u64 = self.get_loan_id_internal();
 		self.loan(loan_id).set(&new_loan);
 		
@@ -360,7 +367,6 @@ pub trait StaterLending {
 	fn approve_loan(&self
 		, loan_id: Self::BigUint
 	) -> elrond_wasm::types::SCResult<()> {
-
 
 
 		Ok(())
@@ -488,6 +494,16 @@ pub trait StaterLending {
 	#[view(getLoanCurrencyByLoanId)]
 	fn get_loan_currency_by_loan_id(&self, loan_id: u64) -> SCResult<Address> {
 		return Ok(self.loan(loan_id).get().currency);
+	}
+
+	#[view(getLoanLenderByLoanId)]
+	fn get_loan_lender_by_loan_id(&self, loan_id: u64) -> SCResult<Address> {
+		return Ok(self.loan(loan_id).get().lender);
+	}
+
+	#[view(getLoanBorrowerByLoanId)]
+	fn get_loan_borrower_by_loan_id(&self, loan_id: u64) -> SCResult<Address> {
+		return Ok(self.loan(loan_id).get().borrower);
 	}
 
 	#[view(getLoanNrOfInstallmentsByLoanId)]
