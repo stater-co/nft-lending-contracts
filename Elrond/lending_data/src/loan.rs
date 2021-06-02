@@ -7,6 +7,7 @@ use elrond_wasm::{Vec, api::BigUintApi};
 
 #[derive(TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi, PartialEq, Clone)]
 pub struct Loan<BigUint: BigUintApi> {
+    pub nft_token_address_array: Vec<super::Address>,
     pub nft_token_id_array: Vec<BigUint>,
     pub loan_amount: BigUint,
     pub assets_value: BigUint,

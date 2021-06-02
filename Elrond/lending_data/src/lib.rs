@@ -295,6 +295,7 @@ pub trait StaterLending {
 		}
 
 		let new_loan = Loan {
+			nft_token_address_array: nft_address_array,
 			nft_token_id_array: nft_token_id_array,
 			loan_amount: Self::BigUint::from(loan_amount),
 			assets_value: Self::BigUint::from(assets_value),
@@ -313,20 +314,33 @@ pub trait StaterLending {
 			status: LoanStatus::Listed
 		};
 
-		/*
-		 *	@DIIMIIM: Send tokens here
-		 * TO DO
-		 */
+		for ((&the_address, &the_token_id), &the_token_type) in nft_address_array.iter().zip(nft_token_id_array.iter()).zip(nft_token_type_array.iter()) {
+			
+			self
+			.nft_generator_proxy(the_address)
+			.perform_transfer(the_token_id, self.blockchain().get_caller(), self.blockchain().get_sc_address())
+			.async_call()
+
+			/*
+			.with_callback(
+				self.callbacks()
+					.transfer_from_callback(caller, token_amount),
+			)
+			*/
+			
+		}
+
 
 		let loan_id: u64 = self.get_loan_id_internal();
 		self.loan(loan_id).set(&new_loan);
 		
 		let new_loan_id: u64 = loan_id + 1u64;
 		self.set_loan_id_internal(&new_loan_id);
-		
 
 		Ok(())
+
 	}
+
 
 
 	/*
@@ -571,17 +585,52 @@ pub trait StaterLending {
 	#[event("NewLoan")]
 	fn new_loan(
 		&self,
-		#[indexed] loanId: u64, 
-		#[indexed] owner: &Address, 
-		creationDate: u64, 
+		#[indexed] loan_id: u64, 
+		#[indexed] owner: &Address,  
 		#[indexed] currency: &Address, 
 		status: LoanStatus, 
-		nftAddressArray: Vec<&Address>, 
-		nftTokenIdArray: Vec<&Self::BigUint>,
-		nftTokenTypeArray: Vec<TokenType>
+		nft_address_array: Vec<&Address>, 
+		nft_token_id_array: Vec<&Self::BigUint>,
+		nft_token_type_array: Vec<TokenType>
 	);
 	*/
-	
+
+
+
+	/*
+	#[callback]
+	fn transfer_from_callback(
+		&self,
+		#[call_result] result: AsyncCallResult<()>,
+		cb_sender: Address,
+		cb_amount: Self::BigUint,
+	) -> OptionalResult<AsyncCall<Self::SendApi>> {
+		match result {
+			AsyncCallResult::Ok(()) => {
+				// transaction started before deadline, ended after -> refund
+				if self.blockchain().get_block_nonce() > self.get_deadline() {
+					let erc20_address = self.get_erc20_contract_address();
+					return OptionalResult::Some(
+						self.erc20_proxy(erc20_address)
+							.transfer(cb_sender, cb_amount)
+							.async_call(),
+					);
+				}
+
+				let mut deposit = self.get_deposit(&cb_sender);
+				deposit += &cb_amount;
+				self.set_deposit(&cb_sender, &deposit);
+
+				let mut balance = self.get_total_balance();
+				balance += &cb_amount;
+				self.set_total_balance(&balance);
+
+				OptionalResult::None
+			},
+			AsyncCallResult::Err(_) => OptionalResult::None,
+		}
+	}
+	*/
 
 
 }
