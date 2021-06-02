@@ -129,14 +129,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8452105ba047068f40ff7093dd1d9da90898e63dd61736462e9cdda6a90ad3c3"
 
 [[package]]
-name = "nft_generator"
-version = "0.0.0"
-dependencies = [
- "elrond-wasm",
- "elrond-wasm-derive",
-]
-
-[[package]]
 name = "proc-macro2"
 version = "1.0.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -172,7 +164,6 @@ dependencies = [
  "elrond-wasm",
  "elrond-wasm-derive",
  "elrond-wasm-node",
- "nft_generator",
 ]
 
 [[package]]

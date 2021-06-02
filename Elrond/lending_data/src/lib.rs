@@ -24,8 +24,6 @@ use loan::Loan;
 #[elrond_wasm_derive::contract]
 pub trait StaterLending {
 
-	#[proxy]
-	fn nft_generator_proxy(&self, to: Address) -> nft_generator::Proxy<Self::SendApi>;
 
 	/*
 	 * owner
@@ -234,10 +232,22 @@ pub trait StaterLending {
 	}
 
 
+    fn send_debt(&self, to: &Address, nonce: u64, amount: &Self::BigUint) {
+        let _ = self.send().direct_esdt_nft_via_transfer_exec(
+            to,
+            self.debt_token_id().get().as_esdt_identifier(),
+            nonce,
+            amount,
+            &[],
+        );
+    }
+
+
 	/*
 	 * create loan
 	 * @DIIMIIM: Call this to create a loan
 	 */
+	#[payable("ESDT")]
 	#[endpoint(createLoan)]
 	fn create_loan(&self
 		, loan_amount: u64 
@@ -314,12 +324,14 @@ pub trait StaterLending {
 			status: LoanStatus::Listed
 		};
 
+		/*
 		for ((&the_address, &the_token_id), &the_token_type) in nft_address_array.iter().zip(nft_token_id_array.iter()).zip(nft_token_type_array.iter()) {
 			
 			self
 			.nft_generator_proxy(the_address)
 			.perform_transfer(the_token_id, self.blockchain().get_caller(), self.blockchain().get_sc_address())
 			.async_call()
+		*/
 
 			/*
 			.with_callback(
@@ -327,8 +339,8 @@ pub trait StaterLending {
 					.transfer_from_callback(caller, token_amount),
 			)
 			*/
-			
-		}
+
+		//}
 
 
 		let loan_id: u64 = self.get_loan_id_internal();
