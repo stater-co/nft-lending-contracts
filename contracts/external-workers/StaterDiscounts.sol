@@ -51,28 +51,32 @@ contract StaterDiscounts is Ownable {
      * @DIIMIIM To discuss this method with @Matei
      */
     function calculateDiscount(address requester) public view returns(uint256){
+        uint256 toReturn = 1;
         for (uint i = 0; i < discountId; ++i){
             
             // token type 1 is first to check to ensure the biggest discount will be applied
             // if user has a erc 1155 for discount
             if ( discounts[i].tokenType == 1 )
                 for (uint j = 0; j < discounts[i].tokenIds.length ; ++j)
-                    if ( IERC1155(discounts[i].tokenContract).balanceOf(requester,discounts[i].tokenIds[j]) > 0 )
-        	            return discounts[i].discount;    
+                    if ( toReturn < discounts[i].discount )
+                        if ( IERC1155(discounts[i].tokenContract).balanceOf(requester,discounts[i].tokenIds[j]) > 0 )
+        	                toReturn = discounts[i].discount;    
 
             // if user has a geyser stake for discount
             if ( discounts[i].tokenType == 2 )
-                if ( Geyser(discounts[i].tokenContract).totalStakedFor(requester) > 0 )
-                    return discounts[i].discount;
+                if ( toReturn < discounts[i].discount )
+                    if ( Geyser(discounts[i].tokenContract).totalStakedFor(requester) > 0 )
+                        toReturn = discounts[i].discount;
         	            
             // if user has a erc 721 for discount 
             if ( discounts[i].tokenType == 0 )
                 for (uint j = 0; j < discounts[i].tokenIds.length ; ++j)
-                    if ( IERC721(discounts[i].tokenContract).ownerOf(discounts[i].tokenIds[j]) == requester )
-                        return discounts[i].discount;
+                    if ( toReturn < discounts[i].discount )
+                        if ( IERC721(discounts[i].tokenContract).ownerOf(discounts[i].tokenIds[j]) == requester )
+                            toReturn = discounts[i].discount;
                         
         }                
-        return 1;
+        return toReturn;
     }
 
 }
