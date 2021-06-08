@@ -335,9 +335,11 @@ pub trait LendingData {
 
 
 	/* Loans mapper */
+	/*
 	#[storage_mapper("loans")]
 	fn loan_handler(
 		&self,
 	) -> SingleValueMapper<Self::Storage, Loan<Self::BigUint>>;
+	*/
 
 }
