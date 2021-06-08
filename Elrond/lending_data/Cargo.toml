@@ -1,7 +1,7 @@
 [package]
-name = "lending_data"
+name = "test"
 version = "0.0.0"
-authors = [ "Gheonea 'DIIMIIM' Emilian", "Stater" ]
+authors = [ "you",]
 edition = "2018"
 publish = false
 
@@ -9,9 +9,10 @@ publish = false
 path = "src/lib.rs"
 
 [features]
-wasm-output-mode = ["elrond-wasm-node"]
+wasm-output-mode = [ "elrond-wasm-node",]
 
 [dependencies.elrond-wasm]
+<<<<<<< HEAD
 version = "0.16.2"
 
 [dependencies.elrond-wasm-derive]
@@ -23,3 +24,16 @@ optional = true
 
 [dev-dependencies.elrond-wasm-debug]
 version = "0.16.2"
+=======
+version = "0.17.0"
+
+[dependencies.elrond-wasm-derive]
+version = "0.17.0"
+
+[dependencies.elrond-wasm-node]
+version = "0.17.0"
+optional = true
+
+[dev-dependencies.elrond-wasm-debug]
+version = "0.17.0"
+>>>>>>> b7942aa2f75cf7d5930767c9fdcbfd04b306e49a

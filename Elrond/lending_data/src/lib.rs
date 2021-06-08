@@ -1,36 +1,29 @@
 #![no_std]
-
-
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
-
-
-mod time_scale;
-mod loan;
-//mod storage;
-use time_scale::TimeScale;
-use loan::Loan;
+// #![allow(clippy::string_lit_as_bytes)]
 
 
 /*
  * @DIIMIIM: erd1deaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaddeaqtv0gag [elrond] == address(0) [ethereum]
  */
+elrond_wasm::imports!();
 
-/*
- * @DIIMIIM: CRITICAL:cli:Cannot handle non-hex, non-number arguments yet: "ERD1DEADDEADDEADDEADDEADDEADDEADDEADDEADDEADDEADDEADDEAQTV0GAG".
- */
+mod loan_status;
+use loan_status::LoanStatus;
+
+mod time_scale;
+use time_scale::TimeScale;
+
+mod token_type;
+use token_type::TokenType;
+
+mod loan;
+use loan::Loan;
 
 
-/*
- * STATER.CO - Lending smart contract Rust implementation
- * @DIIMIIM, created on 17 May 2021
- * rustc --explain E0204:
- * The `Copy` trait is implemented by default only on primitive types. If your
- * type only contains primitive types, you'll be able to implement `Copy` on it.
- * Otherwise, it won't be possible.
- */
-#[elrond_wasm_derive::contract()]
-pub trait LendingData {
+
+#[elrond_wasm_derive::contract]
+pub trait StaterLending {
+
 
 	/*
 	 * owner
@@ -44,19 +37,29 @@ pub trait LendingData {
 	fn set_owner(&self, owner: &Address);
 
 
-
 	/*
-	 * push loan
-	 * @DIIMIIM: This will be set on smart contract constructor
+	 * loan_id
+	 * will be set with 0 on smart contract constructor
 	 */
-	/*
-	#[storage_set("loans")]
-	fn push_loan_internal(&self, loan_id: &u64, loan: &Loan<u64>);
+	#[view(loanId)]
+	#[storage_get("loan_id")]
+	fn get_loan_id(&self) -> u64;
 
-	#[view(loans)]
-	#[storage_get("loans")]
-	fn get_loans(&self, loan_id: &u64) -> Loan<u64>;
-	*/
+	#[storage_get("loan_id")]
+	fn get_loan_id_internal(&self) -> u64;
+
+	#[storage_set("loan_id")]
+	fn set_loan_id_internal(&self, loan_id: &u64);
+
+	/*
+	 * loan_id setter
+	 * @DIIMIIM: This will set the loan id value
+	 */
+	#[endpoint]
+	fn set_loan_id(&self, value: &u64) -> SCResult<()> {
+		self.set_loan_id_internal(&value);
+		Ok(())
+	}
 
 
 	/*
@@ -81,20 +84,6 @@ pub trait LendingData {
 	}
 
 
-
-	/*
-	 * loanID
-	 * The loan ID
-	 */
-	#[view(loanID)]
-	#[storage_get("loan_id")]
-	fn get_loan_id(&self) -> BigUint;
-
-	#[storage_set("loan_id")]
-	fn set_loan_id(&self, loan_id: &BigUint);
-
-
-
 	/*
 	 * lender_fee
 	 * will be set on smart contract constructor
@@ -116,7 +105,6 @@ pub trait LendingData {
 		Ok(())
 	}
 
-	
 
 	/*
 	 * ltv
@@ -128,7 +116,7 @@ pub trait LendingData {
 
 	#[storage_set("ltv")]
 	fn set_ltv_internal(&self, ltv: &u16);
-
+ 
 	/*
 	 * discount ltv setter
 	 * @DIIMIIM: This will set the ltv value
@@ -137,8 +125,7 @@ pub trait LendingData {
 	fn set_ltv(&self, value: &u16) -> SCResult<()> {
 		self.set_ltv_internal(&value);
 		Ok(())
-	} 
-
+	}
 
 
 	/*
@@ -160,8 +147,7 @@ pub trait LendingData {
 	fn set_installment_frequency(&self, value: &u16) -> SCResult<()> {
 		self.set_installment_frequency_internal(&value);
 		Ok(())
-	} 
-
+	}
 
 
 	/*
@@ -174,7 +160,7 @@ pub trait LendingData {
 
 	#[storage_set("interest_rate")]
 	fn set_interest_rate_internal(&self, interest_rate: &u8);
-
+ 
 	/*
 	 * interest rate setter
 	 * @DIIMIIM: This will set the interest rate value
@@ -183,8 +169,7 @@ pub trait LendingData {
 	fn set_interest_rate(&self, value: &u8) -> SCResult<()> {
 		self.set_interest_rate_internal(&value);
 		Ok(())
-	}  
-
+	}
 
 
 	/*
@@ -197,7 +182,7 @@ pub trait LendingData {
 
 	#[storage_set("interest_rate_to_stater")]
 	fn set_interest_rate_to_stater_internal(&self, interest_rate_to_stater: &u8);
-
+ 
 	/*
 	 * interest rate setter
 	 * @DIIMIIM: This will set the interest rate value
@@ -206,15 +191,13 @@ pub trait LendingData {
 	fn set_interest_rate_to_stater(&self, value: &u8) -> SCResult<()> {
 		self.set_interest_rate_to_stater_internal(&value);
 		Ok(())
-	}  
-
+	}
 
 
 	#[endpoint]
 	fn percent(&self, numerator: u64, denominator: u64) -> u64 {
 		return numerator * 10000 / denominator + 5 / 10;
-	}  
-
+	}
 
 
 	/*
@@ -241,29 +224,40 @@ pub trait LendingData {
 		self.set_interest_rate_to_stater_internal(&interest_rate_to_stater_constructor);
 
 		/*
-		 * @DIIMIIM:
-		 * Here we set the smart contract owner
-		 */
-		let owner = self.get_caller();
+		* @DIIMIIM:
+		* Here we set the smart contract owner
+		*/
+		let owner = self.blockchain().get_caller();
 		self.set_owner(&owner);
 	}
 
+
+    fn send_debt(&self, to: &Address, nonce: u64, amount: &Self::BigUint) {
+        let _ = self.send().direct_esdt_nft_via_transfer_exec(
+            to,
+            self.debt_token_id().get().as_esdt_identifier(),
+            nonce,
+            amount,
+            &[],
+        );
+    }
 
 
 	/*
 	 * create loan
 	 * @DIIMIIM: Call this to create a loan
 	 */
-	 #[endpoint(createLoan)]
+	#[payable("ESDT")]
+	#[endpoint(createLoan)]
 	fn create_loan(&self
-		, loan_amount: u64
-		, nr_of_installments: u16
+		, loan_amount: u64 
+		, nr_of_installments: u16 
 		, currency: Address 
-		, assets_value: u64
-		, nft_address_array: Vec<Address>
-		, nft_token_id_array: Vec<u64>
-		, nft_token_type_array: Vec<u8>
-	) -> SCResult<()> {
+		, assets_value: u64 
+		, nft_address_array: Vec<Address> 
+		, nft_token_id_array: Vec<Self::BigUint> 
+		, nft_token_type_array: Vec<TokenType>
+	) -> elrond_wasm::types::SCResult<()> {
 
 		require!(
 			nr_of_installments > 0,
@@ -280,13 +274,15 @@ pub trait LendingData {
 			"Loan must have atleast 1 NFT"
 		);
 
+		/*
 		require!(
 			nft_address_array.len() == nft_token_id_array.len() && nft_token_id_array.len() == nft_token_type_array.len(), 
 			"NFT provided informations are missing or incomplete"
 		);
+		*/
 
 		require!(
-			self.percent(loan_amount,assets_value) <= u64::from(self.get_ltv()),
+			( ( loan_amount * 10000u64 / assets_value ) + 5u64 ) / 10u64 <= u64::from(self.get_ltv()),
 			"LTV exceeds maximum limit allowed"
 		);
 
@@ -308,38 +304,355 @@ pub trait LendingData {
 			the_defaulting_limit = 3;
 		}
 
-		/*
-		self.loan_handler().set(&Loan {
-			nft_address_array,
-			borrower: self.get_caller(),
-			lender: self.get_caller(),
-			currency,
-			status: 0u8,
-			nft_token_id_array,
-			loan_amount,
-			assets_value,
+		let new_loan = Loan {
+			nft_token_address_array: nft_address_array,
+			nft_token_id_array: nft_token_id_array,
+			loan_amount: Self::BigUint::from(loan_amount),
+			assets_value: Self::BigUint::from(assets_value),
 			loan_start: 0u64,
 			loan_end: 0u64,
-			nr_of_installments,
-			installment_amount: the_installment_amount,
-			amount_due: the_amount_due,
-			paid_amount: 0u64,
+			borrower: self.blockchain().get_caller(),
+			lender: Address::zero(), //self.blockchain().get_caller(), // To be changed in the future, elrond_wasm::types::Address,
+			currency: currency,
+			nr_of_installments: nr_of_installments,
+			installment_amount: Self::BigUint::from(the_installment_amount),
+			amount_due: Self::BigUint::from(the_amount_due),
+			paid_amount: Self::BigUint::from(0u32),
 			defaulting_limit: the_defaulting_limit,
 			nr_of_payments: 0u16,
-			nft_token_type_array
-		});
+			nft_token_type_array: nft_token_type_array,
+			status: LoanStatus::Listed
+		};
+
+		/*
+		for ((&the_address, &the_token_id), &the_token_type) in nft_address_array.iter().zip(nft_token_id_array.iter()).zip(nft_token_type_array.iter()) {
+			
+			self
+			.nft_generator_proxy(the_address)
+			.perform_transfer(the_token_id, self.blockchain().get_caller(), self.blockchain().get_sc_address())
+			.async_call()
 		*/
+
+			/*
+			.with_callback(
+				self.callbacks()
+					.transfer_from_callback(caller, token_amount),
+			)
+			*/
+
+		//}
+
+
+		let loan_id: u64 = self.get_loan_id_internal();
+		self.loan(loan_id).set(&new_loan);
+		
+		let new_loan_id: u64 = loan_id + 1u64;
+		self.set_loan_id_internal(&new_loan_id);
+
+		Ok(())
+
+	}
+
+
+<<<<<<< HEAD
+	/* Loans mapper */
+	/*
+=======
+
+	/*
+	 * approve loan
+	 * @DIIMIIM: Call this to approve a loan
+	 */
+	#[payable("EGLD")]
+	#[endpoint(approveLoan)]
+	fn approve_loan(&self
+		, loan_id: u64
+		, #[payment] payment: Self::BigUint
+	) -> elrond_wasm::types::SCResult<()> {
+		let loan_obj: Loan<Self::BigUint> = self.loan(loan_id).get();
+
+		require!(
+			loan_obj.lender == Address::zero(),
+			"Loan must have at least 1 installment"
+		);
+
+		require!(
+			loan_obj.paid_amount == 0, 
+			"This loan is currently not ready for lenders"
+		);
+
+		require!(
+			loan_obj.status == LoanStatus::Listed, 
+			"This loan is not currently ready for lenders, check later"
+		);
+
+		/*
+		 * @DIIMIIM: The discount smart contract
+		 * TO DO
+		 */
+		let discount: u8 = 1;
+
+		
 
 		Ok(())
 	}
 
 
-	/* Loans mapper */
 	/*
+	 * cancel loan
+	 * @DIIMIIM: Call this to cancel a loan
+	 */
+	#[endpoint(cancelLoan)]
+	fn cancel_loan(&self
+		, loan_id: Self::BigUint
+	) -> elrond_wasm::types::SCResult<()> {
+
+
+
+		Ok(())
+	}
+
+
+	/*
+	 * pay loan
+	 * @DIIMIIM: Call this to pay a loan
+	 */
+	#[endpoint(payLoan)]
+	fn pay_loan(&self
+		, loan_id: Self::BigUint
+	) -> elrond_wasm::types::SCResult<()> {
+
+
+
+		Ok(())
+	}
+
+	
+	/*
+	 * terminate loan
+	 * @DIIMIIM: Call this to terminate a loan
+	 */
+	#[endpoint(terminateLoan)]
+	fn terminate_loan(&self
+		, loan_id: Self::BigUint
+	) -> elrond_wasm::types::SCResult<()> {
+
+
+
+		Ok(())
+	}
+
+
+	#[view(nftAddressArray)]
+	#[storage_get("nft_address_array")]
+	fn get_nft_address_array(&self) -> Vec<Address>;
+ 
+	#[storage_set("nft_address_array")]
+	fn set_nft_address_array_internal(&self, nft_address_array: &Vec<Address>);
+
+	#[endpoint(setNftAddressArray)]
+	fn set_nft_address_array(&self,
+		nft_address_array: Vec<Address> 
+	) -> SCResult<()> {
+		self.set_nft_address_array_internal(&nft_address_array);
+		Ok(())
+	}
+
+
+	#[view(nftTokenIdArray)]
+	#[storage_get("nft_token_id_array")]
+	fn get_nft_token_id_array(&self) -> Vec<Self::BigUint>;
+ 
+	#[storage_set("nft_token_id_array")]
+	fn set_nft_token_id_array_internal(&self, nft_token_id_array: &Vec<Self::BigUint>);
+
+	#[endpoint(setNftTokenIdArray)]
+	fn set_nft_token_id_array(&self,
+		nft_token_id_array: Vec<Self::BigUint> 
+	) -> SCResult<()> {
+		self.set_nft_token_id_array_internal(&nft_token_id_array);
+		Ok(())
+	}
+
+
+
+	#[endpoint]
+	#[storage_set("discount_contract_address")]
+	fn set_discount_contract_address(&self, address: &Address);
+
+	#[storage_set("discount_contract_address")]
+	fn set_discount_contract_address_internal(&self, address: &Address);
+
+	#[view]
+	#[storage_get("discount_contract_address")]
+	fn get_discount_contract_address(&self) -> Address;
+
+
+	#[endpoint]
+	#[storage_set("nft_contract_address")]
+	fn set_nft_contract_address(&self, address: &Address);
+
+	#[storage_set("nft_contract_address")]
+	fn set_nft_contract_address_internal(&self, address: &Address);
+
+	#[view]
+	#[storage_get("nft_contract_address")]
+	fn get_nft_contract_address(&self) -> Address;
+
+
+>>>>>>> b7942aa2f75cf7d5930767c9fdcbfd04b306e49a
 	#[storage_mapper("loans")]
-	fn loan_handler(
+    fn loan(
+        &self,
+        id: u64,
+    ) -> SingleValueMapper<Self::Storage, Loan<Self::BigUint>>;
+
+	/*
+	 * @DIIMIIM: Loan getters
+	 */
+
+	#[view(getLoanById)]
+	fn get_loan_by_id(&self, loan_id: u64) -> Loan<Self::BigUint> {
+		self.loan(loan_id).get()
+	}
+
+	#[view(getLoanAmountByLoanId)]
+	fn get_loan_amount_by_loan_id(&self, loan_id: u64) -> SCResult<Self::BigUint> {
+		return Ok(self.loan(loan_id).get().loan_amount);
+	}
+
+	#[view(getLoanStartByLoanId)]
+	fn get_loan_start_by_loan_id(&self, loan_id: u64) -> SCResult<u64> {
+		return Ok(self.loan(loan_id).get().loan_start);
+	}
+
+	#[view(getLoanEndByLoanId)]
+	fn get_loan_end_by_loan_id(&self, loan_id: u64) -> SCResult<u64> {
+		return Ok(self.loan(loan_id).get().loan_end);
+	}
+
+	#[view(getLoanAssetsValueByLoanId)]
+	fn get_loan_assets_value_by_loan_id(&self, loan_id: u64) -> SCResult<Self::BigUint> {
+		return Ok(self.loan(loan_id).get().assets_value);
+	}
+
+	#[view(getLoanNftTokenIdArrayByLoanId)]
+	fn get_loan_nft_token_id_array_by_loan_id(&self, loan_id: u64) -> SCResult<Vec<Self::BigUint>> {
+		return Ok(self.loan(loan_id).get().nft_token_id_array);
+	}
+
+	#[view(getLoanCurrencyByLoanId)]
+	fn get_loan_currency_by_loan_id(&self, loan_id: u64) -> SCResult<Address> {
+		return Ok(self.loan(loan_id).get().currency);
+	}
+
+	#[view(getLoanLenderByLoanId)]
+	fn get_loan_lender_by_loan_id(&self, loan_id: u64) -> SCResult<Address> {
+		return Ok(self.loan(loan_id).get().lender);
+	}
+
+	#[view(getLoanBorrowerByLoanId)]
+	fn get_loan_borrower_by_loan_id(&self, loan_id: u64) -> SCResult<Address> {
+		return Ok(self.loan(loan_id).get().borrower);
+	}
+
+	#[view(getLoanNrOfInstallmentsByLoanId)]
+	fn get_loan_nr_of_installments_by_loan_id(&self, loan_id: u64) -> SCResult<u16> {
+		return Ok(self.loan(loan_id).get().nr_of_installments);
+	}
+
+	#[view(getLoanInstallmentAmountByLoanId)]
+	fn get_loan_installment_amount_by_loan_id(&self, loan_id: u64) -> SCResult<Self::BigUint> {
+		return Ok(self.loan(loan_id).get().installment_amount);
+	}
+
+	#[view(getLoanAmountDueByLoanId)]
+	fn get_loan_amount_due_by_loan_id(&self, loan_id: u64) -> SCResult<Self::BigUint> {
+		return Ok(self.loan(loan_id).get().amount_due);
+	}
+
+	#[view(getLoanPaidAmountByLoanId)]
+	fn get_loan_paid_amount_by_loan_id(&self, loan_id: u64) -> SCResult<Self::BigUint> {
+		return Ok(self.loan(loan_id).get().paid_amount);
+	}
+
+	#[view(getLoanDefaultingLimitByLoanId)]
+	fn get_loan_defaulting_limit_by_loan_id(&self, loan_id: u64) -> SCResult<u8> {
+		return Ok(self.loan(loan_id).get().defaulting_limit);
+	}
+
+	#[view(getLoanNrOfPaymentsByLoanId)]
+	fn get_loan_nr_of_payments_by_loan_id(&self, loan_id: u64) -> SCResult<u16> {
+		return Ok(self.loan(loan_id).get().nr_of_payments);
+	}
+
+	#[view(getLoanNftTokenTypeArrayByLoanId)]
+	fn get_loan_nft_token_type_array_by_loan_id(&self, loan_id: u64) -> SCResult<Vec<TokenType>> {
+		return Ok(self.loan(loan_id).get().nft_token_type_array);
+	}
+
+	#[view(getLoanStatusByLoanId)]
+	fn get_loan_status_by_loan_id(&self, loan_id: u64) -> SCResult<LoanStatus> {
+		return Ok(self.loan(loan_id).get().status);
+	}
+
+
+	
+	/*
+	#[event("NewLoan")]
+	fn new_loan(
 		&self,
+<<<<<<< HEAD
 	) -> SingleValueMapper<Self::Storage, Loan<Self::BigUint>>;
 	*/
+=======
+		#[indexed] loan_id: u64, 
+		#[indexed] owner: &Address,  
+		#[indexed] currency: &Address, 
+		status: LoanStatus, 
+		nft_address_array: Vec<&Address>, 
+		nft_token_id_array: Vec<&Self::BigUint>,
+		nft_token_type_array: Vec<TokenType>
+	);
+	*/
+
+
+
+	/*
+	#[callback]
+	fn transfer_from_callback(
+		&self,
+		#[call_result] result: AsyncCallResult<()>,
+		cb_sender: Address,
+		cb_amount: Self::BigUint,
+	) -> OptionalResult<AsyncCall<Self::SendApi>> {
+		match result {
+			AsyncCallResult::Ok(()) => {
+				// transaction started before deadline, ended after -> refund
+				if self.blockchain().get_block_nonce() > self.get_deadline() {
+					let erc20_address = self.get_erc20_contract_address();
+					return OptionalResult::Some(
+						self.erc20_proxy(erc20_address)
+							.transfer(cb_sender, cb_amount)
+							.async_call(),
+					);
+				}
+
+				let mut deposit = self.get_deposit(&cb_sender);
+				deposit += &cb_amount;
+				self.set_deposit(&cb_sender, &deposit);
+
+				let mut balance = self.get_total_balance();
+				balance += &cb_amount;
+				self.set_total_balance(&balance);
+
+				OptionalResult::None
+			},
+			AsyncCallResult::Err(_) => OptionalResult::None,
+		}
+	}
+	*/
+
+>>>>>>> b7942aa2f75cf7d5930767c9fdcbfd04b306e49a
 
 }

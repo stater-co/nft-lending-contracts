@@ -91,9 +91,15 @@ dependencies = [
 
 [[package]]
 name = "elrond-wasm"
+<<<<<<< HEAD
 version = "0.16.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "03c4fd8cca1cfc4e46fed1a3d1f907c7c2ff57e558d90d35b027b2c7d1ca74b7"
+=======
+version = "0.17.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fec3331ca3be6cea8e02ffe43b3828c93d6ed02ed9316236186e0955838c0a40"
+>>>>>>> b7942aa2f75cf7d5930767c9fdcbfd04b306e49a
 dependencies = [
  "arrayvec",
  "elrond-codec",
@@ -104,9 +110,15 @@ dependencies = [
 
 [[package]]
 name = "elrond-wasm-debug"
+<<<<<<< HEAD
 version = "0.16.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fcb6a3da5b775943e442a2cc1a3e2e95702b7b588f5064e553e5221d19ab37cf"
+=======
+version = "0.17.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d7cbd9ae94ca09616d293a7ff93c0723ff3c198e5a91688cb3cc6496a7db5d35"
+>>>>>>> b7942aa2f75cf7d5930767c9fdcbfd04b306e49a
 dependencies = [
  "elrond-wasm",
  "hex",
@@ -121,9 +133,15 @@ dependencies = [
 
 [[package]]
 name = "elrond-wasm-derive"
+<<<<<<< HEAD
 version = "0.16.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "31a1b431ed3871b1e76a196a5bd390f63867b02b6dd4247467dcbf3fab1084df"
+=======
+version = "0.17.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c9bbe82b96cc419ba64821319c222701170687f9fae3d5e464acfbf65228901f"
+>>>>>>> b7942aa2f75cf7d5930767c9fdcbfd04b306e49a
 dependencies = [
  "hex",
  "proc-macro2",
@@ -133,9 +151,15 @@ dependencies = [
 
 [[package]]
 name = "elrond-wasm-node"
+<<<<<<< HEAD
 version = "0.16.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "41a9027905abf02975b29cb12fb814d0678cea28547eecbbf9774473959bfb33"
+=======
+version = "0.17.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "19f3b65f245aff3e9013f6fe64d16edc93c5ee7e851a349a002c92b273823fa6"
+>>>>>>> b7942aa2f75cf7d5930767c9fdcbfd04b306e49a
 dependencies = [
  "elrond-wasm",
 ]
@@ -184,20 +208,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "67c21572b4949434e4fc1e1978b99c5f77064153c59d998bf13ecd96fb5ecba7"
 
 [[package]]
-name = "lending_data"
-version = "0.0.0"
-dependencies = [
- "elrond-wasm",
- "elrond-wasm-debug",
- "elrond-wasm-derive",
- "elrond-wasm-node",
-]
-
-[[package]]
 name = "libc"
-version = "0.2.94"
+version = "0.2.95"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "18794a8ad5b29321f790b55d93dfba91e125cb1a9edbd4f8e3150acc771c1a5e"
+checksum = "789da6d93f1b866ffe175afc5322a4d76c038605a1c3319bb57b06967ca98a36"
 
 [[package]]
 name = "mandos"
@@ -344,6 +358,16 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-xid",
+]
+
+[[package]]
+name = "test"
+version = "0.0.0"
+dependencies = [
+ "elrond-wasm",
+ "elrond-wasm-debug",
+ "elrond-wasm-derive",
+ "elrond-wasm-node",
 ]
 
 [[package]]

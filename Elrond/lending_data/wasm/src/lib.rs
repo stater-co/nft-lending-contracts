@@ -1,4 +1,4 @@
 #![no_std]
 
-pub use lending_data::*;
+pub use test::*;
 pub use elrond_wasm_output::*;

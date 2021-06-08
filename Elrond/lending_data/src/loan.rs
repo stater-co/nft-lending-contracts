@@ -1,24 +1,27 @@
-use elrond_wasm::{Address, Vec, BigUintApi};
+elrond_wasm::derive_imports!();
 
-derive_imports!();
+use elrond_wasm::{Vec, api::BigUintApi};
 
-#[derive(NestedEncode, NestedDecode, TopEncode, TopDecode, TypeAbi)]
+
+
+
+#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi, PartialEq, Clone)]
 pub struct Loan<BigUint: BigUintApi> {
-    pub nft_address_array: Vec<Address>,
-    pub borrower: Address,
-    pub lender: Address,
-    pub currency: Address,
-	pub status: u8,
-    pub nft_token_id_array: Vec<u64>,
-    pub loan_amount: u64,
-    pub assets_value: u64,
+    pub nft_token_address_array: Vec<super::Address>,
+    pub nft_token_id_array: Vec<BigUint>,
+    pub loan_amount: BigUint,
+    pub assets_value: BigUint,
     pub loan_start: u64,
     pub loan_end: u64,
+    pub borrower: super::Address,
+    pub lender: super::Address,
+    pub currency: super::Address,
     pub nr_of_installments: u16,
-    pub installment_amount: u64,
-    pub amount_due: u64,
-    pub paid_amount: u64,
+    pub installment_amount: BigUint,
+    pub amount_due: BigUint,
+    pub paid_amount: BigUint,
     pub defaulting_limit: u8,
     pub nr_of_payments: u16,
-    pub nft_token_type_array: Vec<u8>
+    pub nft_token_type_array: Vec<super::TokenType>,
+    pub status: super::LoanStatus
 }

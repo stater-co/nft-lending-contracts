@@ -1,5 +1,5 @@
-extern crate lending_data;
-use lending_data::*;
+extern crate test;
+use test::*;
 use elrond_wasm_debug::*;
 
 #[test]
