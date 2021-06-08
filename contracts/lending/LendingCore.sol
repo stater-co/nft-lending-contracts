@@ -29,7 +29,7 @@ contract LendingCore is StaterTransfers {
     address public promissoryNoteAddress;
     address public lendingMethodsAddress;
     StaterDiscounts public discounts;
-    uint256 public id; // the loan ID
+    uint256 public id = 1; // the loan ID
     uint256 public ltv = 600; // 60%
     uint256 public interestRate = 20;
     uint256 public interestRateToStater = 40;

@@ -18,11 +18,13 @@ contract StaterPool is Ownable, StaterTransfers {
     }
     
     struct Pool {
-        address currency;
-        uint256 loan;
         address[] payers;
+        address createdBy;
+        address currency;
         uint256[] paid;
         uint256[] votes;
+        uint256 toVoteAfter;
+        uint256 loan;
         Status status;
     }
     mapping(uint256 => Pool) public pools;
@@ -50,12 +52,21 @@ contract StaterPool is Ownable, StaterTransfers {
         );
         _;
     }
+    
+    modifier isVoting(Status status) {
+        require(
+            status == Status.VOTING, 
+            "Operation not allowed, pool is no longer in election phase"
+        );
+        _;
+    }
 
 
 
     function createPool(
         address currency,
-        uint256 quantity
+        uint256 quantity,
+        uint256 toVoteAfter
     ) 
         external 
         hasValidCurrency(currency,quantity) 
@@ -64,7 +75,9 @@ contract StaterPool is Ownable, StaterTransfers {
         
         pools[id].currency = currency;
         pools[id].payers = [msg.sender];
+        pools[id].createdBy = msg.sender;
         pools[id].paid = [quantity];
+        pools[id].toVoteAfter = toVoteAfter;
         
         transferTokens(msg.sender,payable(address(this)),currency,quantity.div(100).mul(99),quantity.div(100));
             
@@ -85,7 +98,7 @@ contract StaterPool is Ownable, StaterTransfers {
         payable 
     {
         
-        int existsUser = this.checkUserExistsInsidePoolPayers(pools[poolId].payers,msg.sender);
+        int256 existsUser = this.getPoolUser(pools[poolId].payers,msg.sender);
         
         if (existsUser == -1){
             pools[poolId].payers.push(msg.sender);
@@ -109,10 +122,10 @@ contract StaterPool is Ownable, StaterTransfers {
         payable 
     {
         
-        int existsUser = this.checkUserExistsInsidePoolPayers(pools[poolId].payers,msg.sender);
+        int256 existsUser = this.getPoolUser(pools[poolId].payers,msg.sender);
         
         require(
-            existsUser != -1 || pools[poolId].paid[uint256(existsUser)] < quantity,
+            pools[poolId].paid[uint256(existsUser)] < quantity,
             "Not enough funds to withdraw"
         );
         
@@ -126,11 +139,39 @@ contract StaterPool is Ownable, StaterTransfers {
 
     
     
+    function beginPoolElection(uint256 poolId, uint256 loanId) external hasValidId(poolId) isListed(pools[poolId].status) {
+        require(!this.isPoolEmpty(pools[poolId].paid), "This pool is empty, nothing to elect for");
+        require(block.timestamp >= pools[poolId].toVoteAfter, "Too early to call for pool election");
+        int256 existsUser = this.getPoolUser(pools[poolId].payers,msg.sender);
+        
+        require(
+            pools[poolId].votes[uint256(existsUser)] == 0,
+            "You've already voted for this pool election"    
+        );
+        
+        pools[poolId].status = Status.VOTING;
+        pools[poolId].votes[uint256(existsUser)] = loanId;
+    }
     
-    function checkUserExistsInsidePoolPayers(address[] calldata payers, address user) public pure returns(int) {
+    
+    
+    function vote(uint256 poolId, uint256 loanId) external hasValidId(poolId) isVoting(pools[poolId].status) {
+        int256 existsUser = this.getPoolUser(pools[poolId].payers,msg.sender);
+        
+        require(
+            pools[poolId].votes[uint256(existsUser)] == 0,
+            "You've already voted for this pool election"    
+        );
+        
+        pools[poolId].votes[uint256(existsUser)] = loanId;
+    }
+    
+    
+    
+    function checkUserExistsInsidePoolPayers(address[] calldata payers, address user) public pure returns(int256) {
         for (uint256 i = 0 ; i < payers.length ; ++i)
             if ( payers[i] == user )
-                return int(i);
+                return int256(i);
         return -1;
     }
     
@@ -139,6 +180,16 @@ contract StaterPool is Ownable, StaterTransfers {
             if ( paid[i] > 0 )
                 return true;
         return false;
+    }
+    
+    function getPoolUser(address[] calldata payers, address user) public view returns(int256) {
+        int256 existsUser = this.checkUserExistsInsidePoolPayers(payers,user);
+        require(
+            existsUser != -1,
+            "You're not a member of this pool"
+        );
+        
+        return existsUser;
     }
 
 }
