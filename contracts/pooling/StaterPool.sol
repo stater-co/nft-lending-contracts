@@ -227,6 +227,7 @@ contract StaterPool is Ownable, StaterTransfers {
         isInVoting(poolId)
         lendingTemplateUp
     {
+        
         int256 existsUser = this.getPoolUser(pools[poolId].payers,msg.sender);
         
         require(
@@ -245,6 +246,7 @@ contract StaterPool is Ownable, StaterTransfers {
         isAfterVoting(poolId) 
         isVoting(pools[poolId].status)
     {
+        
         uint256 loanId = 0;
         uint256 total = 0;
         for ( uint256 i = 0 ; i < pools[poolId].votes.length ; ++i ){
