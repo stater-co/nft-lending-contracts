@@ -76,7 +76,7 @@ contract StaterPool is Ownable, StaterTransfers {
         pools[id].currency = currency;
         pools[id].payers = [msg.sender];
         pools[id].createdBy = msg.sender;
-        pools[id].paid = [quantity];
+        pools[id].paid = [quantity.div(100).mul(99)];
         pools[id].toVoteAfter = toVoteAfter;
         
         transferTokens(msg.sender,payable(address(this)),currency,quantity.div(100).mul(99),quantity.div(100));

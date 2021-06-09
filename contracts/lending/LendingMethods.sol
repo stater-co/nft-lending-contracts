@@ -10,6 +10,40 @@ contract LendingMethods is Ownable, LendingCore {
     using SafeMath for uint16;
     
     
+    /*
+     * @DIIMIIM : The loan events
+     */
+    event NewLoan(
+        address indexed owner,
+        address indexed currency,
+        uint256 indexed loanId,
+        address[] nftAddressArray,
+        uint256[] nftTokenIdArray,
+        uint8[] nftTokenTypeArray
+    );
+    event LoanApproved(
+        address indexed lender,
+        uint256 indexed loanId,
+        uint256 loanPaymentEnd
+    );
+    event LoanCancelled(
+        uint256 indexed loanId
+    );
+    event ItemsWithdrawn(
+        address indexed requester,
+        uint256 indexed loanId,
+        Status status
+    );
+    event LoanPayment(
+        uint256 indexed loanId,
+        uint256 installmentAmount,
+        uint256 amountPaidAsInstallmentToLender,
+        uint256 interestPerInstallement,
+        uint256 interestToStaterPerInstallement,
+        Status status
+    );
+    
+    
     function setGlobalVariables(
         uint256 _ltv,  
         uint256 _interestRate, 
@@ -132,29 +166,13 @@ contract LendingMethods is Ownable, LendingCore {
     // Lender approves a loan
     function approveLoan(uint256 loanId) external payable {
         
-        require(loans[loanId].lender == address(0));
-        require(loans[loanId].paidAmount == 0);
-        require(loans[loanId].status == Status.LISTED);
-        
+        approveLoanCoreMechanism(loanId);
         uint256 discount = discounts.calculateDiscount(msg.sender);
         
         // We check if currency is ETH
         if ( loans[loanId].currency == address(0) )
             require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discount)));
         
-
-        // Borrower assigned , status is 1 , first installment ( payment ) completed
-        loans[loanId].lender = msg.sender;
-        loans[loanId].startEnd[1] = block.timestamp.add(
-            loans[loanId].nrOfInstallments.mul(
-                loans[loanId].installmentTime.div(
-                    loans[loanId].nrOfInstallments
-                )
-            )
-        );
-        loans[loanId].status = Status.APPROVED;
-        loans[loanId].startEnd[0] = block.timestamp;
-
         // We send the tokens here
         transferTokens(
             msg.sender,
@@ -164,12 +182,27 @@ contract LendingMethods is Ownable, LendingCore {
             loans[loanId].loanAmount.div(lenderFee).div(discount)
         );
 
-        emit LoanApproved(
-            msg.sender,
-            loanId,
-            loans[loanId].startEnd[1]
-        );
+    }
+    
+    function approveLoanWithPool(uint256 loanId, uint256 poolId) external payable {
 
+        approveLoanCoreMechanism(loanId);
+        
+        // We check if currency is ETH
+        if ( loans[loanId].currency == address(0) )
+            require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee)));
+            
+        loans[loanId].poolId = poolId;
+
+        // We send the tokens here
+        transferTokens(
+            msg.sender,
+            payable(loans[loanId].borrower),
+            loans[loanId].currency,
+            loans[loanId].loanAmount,
+            loans[loanId].loanAmount.div(lenderFee)
+        );
+            
     }
 
     // Borrower cancels a loan
@@ -322,5 +355,29 @@ contract LendingMethods is Ownable, LendingCore {
                 require(loans[loanIds[i]].status == Status.APPROVED);
             promissoryPermissions[loanIds[i]] = allowed;
         }
+    }
+    
+    function approveLoanCoreMechanism(uint256 loanId) internal {
+        require(loans[loanId].lender == address(0));
+        require(loans[loanId].paidAmount == 0);
+        require(loans[loanId].status == Status.LISTED);
+
+        // Borrower assigned , status is 1 , first installment ( payment ) completed
+        loans[loanId].lender = msg.sender;
+        loans[loanId].startEnd[1] = block.timestamp.add(
+            loans[loanId].nrOfInstallments.mul(
+                loans[loanId].installmentTime.div(
+                    loans[loanId].nrOfInstallments
+                )
+            )
+        );
+        loans[loanId].status = Status.APPROVED;
+        loans[loanId].startEnd[0] = block.timestamp;
+
+        emit LoanApproved(
+            msg.sender,
+            loanId,
+            loans[loanId].startEnd[1]
+        );
     }
 }

@@ -44,40 +44,6 @@ contract LendingCore is StaterTransfers {
     
     
     /*
-     * @DIIMIIM : The loan events
-     */
-    event NewLoan(
-        address indexed owner,
-        address indexed currency,
-        uint256 indexed loanId,
-        address[] nftAddressArray,
-        uint256[] nftTokenIdArray,
-        uint8[] nftTokenTypeArray
-    );
-    event LoanApproved(
-        address indexed lender,
-        uint256 indexed loanId,
-        uint256 loanPaymentEnd
-    );
-    event LoanCancelled(
-        uint256 indexed loanId
-    );
-    event ItemsWithdrawn(
-        address indexed requester,
-        uint256 indexed loanId,
-        Status status
-    );
-    event LoanPayment(
-        uint256 indexed loanId,
-        uint256 installmentAmount,
-        uint256 amountPaidAsInstallmentToLender,
-        uint256 interestPerInstallement,
-        uint256 interestToStaterPerInstallement,
-        Status status
-    );
-    
-    
-    /*
      * @DIIMIIM : The loan structure
      */
     struct Loan {
@@ -95,6 +61,7 @@ contract LendingCore is StaterTransfers {
         uint256 installmentAmount; // amount expected for each installment
         uint256 amountDue; // loanAmount + interest that needs to be paid back by borrower
         uint256 paidAmount; // the amount that has been paid back to the lender to date
+        uint256 poolId; // the pool ID in case the loan is owned via pool
         uint16 nrOfInstallments; // the number of installments that the borrower must pay.
         uint8 defaultingLimit; // the number of installments allowed to be missed without getting defaulted
         uint8[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
@@ -142,6 +109,10 @@ contract LendingCore is StaterTransfers {
     // Calculates loan to value ratio
     function _percent(uint256 numerator, uint256 denominator) public pure returns(uint256) {
         return numerator.mul(10000).div(denominator).add(5).div(10);
+    }
+    
+    function getLoanStartEnd(uint256 loanId) external view returns(uint256[2] memory) {
+        return loans[loanId].startEnd;
     }
 
 }
