@@ -12,13 +12,14 @@ interface LendingTemplate {
 
 contract StaterPool is Ownable, StaterTransfers {
     using SafeMath for uint256;
+    using SafeMath for uint32;
     uint256 public id = 1;
     LendingTemplate public lendingDataTemplate;
     enum Status{ 
         LISTED, 
         CANCELLED,
         VOTING, 
-        FINISHED, 
+        VOTED, 
         WITHDRAWN
     }
     
@@ -27,9 +28,10 @@ contract StaterPool is Ownable, StaterTransfers {
         address currency;
         uint256[] paid;
         uint256[] votes;
-        uint256 toVoteAfter;
-        uint256 votingPeriod;
+        uint256[] percents;
         uint256 loan;
+        uint32 toVoteAfter;
+        uint32 votingPeriod;
         Status status;
     }
     mapping(uint256 => Pool) public pools;
@@ -74,6 +76,14 @@ contract StaterPool is Ownable, StaterTransfers {
         _;
     }
     
+    modifier isVoted(Status status) {
+        require(
+            status == Status.VOTED, 
+            "Operation not allowed, pool is no longer in post election phase"
+        );
+        _;
+    }
+    
     modifier isBeforeVoting(uint256 poolId) {
         require(
             block.timestamp < pools[poolId].toVoteAfter, 
@@ -107,8 +117,8 @@ contract StaterPool is Ownable, StaterTransfers {
     function createPool(
         address currency,
         uint256 quantity,
-        uint256 toVoteAfter,
-        uint256 votingPeriod
+        uint32 toVoteAfter,
+        uint32 votingPeriod
     ) 
         external 
         hasValidCurrency(currency,quantity) 
@@ -144,18 +154,8 @@ contract StaterPool is Ownable, StaterTransfers {
         int256 existsUser = this.getPoolUser(pools[poolId].payers,msg.sender);
         
         if (existsUser == -1){
-            bool found = false;
-            for ( uint256 i = 0 ; i < pools[poolId].payers.length ; ++i )
-                if ( pools[poolId].payers[i] == msg.sender ){
-                    found = true;
-                    pools[poolId].paid[i].add(quantity.div(100).mul(99));
-                    break;
-                }
-            
-            if ( !found ){
-                pools[poolId].payers.push(msg.sender);
-                pools[poolId].paid.push(quantity.div(100).mul(99));
-            }
+            pools[poolId].paid.push(quantity.div(100).mul(99));
+            pools[poolId].payers.push(msg.sender);
         }else
             pools[poolId].paid[uint256(existsUser)] = pools[poolId].paid[uint256(existsUser)].add(quantity);
             
@@ -243,18 +243,25 @@ contract StaterPool is Ownable, StaterTransfers {
     ) 
         external 
         isAfterVoting(poolId) 
+        isVoting(pools[poolId].status)
     {
-        uint256 loanId;
-        //for 
+        uint256 loanId = 0;
+        uint256 total = 0;
+        for ( uint256 i = 0 ; i < pools[poolId].votes.length ; ++i ){
+            pools[poolId].percents[i] = this.getPoolTotalFunds(pools[poolId].paid) / this.getPoolTotalFundsPayer(pools[poolId].paid,pools[poolId].payers,pools[poolId].payers[i]);
+            uint256 totalAux = 0;
+            for ( uint256 j = 0 ; j < pools[poolId].paid.length ; ++j )
+                if ( pools[poolId].votes[j] == pools[poolId].votes[i] )
+                    totalAux = totalAux.add(pools[poolId].paid[j]);
+            if ( total < totalAux ){
+                total = totalAux;
+                loanId = pools[poolId].votes[i];
+            }
+        }
         require(lendingDataTemplate.getLoanApprovalCostOnly(loanId) <= this.getPoolTotalFunds(pools[poolId].paid), "Not enough funds to pick this loan");
-    }
-    
-    
-    function checkUserExistsInsidePoolPayers(address[] calldata payers, address user) public pure returns(int256) {
-        for (uint256 i = 0 ; i < payers.length ; ++i)
-            if ( payers[i] == user )
-                return int256(i);
-        return -1;
+        
+        pools[poolId].loan = loanId;
+        pools[poolId].status = Status.VOTED;
     }
     
     function isPoolEmpty(uint256[] calldata paid) public pure returns(bool) {
@@ -271,14 +278,26 @@ contract StaterPool is Ownable, StaterTransfers {
         return total;
     }
     
-    function getPoolUser(address[] calldata payers, address user) public view returns(int256) {
-        int256 existsUser = this.checkUserExistsInsidePoolPayers(payers,user);
+    function getPoolTotalFundsPayer(uint256[] calldata paid, address[] calldata payers, address payer) public pure returns(uint256) {
+        uint256 total;
+        for (uint256 i = 0 ; i < paid.length ; ++i)
+            if ( payers[i] == payer )
+                total.add(paid[i]);
+        return total;
+    }
+    
+    function getPoolUser(address[] calldata payers, address user) public pure returns(int256) {
+        int256 index;
+        for (uint256 i = 0 ; i < payers.length ; ++i)
+            if ( payers[i] == user ) {
+                index = int256(i);
+                break;
+            }
         require(
-            existsUser != -1,
+            index != -1,
             "You're not a member of this pool"
         );
-        
-        return existsUser;
+        return index;
     }
 
 }
