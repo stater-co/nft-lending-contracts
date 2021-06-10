@@ -19,6 +19,8 @@ use token_type::TokenType;
 mod loan;
 use loan::Loan;
 
+//mod debt_token;
+
 
 
 #[elrond_wasm_derive::contract]
@@ -232,15 +234,13 @@ pub trait StaterLending {
 	}
 
 
+	/*
     fn send_debt(&self, to: &Address, nonce: u64, amount: &Self::BigUint) {
-        let _ = self.send().direct_esdt_nft_via_transfer_exec(
-            to,
-            self.debt_token_id().get().as_esdt_identifier(),
-            nonce,
-            amount,
-            &[],
-        );
+        self.send()
+            .direct_nft(to, &self.debt_token_id().get(), nonce, amount, &[]);
     }
+	*/
+
 
 
 	/*
@@ -254,9 +254,7 @@ pub trait StaterLending {
 		, nr_of_installments: u16 
 		, currency: Address 
 		, assets_value: u64 
-		, nft_address_array: Vec<Address> 
-		, nft_token_id_array: Vec<Self::BigUint> 
-		, nft_token_type_array: Vec<TokenType>
+		, nfts: Vec<(TokenIdentifier, Self::BigUint)>
 	) -> elrond_wasm::types::SCResult<()> {
 
 		require!(
@@ -268,18 +266,6 @@ pub trait StaterLending {
 			loan_amount > 0, 
 			"Loan amount must be higher than 0"
 		);
-
-		require!(
-			nft_address_array.len() > 0, 
-			"Loan must have atleast 1 NFT"
-		);
-
-		/*
-		require!(
-			nft_address_array.len() == nft_token_id_array.len() && nft_token_id_array.len() == nft_token_type_array.len(), 
-			"NFT provided informations are missing or incomplete"
-		);
-		*/
 
 		require!(
 			( ( loan_amount * 10000u64 / assets_value ) + 5u64 ) / 10u64 <= u64::from(self.get_ltv()),
@@ -303,16 +289,42 @@ pub trait StaterLending {
 		} else if nr_of_installments >= 6 {
 			the_defaulting_limit = 3;
 		}
+		
+		for nft in &nfts {
+			require!(
+				nft.0.is_valid_esdt_identifier(),
+				"Invalid token name provided!"
+			);
+
+			self.send().transfer_esdt_nft_via_async_call(
+				&self.blockchain().get_caller(),
+				&self.blockchain().get_sc_address(),
+				&nft.0,
+				&nft.1,
+				&Self::BigUint::from(0u32),
+				data.as_slice(),
+			);
+			
+			/*
+			self.send().direct(
+				&self.blockchain().get_sc_address(),
+				&nft,
+				&Self::BigUint::from(0u32), 
+				&[]
+			);
+			*/
+
+		}
+		
+
 
 		let new_loan = Loan {
-			nft_token_address_array: nft_address_array,
-			nft_token_id_array: nft_token_id_array,
 			loan_amount: Self::BigUint::from(loan_amount),
 			assets_value: Self::BigUint::from(assets_value),
 			loan_start: 0u64,
 			loan_end: 0u64,
 			borrower: self.blockchain().get_caller(),
-			lender: Address::zero(), //self.blockchain().get_caller(), // To be changed in the future, elrond_wasm::types::Address,
+			lender: Address::zero(),
 			currency: currency,
 			nr_of_installments: nr_of_installments,
 			installment_amount: Self::BigUint::from(the_installment_amount),
@@ -320,8 +332,8 @@ pub trait StaterLending {
 			paid_amount: Self::BigUint::from(0u32),
 			defaulting_limit: the_defaulting_limit,
 			nr_of_payments: 0u16,
-			nft_token_type_array: nft_token_type_array,
-			status: LoanStatus::Listed
+			status: LoanStatus::Listed,
+			nfts: nfts
 		};
 
 		/*
@@ -342,7 +354,7 @@ pub trait StaterLending {
 
 		//}
 
-
+		
 		let loan_id: u64 = self.get_loan_id_internal();
 		self.loan(loan_id).set(&new_loan);
 		
@@ -353,11 +365,6 @@ pub trait StaterLending {
 
 	}
 
-
-<<<<<<< HEAD
-	/* Loans mapper */
-	/*
-=======
 
 	/*
 	 * approve loan
@@ -500,7 +507,6 @@ pub trait StaterLending {
 	fn get_nft_contract_address(&self) -> Address;
 
 
->>>>>>> b7942aa2f75cf7d5930767c9fdcbfd04b306e49a
 	#[storage_mapper("loans")]
     fn loan(
         &self,
@@ -534,11 +540,6 @@ pub trait StaterLending {
 	#[view(getLoanAssetsValueByLoanId)]
 	fn get_loan_assets_value_by_loan_id(&self, loan_id: u64) -> SCResult<Self::BigUint> {
 		return Ok(self.loan(loan_id).get().assets_value);
-	}
-
-	#[view(getLoanNftTokenIdArrayByLoanId)]
-	fn get_loan_nft_token_id_array_by_loan_id(&self, loan_id: u64) -> SCResult<Vec<Self::BigUint>> {
-		return Ok(self.loan(loan_id).get().nft_token_id_array);
 	}
 
 	#[view(getLoanCurrencyByLoanId)]
@@ -586,11 +587,6 @@ pub trait StaterLending {
 		return Ok(self.loan(loan_id).get().nr_of_payments);
 	}
 
-	#[view(getLoanNftTokenTypeArrayByLoanId)]
-	fn get_loan_nft_token_type_array_by_loan_id(&self, loan_id: u64) -> SCResult<Vec<TokenType>> {
-		return Ok(self.loan(loan_id).get().nft_token_type_array);
-	}
-
 	#[view(getLoanStatusByLoanId)]
 	fn get_loan_status_by_loan_id(&self, loan_id: u64) -> SCResult<LoanStatus> {
 		return Ok(self.loan(loan_id).get().status);
@@ -602,10 +598,6 @@ pub trait StaterLending {
 	#[event("NewLoan")]
 	fn new_loan(
 		&self,
-<<<<<<< HEAD
-	) -> SingleValueMapper<Self::Storage, Loan<Self::BigUint>>;
-	*/
-=======
 		#[indexed] loan_id: u64, 
 		#[indexed] owner: &Address,  
 		#[indexed] currency: &Address, 
@@ -652,7 +644,5 @@ pub trait StaterLending {
 		}
 	}
 	*/
-
->>>>>>> b7942aa2f75cf7d5930767c9fdcbfd04b306e49a
 
 }
