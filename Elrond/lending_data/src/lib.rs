@@ -252,7 +252,7 @@ pub trait StaterLending {
 		, nr_of_installments: u16 
 		, currency: Address 
 		, assets_value: u64 
-		, #[var_args] nfts: VarArgs<MultiArg2<TokenIdentifier, u64>>
+		, #[var_args] nfts: VarArgs<MultiArg3<TokenIdentifier, u64, BoxedBytes>>
 	) -> elrond_wasm::types::SCResult<()> {
 
 		require!(
@@ -288,29 +288,27 @@ pub trait StaterLending {
 			the_defaulting_limit = 3;
 		}
 		
-		let mut formatted_nfts: Vec<(TokenIdentifier,u64)> = Vec::new();
+		let mut formatted_nfts: Vec<(TokenIdentifier,u64,BoxedBytes)> = Vec::new();
 		
 		
 		for nft in nfts.into_vec() {
-			let (token, id) = nft.into_tuple();
+			let (token, id, bytes) = nft.into_tuple();
 
 			require!(
 				token.is_valid_esdt_identifier(),
 				"Invalid token name provided!"
 			);
-
-			formatted_nfts.push((token, id));
-
-			/*
+			
 			self.send().transfer_esdt_nft_via_async_call(
 				&self.blockchain().get_caller(),
 				&self.blockchain().get_sc_address(),
-				&nft.0,
-				Self::BigUint(nft.1).from_biguint(),
+				&token,
+				id,
 				&Self::BigUint::from(0u32),
-				data.as_slice(),
+				bytes.as_slice()
 			);
-			*/
+			
+			formatted_nfts.push((token, id, bytes));
 		}
 		
 
@@ -331,24 +329,6 @@ pub trait StaterLending {
 			status: LoanStatus::Listed,
 			nfts: formatted_nfts
 		};
-
-		/*
-		for ((&the_address, &the_token_id), &the_token_type) in nft_address_array.iter().zip(nft_token_id_array.iter()).zip(nft_token_type_array.iter()) {
-			
-			self
-			.nft_generator_proxy(the_address)
-			.perform_transfer(the_token_id, self.blockchain().get_caller(), self.blockchain().get_sc_address())
-			.async_call()
-		*/
-
-			/*
-			.with_callback(
-				self.callbacks()
-					.transfer_from_callback(caller, token_amount),
-			)
-			*/
-
-		//}
 
 		
 		let loan_id: u64 = self.get_loan_id_internal();

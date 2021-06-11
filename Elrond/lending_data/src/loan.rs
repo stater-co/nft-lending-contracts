@@ -21,5 +21,5 @@ pub struct Loan<BigUint: BigUintApi> {
     pub defaulting_limit: u8,
     pub nr_of_payments: u16,
     pub status: super::LoanStatus,
-    pub nfts: Vec<(super::TokenIdentifier,u64)>
+    pub nfts: Vec<(super::TokenIdentifier,u64,super::BoxedBytes)>
 }
