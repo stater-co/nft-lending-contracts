@@ -1,5 +1,5 @@
 [package]
-name = "test"
+name = "stater_discounts"
 version = "0.0.0"
 authors = [ "you",]
 edition = "2018"
@@ -12,14 +12,14 @@ path = "src/lib.rs"
 wasm-output-mode = [ "elrond-wasm-node",]
 
 [dependencies.elrond-wasm]
-version = "0.10.2"
+version = "0.17.2"
 
 [dependencies.elrond-wasm-derive]
-version = "0.10.2"
+version = "0.17.2"
 
 [dependencies.elrond-wasm-node]
-version = "0.10.2"
+version = "0.17.2"
 optional = true
 
 [dev-dependencies.elrond-wasm-debug]
-version = "0.10.2"
+version = "0.17.2"

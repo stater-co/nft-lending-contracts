@@ -1,5 +1,5 @@
-extern crate test;
-use test::*;
+extern crate stater_discounts;
+use stater_discounts::*;
 use elrond_wasm::*;
 use elrond_wasm_debug::*;
 

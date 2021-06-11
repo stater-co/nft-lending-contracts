@@ -1,4 +1,4 @@
-use test::*;
+use stater_discounts::*;
 use elrond_wasm_debug::*;
 
 fn main() {

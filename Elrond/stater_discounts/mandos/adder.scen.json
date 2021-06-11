@@ -1,5 +1,5 @@
 {
-    "name": "test",
+    "name": "stater_discounts",
     "comment": "add then check",
     "steps": [
         {
@@ -26,7 +26,7 @@
             "tx": {
                 "from": "address:owner",
                 "value": "0",
-                "contractCode": "file:../output/test.wasm",
+                "contractCode": "file:../output/stater_discounts.wasm",
                 "arguments": [
                     "0x05"
                 ],
@@ -100,7 +100,7 @@
                     "storage": {
                         "``sum": "0x08"
                     },
-                    "code": "file:../output/test.wasm"
+                    "code": "file:../output/stater_discounts.wasm"
                 }
             }
         }

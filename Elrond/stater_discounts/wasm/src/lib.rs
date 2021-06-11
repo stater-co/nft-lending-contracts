@@ -1,4 +1,4 @@
 #![no_std]
 
-pub use test::*;
+pub use stater_discounts::*;
 pub use elrond_wasm_output::*;

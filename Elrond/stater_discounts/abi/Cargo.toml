@@ -1,5 +1,5 @@
 [package]
-name = "test-abi"
+name = "stater_discounts-abi"
 version = "0.0.0"
 authors = [ "you",]
 edition = "2018"
@@ -7,7 +7,7 @@ publish = false
 
 [dev-dependencies]
 
-[dependencies.test]
+[dependencies.stater_discounts]
 path = ".."
 
 [dependencies.elrond-wasm]

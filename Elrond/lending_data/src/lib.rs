@@ -1,5 +1,5 @@
 #![no_std]
-// #![allow(clippy::string_lit_as_bytes)]
+#![allow(clippy::string_lit_as_bytes)]
 
 
 /*
@@ -18,8 +18,6 @@ use token_type::TokenType;
 
 mod loan;
 use loan::Loan;
-
-//mod debt_token;
 
 
 
@@ -254,7 +252,7 @@ pub trait StaterLending {
 		, nr_of_installments: u16 
 		, currency: Address 
 		, assets_value: u64 
-		, nfts: Vec<(TokenIdentifier, Self::BigUint)>
+		, #[var_args] nfts: VarArgs<MultiArg2<TokenIdentifier, u64>>
 	) -> elrond_wasm::types::SCResult<()> {
 
 		require!(
@@ -290,33 +288,31 @@ pub trait StaterLending {
 			the_defaulting_limit = 3;
 		}
 		
-		for nft in &nfts {
+		let mut formatted_nfts: Vec<(TokenIdentifier,u64)> = Vec::new();
+		
+		
+		for nft in nfts.into_vec() {
+			let (token, id) = nft.into_tuple();
+
 			require!(
-				nft.0.is_valid_esdt_identifier(),
+				token.is_valid_esdt_identifier(),
 				"Invalid token name provided!"
 			);
 
+			formatted_nfts.push((token, id));
+
+			/*
 			self.send().transfer_esdt_nft_via_async_call(
 				&self.blockchain().get_caller(),
 				&self.blockchain().get_sc_address(),
 				&nft.0,
-				&nft.1,
+				Self::BigUint(nft.1).from_biguint(),
 				&Self::BigUint::from(0u32),
 				data.as_slice(),
 			);
-			
-			/*
-			self.send().direct(
-				&self.blockchain().get_sc_address(),
-				&nft,
-				&Self::BigUint::from(0u32), 
-				&[]
-			);
 			*/
-
 		}
 		
-
 
 		let new_loan = Loan {
 			loan_amount: Self::BigUint::from(loan_amount),
@@ -333,7 +329,7 @@ pub trait StaterLending {
 			defaulting_limit: the_defaulting_limit,
 			nr_of_payments: 0u16,
 			status: LoanStatus::Listed,
-			nfts: nfts
+			nfts: formatted_nfts
 		};
 
 		/*

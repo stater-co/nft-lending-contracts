@@ -1,5 +1,5 @@
 [package]
-name = "test-wasm"
+name = "stater_discounts-wasm"
 version = "0.0.0"
 authors = [ "you",]
 edition = "2018"
@@ -20,7 +20,7 @@ lto = true
 debug = false
 panic = "abort"
 
-[dependencies.test]
+[dependencies.stater_discounts]
 features = [ "wasm-output-mode",]
 default-features = false
 path = ".."
