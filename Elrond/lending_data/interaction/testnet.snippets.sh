@@ -1,10 +1,11 @@
-ALICE="${USERS}/alice.pem"
+DIIMIIM="${USERS}/diimiim.pem"
+DIIMIIM_ADDRESS="erd1am7qzznuq0f8she67ash0k39j359u9mtdc74wumyjn0y8htj2prqah522h"
 ADDRESS=$(erdpy data load --key=address-testnet)
 DEPLOY_TRANSACTION=$(erdpy data load --key=deployTransaction-testnet)
 PROXY=https://testnet-api.elrond.com
 
 deploy() {
-    erdpy --verbose contract deploy --project=${PROJECT} --recall-nonce --pem=${ALICE} --gas-limit=99000000 --send --outfile="deploy-testnet.interaction.json" --proxy=${PROXY} --chain=T || return
+    erdpy --verbose contract deploy --project=${PROJECT} --recall-nonce --pem=${DIIMIIM} --gas-limit=99000000 --send --outfile="deploy-testnet.interaction.json" --proxy=${PROXY} --chain=T || return
 
     TRANSACTION=$(erdpy data parse --file="deploy-testnet.interaction.json" --expression="data['emitted_tx']['hash']")
     ADDRESS=$(erdpy data parse --file="deploy-testnet.interaction.json" --expression="data['emitted_tx']['address']")
@@ -18,7 +19,7 @@ deploy() {
 
 setLenderFee() {
     read -p "Enter lender fee: " NUMBER
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=5000000 --function="set_lender_fee" --arguments ${NUMBER} --send --proxy=${PROXY} --chain=T
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${DIIMIIM} --gas-limit=5000000 --function="set_lender_fee" --arguments ${NUMBER} --send --proxy=${PROXY} --chain=T
 }
 
 lenderFee() {
@@ -39,7 +40,7 @@ installmentTimeScale() {
 
 setInstallmentTimeScale() {
     read -p "Enter time scale index: " NUMBER
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=5000000 --function="set_installment_time_scale" --arguments ${NUMBER} --send --proxy=${PROXY} --chain=T
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${DIIMIIM} --gas-limit=5000000 --function="set_installment_time_scale" --arguments ${NUMBER} --send --proxy=${PROXY} --chain=T
 }
 
 interestRate() {
@@ -50,7 +51,7 @@ interestRateToStater() {
     erdpy --verbose contract query ${ADDRESS} --function="interestRateToStater" --proxy=${PROXY}
 }
 
-numberToElrondHex() {
+numberToElrondNestedHex() {
     nr=$1;
     x=$( printf "%x" $nr );
     stringified="$(printf "%q " "${x}")";
@@ -73,6 +74,31 @@ numberToElrondHex() {
     fi
 }
 
+stringToElrondNestedHex() {
+    str=$1;
+    x=$(echo -n "$str" | od -A n -t x1);
+    x=$(echo $x | tr -d ' ');
+    stringified=$x;
+    thelength=${#stringified};
+    if [[ $((($thelength-1) % 2)) -eq 0 ]];
+    then 
+        formattedLength="$((($thelength-1)/2))";
+    else
+        formattedLength="$(((($thelength-1)/2)+1))";
+    fi
+    finalFormatedHex=$(printf "%.8d\n" $formattedLength);
+    LEN=$(echo ${#x});
+    if [[ $((($LEN) % 2)) -eq 0 ]];
+    then
+        echo "x length % 2 == 0 , "$LEN" , "$x;
+        finalFormatedHex+=$x;
+    else
+        echo "x length % 2 != 0 , "$LEN" , "$x;
+        finalFormatedHex+="0"$x;
+    fi
+}
+
+: '
 createTheLoan() {
     # LOAN_ARGUMENTS : 6000000 5 erd1qqqqqqqqqqqqqpgqn7kmy58sfnx2x5h7gxvlc20jnskcmy62d8ss9vk98j 10000000 [] [] []
     read -p "Enter the loan amount: " LOAN_AMOUNT
@@ -132,6 +158,45 @@ createTheLoan() {
     --proxy=${PROXY} \
     --chain=T
 }
+'
+
+createTheLoan() {
+
+    LOAN_ASSETS_TOKEN_ID="0x";
+    LOAN_ASSETS_TOKEN_QUANTITY="0x";
+
+    # LOAN ASSETS : 
+    read -p "Enter the ESDT token IDs: " RAW_LOAN_ASSETS_TOKEN_ID
+    read -p "Enter the ESDT token quantities: " RAW_LOAN_ASSETS_TOKEN_QUANTITY
+
+    for i in ${RAW_LOAN_ASSETS_TOKEN_ID[@]};
+    do
+        stringToElrondNestedHex $i;
+        LOAN_ASSETS_TOKEN_ID+=$finalFormatedHex;
+    done
+
+    for i in ${RAW_LOAN_ASSETS_TOKEN_QUANTITY[@]};
+    do
+        numberToElrondNestedHex $i;
+        LOAN_ASSETS_TOKEN_QUANTITY+=$finalFormatedHex;
+    done
+
+    echo $LOAN_ASSETS_TOKEN_ID;
+    echo $LOAN_ASSETS_TOKEN_QUANTITY;
+
+    # LOAN_ARGUMENTS : 6000000 5 erd1qqqqqqqqqqqqqpgqn7kmy58sfnx2x5h7gxvlc20jnskcmy62d8ss9vk98j 10000000 [] [] []
+    read -p "Enter the loan amount: " LOAN_AMOUNT
+    read -p "Enter the number of installments: " NR_OF_INSTALLMENTS
+    read -p "Enter the currency: " CURRENCY
+    read -p "Enter the assets value: " ASSETS_VALUE
+    
+    CURRENCY="0x$(erdpy wallet bech32 --decode ${CURRENCY})"
+
+    stringToElrondNestedHex "createLoan";
+    ENCODED_METHOD_NAME="0x"$finalFormatedHex;
+
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${DIIMIIM} --gas-limit=50000000 --function="ESDTTransfer" --arguments ${LOAN_ASSETS_TOKEN_ID} ${LOAN_ASSETS_TOKEN_QUANTITY} ${ENCODED_METHOD_NAME} ${LOAN_AMOUNT} ${NR_OF_INSTALLMENTS} ${CURRENCY} ${ASSETS_VALUE}  ${DIIMIIM_ADDRESS} --send --proxy=${PROXY} --chain=T
+}
 
 id() {
     erdpy --verbose contract query ${ADDRESS} --function="loanId" --proxy=${PROXY}
@@ -148,7 +213,7 @@ setNftAddressArray() {
     done
 
     echo "ARRAY OF ADDRESS TO SET : "$FORMATTED_NFT_ADDRESS_ARRAY
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --function="setNftAddressArray" --arguments ${FORMATTED_NFT_ADDRESS_ARRAY} --send --proxy=${PROXY} --chain=T
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${DIIMIIM} --gas-limit=50000000 --function="setNftAddressArray" --arguments ${FORMATTED_NFT_ADDRESS_ARRAY} --send --proxy=${PROXY} --chain=T
 }
 
 nftAddressArray() {
@@ -165,12 +230,12 @@ setNftTokenIdArray() {
     
     for i in ${NFT_TOKEN_ID_ARRAY[@]};
     do
-        numberToElrondHex $i;
+        numberToElrondNestedHex $i;
         FORMATTED_NFT_TOKEN_ID_ARRAY+=$finalFormatedHex;
     done
 
     echo "ARRAY OF TOKEN IT ARRAY TO SET : "$FORMATTED_NFT_TOKEN_ID_ARRAY
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --function="setNftTokenIdArray" --arguments ${FORMATTED_NFT_TOKEN_ID_ARRAY} --send --proxy=${PROXY} --chain=T
+    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${DIIMIIM} --gas-limit=50000000 --function="setNftTokenIdArray" --arguments ${FORMATTED_NFT_TOKEN_ID_ARRAY} --send --proxy=${PROXY} --chain=T
 }
 
 nftTokenIdArray() {

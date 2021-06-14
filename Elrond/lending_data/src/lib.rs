@@ -245,14 +245,14 @@ pub trait StaterLending {
 	 * create loan
 	 * @DIIMIIM: Call this to create a loan
 	 */
-	#[payable("ESDT")]
+	#[payable("*")]
 	#[endpoint(createLoan)]
 	fn create_loan(&self
 		, loan_amount: u64 
 		, nr_of_installments: u16 
 		, currency: Address 
 		, assets_value: u64 
-		, #[var_args] nfts: VarArgs<MultiArg3<TokenIdentifier, u64, BoxedBytes>>
+		, #[var_args] nfts: VarArgs<MultiArg2<TokenIdentifier, Self::BigUint>>
 	) -> elrond_wasm::types::SCResult<()> {
 
 		require!(
@@ -288,27 +288,18 @@ pub trait StaterLending {
 			the_defaulting_limit = 3;
 		}
 		
-		let mut formatted_nfts: Vec<(TokenIdentifier,u64,BoxedBytes)> = Vec::new();
+		let mut formatted_nfts: Vec<(TokenIdentifier,Self::BigUint)> = Vec::new();
 		
 		
 		for nft in nfts.into_vec() {
-			let (token, id, bytes) = nft.into_tuple();
+			let (token, amount) = nft.into_tuple();
 
 			require!(
 				token.is_valid_esdt_identifier(),
 				"Invalid token name provided!"
 			);
 			
-			self.send().transfer_esdt_nft_via_async_call(
-				&self.blockchain().get_caller(),
-				&self.blockchain().get_sc_address(),
-				&token,
-				id,
-				&Self::BigUint::from(0u32),
-				bytes.as_slice()
-			);
-			
-			formatted_nfts.push((token, id, bytes));
+			formatted_nfts.push((token, amount));
 		}
 		
 
@@ -390,7 +381,7 @@ pub trait StaterLending {
 		, loan_id: Self::BigUint
 	) -> elrond_wasm::types::SCResult<()> {
 
-
+		//self.send().direct(&caller, &token_name, &sc_balance, &[]);
 
 		Ok(())
 	}
@@ -420,7 +411,7 @@ pub trait StaterLending {
 		, loan_id: Self::BigUint
 	) -> elrond_wasm::types::SCResult<()> {
 
-
+		//self.send().direct(&caller, &token_name, &sc_balance, &[]);
 
 		Ok(())
 	}
