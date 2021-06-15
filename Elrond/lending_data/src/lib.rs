@@ -13,9 +13,6 @@ use loan_status::LoanStatus;
 mod time_scale;
 use time_scale::TimeScale;
 
-mod token_type;
-use token_type::TokenType;
-
 mod loan;
 use loan::Loan;
 
@@ -292,8 +289,7 @@ pub trait StaterLending {
 			token_id.is_valid_esdt_identifier(),
 			"Invalid token name provided!"
 		);
-		
-		let formatted_nfts: Vec<(TokenIdentifier,Self::BigUint)> = Vec::new((token_id,token_quantity));
+
 
 		let new_loan = Loan {
 			loan_amount: Self::BigUint::from(loan_amount),
@@ -309,7 +305,7 @@ pub trait StaterLending {
 			defaulting_limit: the_defaulting_limit,
 			nr_of_payments: 0u16,
 			status: LoanStatus::Listed,
-			nfts: formatted_nfts
+			nfts: [(token_id,token_quantity)].to_vec()
 		};
 
 		
