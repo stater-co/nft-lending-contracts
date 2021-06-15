@@ -141,7 +141,7 @@ createTheLoan() {
     stringToElrondNestedHex "createLoan";
     ENCODED_METHOD_NAME="0x"$finalFormatedHex;
 
-    echo "Smart contract address: "$ADDRESS", Encoded method name: "$ENCODED_METHOD_NAME", Loan amount: "$LOAN_AMOUNT", Nr of installments: "$NR_OF_INSTALLMENTS", Assets value: "$ASSETS_VALUE", Loan assets: "$LOAN_ASSETS;
+    echo "Smart contract address: "$ADDRESS", Encoded method name: "$ENCODED_METHOD_NAME", Loan amount: "$LOAN_AMOUNT", Nr of installments: "$NR_OF_INSTALLMENTS", Assets value: "$ASSETS_VALUE", Token ID: "$TOKEN_ID", Token quantity: "$TOKEN_QUANTITY;
 
     erdpy \
     --verbose contract call ${ADDRESS} \
@@ -149,7 +149,7 @@ createTheLoan() {
     --pem=${DIIMIIM} \
     --gas-limit=999000000 \
     --function="ESDTTransfer" \
-    --arguments ${TOKEN_ID} ${TOKEN_QUANTITY} ${ENCODED_METHOD_NAME} ${LOAN_AMOUNT} ${NR_OF_INSTALLMENTS} ${ASSETS_VALUE} \
+    --arguments ${TOKEN_ID} ${TOKEN_QUANTITY} ${ENCODED_METHOD_NAME} ${LOAN_AMOUNT} ${NR_OF_INSTALLMENTS} ${ASSETS_VALUE} ${TOKEN_ID} ${TOKEN_QUANTITY} \
     --send \
     --proxy=${PROXY} \
     --chain=T
