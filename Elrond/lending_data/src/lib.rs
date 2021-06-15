@@ -250,9 +250,9 @@ pub trait StaterLending {
 	fn create_loan(&self
 		, loan_amount: u64 
 		, nr_of_installments: u16 
-		, currency: Address 
 		, assets_value: u64 
-		, #[var_args] nfts: VarArgs<MultiArg2<TokenIdentifier, Self::BigUint>>
+		, token_id: TokenIdentifier 
+		, token_quantity: Self::BigUint 
 	) -> elrond_wasm::types::SCResult<()> {
 
 		require!(
@@ -288,20 +288,12 @@ pub trait StaterLending {
 			the_defaulting_limit = 3;
 		}
 		
-		let mut formatted_nfts: Vec<(TokenIdentifier,Self::BigUint)> = Vec::new();
+		require!(
+			token_id.is_valid_esdt_identifier(),
+			"Invalid token name provided!"
+		);
 		
-		
-		for nft in nfts.into_vec() {
-			let (token, amount) = nft.into_tuple();
-
-			require!(
-				token.is_valid_esdt_identifier(),
-				"Invalid token name provided!"
-			);
-			
-			formatted_nfts.push((token, amount));
-		}
-		
+		let formatted_nfts: Vec<(TokenIdentifier,Self::BigUint)> = Vec::new((token_id,token_quantity));
 
 		let new_loan = Loan {
 			loan_amount: Self::BigUint::from(loan_amount),
@@ -310,7 +302,6 @@ pub trait StaterLending {
 			loan_end: 0u64,
 			borrower: self.blockchain().get_caller(),
 			lender: Address::zero(),
-			currency: currency,
 			nr_of_installments: nr_of_installments,
 			installment_amount: Self::BigUint::from(the_installment_amount),
 			amount_due: Self::BigUint::from(the_amount_due),
@@ -509,11 +500,6 @@ pub trait StaterLending {
 		return Ok(self.loan(loan_id).get().assets_value);
 	}
 
-	#[view(getLoanCurrencyByLoanId)]
-	fn get_loan_currency_by_loan_id(&self, loan_id: u64) -> SCResult<Address> {
-		return Ok(self.loan(loan_id).get().currency);
-	}
-
 	#[view(getLoanLenderByLoanId)]
 	fn get_loan_lender_by_loan_id(&self, loan_id: u64) -> SCResult<Address> {
 		return Ok(self.loan(loan_id).get().lender);
@@ -567,7 +553,6 @@ pub trait StaterLending {
 		&self,
 		#[indexed] loan_id: u64, 
 		#[indexed] owner: &Address,  
-		#[indexed] currency: &Address, 
 		status: LoanStatus, 
 		nft_address_array: Vec<&Address>, 
 		nft_token_id_array: Vec<&Self::BigUint>,

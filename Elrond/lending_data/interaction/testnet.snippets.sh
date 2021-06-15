@@ -66,10 +66,21 @@ numberToElrondNestedHex() {
     LEN=$(echo ${#x});
     if [[ $((($LEN) % 2)) -eq 0 ]];
     then
-        echo "x length % 2 == 0 , "$LEN" , "$x;
         finalFormatedHex+=$x;
     else
-        echo "x length % 2 != 0 , "$LEN" , "$x;
+        finalFormatedHex+="0"$x;
+    fi
+}
+
+numberToElrondHex() {
+    nr=$1;
+    x=$( printf "%x" $nr );
+    LEN=$(echo ${#x});
+    finalFormatedHex="";
+    if [[ $((($LEN) % 2)) -eq 0 ]];
+    then
+        finalFormatedHex+=$x;
+    else
         finalFormatedHex+="0"$x;
     fi
 }
@@ -86,116 +97,63 @@ stringToElrondNestedHex() {
     else
         formattedLength="$(((($thelength-1)/2)+1))";
     fi
-    finalFormatedHex=$(printf "%.8d\n" $formattedLength);
+    finalFormatedHex="";
     LEN=$(echo ${#x});
     if [[ $((($LEN) % 2)) -eq 0 ]];
     then
-        echo "x length % 2 == 0 , "$LEN" , "$x;
         finalFormatedHex+=$x;
     else
-        echo "x length % 2 != 0 , "$LEN" , "$x;
         finalFormatedHex+="0"$x;
     fi
 }
 
-: '
-createTheLoan() {
-    # LOAN_ARGUMENTS : 6000000 5 erd1qqqqqqqqqqqqqpgqn7kmy58sfnx2x5h7gxvlc20jnskcmy62d8ss9vk98j 10000000 [] [] []
-    read -p "Enter the loan amount: " LOAN_AMOUNT
-    read -p "Enter the number of installments: " NR_OF_INSTALLMENTS
-    read -p "Enter the currency: " CURRENCY
-    read -p "Enter the assets value: " ASSETS_VALUE
-    
-    
-    # Example : erd1qqqqqqqqqqqqqpgqn7kmy58sfnx2x5h7gxvlc20jnskcmy62d8ss9vk98j erd1qqqqqqqqqqqqqpgqn7kmy58sfnx2x5h7gxvlc20jnskcmy62d8ss9vk98j
-    echo "Enter the NFT address array: "
-    read -a NFT_ADDRESS_ARRAY
-    
 
-    # Example : 0 1    
-    echo "Enter the NFT token ID array: "
-    read -a NFT_TOKEN_ID_ARRAY
-    
-    
-    # Example : 1 1
-    echo "Enter the NFT token type array: "
-    read -a NFT_TOKEN_TYPE_ARRAY
-    
-    
-    CURRENCY="0x$(erdpy wallet bech32 --decode ${CURRENCY})"
-    FORMATTED_NFT_ADDRESS_ARRAY="0x"
-    FORMATTED_NFT_TOKEN_ID_ARRAY="0x"
-    FORMATTED_NFT_TOKEN_TYPE_ARRAY="0x"
-    
-    for i in ${NFT_ADDRESS_ARRAY[@]};
-    do
-        FORMATTED_NFT_ADDRESS_ARRAY+="$(erdpy wallet bech32 --decode $i)";
-    done
+issueWrappedEgld() {
+    local TOKEN_DISPLAY_NAME=0x53746174657254657374546f6b656e73  # "StaterTestTokens"
+    local TOKEN_TICKER=0x535454  # "STT"
+    local INITIAL_SUPPLY=0xff # 255
+    local NR_DECIMALS=0x01 # 1
+    local CAN_ADD_SPECIAL_ROLES=0x63616e4164645370656369616c526f6c6573 # "canAddSpecialRoles"
+    local TRUE=0x74727565 # "true"
+    local ESDT_SYSTEM_SC_ADDRESS=erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
 
-    
-    for i in ${NFT_TOKEN_ID_ARRAY[@]};
-    do
-        numberToElrondHex $i;
-        FORMATTED_NFT_TOKEN_ID_ARRAY+=$finalFormatedHex;
-    done
-
-
-    for i in ${NFT_TOKEN_TYPE_ARRAY[@]};
-    do
-        numberToElrondHex $i;
-        FORMATTED_NFT_TOKEN_TYPE_ARRAY+=$finalFormatedHex;
-    done
-
-    echo ${LOAN_AMOUNT} ${NR_OF_INSTALLMENTS} ${CURRENCY} ${ASSETS_VALUE} ${FORMATTED_NFT_ADDRESS_ARRAY} ${FORMATTED_NFT_TOKEN_ID_ARRAY} ${FORMATTED_NFT_TOKEN_TYPE_ARRAY};
-    erdpy \
-    --verbose contract call ${ADDRESS} \
-    --recall-nonce \
-    --pem=${ALICE} \
-    --gas-limit=50000000 \
-    --function="createLoan" \
-    --arguments ${LOAN_AMOUNT} ${NR_OF_INSTALLMENTS} ${CURRENCY} ${ASSETS_VALUE} ${FORMATTED_NFT_ADDRESS_ARRAY} ${FORMATTED_NFT_TOKEN_ID_ARRAY} ${FORMATTED_NFT_TOKEN_TYPE_ARRAY} \
-    --send \
-    --proxy=${PROXY} \
-    --chain=T
+    erdpy --verbose contract call ${ESDT_SYSTEM_SC_ADDRESS} --recall-nonce --pem=${DIIMIIM} \
+    --gas-limit=60000000 --value=50000000000000000 --function="issue" \
+    --arguments ${TOKEN_DISPLAY_NAME} ${TOKEN_TICKER} ${INITIAL_SUPPLY} ${NR_DECIMALS} ${CAN_ADD_SPECIAL_ROLES} ${TRUE} \
+    --send --proxy=${PROXY} --chain=T
 }
-'
+
 
 createTheLoan() {
 
-    LOAN_ASSETS_TOKEN_ID="0x";
-    LOAN_ASSETS_TOKEN_QUANTITY="0x";
-
-    # LOAN ASSETS : 
-    read -p "Enter the ESDT token IDs: " RAW_LOAN_ASSETS_TOKEN_ID
-    read -p "Enter the ESDT token quantities: " RAW_LOAN_ASSETS_TOKEN_QUANTITY
-
-    for i in ${RAW_LOAN_ASSETS_TOKEN_ID[@]};
-    do
-        stringToElrondNestedHex $i;
-        LOAN_ASSETS_TOKEN_ID+=$finalFormatedHex;
-    done
-
-    for i in ${RAW_LOAN_ASSETS_TOKEN_QUANTITY[@]};
-    do
-        numberToElrondNestedHex $i;
-        LOAN_ASSETS_TOKEN_QUANTITY+=$finalFormatedHex;
-    done
-
-    echo $LOAN_ASSETS_TOKEN_ID;
-    echo $LOAN_ASSETS_TOKEN_QUANTITY;
-
-    # LOAN_ARGUMENTS : 6000000 5 erd1qqqqqqqqqqqqqpgqn7kmy58sfnx2x5h7gxvlc20jnskcmy62d8ss9vk98j 10000000 [] [] []
     read -p "Enter the loan amount: " LOAN_AMOUNT
     read -p "Enter the number of installments: " NR_OF_INSTALLMENTS
-    read -p "Enter the currency: " CURRENCY
     read -p "Enter the assets value: " ASSETS_VALUE
-    
-    CURRENCY="0x$(erdpy wallet bech32 --decode ${CURRENCY})"
+    read -p "Token ID: " RAW_LOAN_ASSETS_TOKEN_ID
+    read -p "Token quantity: " RAW_LOAN_ASSETS_TOKEN_QUANTITY
+
+    stringToElrondNestedHex $RAW_LOAN_ASSETS_TOKEN_ID;
+    TOKEN_ID="0x"$finalFormatedHex;
+
+    numberToElrondHex $RAW_LOAN_ASSETS_TOKEN_QUANTITY;
+    TOKEN_QUANTITY="0x"$finalFormatedHex;
 
     stringToElrondNestedHex "createLoan";
     ENCODED_METHOD_NAME="0x"$finalFormatedHex;
 
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${DIIMIIM} --gas-limit=50000000 --function="ESDTTransfer" --arguments ${LOAN_ASSETS_TOKEN_ID} ${LOAN_ASSETS_TOKEN_QUANTITY} ${ENCODED_METHOD_NAME} ${LOAN_AMOUNT} ${NR_OF_INSTALLMENTS} ${CURRENCY} ${ASSETS_VALUE}  ${DIIMIIM_ADDRESS} --send --proxy=${PROXY} --chain=T
+    echo "Smart contract address: "$ADDRESS", Encoded method name: "$ENCODED_METHOD_NAME", Loan amount: "$LOAN_AMOUNT", Nr of installments: "$NR_OF_INSTALLMENTS", Assets value: "$ASSETS_VALUE", Loan assets: "$LOAN_ASSETS;
+
+    erdpy \
+    --verbose contract call ${ADDRESS} \
+    --recall-nonce \
+    --pem=${DIIMIIM} \
+    --gas-limit=999000000 \
+    --function="ESDTTransfer" \
+    --arguments ${TOKEN_ID} ${TOKEN_QUANTITY} ${ENCODED_METHOD_NAME} ${LOAN_AMOUNT} ${NR_OF_INSTALLMENTS} ${ASSETS_VALUE} \
+    --send \
+    --proxy=${PROXY} \
+    --chain=T
+
 }
 
 id() {

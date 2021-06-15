@@ -13,7 +13,6 @@ pub struct Loan<BigUint: BigUintApi> {
     pub loan_end: u64,
     pub borrower: super::Address,
     pub lender: super::Address,
-    pub currency: super::Address,
     pub nr_of_installments: u16,
     pub installment_amount: BigUint,
     pub amount_due: BigUint,
