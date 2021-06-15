@@ -1,5 +1,4 @@
 DIIMIIM="${USERS}/diimiim.pem"
-DIIMIIM_ADDRESS="erd1am7qzznuq0f8she67ash0k39j359u9mtdc74wumyjn0y8htj2prqah522h"
 ADDRESS=$(erdpy data load --key=address-testnet)
 DEPLOY_TRANSACTION=$(erdpy data load --key=deployTransaction-testnet)
 PROXY=https://testnet-api.elrond.com
@@ -149,12 +148,14 @@ createTheLoan() {
     --pem=${DIIMIIM} \
     --gas-limit=999000000 \
     --function="ESDTTransfer" \
-    --arguments ${TOKEN_ID} ${TOKEN_QUANTITY} ${ENCODED_METHOD_NAME} ${LOAN_AMOUNT} ${NR_OF_INSTALLMENTS} ${ASSETS_VALUE} ${TOKEN_ID} ${TOKEN_QUANTITY} \
+    --arguments ${TOKEN_ID} ${TOKEN_QUANTITY} ${ENCODED_METHOD_NAME} ${LOAN_AMOUNT} ${NR_OF_INSTALLMENTS} ${ASSETS_VALUE} \
     --send \
     --proxy=${PROXY} \
     --chain=T
 
 }
+
+# erd1qqqqqqqqqqqqqpgqdquzjl5xa68g3kdq2a7cd82cnj6xk8st2prqrderhs
 
 id() {
     erdpy --verbose contract query ${ADDRESS} --function="loanId" --proxy=${PROXY}

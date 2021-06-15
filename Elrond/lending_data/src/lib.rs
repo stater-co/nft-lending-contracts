@@ -248,11 +248,11 @@ pub trait StaterLending {
 	#[payable("*")]
 	#[endpoint(createLoan)]
 	fn create_loan(&self
+		, #[payment_token] token_id: TokenIdentifier
+        , #[payment] token_quantity: Self::BigUint
 		, loan_amount: u64 
 		, nr_of_installments: u16 
 		, assets_value: u64 
-		, token_id: TokenIdentifier 
-		, token_quantity: Self::BigUint 
 	) -> elrond_wasm::types::SCResult<()> {
 
 		require!(
