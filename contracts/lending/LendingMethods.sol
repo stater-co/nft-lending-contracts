@@ -52,6 +52,16 @@ contract LendingMethods is Ownable, LendingCore {
         uint256[] nftTokenIdArray,
         uint8[] nftTokenTypeArray
     );
+    event EditLoan(
+        address indexed currency,
+        uint256 indexed loanId,
+        uint256 loanAmount,
+        uint256 amountDue,
+        uint256 installmentAmount,
+        uint256 assetsValue,
+        uint256 frequencyTime,
+        uint256 frequencyTimeUnit
+    );
     event LoanApproved(
         address indexed lender,
         uint256 indexed loanId,
@@ -167,7 +177,7 @@ contract LendingMethods is Ownable, LendingCore {
         uint16 nrOfInstallments,
         address currency,
         uint256 assetsValue,
-        uint256 intallmentTime
+        uint256 installmentTime
     ) external {
         require(nrOfInstallments > 0 && loanAmount > 0);
         require(loans[loanId].borrower == msg.sender);
@@ -175,7 +185,7 @@ contract LendingMethods is Ownable, LendingCore {
         require(_percent(loanAmount, assetsValue) <= ltv);
         
 
-        loans[loanId].installmentTime = intallmentTime;
+        loans[loanId].installmentTime = installmentTime;
         loans[loanId].loanAmount = loanAmount;
         loans[loanId].amountDue = loanAmount.mul(interestRate.add(100)).div(100);
         loans[loanId].installmentAmount = loans[loanId].amountDue.mod(nrOfInstallments) > 0 ? loans[loanId].amountDue.div(nrOfInstallments).add(1) : loans[loanId].amountDue.div(nrOfInstallments);
@@ -192,6 +202,19 @@ contract LendingMethods is Ownable, LendingCore {
             loans[loanId].defaultingLimit = 2;
         else if ( nrOfInstallments >= 6 )
             loans[loanId].defaultingLimit = 3;
+
+        // Fire event
+        emit EditLoan(
+            currency, 
+            loanId,
+            loanAmount,
+            loans[loanId].amountDue,
+            loans[loanId].installmentAmount,
+            loans[loanId].assetsValue,
+            installmentTime,
+            nrOfInstallments
+        );
+
     }
     
     // Lender approves a loan
