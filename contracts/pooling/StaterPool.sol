@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.7.4;
-import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
+pragma solidity 0.8.7;
 import "../libs/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 import "../plugins/StaterTransfers.sol";
@@ -11,8 +10,6 @@ interface LendingTemplate {
 
 
 contract StaterPool is Ownable, StaterTransfers {
-    using SafeMath for uint256;
-    using SafeMath for uint32;
     uint256 public id = 1;
     LendingTemplate public lendingDataTemplate;
     enum Status{ 
@@ -102,7 +99,7 @@ contract StaterPool is Ownable, StaterTransfers {
     
     modifier isAfterVoting(uint256 poolId) {
         require(
-            block.timestamp >= pools[poolId].toVoteAfter.add(pools[poolId].votingPeriod), 
+            block.timestamp >= pools[poolId].toVoteAfter + pools[poolId].votingPeriod, 
             "Operation not allowed, pool hasn't finished its election time yet"
         );
         _;
@@ -128,10 +125,10 @@ contract StaterPool is Ownable, StaterTransfers {
         pools[id].currency = currency;
         pools[id].payers = [msg.sender];
         pools[id].votingPeriod = votingPeriod;
-        pools[id].paid = [quantity.div(100).mul(99)];
+        pools[id].paid = [(quantity / 100) * 99];
         pools[id].toVoteAfter = toVoteAfter;
         
-        transferTokens(msg.sender,payable(address(this)),currency,quantity.div(100).mul(99),quantity.div(100));
+        transferTokens(msg.sender,payable(address(this)),currency,(quantity / 100) * 99,quantity / 100);
             
         ++id;
         
@@ -154,12 +151,12 @@ contract StaterPool is Ownable, StaterTransfers {
         int256 existsUser = this.getPoolUser(pools[poolId].payers,msg.sender);
         
         if (existsUser == -1){
-            pools[poolId].paid.push(quantity.div(100).mul(99));
+            pools[poolId].paid.push((quantity / 100) * 99);
             pools[poolId].payers.push(msg.sender);
         }else
-            pools[poolId].paid[uint256(existsUser)] = pools[poolId].paid[uint256(existsUser)].add(quantity);
+            pools[poolId].paid[uint256(existsUser)] = pools[poolId].paid[uint256(existsUser)] + quantity;
             
-        transferTokens(msg.sender,payable(address(this)),pools[poolId].currency,quantity.div(100).mul(99),quantity.div(100));
+        transferTokens(msg.sender,payable(address(this)),pools[poolId].currency,(quantity / 100) * 99,quantity / 100);
             
     }
     
@@ -184,7 +181,7 @@ contract StaterPool is Ownable, StaterTransfers {
         );
         
         transferTokens(address(this),payable(msg.sender),pools[poolId].currency,quantity,0);
-        pools[poolId].paid[uint256(existsUser)] = pools[poolId].paid[uint256(existsUser)].sub(quantity);
+        pools[poolId].paid[uint256(existsUser)] = pools[poolId].paid[uint256(existsUser)] - quantity;
         
         if ( this.isPoolEmpty(pools[poolId].paid) )
             pools[poolId].status = Status.CANCELLED;
@@ -254,7 +251,7 @@ contract StaterPool is Ownable, StaterTransfers {
             uint256 totalAux = 0;
             for ( uint256 j = 0 ; j < pools[poolId].paid.length ; ++j )
                 if ( pools[poolId].votes[j] == pools[poolId].votes[i] )
-                    totalAux = totalAux.add(pools[poolId].paid[j]);
+                    totalAux = totalAux + pools[poolId].paid[j];
             if ( total < totalAux ){
                 total = totalAux;
                 loanId = pools[poolId].votes[i];
@@ -276,7 +273,7 @@ contract StaterPool is Ownable, StaterTransfers {
     function getPoolTotalFunds(uint256[] calldata paid) public pure returns(uint256) {
         uint256 total;
         for (uint256 i = 0 ; i < paid.length ; ++i)
-            total.add(paid[i]);
+            total + paid[i];
         return total;
     }
     
@@ -284,7 +281,7 @@ contract StaterPool is Ownable, StaterTransfers {
         uint256 total;
         for (uint256 i = 0 ; i < paid.length ; ++i)
             if ( payers[i] == payer )
-                total.add(paid[i]);
+                total + paid[i];
         return total;
     }
     

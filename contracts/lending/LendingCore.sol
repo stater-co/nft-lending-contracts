@@ -48,20 +48,23 @@ contract LendingCore is StaterTransfers {
         address payable borrower; // the address who receives the loan
         address payable lender; // the address who gives/offers the loan to the borrower
         address currency; // the token that the borrower lends, address(0) for ETH
-        Status status; // the loan status
         uint256[] nftTokenIdArray; // the unique identifier of the NFT token that the borrower uses as collateral
         uint256 installmentTime; // the installment unix timestamp
         uint256 nrOfPayments; // the number of installments paid
         uint256 loanAmount; // the amount, denominated in tokens (see next struct entry), the borrower lends
         uint256 assetsValue; // important for determintng LTV which has to be under 50-60%
+        uint16 nrOfInstallments; // the number of installments that the borrower must pay.
+        uint8[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
+    }
+    
+    struct LoanControlPanel {
+        Status status; // the loan status
+        uint256 poolId; // the pool ID in case the loan is owned via pool
+        uint8 defaultingLimit; // the number of installments allowed to be missed without getting defaulted
         uint256[2] startEnd; // startEnd[0] loan start date , startEnd[1] loan end date
         uint256 installmentAmount; // amount expected for each installment
         uint256 amountDue; // loanAmount + interest that needs to be paid back by borrower
         uint256 paidAmount; // the amount that has been paid back to the lender to date
-        uint256 poolId; // the pool ID in case the loan is owned via pool
-        uint16 nrOfInstallments; // the number of installments that the borrower must pay.
-        uint8 defaultingLimit; // the number of installments allowed to be missed without getting defaulted
-        uint8[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
     }
     
     /*
@@ -69,6 +72,7 @@ contract LendingCore is StaterTransfers {
      *   loans - the loans mapping
      */
     mapping(uint256 => Loan) public loans;
+    mapping(uint256 => LoanControlPanel) public loanControlPanels;
     
     // @notice Mapping for all the loans that are approved by the owner in order to be used in the promissory note
     mapping(uint256 => address) public promissoryPermissions;
