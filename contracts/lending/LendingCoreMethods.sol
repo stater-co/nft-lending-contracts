@@ -11,12 +11,27 @@ contract LendingCoreMethods is Ownable, LendingCore {
     }
 
     
+    function calculateDiscount(address discountsHandler) internal view returns(uint256) {
+        // For 8 or more parameters via delegatecall >> Remix raises an error with no error message
+        (bool success, bytes memory output) = discountsHandler.call(
+            abi.encodeWithSignature(
+                "calculateDiscount(address)",
+                msg.sender
+            )
+        );
+        require(success);
+        return abi.decode(output, (uint256));
+    }
+    
     function getLoanApprovalCost(uint256 loanId) external view returns(uint256,uint256,uint256,uint256,address) {
+        
+        uint256 discount = calculateDiscount(loanControlPanels[loanId].discountsHandler);
+        
         return (
-            loans[loanId].loanAmount + (loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee / discounts.calculateDiscount(msg.sender)),
+            loans[loanId].loanAmount + (loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee / discount),
             loans[loanId].loanAmount,
             loanFeesHandler[loanId].lenderFee,
-            discounts.calculateDiscount(msg.sender),
+            discount,
             msg.sender
         );
     }
@@ -32,13 +47,13 @@ contract LendingCoreMethods is Ownable, LendingCore {
         uint256 amountPaidAsInstallmentToLender
     ) {
         require(nrOfInstallments <= loans[loanId].nrOfInstallments, "Number of installments too high");
-        uint256 discount = discounts.calculateDiscount(msg.sender);
+        uint256 discount = calculateDiscount(loanControlPanels[loanId].discountsHandler);
         interestDiscounted = 0;
         
         overallInstallmentAmount = uint256(loanControlPanels[loanId].installmentAmount * nrOfInstallments);
         interestPerInstallement = uint256(overallInstallmentAmount * loanFeesHandler[loanId].interestRate / 100 / loans[loanId].nrOfInstallments);
         interestDiscounted = interestPerInstallement * loanFeesHandler[loanId].interestRateToStater / 100 / discount; // amount of interest saved per installment
-        interestToStaterPerInstallement = loanFeesHandler[loanId].interestPerInstallement * loanFeesHandler[loanId].interestRateToStater / 100 / interestDiscounted;
+        interestToStaterPerInstallement = interestPerInstallement * loanFeesHandler[loanId].interestRateToStater / 100 / interestDiscounted;
         amountPaidAsInstallmentToLender = interestPerInstallement * (100 / loanFeesHandler[loanId].interestRateToStater) / 100; 
     }
     
@@ -47,7 +62,8 @@ contract LendingCoreMethods is Ownable, LendingCore {
     }
     
     function getLoanApprovalCostOnly(uint256 loanId) external view returns(uint256) {
-        return loans[loanId].loanAmount + (loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee / discounts.calculateDiscount(msg.sender));
+        uint256 discount = calculateDiscount(loanControlPanels[loanId].discountsHandler);
+        return loans[loanId].loanAmount + (loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee / discount);
     }
   
 }
