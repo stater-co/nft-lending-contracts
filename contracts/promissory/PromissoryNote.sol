@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.7.4;
+pragma solidity 0.8.7;
 import "../libs/openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 
@@ -65,7 +65,7 @@ contract StaterPromissoryNote is ERC721, Ownable {
         
         //Set promissory note fields
         promissoryNotes[promissoryNoteId].loans = loanIds;
-        promissoryNotes[promissoryNoteId].owner = msg.sender;
+        promissoryNotes[promissoryNoteId].owner = payable(msg.sender);
         
         for (uint i = 0; i < loanIds.length; ++i){
             require(promissoryLoans[loanIds[i]] == 0,"Stater Promissory Note: One of the loans is already used by another promissory note");
