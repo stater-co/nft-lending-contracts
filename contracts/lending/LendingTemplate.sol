@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.7.4;
+pragma solidity 0.8.7;
 import "./LendingCore.sol";
-import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 
 
 contract LendingTemplate is Ownable, LendingCore {
-    using SafeMath for uint256;
 
     constructor(
         address _promissoryNoteAddress,
@@ -177,13 +175,13 @@ contract LendingTemplate is Ownable, LendingCore {
     }
     
     function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {
-        return loans[loanId].amountDue.sub(loans[loanId].paidAmount);
+        return loanControlPanels[loanId].amountDue - loanControlPanels[loanId].paidAmount;
     }
 
     
     function getLoanApprovalCost(uint256 loanId) external view returns(uint256,uint256,uint256,uint256,address) {
         return (
-            loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discounts.calculateDiscount(msg.sender))),
+            loans[loanId].loanAmount + (loans[loanId].loanAmount / lenderFee / discounts.calculateDiscount(msg.sender)),
             loans[loanId].loanAmount,
             lenderFee,
             discounts.calculateDiscount(msg.sender),
@@ -205,19 +203,19 @@ contract LendingTemplate is Ownable, LendingCore {
         uint256 discount = discounts.calculateDiscount(msg.sender);
         interestDiscounted = 0;
         
-        overallInstallmentAmount = uint256(loans[loanId].installmentAmount.mul(nrOfInstallments));
-        interestPerInstallement = uint256(overallInstallmentAmount.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments));
-        interestDiscounted = interestPerInstallement.mul(interestRateToStater).div(100).div(discount); // amount of interest saved per installment
-        interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100).sub(interestDiscounted);
-        amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); 
+        overallInstallmentAmount = uint256(loanControlPanels[loanId].installmentAmount * nrOfInstallments);
+        interestPerInstallement = uint256(overallInstallmentAmount * interestRate / 100 / loans[loanId].nrOfInstallments);
+        interestDiscounted = interestPerInstallement * interestRateToStater / 100 / discount; // amount of interest saved per installment
+        interestToStaterPerInstallement = interestPerInstallement * interestRateToStater / 100 / interestDiscounted;
+        amountPaidAsInstallmentToLender = interestPerInstallement * (100 / interestRateToStater) / 100; 
     }
     
     function getLoanStartEnd(uint256 loanId) external view returns(uint256[2] memory) {
-        return loans[loanId].startEnd;
+        return loanControlPanels[loanId].startEnd;
     }
     
     function getLoanApprovalCostOnly(uint256 loanId) external view returns(uint256) {
-        return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discounts.calculateDiscount(msg.sender)));
+        return loans[loanId].loanAmount + (loans[loanId].loanAmount / lenderFee / discounts.calculateDiscount(msg.sender));
     }
   
 }
