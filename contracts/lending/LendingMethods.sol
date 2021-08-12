@@ -97,7 +97,8 @@ contract LendingMethods is Ownable, LendingCore {
         uint256 assetsValue,
         address[] calldata nftAddressArray, 
         uint256[] calldata nftTokenIdArray,
-        uint8[] calldata nftTokenTypeArray
+        uint8[] calldata nftTokenTypeArray,
+        address loanHandler
     ) external {
         require(nrOfInstallments > 0 && loanAmount > 0 && nftAddressArray.length > 0);
         require(nftAddressArray.length == nftTokenIdArray.length && nftTokenIdArray.length == nftTokenTypeArray.length);
@@ -125,6 +126,7 @@ contract LendingMethods is Ownable, LendingCore {
         loans[id].nrOfInstallments = nrOfInstallments;
         loanControlPanels[id].installmentAmount = loanControlPanels[id].amountDue % nrOfInstallments > 0 ? loanControlPanels[id].amountDue / nrOfInstallments + 1 : loanControlPanels[id].amountDue / nrOfInstallments;
         loanControlPanels[id].status = Status.LISTED;
+        loanControlPanels[id].loanHandler = loanHandler;
         loans[id].nftAddressArray = nftAddressArray;
         loans[id].borrower = payable(msg.sender);
         loans[id].currency = currency;

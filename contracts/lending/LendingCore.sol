@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.7;
 import "../plugins/StaterTransfers.sol";
-interface StaterDiscounts {
-    function calculateDiscount(address requester) external view returns(uint256);
-}
 
 contract LendingCore is StaterTransfers {
     
@@ -23,14 +20,6 @@ contract LendingCore is StaterTransfers {
      *   CANCELLED - loan is cancelled before a lender to be assigned
      *   WITHDRAWN - loan is LIQUIDATED and items are withdrawn to either lender or borrower
      */
-    address public promissoryNoteAddress;
-    address public lendingMethodsAddress;
-    StaterDiscounts public discounts;
-    uint256 public id = 1; // the loan ID
-    uint256 public ltv = 600; // 60%
-    uint256 public interestRate = 20;
-    uint256 public interestRateToStater = 40;
-    uint32 public lenderFee = 100;
     enum Status{ 
         LISTED, 
         APPROVED, 
@@ -65,6 +54,16 @@ contract LendingCore is StaterTransfers {
         uint256 installmentAmount; // amount expected for each installment
         uint256 amountDue; // loanAmount + interest that needs to be paid back by borrower
         uint256 paidAmount; // the amount that has been paid back to the lender to date
+        address loanHandler; // the address of the smart contract loan handler
+        address promissoryHandler; // the address of the smart contract promissory handler
+        address discountsHandler; // the address of the smart contract discounts handler
+    }
+    
+    struct LoanFeesHandler {
+        uint256 ltv;
+        uint256 interestRate;
+        uint256 interestRateToStater;
+        uint32 lenderFee;
     }
     
     /*
@@ -73,13 +72,6 @@ contract LendingCore is StaterTransfers {
      */
     mapping(uint256 => Loan) public loans;
     mapping(uint256 => LoanControlPanel) public loanControlPanels;
-    
-    // @notice Mapping for all the loans that are approved by the owner in order to be used in the promissory note
-    mapping(uint256 => address) public promissoryPermissions;
-    
-    modifier isPromissoryNote {
-        require(msg.sender == promissoryNoteAddress, "Lending Methods: Access denied");
-        _;
-    }
+    mapping(uint256 => LoanFeesHandler) public loanFeesHandler;
 
 }
