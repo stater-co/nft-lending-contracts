@@ -9,8 +9,8 @@
  * Implementations of standards like [ERC20](https://docs.openzeppelin.com/contracts/erc20) and [ERC721](https://docs.openzeppelin.com/contracts/erc721).
  * Flexible [role-based permissioning](https://docs.openzeppelin.com/contracts/access-control) scheme.
  * Reusable [Solidity components](https://docs.openzeppelin.com/contracts/utilities) to build custom contracts and complex decentralized systems.
- * First-class integration with the [Gas Station Network](https://docs.openzeppelin.com/contracts/gsn) for systems with no gas fees!
- * [Audited](https://github.com/OpenZeppelin/openzeppelin-contracts/tree/master/audit) by leading security firms (_last full audit on v2.0.0_).
+
+:mage: **Not sure how to get started?** Check out [Contracts Wizard](https://wizard.openzeppelin.com/) — an interactive smart contract generator.
 
 ## Overview
 
@@ -27,12 +27,12 @@ OpenZeppelin Contracts features a [stable API](https://docs.openzeppelin.com/con
 Once installed, you can use the contracts in the library by importing them:
 
 ```solidity
-pragma solidity ^0.6.0;
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract MyCollectible is ERC721 {
-    constructor() ERC721("MyCollectible", "MCO") public {
+    constructor() ERC721("MyCollectible", "MCO") {
     }
 }
 ```
@@ -60,18 +60,20 @@ Finally, you may want to take a look at the [guides on our blog](https://blog.op
 
 ## Security
 
-This project is maintained by [OpenZeppelin](https://openzeppelin.com), and developed following our high standards for code quality and security. OpenZeppelin is meant to provide tested and community-audited code, but please use common sense when doing anything that deals with real money! We take no responsibility for your implementation decisions and any security problems you might experience.
+This project is maintained by [OpenZeppelin](https://openzeppelin.com), and developed following our high standards for code quality and security. OpenZeppelin Contracts is meant to provide tested and community-audited code, but please use common sense when doing anything that deals with real money! We take no responsibility for your implementation decisions and any security problems you might experience.
 
-The core development principles and strategies that OpenZeppelin is based on include: security in depth, simple and modular code, clarity-driven naming conventions, comprehensive unit testing, pre-and-post-condition sanity checks, code consistency, and regular audits.
+The core development principles and strategies that OpenZeppelin Contracts is based on include: security in depth, simple and modular code, clarity-driven naming conventions, comprehensive unit testing, pre-and-post-condition sanity checks, code consistency, and regular audits.
 
 The latest audit was done on October 2018 on version 2.0.0.
 
 Please report any security issues you find to security@openzeppelin.org.
 
+Critical bug fixes will be backported to past major releases.
+
 ## Contribute
 
-OpenZeppelin exists thanks to its contributors. There are many ways you can participate and help build high quality software. Check out the [contribution guide](CONTRIBUTING.md)!
+OpenZeppelin Contracts exists thanks to its contributors. There are many ways you can participate and help build high quality software. Check out the [contribution guide](CONTRIBUTING.md)!
 
 ## License
 
-OpenZeppelin is released under the [MIT License](LICENSE).
+OpenZeppelin Contracts is released under the [MIT License](LICENSE).

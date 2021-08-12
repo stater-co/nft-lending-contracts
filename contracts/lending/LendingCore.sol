@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.7.4;
+pragma solidity 0.8.7;
 import "../plugins/StaterTransfers.sol";
 interface StaterDiscounts {
     function calculateDiscount(address requester) external view returns(uint256);
