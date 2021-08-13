@@ -141,7 +141,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/plugins/StaterProxy/StaterProxyAdmin.sol": "StaterGatewayAdmin"
+			"contracts/plugins/StaterProxy/StaterProxyAdmin.sol": "StaterProxyAdmin"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -180,11 +180,11 @@
 			]
 		},
 		"contracts/plugins/StaterProxy/StaterProxyAdmin.sol": {
-			"keccak256": "0x71ef8f56f187c8ecdc6730771455dce3326c70126954a0b4dab91cd5ed6d69a2",
+			"keccak256": "0xe9cda5ce5d2aec11f066d002fe6b57a0ce4e55b252d364d0da15ed9bc82e3138",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b6a86353b5dbc9867ed74d6e5f658b866f368fb081bbd0155971888800c22461",
-				"dweb:/ipfs/QmXySxZUEkKgQm3YYvdygjKb9jsDiAGc4cp96XNb1Drrgo"
+				"bzz-raw://ab84218eef1879fa2df01b8ad16d5735932bb513e84c4786e82dea0065c78834",
+				"dweb:/ipfs/QmWytBzE5YauFt6bPmnP8DA3ABY1P8j5AFfbf23qDzQhQr"
 			]
 		}
 	},

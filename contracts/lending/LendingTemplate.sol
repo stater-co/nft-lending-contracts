@@ -2,10 +2,10 @@
 pragma solidity 0.8.7;
 import "./LendingCore.sol";
 import "./LendingCoreMethods.sol";
-import "../plugins/StaterProxy/StaterGateway.sol";
+import "../plugins/StaterProxy/StaterProxy.sol";
 
 
-contract LendingTemplate is LendingCore, LendingCoreMethods, StaterGateway {
+contract LendingTemplate is LendingCore, LendingCoreMethods, StaterProxy {
     
     /*
      * @DIIMIIM

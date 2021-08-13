@@ -28,6 +28,19 @@
 				],
 				"stateMutability": "view",
 				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "empty",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -58,11 +71,11 @@
 	},
 	"sources": {
 		"contracts/plugins/StaterProxy/ProxyCore.sol": {
-			"keccak256": "0x1324169169686d0260613e44cd1532e68c798ed86d9dccfe4438ef18f309a73b",
+			"keccak256": "0xbfc959a3aaddba1af7e9e296ecc87472e0c7b6ecf5f0a57866ea7469c4656622",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b6ffc13919aad04dc844cc78fa12fbbaa928f96551d9effe123f18e10aa73161",
-				"dweb:/ipfs/QmYeFsCxKMsbzW7jq3eNKdYXQptXMyPFc7N2QKLSLMHtnX"
+				"bzz-raw://5bc03a2483e100355e3b9c7bd78e69130e3078b1442c95340f29360e7e34daf4",
+				"dweb:/ipfs/QmS9hYUYvc27KUjWfPyJH4xV4KzAbkiBvFPNuwU6ZhJ6j7"
 			]
 		}
 	},

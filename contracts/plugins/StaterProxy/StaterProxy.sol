@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.7;
 import "./ProxyCore.sol";
+import "./StaterProxyAdmin.sol";
 
 
-contract StaterGateway is ProxyCore {
+contract StaterProxy is ProxyCore, StaterProxyAdmin {
     
     /*
      * @DIIMIIM: call() implementation

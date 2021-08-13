@@ -49,6 +49,24 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes",
+						"name": "input",
+						"type": "bytes"
+					}
+				],
+				"name": "delegateCall",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "empty",
 				"outputs": [
@@ -116,6 +134,42 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes4",
+						"name": "method",
+						"type": "bytes4"
+					}
+				],
+				"name": "updateBoilerplate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes",
+						"name": "input",
+						"type": "bytes"
+					}
+				],
+				"name": "vanillaCall",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -141,7 +195,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/plugins/StaterProxy/StaterProxyAdmin.sol": "StaterGatewayAdmin"
+			"contracts/plugins/StaterProxy/StaterProxy.sol": "StaterProxy"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -179,12 +233,20 @@
 				"dweb:/ipfs/QmS9hYUYvc27KUjWfPyJH4xV4KzAbkiBvFPNuwU6ZhJ6j7"
 			]
 		},
-		"contracts/plugins/StaterProxy/StaterProxyAdmin.sol": {
-			"keccak256": "0x71ef8f56f187c8ecdc6730771455dce3326c70126954a0b4dab91cd5ed6d69a2",
+		"contracts/plugins/StaterProxy/StaterProxy.sol": {
+			"keccak256": "0xa95d44775ff36d51c92ee5e9e8e4e1a116a0992ea90317299d319ca6fe807eea",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b6a86353b5dbc9867ed74d6e5f658b866f368fb081bbd0155971888800c22461",
-				"dweb:/ipfs/QmXySxZUEkKgQm3YYvdygjKb9jsDiAGc4cp96XNb1Drrgo"
+				"bzz-raw://baa9ceb7c281c4811a26091f2930f7ef03f352cbe22a3ba01a898775f5dff617",
+				"dweb:/ipfs/QmUqCdxtbpj2etwnQV4YMEjenfRx8NyrnoTspa5swvdNWg"
+			]
+		},
+		"contracts/plugins/StaterProxy/StaterProxyAdmin.sol": {
+			"keccak256": "0xe9cda5ce5d2aec11f066d002fe6b57a0ce4e55b252d364d0da15ed9bc82e3138",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ab84218eef1879fa2df01b8ad16d5735932bb513e84c4786e82dea0065c78834",
+				"dweb:/ipfs/QmWytBzE5YauFt6bPmnP8DA3ABY1P8j5AFfbf23qDzQhQr"
 			]
 		}
 	},
