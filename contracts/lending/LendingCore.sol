@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.7;
 import "../plugins/StaterTransfers.sol";
+interface StaterDiscounts {
+    function calculateDiscount(address requester) external view returns(uint256);
+}
+
 
 contract LendingCore is StaterTransfers {
     
@@ -70,8 +74,22 @@ contract LendingCore is StaterTransfers {
      * @DIIMIIM : public mappings
      *   loans - the loans mapping
      */
+    uint256 public id = 1;
     mapping(uint256 => Loan) public loans;
     mapping(uint256 => LoanControlPanel) public loanControlPanels;
     mapping(uint256 => LoanFeesHandler) public loanFeesHandler;
+    
+    // Calculates loan to value ratio
+    function _percent(uint256 numerator, uint256 denominator) internal pure returns(uint256) {
+        return (((numerator * 10000) / denominator) + 5) / 10;
+    }
+    
+    /*
+     * @DIIMIIM: Not possible to send non payable transactions from a solidity method unless we use the interface
+     * So we'll have to use this as the calculateDiscount standard
+     */
+    function calculateDiscount(address discountsHandler) internal view returns(uint256) {
+        return StaterDiscounts(discountsHandler).calculateDiscount(msg.sender);
+    }
 
 }

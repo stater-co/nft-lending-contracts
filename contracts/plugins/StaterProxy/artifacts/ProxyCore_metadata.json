@@ -1,0 +1,70 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "boilerplate",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/plugins/StaterProxy/ProxyCore.sol": "ProxyCore"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/plugins/StaterProxy/ProxyCore.sol": {
+			"keccak256": "0x1324169169686d0260613e44cd1532e68c798ed86d9dccfe4438ef18f309a73b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b6ffc13919aad04dc844cc78fa12fbbaa928f96551d9effe123f18e10aa73161",
+				"dweb:/ipfs/QmYeFsCxKMsbzW7jq3eNKdYXQptXMyPFc7N2QKLSLMHtnX"
+			]
+		}
+	},
+	"version": 1
+}

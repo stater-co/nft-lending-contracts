@@ -1,0 +1,132 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "boilerplate",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes",
+						"name": "input",
+						"type": "bytes"
+					}
+				],
+				"name": "delegateCall",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes4",
+						"name": "method",
+						"type": "bytes4"
+					}
+				],
+				"name": "updateBoilerplate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes",
+						"name": "input",
+						"type": "bytes"
+					}
+				],
+				"name": "vanillaCall",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/plugins/StaterProxy/StaterGateway.sol": "StaterGateway"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/plugins/StaterProxy/ProxyCore.sol": {
+			"keccak256": "0x1324169169686d0260613e44cd1532e68c798ed86d9dccfe4438ef18f309a73b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b6ffc13919aad04dc844cc78fa12fbbaa928f96551d9effe123f18e10aa73161",
+				"dweb:/ipfs/QmYeFsCxKMsbzW7jq3eNKdYXQptXMyPFc7N2QKLSLMHtnX"
+			]
+		},
+		"contracts/plugins/StaterProxy/StaterGateway.sol": {
+			"keccak256": "0xeaa41435d79e4ea5e1bc0d49a0b0012bc9b1f613a7c33a3065317bf43c247c8a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a9100ebe5541a06f23b36c61a307330d13c09b6eb10bebfe65356f426a9f24ec",
+				"dweb:/ipfs/QmbaQfVRnGR9fxs6Qa3Auk3SmeG1HQx6os8j1ztGXY8aYX"
+			]
+		}
+	},
+	"version": 1
+}

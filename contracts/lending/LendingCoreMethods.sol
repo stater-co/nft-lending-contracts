@@ -1,26 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.7;
 import "./LendingCore.sol";
-import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 
 
 contract LendingCoreMethods is Ownable, LendingCore {
 
     function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {
         return loanControlPanels[loanId].amountDue - loanControlPanels[loanId].paidAmount;
-    }
-
-    
-    function calculateDiscount(address discountsHandler) internal view returns(uint256) {
-        // For 8 or more parameters via delegatecall >> Remix raises an error with no error message
-        (bool success, bytes memory output) = discountsHandler.call(
-            abi.encodeWithSignature(
-                "calculateDiscount(address)",
-                msg.sender
-            )
-        );
-        require(success);
-        return abi.decode(output, (uint256));
     }
     
     function getLoanApprovalCost(uint256 loanId) external view returns(uint256,uint256,uint256,uint256,address) {

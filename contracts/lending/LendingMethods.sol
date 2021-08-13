@@ -1,31 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.7;
 import "./LendingCore.sol";
-import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 
 
-contract LendingMethods is Ownable, LendingCore {
-    
-    
-    /*
-     * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
-     * @ => TRUE = Loan has exceed the maximum unpaid installments limit, lender can terminate the loan and get the NFTs
-     * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
-     */
-    function lackOfPayment(uint256 loanId) public view returns(bool) {
-        return 
-            loanControlPanels[loanId].status == Status.APPROVED 
-                && 
-            loanControlPanels[loanId].startEnd[0] + (loans[loanId].nrOfPayments * (loans[loanId].installmentTime / loans[loanId].nrOfInstallments)) 
-                <= 
-            block.timestamp - (loanControlPanels[loanId].defaultingLimit * (loans[loanId].installmentTime / loans[loanId].nrOfInstallments));
-    }
-
-    // Calculates loan to value ratio
-    function _percent(uint256 numerator, uint256 denominator) public pure returns(uint256) {
-        return (((numerator * 10000) / denominator) + 5) / 10;
-    }
-    
+contract LendingMethods is LendingCore {
     
     /*
      * @DIIMIIM : The loan events
@@ -70,23 +48,18 @@ contract LendingMethods is Ownable, LendingCore {
         Status status
     );
     
-    
-    function setGlobalVariables(
-        uint256 _ltv,  
-        uint256 _interestRate, 
-        uint256 _interestRateToStater, 
-        uint32 _lenderFee,
-        address _promissoryNoteAddress,
-        address _lendingMethodsAddress,
-        address _lendingDiscountsAddress
-    ) external onlyOwner {
-        ltv = _ltv;
-        interestRate = _interestRate;
-        interestRateToStater = _interestRateToStater;
-        lenderFee = _lenderFee;
-        promissoryNoteAddress = _promissoryNoteAddress;
-        lendingMethodsAddress = _lendingMethodsAddress;
-        discounts = StaterDiscounts(_lendingDiscountsAddress);
+    /*
+     * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
+     * @ => TRUE = Loan has exceed the maximum unpaid installments limit, lender can terminate the loan and get the NFTs
+     * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
+     */
+    function lackOfPayment(uint256 loanId) public view returns(bool) {
+        return 
+            loanControlPanels[loanId].status == Status.APPROVED 
+                && 
+            loanControlPanels[loanId].startEnd[0] + (loans[loanId].nrOfPayments * (loans[loanId].installmentTime / loans[loanId].nrOfInstallments)) 
+                <= 
+            block.timestamp - (loanControlPanels[loanId].defaultingLimit * (loans[loanId].installmentTime / loans[loanId].nrOfInstallments));
     }
     
     // Borrower creates a loan
@@ -108,7 +81,7 @@ contract LendingMethods is Ownable, LendingCore {
          * @ Side note : _percent is missing from the LendingCore contract , in case of any error
          */
         // Compute loan to value ratio for current loan application
-        require(_percent(loanAmount, loans[id].assetsValue) <= ltv);
+        require(_percent(loanAmount, loans[id].assetsValue) <= loanFeesHandler[id].ltv);
         
         // Computing the defaulting limit
         if ( nrOfInstallments <= 3 )
@@ -122,7 +95,7 @@ contract LendingMethods is Ownable, LendingCore {
         
         loans[id].nftTokenIdArray = nftTokenIdArray;
         loans[id].loanAmount = loanAmount;
-        loanControlPanels[id].amountDue = (loanAmount * (interestRate + 100)) / 100; // interest rate >> 20%
+        loanControlPanels[id].amountDue = (loanAmount * (loanFeesHandler[id].interestRate + 100)) / 100; // interest rate >> 20%
         loans[id].nrOfInstallments = nrOfInstallments;
         loanControlPanels[id].installmentAmount = loanControlPanels[id].amountDue % nrOfInstallments > 0 ? loanControlPanels[id].amountDue / nrOfInstallments + 1 : loanControlPanels[id].amountDue / nrOfInstallments;
         loanControlPanels[id].status = Status.LISTED;
@@ -170,12 +143,12 @@ contract LendingMethods is Ownable, LendingCore {
         require(nrOfInstallments > 0 && loanAmount > 0);
         require(loans[loanId].borrower == msg.sender);
         require(loanControlPanels[loanId].status < Status.APPROVED);
-        require(_percent(loanAmount, assetsValue) <= ltv);
+        require(_percent(loanAmount, assetsValue) <= loanFeesHandler[loanId].ltv);
         
 
         loans[loanId].installmentTime = installmentTime;
         loans[loanId].loanAmount = loanAmount;
-        loanControlPanels[loanId].amountDue = (loanAmount * (interestRate + 100)) / 100;
+        loanControlPanels[loanId].amountDue = (loanAmount * (loanFeesHandler[loanId].interestRate + 100)) / 100;
         loanControlPanels[loanId].installmentAmount = loanControlPanels[loanId].amountDue % nrOfInstallments > 0 ? (loanControlPanels[loanId].amountDue / nrOfInstallments) + 1 : loanControlPanels[loanId].amountDue / nrOfInstallments;
         loans[loanId].assetsValue = assetsValue;
         loans[loanId].currency = currency;
@@ -209,11 +182,11 @@ contract LendingMethods is Ownable, LendingCore {
     function approveLoan(uint256 loanId) external payable {
         
         approveLoanCoreMechanism(loanId);
-        uint256 discount = discounts.calculateDiscount(msg.sender);
+        uint256 discount = calculateDiscount(msg.sender);
         
         // We check if currency is ETH
         if ( loans[loanId].currency == address(0) )
-            require(msg.value >= loans[loanId].loanAmount + (loans[loanId].loanAmount / lenderFee / discount));
+            require(msg.value >= loans[loanId].loanAmount + (loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee / discount));
         
         // We send the tokens here
         transferTokens(
@@ -221,7 +194,7 @@ contract LendingMethods is Ownable, LendingCore {
             payable(loans[loanId].borrower),
             loans[loanId].currency,
             loans[loanId].loanAmount,
-            loans[loanId].loanAmount / lenderFee / discount
+            loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee / discount
         );
 
     }
@@ -232,7 +205,7 @@ contract LendingMethods is Ownable, LendingCore {
         
         // We check if currency is ETH
         if ( loans[loanId].currency == address(0) )
-            require(msg.value >= loans[loanId].loanAmount + (loans[loanId].loanAmount / lenderFee));
+            require(msg.value >= loans[loanId].loanAmount + (loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee));
             
         loanControlPanels[loanId].poolId = poolId;
 
@@ -242,7 +215,7 @@ contract LendingMethods is Ownable, LendingCore {
             payable(loans[loanId].borrower),
             loans[loanId].currency,
             loans[loanId].loanAmount,
-            loans[loanId].loanAmount / lenderFee
+            loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee
         );
             
     }
@@ -281,9 +254,9 @@ contract LendingMethods is Ownable, LendingCore {
         
         uint256 paidByBorrower = msg.value > 0 ? msg.value : amount;
         uint256 amountPaidAsInstallmentToLender = paidByBorrower; // >> amount of installment that goes to lender
-        uint256 interestPerInstallement = paidByBorrower * interestRate / 100; // entire interest for installment
-        uint256 discount = discounts.calculateDiscount(msg.sender);
-        uint256 interestToStaterPerInstallement = interestPerInstallement * interestRateToStater / 100;
+        uint256 interestPerInstallement = paidByBorrower * loanFeesHandler[loanId].interestRate / 100; // entire interest for installment
+        uint256 discount = calculateDiscount(msg.sender);
+        uint256 interestToStaterPerInstallement = interestPerInstallement * loanFeesHandler[loanId].interestRateToStater / 100;
 
         if ( discount != 1 ){
             if ( loans[loanId].currency == address(0) ){
@@ -366,35 +339,6 @@ contract LendingMethods is Ownable, LendingCore {
             loanId,
             loanControlPanels[loanId].status
         );
-    }
-    
-    /**
-     * @notice Used by the Promissory Note contract to change the ownership of the loan when the Promissory Note NFT is sold 
-     * @param from The address of the current owner
-     * @param to The address of the new owner
-     * @param loanIds The ids of the loans that will be transferred to the new owner
-     */
-    function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external isPromissoryNote {
-        for (uint256 i = 0; i < loanIds.length; ++i) {
-            require(loans[loanIds[i]].lender == from);
-            require(loanControlPanels[loanIds[i]].status == Status.APPROVED);
-            require(promissoryPermissions[loanIds[i]] == from);
-            loans[loanIds[i]].lender = to;
-            promissoryPermissions[loanIds[i]] = to;
-        }
-    }
-  
-    /**
-     * @notice Used by the Promissory Note contract to approve a list of loans to be used as a Promissory Note NFT
-     * @param loanIds The ids of the loans that will be approved
-     */
-     function setPromissoryPermissions(uint256[] calldata loanIds, address sender, address allowed) external isPromissoryNote {
-        for (uint256 i = 0; i < loanIds.length; ++i){
-            require(loans[loanIds[i]].lender == sender);
-            if (allowed != address(0))
-                require(loanControlPanels[loanIds[i]].status == Status.APPROVED);
-            promissoryPermissions[loanIds[i]] = allowed;
-        }
     }
     
     function approveLoanCoreMechanism(uint256 loanId) internal {
