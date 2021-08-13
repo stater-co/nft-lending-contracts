@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.7;
-import "../../LendingCore.sol";
+import "./LendingCore.sol";
 
 
-contract Methods is Ownable, LendingCore {
+contract LendingCoreMethods is Ownable, LendingCore {
 
     function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {
         return loanControlPanels[loanId].amountDue - loanControlPanels[loanId].paidAmount;

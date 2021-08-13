@@ -227,7 +227,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/external-workers/StaterDiscounts.sol": "StaterDiscounts"
+			"contracts/externalWorkers/StaterDiscounts.sol": "StaterDiscounts"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -235,13 +235,13 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
-		"contracts/external-workers/StaterDiscounts.sol": {
+		"contracts/externalWorkers/StaterDiscounts.sol": {
 			"keccak256": "0x0f1357d96485b588ebbf8dc626083b9675e45aa03c2624e9bb37e7581601e008",
 			"license": "MIT",
 			"urls": [

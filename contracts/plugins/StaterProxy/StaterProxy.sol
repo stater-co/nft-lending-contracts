@@ -11,8 +11,8 @@ contract StaterProxy is ProxyCore, StaterProxyAdmin {
      * @param to: Represents the address of the smart contract to call, will also be checked within this method
      * @param input: Represents the method payload encoded as bytes
      */
-    function vanillaCall(address to, bytes calldata input) external guarded(to) {
-        _call(to,input);
+    function vanillaCall(address to, bytes calldata input) external guarded(to) returns(bytes memory){
+        return abi.decode(_call(to,input),(bytes));
     }
 
     /*

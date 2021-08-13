@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.7;
-import "./LendingCore.sol";
+import "../LendingCore.sol";
+import "./Params.sol";
 
 
-contract LendingMethods is LendingCore {
+contract StaterDefault is LendingCore, Params {
     
     /*
      * @DIIMIIM : The loan events
@@ -64,65 +65,58 @@ contract LendingMethods is LendingCore {
     
     // Borrower creates a loan
     function createLoan(
-        uint256 loanAmount,
-        uint16 nrOfInstallments,
-        address currency,
-        uint256 assetsValue,
-        address[] calldata nftAddressArray, 
-        uint256[] calldata nftTokenIdArray,
-        uint8[] calldata nftTokenTypeArray,
-        address loanHandler
+        CreateLoanParams memory loan
     ) external {
-        require(nrOfInstallments > 0 && loanAmount > 0 && nftAddressArray.length > 0);
-        require(nftAddressArray.length == nftTokenIdArray.length && nftTokenIdArray.length == nftTokenTypeArray.length);
+        require(loan.nrOfInstallments > 0 && loan.loanAmount > 0 && loan.nftAddressArray.length > 0);
+        require(loan.nftAddressArray.length == loan.nftTokenIdArray.length && loan.nftTokenIdArray.length == loan.nftTokenTypeArray.length);
         
-        loans[id].assetsValue = assetsValue;
         /*
          * @ Side note : _percent is missing from the LendingCore contract , in case of any error
+         * Compute loan to value ratio for current loan application
          */
-        // Compute loan to value ratio for current loan application
-        require(_percent(loanAmount, loans[id].assetsValue) <= loanFeesHandler[id].ltv);
+        require(_percent(loan.loanAmount, loan.assetsValue) <= loan.ltv);
+        
+        loans[id].assetsValue = loan.assetsValue;
         
         // Computing the defaulting limit
-        if ( nrOfInstallments <= 3 )
+        if ( loan.nrOfInstallments <= 3 )
             loanControlPanels[id].defaultingLimit = 1;
-        else if ( nrOfInstallments <= 5 )
+        else if ( loan.nrOfInstallments <= 5 )
             loanControlPanels[id].defaultingLimit = 2;
-        else if ( nrOfInstallments >= 6 )
+        else if ( loan.nrOfInstallments >= 6 )
             loanControlPanels[id].defaultingLimit = 3;
         
         // Set loan fields
-        
-        loans[id].nftTokenIdArray = nftTokenIdArray;
-        loans[id].loanAmount = loanAmount;
-        loanControlPanels[id].amountDue = (loanAmount * (loanFeesHandler[id].interestRate + 100)) / 100; // interest rate >> 20%
-        loans[id].nrOfInstallments = nrOfInstallments;
-        loanControlPanels[id].installmentAmount = loanControlPanels[id].amountDue % nrOfInstallments > 0 ? loanControlPanels[id].amountDue / nrOfInstallments + 1 : loanControlPanels[id].amountDue / nrOfInstallments;
+        loans[id].nftTokenIdArray = loan.nftTokenIdArray;
+        loans[id].loanAmount = loan.loanAmount;
+        loanControlPanels[id].amountDue = (loan.loanAmount * (loanFeesHandler[id].interestRate + 100)) / 100; // interest rate >> 20%
+        loans[id].nrOfInstallments = loan.nrOfInstallments;
+        loanControlPanels[id].installmentAmount = loanControlPanels[id].amountDue % loan.nrOfInstallments > 0 ? loanControlPanels[id].amountDue / loan.nrOfInstallments + 1 : loanControlPanels[id].amountDue / loan.nrOfInstallments;
         loanControlPanels[id].status = Status.LISTED;
-        loanControlPanels[id].loanHandler = loanHandler;
-        loans[id].nftAddressArray = nftAddressArray;
+        loanControlPanels[id].loanHandler = loan.loanHandler;
+        loans[id].nftAddressArray = loan.nftAddressArray;
         loans[id].borrower = payable(msg.sender);
-        loans[id].currency = currency;
-        loans[id].nftTokenTypeArray = nftTokenTypeArray;
+        loans[id].currency = loan.currency;
+        loans[id].nftTokenTypeArray = loan.nftTokenTypeArray;
         loans[id].installmentTime = 1 weeks;
         
         // Transfer the items from lender to stater contract
         transferItems(
             msg.sender, 
             address(this), 
-            nftAddressArray, 
-            nftTokenIdArray,
-            nftTokenTypeArray
+            loan.nftAddressArray, 
+            loan.nftTokenIdArray,
+            loan.nftTokenTypeArray
         );
         
         // Fire event
         emit NewLoan(
             msg.sender, 
-            currency, 
+            loan.currency, 
             id,
-            nftAddressArray,
-            nftTokenIdArray,
-            nftTokenTypeArray
+            loan.nftAddressArray,
+            loan.nftTokenIdArray,
+            loan.nftTokenTypeArray
         );
         ++id;
     }

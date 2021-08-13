@@ -167,7 +167,13 @@
 					}
 				],
 				"name": "vanillaCall",
-				"outputs": [],
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			}
@@ -234,11 +240,11 @@
 			]
 		},
 		"contracts/plugins/StaterProxy/StaterProxy.sol": {
-			"keccak256": "0xa95d44775ff36d51c92ee5e9e8e4e1a116a0992ea90317299d319ca6fe807eea",
+			"keccak256": "0x47a2c12f838512f96bbd0beac127a984ea64db2c31cb03643007f3c88dfa23dd",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://baa9ceb7c281c4811a26091f2930f7ef03f352cbe22a3ba01a898775f5dff617",
-				"dweb:/ipfs/QmUqCdxtbpj2etwnQV4YMEjenfRx8NyrnoTspa5swvdNWg"
+				"bzz-raw://dc1465aa7c05a6f56f5d8954215e862873b2d52e691b3f10588f4e9495e3381f",
+				"dweb:/ipfs/QmYep2VGqf3aw2BnvwuNpSDvLn2RCMNFMyn3chUzeTtUMB"
 			]
 		},
 		"contracts/plugins/StaterProxy/StaterProxyAdmin.sol": {
