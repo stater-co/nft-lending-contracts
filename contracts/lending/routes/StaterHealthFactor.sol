@@ -1,10 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.7;
+pragma solidity >=0.7.6;
+pragma abicoder v2;
+
 import "../LendingCore.sol";
+import "../../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
+import "../../libs/uniswap-v3-periphery/interfaces/INonfungiblePositionManager.sol";
 import "./Params.sol";
 
 
-contract StaterDefault is LendingCore, Params {
+contract StaterHealthFactor is Ownable, LendingCore, Params {
+    
+    uint256 public liquidationTreshold = .3 ether;
     
     /*
      * @DIIMIIM : The loan events
@@ -49,18 +55,21 @@ contract StaterDefault is LendingCore, Params {
         Status status
     );
     
+    
+    
     /*
      * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
      * @ => TRUE = Loan has exceed the maximum unpaid installments limit, lender can terminate the loan and get the NFTs
      * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
      */
-    function lackOfPayment(uint256 loanId) public view returns(bool) {
-        return 
-            loanControlPanels[loanId].status == Status.APPROVED 
-                && 
-            loanControlPanels[loanId].startEnd[0] + (loans[loanId].nrOfPayments * (loans[loanId].installmentTime / loans[loanId].nrOfInstallments)) 
-                <= 
-            block.timestamp - (loanControlPanels[loanId].defaultingLimit * (loans[loanId].installmentTime / loans[loanId].nrOfInstallments));
+    function lackOfPayment(uint256 loanId) public view returns(uint8) {
+        LoanControlPanel memory loanControlPanel = loanControlPanels[loanId];
+        if ( loanControlPanel.paidAmount >= loanControlPanel.amountDue )
+            return 11;
+        
+        uint8 healthFactor = 1;
+        
+        return 1;
     }
     
     // Borrower creates a loan
@@ -74,7 +83,7 @@ contract StaterDefault is LendingCore, Params {
          * @ Side note : _percent is missing from the LendingCore contract , in case of any error
          * Compute loan to value ratio for current loan application
          */
-        require(_percent(loan.loanAmount, loan.assetsValue) <= loan.ltv);
+        require(_percent(loan.loanAmount, loan.assetsValue) <= ltv);
         
         loans[id].assetsValue = loan.assetsValue;
         
@@ -93,7 +102,10 @@ contract StaterDefault is LendingCore, Params {
         loans[id].nrOfInstallments = loan.nrOfInstallments;
         loanControlPanels[id].installmentAmount = loanControlPanels[id].amountDue % loan.nrOfInstallments > 0 ? loanControlPanels[id].amountDue / loan.nrOfInstallments + 1 : loanControlPanels[id].amountDue / loan.nrOfInstallments;
         loanControlPanels[id].status = Status.LISTED;
-        loanControlPanels[id].loanHandler = loan.loanHandler;
+        loanControlPanels[id].loanHandler = loanHandler;
+        loanControlPanels[id].promissoryHandler = promissoryHandler;
+        loanControlPanels[id].discountsHandler = discountsHandler;
+        loanControlPanels[id].poolHandler = poolHandler;
         loans[id].nftAddressArray = loan.nftAddressArray;
         loans[id].borrower = payable(msg.sender);
         loans[id].currency = loan.currency;
@@ -176,7 +188,7 @@ contract StaterDefault is LendingCore, Params {
     function approveLoan(uint256 loanId) external payable {
         
         approveLoanCoreMechanism(loanId);
-        uint256 discount = calculateDiscount(msg.sender);
+        uint256 discount = calculateDiscount(loanId,msg.sender);
         
         // We check if currency is ETH
         if ( loans[loanId].currency == address(0) )
@@ -249,7 +261,7 @@ contract StaterDefault is LendingCore, Params {
         uint256 paidByBorrower = msg.value > 0 ? msg.value : amount;
         uint256 amountPaidAsInstallmentToLender = paidByBorrower; // >> amount of installment that goes to lender
         uint256 interestPerInstallement = paidByBorrower * loanFeesHandler[loanId].interestRate / 100; // entire interest for installment
-        uint256 discount = calculateDiscount(msg.sender);
+        uint256 discount = calculateDiscount(loanId,msg.sender);
         uint256 interestToStaterPerInstallement = interestPerInstallement * loanFeesHandler[loanId].interestRateToStater / 100;
 
         if ( discount != 1 ){
@@ -290,10 +302,10 @@ contract StaterDefault is LendingCore, Params {
     // Lender can withdraw loan item is loan is DEFAULTED
     function terminateLoan(uint256 loanId) external {
         require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender);
-        require((block.timestamp >= loanControlPanels[loanId].startEnd[1] || loanControlPanels[loanId].paidAmount >= loanControlPanels[loanId].amountDue) || lackOfPayment(loanId));
+        require((block.timestamp >= loanControlPanels[loanId].startEnd[1] || loanControlPanels[loanId].paidAmount >= loanControlPanels[loanId].amountDue) || lackOfPayment(loanId) < 1);
         require(loanControlPanels[loanId].status == Status.LIQUIDATED || loanControlPanels[loanId].status == Status.APPROVED);
 
-        if ( lackOfPayment(loanId) ) {
+        if ( lackOfPayment(loanId) < 1 ) {
             loanControlPanels[loanId].status = Status.WITHDRAWN;
             loanControlPanels[loanId].startEnd[1] = block.timestamp;
             // We send the items back to lender

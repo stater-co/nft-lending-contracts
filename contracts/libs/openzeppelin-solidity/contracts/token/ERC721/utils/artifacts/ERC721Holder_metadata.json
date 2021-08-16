@@ -1,0 +1,93 @@
+{
+	"compiler": {
+		"version": "0.7.6+commit.7338295f"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"name": "onERC721Received",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "Implementation of the {IERC721Receiver} interface. Accepts all token transfers. Make sure the contract is able to use its token with {IERC721-safeTransferFrom}, {IERC721-approve} or {IERC721-setApprovalForAll}.",
+			"kind": "dev",
+			"methods": {
+				"onERC721Received(address,address,uint256,bytes)": {
+					"details": "See {IERC721Receiver-onERC721Received}. Always returns `IERC721Receiver.onERC721Received.selector`."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/libs/openzeppelin-solidity/contracts/token/ERC721/utils/ERC721Holder.sol": "ERC721Holder"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721Receiver.sol": {
+			"keccak256": "0xd3b42d5ee37531d3d4e757e43906b6d246ecfd79e6457d26837b5094d653d7ff",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1fcdce9b37f19f49b0738230e2d78989cd480bf38d1abf23ebf0a44e3bd50b7b",
+				"dweb:/ipfs/QmQX1DWXasSJD9dQ7XoofmZiZJ3pYutYwhCTmbK2fD2aho"
+			]
+		},
+		"contracts/libs/openzeppelin-solidity/contracts/token/ERC721/utils/ERC721Holder.sol": {
+			"keccak256": "0x439491a07457de56c6a92c154bac0e9e534a4eac7f0c4098c63315719be47ef4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f2569bf533fdd50788d6e27d839d7d57296c359c25b1c10698ed79e0f11ca036",
+				"dweb:/ipfs/QmZTSUn8nFVdfNGn4KbGnFtr4XHUbZVksnPBPxvu2Jwn7r"
+			]
+		}
+	},
+	"version": 1
+}

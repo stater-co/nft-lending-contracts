@@ -1,0 +1,1168 @@
+{
+	"compiler": {
+		"version": "0.7.6+commit.7338295f"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "currency",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "loanAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountDue",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "installmentAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "assetsValue",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "frequencyTime",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "frequencyTimeUnit",
+						"type": "uint256"
+					}
+				],
+				"name": "EditLoan",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "requester",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum LendingCore.Status",
+						"name": "status",
+						"type": "uint8"
+					}
+				],
+				"name": "ItemsWithdrawn",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "lender",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "loanPaymentEnd",
+						"type": "uint256"
+					}
+				],
+				"name": "LoanApproved",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					}
+				],
+				"name": "LoanCancelled",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "installmentAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountPaidAsInstallmentToLender",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "interestPerInstallement",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "interestToStaterPerInstallement",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum LendingCore.Status",
+						"name": "status",
+						"type": "uint8"
+					}
+				],
+				"name": "LoanPayment",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "currency",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address[]",
+						"name": "nftAddressArray",
+						"type": "address[]"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256[]",
+						"name": "nftTokenIdArray",
+						"type": "uint256[]"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint8[]",
+						"name": "nftTokenTypeArray",
+						"type": "uint8[]"
+					}
+				],
+				"name": "NewLoan",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					}
+				],
+				"name": "approveLoan",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "poolId",
+						"type": "uint256"
+					}
+				],
+				"name": "approveLoanWithPool",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					}
+				],
+				"name": "cancelLoan",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "currency",
+								"type": "address"
+							},
+							{
+								"internalType": "address[]",
+								"name": "nftAddressArray",
+								"type": "address[]"
+							},
+							{
+								"internalType": "uint256",
+								"name": "loanAmount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "installmentTime",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "assetsValue",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256[]",
+								"name": "nftTokenIdArray",
+								"type": "uint256[]"
+							},
+							{
+								"internalType": "uint16",
+								"name": "nrOfInstallments",
+								"type": "uint16"
+							},
+							{
+								"internalType": "uint8[]",
+								"name": "nftTokenTypeArray",
+								"type": "uint8[]"
+							}
+						],
+						"internalType": "struct Params.CreateLoanParams",
+						"name": "loan",
+						"type": "tuple"
+					}
+				],
+				"name": "createLoan",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "discountsHandler",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "loanAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint16",
+						"name": "nrOfInstallments",
+						"type": "uint16"
+					},
+					{
+						"internalType": "address",
+						"name": "currency",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "assetsValue",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "installmentTime",
+						"type": "uint256"
+					}
+				],
+				"name": "editLoan",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "id",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "interestRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "interestRateToStater",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					}
+				],
+				"name": "lackOfPayment",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "lenderFee",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "liquidationTreshold",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "loanControlPanels",
+				"outputs": [
+					{
+						"internalType": "enum LendingCore.Status",
+						"name": "status",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "poolId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint8",
+						"name": "defaultingLimit",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "installmentAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amountDue",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "paidAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "loanHandler",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "promissoryHandler",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "discountsHandler",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "poolHandler",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "loanFeesHandler",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "ltv",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "interestRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "interestRateToStater",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint32",
+						"name": "lenderFee",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "loanHandler",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "loans",
+				"outputs": [
+					{
+						"internalType": "address payable",
+						"name": "borrower",
+						"type": "address"
+					},
+					{
+						"internalType": "address payable",
+						"name": "lender",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "currency",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "installmentTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "nrOfPayments",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "loanAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "assetsValue",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint16",
+						"name": "nrOfInstallments",
+						"type": "uint16"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "ltv",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"name": "onERC1155BatchReceived",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"name": "onERC1155Received",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"name": "onERC721Received",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "payLoan",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "poolHandler",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "promissoryHandler",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					}
+				],
+				"name": "terminateLoan",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "address[]",
+						"name": "nftAddressArray",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "nftTokenIdArray",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint8[]",
+						"name": "nftTokenTypeArray",
+						"type": "uint8[]"
+					}
+				],
+				"name": "transferItems",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "address payable",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "currency",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "qty1",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "qty2",
+						"type": "uint256"
+					}
+				],
+				"name": "transferTokens",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"onERC721Received(address,address,uint256,bytes)": {
+					"details": "See {IERC721Receiver-onERC721Received}. Always returns `IERC721Receiver.onERC721Received.selector`."
+				},
+				"owner()": {
+					"details": "Returns the address of the current owner."
+				},
+				"renounceOwnership()": {
+					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				},
+				"supportsInterface(bytes4)": {
+					"details": "See {IERC165-supportsInterface}."
+				},
+				"transferOwnership(address)": {
+					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/lending/routes/StaterHealthFactor.sol": "StaterHealthFactor"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/lending/LendingCore.sol": {
+			"keccak256": "0xd1225e1da70852fcd13e94458486c4538dd40a947a12a9aa4a4821a3ea09ef48",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7ae84f41e06d8b43c818a47d7115537d9e7896655a6c6c14f867cbe959ef3e45",
+				"dweb:/ipfs/Qmc4f4Z5fW48SEzh4NPiXPopVhXKLjrrDywsZ1KT24dP54"
+			]
+		},
+		"contracts/lending/routes/Params.sol": {
+			"keccak256": "0x9b0e329da82d3ba2e20801f8687a94d4e11fa875bf3840e164b0fe8487b92f81",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://076ac217be1e899a1b42f4a382265b6cc55158252493f5a7c1577c256bab05e4",
+				"dweb:/ipfs/QmTriQo3HDJo9J7V3i2hZT92zkAXKRqEdVjatQ7mHK9iJd"
+			]
+		},
+		"contracts/lending/routes/StaterHealthFactor.sol": {
+			"keccak256": "0x7768b956a9d0af06b790813d77dae8faed901ddace5c908fbf8783c363e75bbc",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e7dc1bdd107335dfcf52b6389d740775a19c578b397b17946fddc8d9d5120856",
+				"dweb:/ipfs/QmcNiLrgpaqnG4ojBDTLrsheeAsyhgz4ffp1P7LSGj1aZH"
+			]
+		},
+		"contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {
+			"keccak256": "0x813ebd2bf6cc80ec02bea50e8946b6e7a5668133bc388db1cc4c0c8391f70470",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://3208427ec9416b570a4feb7a21839b1cddd6a26355dfb542b05997bfc985dd4f",
+				"dweb:/ipfs/QmZ4bQxEyGhSSwNF2mHqhgfZtHyjsVnRxFrY5Xhug3TQUb"
+			]
+		},
+		"contracts/libs/openzeppelin-solidity/contracts/access/Ownable.sol": {
+			"keccak256": "0xe9e3a9928c1ef10ade7d52879539aee32be117197cff2dab10648279a2135e10",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7133e77480750750bbd7a724d9396821b39d631ec3dcae6f8cd1a092b2ae6a00",
+				"dweb:/ipfs/QmdG8Figj7pQEVpomY21Mm6T2QNWWtBhhFb9yptDB2qqfo"
+			]
+		},
+		"contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155Receiver.sol": {
+			"keccak256": "0x3b739d625796f4ea306931d39ba11a1e98618e09ad5ad461d7f4ae388d466388",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://eeff4988ed6d9cf7ac2fd2be16715af76af3c4818eb2bb030e9094271d71e8ac",
+				"dweb:/ipfs/QmWXakHdT46LW8aLAPSpsKJMUdcdZsPoNkcE2KyUwRZ83f"
+			]
+		},
+		"contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/utils/ERC1155Holder.sol": {
+			"keccak256": "0xd0b630b457e35a1b089069048c462e58c51cb7623445ccb276a020b653442fe7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://375879d5cf76818b32dd50cf3e5a87ce5abb22e89d6453fdd7b29ead0a8622a5",
+				"dweb:/ipfs/QmcGDYMU2rUTo7GEeniVyN2sXPcESvoZvoWtrkxCKKJBeZ"
+			]
+		},
+		"contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/utils/ERC1155Receiver.sol": {
+			"keccak256": "0x247427b0f858166db61281d747b41e830388fa37228474be58d66626bbd05f0e",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9bd46c2765d170524c2595bea16dcd537bec01ae79e9ce6863b0c8b4db2143c8",
+				"dweb:/ipfs/QmYbrmrsNVh2A2Hdvz8J5Jpfu8FBpXt1EEEnEp3jhYdHuC"
+			]
+		},
+		"contracts/libs/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0x88cc795d4359a1989e685c68c8a3ac2aa39eec24f78e8d10ecd4e91d677dc827",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://100274cccd8efbbd01a5fcb70683c110c81b2f973a3ecd1018530e2d9e48f92c",
+				"dweb:/ipfs/QmYF9H8aXxnCHC4VxUpxreGC2kX2ZBqNhGKcWWaqLrQnZ4"
+			]
+		},
+		"contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol": {
+			"keccak256": "0x4c82e0544ac173d9fcb48c5959a8944e1856a2092589b0a4aa9d76bfd7d9dba7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1563d203647c242ed587ec91f70cae6c392715517ad0d70f46ae0ee9e7bd25bf",
+				"dweb:/ipfs/QmVXVQd9wVCQBz9nha11TwZHZTVsAmznhXU9KKG4GmCEJT"
+			]
+		},
+		"contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721Receiver.sol": {
+			"keccak256": "0xd3b42d5ee37531d3d4e757e43906b6d246ecfd79e6457d26837b5094d653d7ff",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1fcdce9b37f19f49b0738230e2d78989cd480bf38d1abf23ebf0a44e3bd50b7b",
+				"dweb:/ipfs/QmQX1DWXasSJD9dQ7XoofmZiZJ3pYutYwhCTmbK2fD2aho"
+			]
+		},
+		"contracts/libs/openzeppelin-solidity/contracts/token/ERC721/extensions/IERC721Enumerable.sol": {
+			"keccak256": "0x465e48c208f852e108d42e4312a6a0f97bc233372a53e411eb019735ea0ce21e",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a7ab5699ced14ed908b414025f04bec3f715c390ef820bb3bdb9fac7c4ac7200",
+				"dweb:/ipfs/QmRrwoKJ32sWwoHWtRy8sB8Zbu6AWcWKFWeRfNnHHEjuMq"
+			]
+		},
+		"contracts/libs/openzeppelin-solidity/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
+			"keccak256": "0xf32dfbe8cd4c8f85b200c9c0f30f1344c666e0c304f595fdccbb1467d2a123db",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4793f8920b2f2772198ff8d35cd3fbc14ccc4ee646066e1d9831b70860a127e2",
+				"dweb:/ipfs/QmNXLcxpzzEWmisqfSm3VSQ5Kaqz7btM7c16yVRbkqPghC"
+			]
+		},
+		"contracts/libs/openzeppelin-solidity/contracts/token/ERC721/utils/ERC721Holder.sol": {
+			"keccak256": "0x439491a07457de56c6a92c154bac0e9e534a4eac7f0c4098c63315719be47ef4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f2569bf533fdd50788d6e27d839d7d57296c359c25b1c10698ed79e0f11ca036",
+				"dweb:/ipfs/QmZTSUn8nFVdfNGn4KbGnFtr4XHUbZVksnPBPxvu2Jwn7r"
+			]
+		},
+		"contracts/libs/openzeppelin-solidity/contracts/utils/Context.sol": {
+			"keccak256": "0xa73f809b2115d6f44a20ca6f9fbb21f3817fb7b7cfa5a9b50484d090f3325950",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://af37c25a0f7337855dc5d1d4397b851bf31b82d3827c2381f825a44b97a41230",
+				"dweb:/ipfs/QmUAVYQfL2n34zqMhdTQRb1THE1ReWTQbeUsApRbLkenxE"
+			]
+		},
+		"contracts/libs/openzeppelin-solidity/contracts/utils/introspection/ERC165.sol": {
+			"keccak256": "0x9524e9ff661f365395825367c2bdd8b42522b274cb624570c995baea41d623b3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7d859c49468029bdf70db72673a04c0a1101d967e01f75101ba4505718a41004",
+				"dweb:/ipfs/QmT1Qg1r7Hwh7juFtzoe3FjT7hQeY68vjBcPbbNmiK3fRL"
+			]
+		},
+		"contracts/libs/openzeppelin-solidity/contracts/utils/introspection/IERC165.sol": {
+			"keccak256": "0x18f74273b9ae87fdaa99d56c057b57da6ef5d49be5d78bfe98ec9f6c4adc8f8c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7e66a930a52b08d74651c65c01ce2918043f41f6ae8b85dff1902c9ff053407e",
+				"dweb:/ipfs/QmZBTrx4xKHV1GpzcBYzETkX9rfsAuqkE12Fc7Tqam4uSG"
+			]
+		},
+		"contracts/libs/uniswap-v3-periphery/interfaces/IERC721Permit.sol": {
+			"keccak256": "0xc7e5e397deb7136b36731de129731c11133ef78cbe667d112d244cb3dcd62ad1",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://8d7ba393f304a3d771466ac2a074f0bc7d43846812b425f7cb1674eb01168756",
+				"dweb:/ipfs/QmVU6JoefucXsGx8jYF8wuKKEXVKFzu4QYD9jXXF21Gw8K"
+			]
+		},
+		"contracts/libs/uniswap-v3-periphery/interfaces/INonfungiblePositionManager.sol": {
+			"keccak256": "0x824f57ba55b4d5c2844067aa0f7c48778d7296c130afac956889839fb71d76ac",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://a04330967af55a363c0d2bbe12bc7a321b04c3e7619fada58e42b8ac7c36b475",
+				"dweb:/ipfs/QmR2HckHeWgJfNaxRwjtRp7LwzmgAE3NDkyZMB2VJ8aZ4G"
+			]
+		},
+		"contracts/libs/uniswap-v3-periphery/interfaces/IPeripheryImmutableState.sol": {
+			"keccak256": "0x7affcfeb5127c0925a71d6a65345e117c33537523aeca7bc98085ead8452519d",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://e16b291294210e71cb0f20cd0afe62ae2dc6878d627f5ccc19c4dc9cd80aec3f",
+				"dweb:/ipfs/QmQGitSyBr26nour81BZmpmDMyJpvZRqHQZvnCD1Acb127"
+			]
+		},
+		"contracts/libs/uniswap-v3-periphery/interfaces/IPeripheryPayments.sol": {
+			"keccak256": "0xb547e10f1e69bed03621a62b73a503e260643066c6b4054867a4d1fef47eb274",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://f9a90f58f5fd5fb42f7811f4094113b532f307b14a73764c91f977590747f407",
+				"dweb:/ipfs/QmSeNH2mfiDMKf3Q6V2sqtNxx1s72JNuA1VVxRM9HoMqYp"
+			]
+		},
+		"contracts/libs/uniswap-v3-periphery/interfaces/IPoolInitializer.sol": {
+			"keccak256": "0x9d7695e8d94c22cc5fcced602017aabb988de89981ea7bee29ea629d5328a862",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://61b50933026ee1017db2a6273af8cedc3238c95dca58880db0918dbdbb2f064f",
+				"dweb:/ipfs/QmUebR26pqG25d18aBELKz8aFFKkmHa8PxntzXTA7o9Ldu"
+			]
+		},
+		"contracts/libs/uniswap-v3-periphery/libraries/PoolAddress.sol": {
+			"keccak256": "0x2593147a052addc2ec096c685ce6c31c3d92f1eb432a6675ec4a3d4c9b344fa6",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://0caacc99d5e0bdbcca9aaef8d9bfe0aaf42dd452518bd7e2fde4c012516303ae",
+				"dweb:/ipfs/QmcJiW2tPTJjvWfLLBYd3gHB9SPYNwrUhsbeT1Ncfo3oK7"
+			]
+		},
+		"contracts/plugins/StaterTransfers.sol": {
+			"keccak256": "0xe6aa05622696dd71c12e4387554a0d06b141e64b733aa1a78b6fa58b5adb357b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://13a9873ef82425d0eb6d770d4977dc5aecf84aa7b3cf24036b9a4b578315b1b5",
+				"dweb:/ipfs/Qmev8bVwH29JHa6BVyR8F42RT5gfLBSYw7Atpt4ZFCnvaq"
+			]
+		}
+	},
+	"version": 1
+}

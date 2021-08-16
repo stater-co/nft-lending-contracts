@@ -11,7 +11,7 @@ contract LendingCoreMethods is Ownable, LendingCore {
     
     function getLoanApprovalCost(uint256 loanId) external view returns(uint256,uint256,uint256,uint256,address) {
         
-        uint256 discount = calculateDiscount(loanControlPanels[loanId].discountsHandler);
+        uint256 discount = calculateDiscount(loanId,loanControlPanels[loanId].discountsHandler);
         
         return (
             loans[loanId].loanAmount + (loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee / discount),
@@ -33,7 +33,7 @@ contract LendingCoreMethods is Ownable, LendingCore {
         uint256 amountPaidAsInstallmentToLender
     ) {
         require(nrOfInstallments <= loans[loanId].nrOfInstallments, "Number of installments too high");
-        uint256 discount = calculateDiscount(loanControlPanels[loanId].discountsHandler);
+        uint256 discount = calculateDiscount(loanId,loanControlPanels[loanId].discountsHandler);
         interestDiscounted = 0;
         
         overallInstallmentAmount = uint256(loanControlPanels[loanId].installmentAmount * nrOfInstallments);
@@ -48,7 +48,7 @@ contract LendingCoreMethods is Ownable, LendingCore {
     }
     
     function getLoanApprovalCostOnly(uint256 loanId) external view returns(uint256) {
-        uint256 discount = calculateDiscount(loanControlPanels[loanId].discountsHandler);
+        uint256 discount = calculateDiscount(loanId,loanControlPanels[loanId].discountsHandler);
         return loans[loanId].loanAmount + (loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee / discount);
     }
   
