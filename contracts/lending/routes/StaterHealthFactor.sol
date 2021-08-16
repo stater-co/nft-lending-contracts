@@ -11,6 +11,7 @@ import "./Params.sol";
 contract StaterHealthFactor is Ownable, LendingCore, Params {
     
     uint256 public liquidationTreshold = .3 ether;
+    address uniswapV3OracleAddress;
     
     /*
      * @DIIMIIM : The loan events
@@ -64,12 +65,31 @@ contract StaterHealthFactor is Ownable, LendingCore, Params {
      */
     function lackOfPayment(uint256 loanId) public view returns(uint8) {
         LoanControlPanel memory loanControlPanel = loanControlPanels[loanId];
+        Loan memory loan = loans[loanId];
         if ( loanControlPanel.paidAmount >= loanControlPanel.amountDue )
             return 11;
         
-        uint8 healthFactor = 1;
+        uint8 healthFactor;
+        for ( uint256 i = 0; i < loan.nftAddressArray.length; ++i ) {
+            (
+                ,
+                ,
+                address token0,
+                address token1,
+                ,
+                ,
+                ,
+                uint128 liquidity,
+                ,
+                ,
+                uint128 tokensOwed0,
+                uint128 tokensOwed1
+            ) = INonfungiblePositionManager(uniswapV3OracleAddress).positions(loan.nftTokenIdArray[i]);
+            healthFactor += ;
+            
+        }
         
-        return 1;
+        return uint8(healthFactor / loan.nftAddressArray.length);
     }
     
     // Borrower creates a loan
