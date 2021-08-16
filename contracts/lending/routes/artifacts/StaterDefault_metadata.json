@@ -414,6 +414,32 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "interestRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "interestRateToStater",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -427,6 +453,19 @@
 						"internalType": "bool",
 						"name": "",
 						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "lenderFee",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
 					}
 				],
 				"stateMutability": "view",
@@ -574,6 +613,19 @@
 						"internalType": "uint16",
 						"name": "nrOfInstallments",
 						"type": "uint16"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "ltv",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -732,6 +784,41 @@
 			{
 				"inputs": [
 					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "ltv",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "interestRate",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "interestRateToStater",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint32",
+								"name": "lenderFee",
+								"type": "uint32"
+							}
+						],
+						"internalType": "struct LendingCore.LoanFeesHandler",
+						"name": "feesHandler",
+						"type": "tuple"
+					}
+				],
+				"name": "setGlobalVariables",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "bytes4",
 						"name": "interfaceId",
 						"type": "bytes4"
@@ -839,6 +926,46 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "loanId",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "ltv",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "interestRate",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "interestRateToStater",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint32",
+								"name": "lenderFee",
+								"type": "uint32"
+							}
+						],
+						"internalType": "struct LendingCore.LoanFeesHandler",
+						"name": "feesHandler",
+						"type": "tuple"
+					}
+				],
+				"name": "updateLoan",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -885,11 +1012,11 @@
 	},
 	"sources": {
 		"contracts/lending/LendingCore.sol": {
-			"keccak256": "0xc9ed73421a38192971da99822e7c79b93eec40ed815c5fe089abdefafb763986",
+			"keccak256": "0xdb20cc998c551a79b57ac6f71d4fe3dc73452bc3e0f39bd0f8cdea50e4052e9c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://20affbda8f13781bbde011cac820bac11285e2c63f4d1464c4f10b1a6687728d",
-				"dweb:/ipfs/Qmc4ZvDFwcvX9NzEyufBcW3Ctr4QUoWMFNTaHymToNi7mG"
+				"bzz-raw://fc4b3c9e2fdb9425a2eef5e59cf1e68b3fc7f7d2e2be3f711be4015a9c50208b",
+				"dweb:/ipfs/QmU3XnGXkzbCZS254sHXaFmKeWRjZESqi87ohtxHL2CRoB"
 			]
 		},
 		"contracts/lending/routes/Params.sol": {
@@ -901,11 +1028,11 @@
 			]
 		},
 		"contracts/lending/routes/StaterDefault.sol": {
-			"keccak256": "0x8268719c203d13f0f5c8be73f869a60dcbe87432d72cc8b1c6f2df85d2b13cf3",
+			"keccak256": "0xb94c166a4b8daa542bf3c912b6108b194afe201d0e14f68ba01724b207a40842",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://576a2a46a92a27d41281a619559f85deabbd2619aeab5c389cf385b728b5edb1",
-				"dweb:/ipfs/QmbtrFaZUGo2J8h5tP7KoJNg4Nu312kkk8cXcMwY5f2peM"
+				"bzz-raw://33db05090abc38d4adae894d1a735de70336f37df203f0d0be9408e22ddbc912",
+				"dweb:/ipfs/QmT1wbpALSFUQLjaVpYXzGedt2t1eRc2kSNgeLWhLrS1e4"
 			]
 		},
 		"contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {

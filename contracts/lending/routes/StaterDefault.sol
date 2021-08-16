@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.7;
 import "../LendingCore.sol";
+import "../../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 import "./Params.sol";
 
 
-contract StaterDefault is LendingCore, Params {
+contract StaterDefault is Ownable, LendingCore, Params {
     
     /*
      * @DIIMIIM : The loan events
@@ -89,7 +90,7 @@ contract StaterDefault is LendingCore, Params {
         // Set loan fields
         loans[id].nftTokenIdArray = loan.nftTokenIdArray;
         loans[id].loanAmount = loan.loanAmount;
-        loanControlPanels[id].amountDue = (loan.loanAmount * (loanFeesHandler[id].interestRate + 100)) / 100; // interest rate >> 20%
+        loanControlPanels[id].amountDue = (loan.loanAmount * (interestRate + 100)) / 100; // interest rate >> 20%
         loans[id].nrOfInstallments = loan.nrOfInstallments;
         loanControlPanels[id].installmentAmount = loanControlPanels[id].amountDue % loan.nrOfInstallments > 0 ? loanControlPanels[id].amountDue / loan.nrOfInstallments + 1 : loanControlPanels[id].amountDue / loan.nrOfInstallments;
         loanControlPanels[id].status = Status.LISTED;
@@ -137,12 +138,12 @@ contract StaterDefault is LendingCore, Params {
         require(nrOfInstallments > 0 && loanAmount > 0);
         require(loans[loanId].borrower == msg.sender);
         require(loanControlPanels[loanId].status < Status.APPROVED);
-        require(_percent(loanAmount, assetsValue) <= loanFeesHandler[loanId].ltv);
+        require(_percent(loanAmount, assetsValue) <= ltv);
         
 
         loans[loanId].installmentTime = installmentTime;
         loans[loanId].loanAmount = loanAmount;
-        loanControlPanels[loanId].amountDue = (loanAmount * (loanFeesHandler[loanId].interestRate + 100)) / 100;
+        loanControlPanels[loanId].amountDue = (loanAmount * (interestRate + 100)) / 100;
         loanControlPanels[loanId].installmentAmount = loanControlPanels[loanId].amountDue % nrOfInstallments > 0 ? (loanControlPanels[loanId].amountDue / nrOfInstallments) + 1 : loanControlPanels[loanId].amountDue / nrOfInstallments;
         loans[loanId].assetsValue = assetsValue;
         loans[loanId].currency = currency;
@@ -180,7 +181,7 @@ contract StaterDefault is LendingCore, Params {
         
         // We check if currency is ETH
         if ( loans[loanId].currency == address(0) )
-            require(msg.value >= loans[loanId].loanAmount + (loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee / discount));
+            require(msg.value >= loans[loanId].loanAmount + (loans[loanId].loanAmount / lenderFee / discount));
         
         // We send the tokens here
         transferTokens(
@@ -188,7 +189,7 @@ contract StaterDefault is LendingCore, Params {
             payable(loans[loanId].borrower),
             loans[loanId].currency,
             loans[loanId].loanAmount,
-            loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee / discount
+            loans[loanId].loanAmount / lenderFee / discount
         );
 
     }
@@ -199,7 +200,7 @@ contract StaterDefault is LendingCore, Params {
         
         // We check if currency is ETH
         if ( loans[loanId].currency == address(0) )
-            require(msg.value >= loans[loanId].loanAmount + (loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee));
+            require(msg.value >= loans[loanId].loanAmount + (loans[loanId].loanAmount / lenderFee));
             
         loanControlPanels[loanId].poolId = poolId;
 
@@ -209,7 +210,7 @@ contract StaterDefault is LendingCore, Params {
             payable(loans[loanId].borrower),
             loans[loanId].currency,
             loans[loanId].loanAmount,
-            loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee
+            loans[loanId].loanAmount / lenderFee
         );
             
     }
@@ -248,9 +249,9 @@ contract StaterDefault is LendingCore, Params {
         
         uint256 paidByBorrower = msg.value > 0 ? msg.value : amount;
         uint256 amountPaidAsInstallmentToLender = paidByBorrower; // >> amount of installment that goes to lender
-        uint256 interestPerInstallement = paidByBorrower * loanFeesHandler[loanId].interestRate / 100; // entire interest for installment
+        uint256 interestPerInstallement = paidByBorrower * interestRate / 100; // entire interest for installment
         uint256 discount = calculateDiscount(msg.sender);
-        uint256 interestToStaterPerInstallement = interestPerInstallement * loanFeesHandler[loanId].interestRateToStater / 100;
+        uint256 interestToStaterPerInstallement = interestPerInstallement * interestRateToStater / 100;
 
         if ( discount != 1 ){
             if ( loans[loanId].currency == address(0) ){
@@ -353,5 +354,19 @@ contract StaterDefault is LendingCore, Params {
             loanId,
             loanControlPanels[loanId].startEnd[1]
         );
+    }
+    
+    function updateLoan(uint256 loanId, LoanFeesHandler memory feesHandler) external onlyOwner {
+        loanFeesHandler[loanId].ltv = feesHandler.ltv;
+        loanFeesHandler[loanId].interestRate = feesHandler.interestRate;
+        loanFeesHandler[loanId].interestRateToStater = feesHandler.interestRateToStater;
+        loanFeesHandler[loanId].lenderFee = feesHandler.lenderFee;
+    }
+    
+    function setGlobalVariables(LoanFeesHandler memory feesHandler) external onlyOwner {
+        ltv = feesHandler.ltv;
+        interestRate = feesHandler.interestRate;
+        interestRateToStater = feesHandler.interestRateToStater;
+        lenderFee = feesHandler.lenderFee;
     }
 }

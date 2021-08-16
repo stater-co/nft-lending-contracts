@@ -8,6 +8,11 @@ interface StaterDiscounts {
 
 contract LendingCore is StaterTransfers {
     
+    uint256 public ltv;
+    uint256 public interestRate;
+    uint256 public interestRateToStater;
+    uint32 public lenderFee;
+    
     /*
      * @DIIMIIM Public & global variables for the lending contract
      * id : the loan ID, id will be the actual loans mapping length
