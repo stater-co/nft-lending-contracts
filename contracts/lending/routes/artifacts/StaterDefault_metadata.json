@@ -6,6 +6,32 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_loanHandler",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_promissoryHandler",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_discountsHandler",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_poolHandler",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"anonymous": false,
 				"inputs": [
 					{
@@ -278,21 +304,6 @@
 						"components": [
 							{
 								"internalType": "address",
-								"name": "loanHandler",
-								"type": "address"
-							},
-							{
-								"internalType": "address",
-								"name": "promissoryHandler",
-								"type": "address"
-							},
-							{
-								"internalType": "address",
-								"name": "discountsHandler",
-								"type": "address"
-							},
-							{
-								"internalType": "address",
 								"name": "currency",
 								"type": "address"
 							},
@@ -317,29 +328,9 @@
 								"type": "uint256"
 							},
 							{
-								"internalType": "uint256",
-								"name": "ltv",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "interestRate",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "interestRateToStater",
-								"type": "uint256"
-							},
-							{
 								"internalType": "uint256[]",
 								"name": "nftTokenIdArray",
 								"type": "uint256[]"
-							},
-							{
-								"internalType": "uint32",
-								"name": "lenderFee",
-								"type": "uint32"
 							},
 							{
 								"internalType": "uint16",
@@ -360,6 +351,19 @@
 				"name": "createLoan",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "discountsHandler",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -525,6 +529,11 @@
 						"internalType": "address",
 						"name": "discountsHandler",
 						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "poolHandler",
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -559,6 +568,19 @@
 						"internalType": "uint32",
 						"name": "lenderFee",
 						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "loanHandler",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -776,6 +798,32 @@
 			},
 			{
 				"inputs": [],
+				"name": "poolHandler",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "promissoryHandler",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "renounceOwnership",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -808,6 +856,33 @@
 						],
 						"internalType": "struct LendingCore.LoanFeesHandler",
 						"name": "feesHandler",
+						"type": "tuple"
+					},
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "loanHandler",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "promissoryHandler",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "discountsHandler",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "poolHandler",
+								"type": "address"
+							}
+						],
+						"internalType": "struct Params.Handlers",
+						"name": "handlers",
 						"type": "tuple"
 					}
 				],
@@ -960,6 +1035,33 @@
 						"internalType": "struct LendingCore.LoanFeesHandler",
 						"name": "feesHandler",
 						"type": "tuple"
+					},
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "loanHandler",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "promissoryHandler",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "discountsHandler",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "poolHandler",
+								"type": "address"
+							}
+						],
+						"internalType": "struct Params.Handlers",
+						"name": "handlers",
+						"type": "tuple"
 					}
 				],
 				"name": "updateLoan",
@@ -1012,27 +1114,27 @@
 	},
 	"sources": {
 		"contracts/lending/LendingCore.sol": {
-			"keccak256": "0xdb20cc998c551a79b57ac6f71d4fe3dc73452bc3e0f39bd0f8cdea50e4052e9c",
+			"keccak256": "0xbd8f3c28f3400555690215ea32bd08f15d3fc0cd6cb7aadfcac906d219cd980b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fc4b3c9e2fdb9425a2eef5e59cf1e68b3fc7f7d2e2be3f711be4015a9c50208b",
-				"dweb:/ipfs/QmU3XnGXkzbCZS254sHXaFmKeWRjZESqi87ohtxHL2CRoB"
+				"bzz-raw://61e4f183b95fc06d372fd03916b07e6e9d177f338746750d934258c9a7bcaa9d",
+				"dweb:/ipfs/QmP4ipFGqN9faLsKzsjCCF9gUiGbF4hEfjKuw9h1VwF89e"
 			]
 		},
 		"contracts/lending/routes/Params.sol": {
-			"keccak256": "0x9cb5fc4299be222bab762b141b7b44e6f22e89a5d7278c620695805b868c9e77",
+			"keccak256": "0x9581c279e78fae990e173b04b8487bba7549665f76c534051fa8657dad97b67f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://a21d4b7a13590d0c727b20ada53859decd5ea4bb3dcc7beaf0d2ee17c096101d",
-				"dweb:/ipfs/QmbrWTKAT9cumjvbwEMpPcDCh93BtunCs3YH9miy13wPs2"
+				"bzz-raw://818e2084ed03d394ffedd5843bece3a9d89a09d1ff7177c3ac8615827cb4cf8f",
+				"dweb:/ipfs/QmRNVrTWXZctpBKgoDsqQ6F2ojqSFxVh1LERHHAMreTM2m"
 			]
 		},
 		"contracts/lending/routes/StaterDefault.sol": {
-			"keccak256": "0xb94c166a4b8daa542bf3c912b6108b194afe201d0e14f68ba01724b207a40842",
+			"keccak256": "0x97c6a5515015b61414a3f697fc69620da83d0dbf7df47d4462d1d5d2a19e0ddb",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://33db05090abc38d4adae894d1a735de70336f37df203f0d0be9408e22ddbc912",
-				"dweb:/ipfs/QmT1wbpALSFUQLjaVpYXzGedt2t1eRc2kSNgeLWhLrS1e4"
+				"bzz-raw://e307f6ac10d386d369643aa2dd01d7d9d6f13843e955bdcf7377a5f0221718e9",
+				"dweb:/ipfs/QmW3uRq9RgYswnZi1Ywwq2nFnpJb283KKeBdPQCbC92kFs"
 			]
 		},
 		"contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {

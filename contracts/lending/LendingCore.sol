@@ -8,6 +8,10 @@ interface StaterDiscounts {
 
 contract LendingCore is StaterTransfers {
     
+    address public loanHandler;
+    address public promissoryHandler;
+    address public discountsHandler;
+    address public poolHandler;
     uint256 public ltv;
     uint256 public interestRate;
     uint256 public interestRateToStater;
@@ -66,6 +70,7 @@ contract LendingCore is StaterTransfers {
         address loanHandler; // the address of the smart contract loan handler
         address promissoryHandler; // the address of the smart contract promissory handler
         address discountsHandler; // the address of the smart contract discounts handler
+        address poolHandler; // the address of the lending pool contract
     }
     
     struct LoanFeesHandler {
@@ -93,8 +98,8 @@ contract LendingCore is StaterTransfers {
      * @DIIMIIM: Not possible to send non payable transactions from a solidity method unless we use the interface
      * So we'll have to use this as the calculateDiscount standard
      */
-    function calculateDiscount(address discountsHandler) internal view returns(uint256) {
-        return StaterDiscounts(discountsHandler).calculateDiscount(msg.sender);
+    function calculateDiscount(uint256 loanId, address onBehalfOf) internal view returns(uint256) {
+        return StaterDiscounts(loanControlPanels[loanId].discountsHandler).calculateDiscount(onBehalfOf);
     }
 
 }

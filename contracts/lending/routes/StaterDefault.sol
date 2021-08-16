@@ -50,6 +50,18 @@ contract StaterDefault is Ownable, LendingCore, Params {
         Status status
     );
     
+    constructor(
+        address _loanHandler,
+        address _promissoryHandler,
+        address _discountsHandler,
+        address _poolHandler
+    ) {
+        loanHandler = _loanHandler;
+        promissoryHandler = _promissoryHandler;
+        discountsHandler = _discountsHandler;
+        poolHandler = _poolHandler;
+    }
+    
     /*
      * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
      * @ => TRUE = Loan has exceed the maximum unpaid installments limit, lender can terminate the loan and get the NFTs
@@ -75,7 +87,7 @@ contract StaterDefault is Ownable, LendingCore, Params {
          * @ Side note : _percent is missing from the LendingCore contract , in case of any error
          * Compute loan to value ratio for current loan application
          */
-        require(_percent(loan.loanAmount, loan.assetsValue) <= loan.ltv);
+        require(_percent(loan.loanAmount, loan.assetsValue) <= ltv);
         
         loans[id].assetsValue = loan.assetsValue;
         
@@ -94,7 +106,10 @@ contract StaterDefault is Ownable, LendingCore, Params {
         loans[id].nrOfInstallments = loan.nrOfInstallments;
         loanControlPanels[id].installmentAmount = loanControlPanels[id].amountDue % loan.nrOfInstallments > 0 ? loanControlPanels[id].amountDue / loan.nrOfInstallments + 1 : loanControlPanels[id].amountDue / loan.nrOfInstallments;
         loanControlPanels[id].status = Status.LISTED;
-        loanControlPanels[id].loanHandler = loan.loanHandler;
+        loanControlPanels[id].loanHandler = loanHandler;
+        loanControlPanels[id].promissoryHandler = promissoryHandler;
+        loanControlPanels[id].discountsHandler = discountsHandler;
+        loanControlPanels[id].poolHandler = poolHandler;
         loans[id].nftAddressArray = loan.nftAddressArray;
         loans[id].borrower = payable(msg.sender);
         loans[id].currency = loan.currency;
@@ -177,7 +192,7 @@ contract StaterDefault is Ownable, LendingCore, Params {
     function approveLoan(uint256 loanId) external payable {
         
         approveLoanCoreMechanism(loanId);
-        uint256 discount = calculateDiscount(msg.sender);
+        uint256 discount = calculateDiscount(loanId,msg.sender);
         
         // We check if currency is ETH
         if ( loans[loanId].currency == address(0) )
@@ -250,7 +265,7 @@ contract StaterDefault is Ownable, LendingCore, Params {
         uint256 paidByBorrower = msg.value > 0 ? msg.value : amount;
         uint256 amountPaidAsInstallmentToLender = paidByBorrower; // >> amount of installment that goes to lender
         uint256 interestPerInstallement = paidByBorrower * interestRate / 100; // entire interest for installment
-        uint256 discount = calculateDiscount(msg.sender);
+        uint256 discount = calculateDiscount(loanId,msg.sender);
         uint256 interestToStaterPerInstallement = interestPerInstallement * interestRateToStater / 100;
 
         if ( discount != 1 ){
@@ -356,17 +371,25 @@ contract StaterDefault is Ownable, LendingCore, Params {
         );
     }
     
-    function updateLoan(uint256 loanId, LoanFeesHandler memory feesHandler) external onlyOwner {
+    function updateLoan(uint256 loanId, LoanFeesHandler memory feesHandler, Handlers memory handlers) external onlyOwner {
         loanFeesHandler[loanId].ltv = feesHandler.ltv;
         loanFeesHandler[loanId].interestRate = feesHandler.interestRate;
         loanFeesHandler[loanId].interestRateToStater = feesHandler.interestRateToStater;
         loanFeesHandler[loanId].lenderFee = feesHandler.lenderFee;
+        loanControlPanels[loanId].loanHandler = handlers.loanHandler;
+        loanControlPanels[loanId].promissoryHandler = handlers.promissoryHandler;
+        loanControlPanels[loanId].discountsHandler = handlers.discountsHandler;
+        loanControlPanels[loanId].poolHandler = handlers.poolHandler;
     }
     
-    function setGlobalVariables(LoanFeesHandler memory feesHandler) external onlyOwner {
+    function setGlobalVariables(LoanFeesHandler memory feesHandler, Handlers memory handlers) external onlyOwner {
         ltv = feesHandler.ltv;
         interestRate = feesHandler.interestRate;
         interestRateToStater = feesHandler.interestRateToStater;
         lenderFee = feesHandler.lenderFee;
+        loanHandler = handlers.loanHandler;
+        promissoryHandler = handlers.promissoryHandler;
+        discountsHandler = handlers.discountsHandler;
+        poolHandler = handlers.poolHandler;
     }
 }
