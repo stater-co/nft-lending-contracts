@@ -5,6 +5,7 @@ pragma abicoder v2;
 import "../LendingCore.sol";
 import "../../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 import "../../libs/uniswap-v3-periphery/interfaces/INonfungiblePositionManager.sol";
+import "../../libs/protocol-v2/contracts/interfaces/IPriceOracleGetter.sol";
 import "./Params.sol";
 
 
@@ -12,6 +13,7 @@ contract StaterHealthFactor is Ownable, LendingCore, Params {
     
     uint256 public liquidationTreshold = .3 ether;
     address uniswapV3OracleAddress;
+    address priceOracleGetter;
     
     /*
      * @DIIMIIM : The loan events
@@ -63,13 +65,13 @@ contract StaterHealthFactor is Ownable, LendingCore, Params {
      * @ => TRUE = Loan has exceed the maximum unpaid installments limit, lender can terminate the loan and get the NFTs
      * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
      */
-    function lackOfPayment(uint256 loanId) public view returns(uint8) {
+    function lackOfPayment(uint256 loanId) public view returns(uint256) {
         LoanControlPanel memory loanControlPanel = loanControlPanels[loanId];
         Loan memory loan = loans[loanId];
         if ( loanControlPanel.paidAmount >= loanControlPanel.amountDue )
             return 11;
         
-        uint8 healthFactor;
+        uint256 healthFactor;
         for ( uint256 i = 0; i < loan.nftAddressArray.length; ++i ) {
             (
                 ,
@@ -85,11 +87,13 @@ contract StaterHealthFactor is Ownable, LendingCore, Params {
                 uint128 tokensOwed0,
                 uint128 tokensOwed1
             ) = INonfungiblePositionManager(uniswapV3OracleAddress).positions(loan.nftTokenIdArray[i]);
-            healthFactor += ;
+            tokensOwed1 = uint128(IPriceOracleGetter(priceOracleGetter).getAssetPrice(token1) * tokensOwed1);
+            tokensOwed0 = uint128(IPriceOracleGetter(priceOracleGetter).getAssetPrice(token0) * tokensOwed0);
+            healthFactor += liquidity * liquidationTreshold / loanControlPanel.amountDue;
             
         }
         
-        return uint8(healthFactor / loan.nftAddressArray.length);
+        return healthFactor;
     }
     
     // Borrower creates a loan

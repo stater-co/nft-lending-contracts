@@ -428,9 +428,9 @@
 				"name": "lackOfPayment",
 				"outputs": [
 					{
-						"internalType": "uint8",
+						"internalType": "uint256",
 						"name": "",
-						"type": "uint8"
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -988,11 +988,11 @@
 			]
 		},
 		"contracts/lending/routes/StaterHealthFactor.sol": {
-			"keccak256": "0x2736c7618d615fcdc9861766b23b533d0f2b9a9a9fd70298b8683ff9b97c159e",
+			"keccak256": "0xef952b34af199cbca287809aeba4e6c5be66ab36e67281c9498e18a1aa7c92c8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8f844ab4ff68b220f90ebad41bf8f6d6c7b1d34de167f8f44ca77754c83c888f",
-				"dweb:/ipfs/QmXd1AiJxcZyR6cuD6mJisYRPKoh7WTFoLxP16EvSpqFyp"
+				"bzz-raw://24e04071c806a297f28ef90c8aa253bf12eafc63f6e90de0d80614e123de7b5d",
+				"dweb:/ipfs/QmUvta3AzgCi8NdzC4NzAG87ToD2DT8marjJpW8yLUxZSu"
 			]
 		},
 		"contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {
@@ -1105,6 +1105,14 @@
 			"urls": [
 				"bzz-raw://7e66a930a52b08d74651c65c01ce2918043f41f6ae8b85dff1902c9ff053407e",
 				"dweb:/ipfs/QmZBTrx4xKHV1GpzcBYzETkX9rfsAuqkE12Fc7Tqam4uSG"
+			]
+		},
+		"contracts/libs/protocol-v2/contracts/interfaces/IPriceOracleGetter.sol": {
+			"keccak256": "0x32c2052a5851605f9dcac3a78931fd879149c705a16413dab6c1098939a75576",
+			"license": "agpl-3.0",
+			"urls": [
+				"bzz-raw://d76002fae2dc988d874ffe6b5980d1eb0ce69964a9d83b4f500fff9b53b85fb6",
+				"dweb:/ipfs/QmbrdYJ2YFugoDwXwSUHLM7fT285wZYhwPuZYi3qgKpTjo"
 			]
 		},
 		"contracts/libs/uniswap-v3-periphery/interfaces/IERC721Permit.sol": {
