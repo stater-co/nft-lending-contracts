@@ -3,7 +3,7 @@ pragma solidity 0.7.6;
 pragma abicoder v2;
 import "../../LendingCore.sol";
 import "../../../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
-import "../../params/CreateLoanMethod.sol";
+import "./params/CreateLoanMethod.sol";
 
 
 contract StaterDefault is Ownable, LendingCore, CreateLoanMethod {
@@ -52,14 +52,10 @@ contract StaterDefault is Ownable, LendingCore, CreateLoanMethod {
     );
     
     constructor(
-        address _promissoryHandler,
-        address _discountsHandler,
-        address _poolHandler
+        address _discountsHandler
     ) {
         require(_discountsHandler != address(0), "A valid discounts handler is required");
-        promissoryHandler = _promissoryHandler;
         discountsHandler = _discountsHandler;
-        poolHandler = _poolHandler;
     }
     
     /*
@@ -107,9 +103,7 @@ contract StaterDefault is Ownable, LendingCore, CreateLoanMethod {
         loanControlPanels[id].installmentAmount = loanControlPanels[id].amountDue % loan.nrOfInstallments > 0 ? loanControlPanels[id].amountDue / loan.nrOfInstallments + 1 : loanControlPanels[id].amountDue / loan.nrOfInstallments;
         loanControlPanels[id].status = Status.LISTED;
         loanControlPanels[id].loanHandler = loanHandler;
-        loanControlPanels[id].promissoryHandler = promissoryHandler;
         loanControlPanels[id].discountsHandler = discountsHandler;
-        loanControlPanels[id].poolHandler = poolHandler;
         loans[id].nftAddressArray = loan.nftAddressArray;
         loans[id].borrower = payable(msg.sender);
         loans[id].currency = loan.currency;
@@ -377,8 +371,6 @@ contract StaterDefault is Ownable, LendingCore, CreateLoanMethod {
         loanFeesHandler[loanId].interestRateToStater = feesHandler.interestRateToStater;
         loanFeesHandler[loanId].lenderFee = feesHandler.lenderFee;
         loanControlPanels[loanId].loanHandler = handlers.loanHandler;
-        loanControlPanels[loanId].promissoryHandler = handlers.promissoryHandler;
         loanControlPanels[loanId].discountsHandler = handlers.discountsHandler;
-        loanControlPanels[loanId].poolHandler = handlers.poolHandler;
     }
 }
