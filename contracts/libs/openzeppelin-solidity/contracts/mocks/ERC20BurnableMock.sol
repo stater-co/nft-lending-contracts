@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.7.0;
 
-import "../token/ERC20/extensions/ERC20Burnable.sol";
+import "../token/ERC20/ERC20Burnable.sol";
 
 contract ERC20BurnableMock is ERC20Burnable {
-    constructor(
+    constructor (
         string memory name,
         string memory symbol,
         address initialAccount,

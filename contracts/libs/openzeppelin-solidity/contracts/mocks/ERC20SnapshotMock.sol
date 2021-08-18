@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.7.0;
 
-import "../token/ERC20/extensions/ERC20Snapshot.sol";
+import "../token/ERC20/ERC20Snapshot.sol";
+
 
 contract ERC20SnapshotMock is ERC20Snapshot {
     constructor(

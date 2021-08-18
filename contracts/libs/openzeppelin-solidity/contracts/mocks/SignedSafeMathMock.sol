@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.7.0;
 
-import "../utils/math/SignedSafeMath.sol";
+import "../math/SignedSafeMath.sol";
 
 contract SignedSafeMathMock {
     function mul(int256 a, int256 b) public pure returns (int256) {

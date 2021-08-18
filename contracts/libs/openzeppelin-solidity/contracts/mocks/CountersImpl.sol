@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.7.0;
 
 import "../utils/Counters.sol";
 
@@ -19,9 +19,5 @@ contract CountersImpl {
 
     function decrement() public {
         _counter.decrement();
-    }
-
-    function reset() public {
-        _counter.reset();
     }
 }

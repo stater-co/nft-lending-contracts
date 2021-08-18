@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.7.0;
 
-import "../../utils/introspection/IERC165.sol";
+import "../../introspection/IERC165.sol";
 
 /**
  * https://eips.ethereum.org/EIPS/eip-214#specification
@@ -29,7 +29,7 @@ contract SupportsInterfaceWithLookupMock is IERC165 {
      * @dev A contract implementing SupportsInterfaceWithLookup
      * implement ERC165 itself.
      */
-    constructor() {
+    constructor () {
         _registerInterface(INTERFACE_ID_ERC165);
     }
 
@@ -50,7 +50,7 @@ contract SupportsInterfaceWithLookupMock is IERC165 {
 }
 
 contract ERC165InterfacesSupported is SupportsInterfaceWithLookupMock {
-    constructor(bytes4[] memory interfaceIds) {
+    constructor (bytes4[] memory interfaceIds) {
         for (uint256 i = 0; i < interfaceIds.length; i++) {
             _registerInterface(interfaceIds[i]);
         }
