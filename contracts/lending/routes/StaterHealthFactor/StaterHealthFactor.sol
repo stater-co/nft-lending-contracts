@@ -70,8 +70,7 @@ contract StaterHealthFactor is Ownable, LendingCore, Params, SqrtPriceMathTest, 
     function lackOfPayment(uint256 loanId) public view returns(uint256) {
         LoanControlPanel memory loanControlPanel = loanControlPanels[loanId];
         Loan memory loan = loans[loanId];
-        if ( loanControlPanel.paidAmount >= loanControlPanel.amountDue )
-            return 11;
+        require(loanControlPanel.paidAmount < loanControlPanel.amountDue);
         
         uint256 healthFactor;
         for ( uint256 i = 0; i < loan.nftAddressArray.length; ++i ) {
@@ -106,7 +105,7 @@ contract StaterHealthFactor is Ownable, LendingCore, Params, SqrtPriceMathTest, 
             ) * liquidationTreshold / loanControlPanel.amountDue;
         }
         
-        return healthFactor;
+        return healthFactor / loan.nftAddressArray.length;
     }
     
     // Borrower creates a loan
