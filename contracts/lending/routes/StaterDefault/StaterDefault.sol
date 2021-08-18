@@ -3,10 +3,10 @@ pragma solidity 0.7.6;
 pragma abicoder v2;
 import "../../LendingCore.sol";
 import "../../../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
-import "../Params.sol";
+import "../../params/CreateLoanMethod.sol";
 
 
-contract StaterDefault is Ownable, LendingCore, Params {
+contract StaterDefault is Ownable, LendingCore, CreateLoanMethod {
     
     /*
      * @DIIMIIM : The loan events
@@ -52,12 +52,11 @@ contract StaterDefault is Ownable, LendingCore, Params {
     );
     
     constructor(
-        address _loanHandler,
         address _promissoryHandler,
         address _discountsHandler,
         address _poolHandler
     ) {
-        loanHandler = _loanHandler;
+        require(_discountsHandler != address(0), "A valid discounts handler is required");
         promissoryHandler = _promissoryHandler;
         discountsHandler = _discountsHandler;
         poolHandler = _poolHandler;
@@ -79,7 +78,7 @@ contract StaterDefault is Ownable, LendingCore, Params {
     
     // Borrower creates a loan
     function createLoan(
-        CreateLoanParams memory loan
+        CreateLoanMethodParams memory loan
     ) external {
         require(loan.nrOfInstallments > 0 && loan.loanAmount > 0 && loan.nftAddressArray.length > 0);
         require(loan.nftAddressArray.length == loan.nftTokenIdArray.length && loan.nftTokenIdArray.length == loan.nftTokenTypeArray.length);
@@ -381,16 +380,5 @@ contract StaterDefault is Ownable, LendingCore, Params {
         loanControlPanels[loanId].promissoryHandler = handlers.promissoryHandler;
         loanControlPanels[loanId].discountsHandler = handlers.discountsHandler;
         loanControlPanels[loanId].poolHandler = handlers.poolHandler;
-    }
-    
-    function setGlobalVariables(LoanFeesHandler memory feesHandler, Handlers memory handlers) external onlyOwner {
-        ltv = feesHandler.ltv;
-        interestRate = feesHandler.interestRate;
-        interestRateToStater = feesHandler.interestRateToStater;
-        lenderFee = feesHandler.lenderFee;
-        loanHandler = handlers.loanHandler;
-        promissoryHandler = handlers.promissoryHandler;
-        discountsHandler = handlers.discountsHandler;
-        poolHandler = handlers.poolHandler;
     }
 }

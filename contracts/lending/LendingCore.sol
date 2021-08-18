@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.6;
+pragma abicoder v2;
 import "../plugins/StaterTransfers.sol";
 interface StaterDiscounts {
     function calculateDiscount(address requester) external view returns(uint256);
@@ -78,6 +79,13 @@ contract LendingCore is StaterTransfers {
         uint256 interestRate;
         uint256 interestRateToStater;
         uint32 lenderFee;
+    }
+    
+    struct Handlers {
+        address loanHandler;
+        address promissoryHandler;
+        address discountsHandler;
+        address poolHandler;
     }
     
     /*

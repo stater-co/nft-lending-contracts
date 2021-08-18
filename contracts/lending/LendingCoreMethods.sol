@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.6;
+pragma abicoder v2;
 import "./LendingCore.sol";
 
 
@@ -50,6 +51,17 @@ contract LendingCoreMethods is Ownable, LendingCore {
     function getLoanApprovalCostOnly(uint256 loanId) external view returns(uint256) {
         uint256 discount = calculateDiscount(loanId,loanControlPanels[loanId].discountsHandler);
         return loans[loanId].loanAmount + (loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee / discount);
+    }
+    
+    function setGlobalVariables(LoanFeesHandler memory feesHandler, Handlers memory handlers) external onlyOwner {
+        ltv = feesHandler.ltv;
+        interestRate = feesHandler.interestRate;
+        interestRateToStater = feesHandler.interestRateToStater;
+        lenderFee = feesHandler.lenderFee;
+        loanHandler = handlers.loanHandler;
+        promissoryHandler = handlers.promissoryHandler;
+        discountsHandler = handlers.discountsHandler;
+        poolHandler = handlers.poolHandler;
     }
   
 }

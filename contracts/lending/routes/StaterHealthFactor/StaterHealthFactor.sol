@@ -8,14 +8,14 @@ import "../../../libs/uniswap-v3-core/test/SqrtPriceMathTest.sol";
 import '../../../libs/uniswap-v3-core/test/TickMathTest.sol';
 import "../../../libs/uniswap-v3-periphery/interfaces/INonfungiblePositionManager.sol";
 import "../../../libs/protocol-v2/contracts/interfaces/IPriceOracleGetter.sol";
-import "../Params.sol";
+import "../../params/CreateLoanMethod.sol";
 
 
-contract StaterHealthFactor is Ownable, LendingCore, Params, SqrtPriceMathTest, TickMathTest {
+contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, SqrtPriceMathTest, TickMathTest {
     
     uint256 public liquidationTreshold = .3 ether;
-    address uniswapV3OracleAddress;
-    address priceOracleGetter;
+    address public priceOracleGetter;
+    mapping(address => bool) public whitelistedCurrencies;
     
     /*
      * @DIIMIIM : The loan events
@@ -60,7 +60,28 @@ contract StaterHealthFactor is Ownable, LendingCore, Params, SqrtPriceMathTest, 
         Status status
     );
     
+    constructor(
+        address _promissoryHandler,
+        address _discountsHandler,
+        address _poolHandler,
+        address _priceOracleGetter,
+        address[] memory _whitelistedCurrencies
+    ) {
+        require(_discountsHandler != address(0), "A valid discounts handler is required");
+        promissoryHandler = _promissoryHandler;
+        discountsHandler = _discountsHandler;
+        poolHandler = _poolHandler;
+        priceOracleGetter = _priceOracleGetter;
+        for ( uint256 i = 0; i < _whitelistedCurrencies.length; ++i )
+            whitelistedCurrencies[_whitelistedCurrencies[i]] = true;
+    }
     
+    function setGlobalRouteVariables(address _priceOracleGetter, address[] memory _whitelistedCurrencies, bool[] memory _status) external onlyOwner {
+        require(_status.length == _whitelistedCurrencies.length, "Bad input");
+        priceOracleGetter = _priceOracleGetter;
+        for ( uint256 i = 0; i < _whitelistedCurrencies.length; ++i )
+            whitelistedCurrencies[_whitelistedCurrencies[i]] = _status[i];
+    }
     
     /*
      * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
@@ -85,32 +106,45 @@ contract StaterHealthFactor is Ownable, LendingCore, Params, SqrtPriceMathTest, 
                 uint128 liquidity,
                 ,
                 ,
-                uint128 tokensOwed0,
-                uint128 tokensOwed1
-            ) = INonfungiblePositionManager(uniswapV3OracleAddress).positions(loan.nftTokenIdArray[i]);
-            tokensOwed1 = uint128(IPriceOracleGetter(priceOracleGetter).getAssetPrice(token1) * tokensOwed1);
-            tokensOwed0 = uint128(IPriceOracleGetter(priceOracleGetter).getAssetPrice(token0) * tokensOwed0);
+                ,
+            ) = INonfungiblePositionManager(loan.nftAddressArray[i]).positions(loan.nftTokenIdArray[i]);
+        
             healthFactor += ( 
-                getAmount0Delta(
-                    getSqrtRatioAtTick(tickLower),
-                    getSqrtRatioAtTick(tickUpper),
-                    liquidity,
-                    true
-                ) + getAmount1Delta(
-                    getSqrtRatioAtTick(tickLower),
-                    getSqrtRatioAtTick(tickUpper),
-                    liquidity,
-                    true
-                )
+                getAmount0Delta(getSqrtRatioAtTick(tickLower),getSqrtRatioAtTick(tickUpper),liquidity,true) * IPriceOracleGetter(priceOracleGetter).getAssetPrice(token0) 
+                + 
+                getAmount1Delta(getSqrtRatioAtTick(tickLower),getSqrtRatioAtTick(tickUpper),liquidity,true) * IPriceOracleGetter(priceOracleGetter).getAssetPrice(token1)
             ) * liquidationTreshold / loanControlPanel.amountDue;
         }
         
         return healthFactor / loan.nftAddressArray.length;
     }
     
+    function debuggingMechanism(address nftAddress, uint256 nftId /*, uint256 amountDue*/) external view returns(int24,uint160,uint160,uint256,uint256) {
+        (
+            ,
+            ,
+            address token0,
+            address token1,
+            ,
+            int24 tickLower,
+            int24 tickUpper,
+            uint128 liquidity,
+            ,
+            ,
+            uint128 tokensOwed0,
+            uint128 tokensOwed1
+        ) = INonfungiblePositionManager(nftAddress).positions(nftId);
+        uint160 sqrtLower = getSqrtRatioAtTick(tickLower);
+        uint160 sqrtUpper = getSqrtRatioAtTick(tickUpper);
+        tokensOwed1 = uint128(IPriceOracleGetter(priceOracleGetter).getAssetPrice(token1) * tokensOwed1);
+        tokensOwed0 = uint128(IPriceOracleGetter(priceOracleGetter).getAssetPrice(token0) * tokensOwed0);
+        //uint256 healthFactor = (getAmount0Delta(sqrtLower,sqrtUpper,liquidity,true) + getAmount1Delta(sqrtLower,sqrtUpper,liquidity,true)) * liquidationTreshold / amountDue;
+        return (tickUpper,sqrtLower,sqrtUpper,getAmount0Delta(sqrtLower,sqrtUpper,liquidity,true),getAmount1Delta(sqrtLower,sqrtUpper,liquidity,true));
+    }
+    
     // Borrower creates a loan
     function createLoan(
-        CreateLoanParams memory loan
+        CreateLoanMethodParams memory loan
     ) external {
         require(loan.nrOfInstallments > 0 && loan.loanAmount > 0 && loan.nftAddressArray.length > 0);
         require(loan.nftAddressArray.length == loan.nftTokenIdArray.length && loan.nftTokenIdArray.length == loan.nftTokenTypeArray.length);

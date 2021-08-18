@@ -26,18 +26,18 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"contracts/lending/routes/Params.sol": {
-			"keccak256": "0x9b0e329da82d3ba2e20801f8687a94d4e11fa875bf3840e164b0fe8487b92f81",
+			"keccak256": "0x647254d5031e0b19bdacc500825bdc445545ffd47445776893a85462f2b91a55",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://076ac217be1e899a1b42f4a382265b6cc55158252493f5a7c1577c256bab05e4",
-				"dweb:/ipfs/QmTriQo3HDJo9J7V3i2hZT92zkAXKRqEdVjatQ7mHK9iJd"
+				"bzz-raw://45c2a2c712667815271c61be164ef862e48eb20644decb2c6ce07a49f4fd240f",
+				"dweb:/ipfs/QmY2zaK9bpdG8Jv7W6CfbNgJkGeNpqsjU6bHoNpdwhPkRg"
 			]
 		}
 	},

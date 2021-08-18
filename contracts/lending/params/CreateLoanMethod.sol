@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.5.0;
+pragma solidity 0.7.6;
 
 
-contract Params {
-    struct CreateLoanParams {
+contract CreateLoanMethod {
+    struct CreateLoanMethodParams {
         address currency;
         address[] nftAddressArray;
         uint256 loanAmount;
@@ -12,11 +12,5 @@ contract Params {
         uint256[] nftTokenIdArray;
         uint16 nrOfInstallments;
         uint8[] nftTokenTypeArray;
-    }
-    struct Handlers {
-        address loanHandler;
-        address promissoryHandler;
-        address discountsHandler;
-        address poolHandler;
     }
 }
