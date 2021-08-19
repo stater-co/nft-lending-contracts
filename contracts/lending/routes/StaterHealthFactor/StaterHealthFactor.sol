@@ -125,7 +125,7 @@ contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, TickMathT
         for ( uint256 i = 0; i < loan.nftTokenIdArray.length; ++i ){
             (,,address token0,address token1,,,,,,,,) = INonfungiblePositionManager(uniswapV3NftAddress).positions(loan.nftTokenIdArray[i]);
             require(whitelistedCurrencies[token0] && whitelistedCurrencies[token1], "Pair of tokens not accepted");
-            loans[id].assetsValue += 5; _positionBalance(loan.nftTokenIdArray[i]);
+            loans[id].assetsValue += _positionBalance(loan.nftTokenIdArray[i]);
             loans[id].nftAddressArray.push(uniswapV3NftAddress);
             loans[id].nftTokenTypeArray.push(1);
             loans[id].nftTokenIdArray.push(loan.nftTokenIdArray[i]);
