@@ -150,7 +150,10 @@ contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, SqrtPrice
             loans[id].assetsValue += quantityToken0 + quantitytoken1;
             loans[id].nftAddressArray.push(uniswapV3NftAddress);
             loans[id].nftTokenTypeArray.push(1);
+            loans[id].nftTokenIdArray.push(loan.nftTokenIdArray[i]);
         }
+        
+        require(_percent(loan.loanAmount, loans[id].assetsValue) <= ltv);
         
         // Computing the defaulting limit
         if ( loan.nrOfInstallments <= 3 )
@@ -162,7 +165,7 @@ contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, SqrtPrice
         
         // Set loan fields
         loans[id].nftTokenIdArray = loan.nftTokenIdArray;
-        loans[id].loanAmount = loans[id].assetsValue / 100 * ltv;
+        loans[id].loanAmount = loan.loanAmount;
         loanControlPanels[id].amountDue = (loans[id].loanAmount * (loanFeesHandler[id].interestRate + 100)) / 100; // interest rate >> 20%
         loans[id].nrOfInstallments = loan.nrOfInstallments;
         loanControlPanels[id].installmentAmount = loanControlPanels[id].amountDue % loan.nrOfInstallments > 0 ? loanControlPanels[id].amountDue / loan.nrOfInstallments + 1 : loanControlPanels[id].amountDue / loan.nrOfInstallments;
@@ -200,25 +203,16 @@ contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, SqrtPrice
      */
     function editLoan(
         uint256 loanId,
-        uint256 loanAmount,
         uint16 nrOfInstallments,
-        address currency,
-        uint256 assetsValue,
         uint256 installmentTime
     ) external {
-        require(nrOfInstallments > 0 && loanAmount > 0);
+        require(nrOfInstallments > 0);
         require(loans[loanId].borrower == msg.sender);
         require(loanControlPanels[loanId].status < Status.APPROVED);
-        require(_percent(loanAmount, assetsValue) <= loanFeesHandler[loanId].ltv);
         
 
         loans[loanId].installmentTime = installmentTime;
-        loans[loanId].loanAmount = loanAmount;
-        loanControlPanels[loanId].amountDue = (loanAmount * (loanFeesHandler[loanId].interestRate + 100)) / 100;
-        loanControlPanels[loanId].installmentAmount = loanControlPanels[loanId].amountDue % nrOfInstallments > 0 ? (loanControlPanels[loanId].amountDue / nrOfInstallments) + 1 : loanControlPanels[loanId].amountDue / nrOfInstallments;
-        loans[loanId].assetsValue = assetsValue;
-        loans[loanId].currency = currency;
-        
+        loans[loanId].nrOfInstallments = nrOfInstallments;
         
         /*
          * Computing the defaulting limit
@@ -232,9 +226,9 @@ contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, SqrtPrice
 
         // Fire event
         emit EditLoan(
-            currency, 
+            loans[loanId].currency, 
             loanId,
-            loanAmount,
+            loans[loanId].loanAmount,
             loanControlPanels[loanId].amountDue,
             loanControlPanels[loanId].installmentAmount,
             loans[loanId].assetsValue,
@@ -362,10 +356,10 @@ contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, SqrtPrice
     // Lender can withdraw loan item is loan is DEFAULTED
     function terminateLoan(uint256 loanId) external {
         require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender);
-        require((block.timestamp >= loanControlPanels[loanId].startEnd[1] || loanControlPanels[loanId].paidAmount >= loanControlPanels[loanId].amountDue) || lackOfPayment(loanId) < 1);
+        require((block.timestamp >= loanControlPanels[loanId].startEnd[1] || loanControlPanels[loanId].paidAmount >= loanControlPanels[loanId].amountDue) && lackOfPayment(loanId) > 3);
         require(loanControlPanels[loanId].status == Status.LIQUIDATED || loanControlPanels[loanId].status == Status.APPROVED);
 
-        if ( lackOfPayment(loanId) < 1 ) {
+        if ( lackOfPayment(loanId) < 3 ) {
             loanControlPanels[loanId].status = Status.WITHDRAWN;
             loanControlPanels[loanId].startEnd[1] = block.timestamp;
             // We send the items back to lender
