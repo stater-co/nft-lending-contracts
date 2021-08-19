@@ -5,19 +5,20 @@ pragma abicoder v2;
 import "../../LendingCore.sol";
 import "../../../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 import "../../../libs/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "../../../libs/uniswap-v3-core/test/SqrtPriceMathTest.sol";
 import '../../../libs/uniswap-v3-core/test/TickMathTest.sol';
 import "../../../libs/uniswap-v3-periphery/interfaces/INonfungiblePositionManager.sol";
 import "../../../libs/protocol-v2/contracts/interfaces/IPriceOracleGetter.sol";
+import '../../../libs/uniswap-v3-periphery/libraries/LiquidityAmounts.sol';
 import "./params/CreateLoanMethod.sol";
 
 
-contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, SqrtPriceMathTest, TickMathTest {
+contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, TickMathTest {
     
     uint256 public liquidationTreshold = .3 ether;
     address public priceOracleGetter;
     address public uniswapV3NftAddress;
     mapping(address => bool) public whitelistedCurrencies;
+    using LiquidityAmounts for uint160;
     
     /*
      * @DIIMIIM : The loan events
@@ -84,6 +85,18 @@ contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, SqrtPrice
             whitelistedCurrencies[_whitelistedCurrencies[i]] = _status[i];
     }
     
+    function _positionBalance(uint256 positionId, bool isToken1) internal view returns(uint256) {
+        (,,,,,int24 tickLower,int24 tickUpper,uint128 liquidity,,,,) = INonfungiblePositionManager(uniswapV3NftAddress).positions(positionId);
+        
+        uint160 sqrtLower = getSqrtRatioAtTick(tickLower);
+        uint160 sqrtUpper = getSqrtRatioAtTick(tickUpper);
+        return isToken1 ? sqrtUpper.getAmount1ForLiquidity(sqrtUpper,liquidity) : sqrtLower.getAmount0ForLiquidity(sqrtLower,liquidity);
+    }
+    
+    function _positionBalance(uint256 positionId) internal view returns(uint256) {
+        return _positionBalance(positionId,false);
+    }
+    
     /*
      * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
      * @ => TRUE = Loan has exceed the maximum unpaid installments limit, lender can terminate the loan and get the NFTs
@@ -95,66 +108,30 @@ contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, SqrtPrice
         require(loanControlPanel.paidAmount < loanControlPanel.amountDue);
         
         uint256 healthFactor;
-        for ( uint256 i = 0; i < loan.nftAddressArray.length; ++i ) {
-            (
-                ,
-                ,
-                address token0,
-                address token1,
-                ,
-                int24 tickLower,
-                int24 tickUpper,
-                uint128 liquidity,
-                ,
-                ,
-                ,
-            ) = INonfungiblePositionManager(loan.nftAddressArray[i]).positions(loan.nftTokenIdArray[i]);
-        
-            healthFactor += ( 
-                getAmount0Delta(getSqrtRatioAtTick(tickLower),getSqrtRatioAtTick(tickUpper),liquidity,true) * IPriceOracleGetter(priceOracleGetter).getAssetPrice(token0) / ERC20(token0).decimals()
-                + 
-                getAmount1Delta(getSqrtRatioAtTick(tickLower),getSqrtRatioAtTick(tickUpper),liquidity,true) * IPriceOracleGetter(priceOracleGetter).getAssetPrice(token1) / ERC20(token0).decimals()
-            ) * liquidationTreshold / loanControlPanel.amountDue;
+        for (uint256 i = 0; i < loan.nftTokenIdArray.length; ++i) {
+            healthFactor += _positionBalance(loan.nftTokenIdArray[i]) * liquidationTreshold / loanControlPanel.amountDue;
         }
         
-        return healthFactor / loan.nftAddressArray.length;
-    }
-    
-    function getNftTokenQuantities(uint256 nftId) internal view returns(uint256,uint256) {
-        (
-            ,
-            ,
-            address token0,
-            address token1,
-            ,
-            int24 tickLower,
-            int24 tickUpper,
-            uint128 liquidity,
-            ,
-            ,
-            ,
-        ) = INonfungiblePositionManager(uniswapV3NftAddress).positions(nftId);
-        
-        return (getAmount0Delta(getSqrtRatioAtTick(tickLower),getSqrtRatioAtTick(tickUpper),liquidity,true) * IPriceOracleGetter(priceOracleGetter).getAssetPrice(token0),getAmount1Delta(getSqrtRatioAtTick(tickLower),getSqrtRatioAtTick(tickUpper),liquidity,true) * IPriceOracleGetter(priceOracleGetter).getAssetPrice(token1));
+        return healthFactor / loan.nftTokenIdArray.length;
     }
     
     // Borrower creates a loan
     function createLoan(
         CreateLoanMethodParams memory loan
     ) external {
-        require(loan.nrOfInstallments > 0 && loan.nftTokenIdArray.length > 0);
+        require(loan.nrOfInstallments > 0, "Loan must have at least 1 installment");
+        require(loan.nftTokenIdArray.length > 0, "Loan must have at least 1 NFT");
         
         for ( uint256 i = 0; i < loan.nftTokenIdArray.length; ++i ){
             (,,address token0,address token1,,,,,,,,) = INonfungiblePositionManager(uniswapV3NftAddress).positions(loan.nftTokenIdArray[i]);
-            require(whitelistedCurrencies[token0] && whitelistedCurrencies[token1]);
-            (uint256 quantityToken0, uint256 quantitytoken1) = getNftTokenQuantities(loan.nftTokenIdArray[i]);
-            loans[id].assetsValue += quantityToken0 + quantitytoken1;
+            require(whitelistedCurrencies[token0] && whitelistedCurrencies[token1], "Pair of tokens not accepted");
+            loans[id].assetsValue += 5; _positionBalance(loan.nftTokenIdArray[i]);
             loans[id].nftAddressArray.push(uniswapV3NftAddress);
             loans[id].nftTokenTypeArray.push(1);
             loans[id].nftTokenIdArray.push(loan.nftTokenIdArray[i]);
         }
         
-        require(_percent(loan.loanAmount, loans[id].assetsValue) <= ltv);
+        require(_percent(loan.loanAmount, loans[id].assetsValue) <= ltv, "The LTV must be under 60%");
         
         // Computing the defaulting limit
         if ( loan.nrOfInstallments <= 3 )
