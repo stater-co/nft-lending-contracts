@@ -190,6 +190,7 @@ contract LendingMethods is Ownable, LendingCore {
         loans[loanId].amountDue = loanAmount.mul(interestRate.add(100)).div(100);
         loans[loanId].installmentAmount = loans[loanId].amountDue.mod(nrOfInstallments) > 0 ? loans[loanId].amountDue.div(nrOfInstallments).add(1) : loans[loanId].amountDue.div(nrOfInstallments);
         loans[loanId].assetsValue = assetsValue;
+        loans[loanId].nrOfInstallments = nrOfInstallments;
         loans[loanId].currency = currency;
         
         
