@@ -4,6 +4,7 @@ pragma abicoder v2;
 
 import "../../LendingCore.sol";
 import "../../../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
+import "../../../libs/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "../../../libs/uniswap-v3-core/test/SqrtPriceMathTest.sol";
 import '../../../libs/uniswap-v3-core/test/TickMathTest.sol';
 import "../../../libs/uniswap-v3-periphery/interfaces/INonfungiblePositionManager.sol";
@@ -110,9 +111,9 @@ contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, SqrtPrice
             ) = INonfungiblePositionManager(loan.nftAddressArray[i]).positions(loan.nftTokenIdArray[i]);
         
             healthFactor += ( 
-                getAmount0Delta(getSqrtRatioAtTick(tickLower),getSqrtRatioAtTick(tickUpper),liquidity,true) * IPriceOracleGetter(priceOracleGetter).getAssetPrice(token0) 
+                getAmount0Delta(getSqrtRatioAtTick(tickLower),getSqrtRatioAtTick(tickUpper),liquidity,true) * IPriceOracleGetter(priceOracleGetter).getAssetPrice(token0) / ERC20(token0).decimals()
                 + 
-                getAmount1Delta(getSqrtRatioAtTick(tickLower),getSqrtRatioAtTick(tickUpper),liquidity,true) * IPriceOracleGetter(priceOracleGetter).getAssetPrice(token1)
+                getAmount1Delta(getSqrtRatioAtTick(tickLower),getSqrtRatioAtTick(tickUpper),liquidity,true) * IPriceOracleGetter(priceOracleGetter).getAssetPrice(token1) / ERC20(token0).decimals()
             ) * liquidationTreshold / loanControlPanel.amountDue;
         }
         
