@@ -52,16 +52,5 @@ contract LendingCoreMethods is Ownable, LendingCore {
         uint256 discount = calculateDiscount(loanId,loanControlPanels[loanId].discountsHandler);
         return loans[loanId].loanAmount + (loans[loanId].loanAmount / loanFeesHandler[loanId].lenderFee / discount);
     }
-    
-    function setGlobalVariables(LoanFeesHandler memory feesHandler, Handlers memory handlers) external onlyOwner {
-        ltv = feesHandler.ltv;
-        interestRate = feesHandler.interestRate;
-        interestRateToStater = feesHandler.interestRateToStater;
-        lenderFee = feesHandler.lenderFee;
-        loanHandler = handlers.loanHandler;
-        promissoryHandler = handlers.promissoryHandler;
-        discountsHandler = handlers.discountsHandler;
-        poolHandler = handlers.poolHandler;
-    }
   
 }

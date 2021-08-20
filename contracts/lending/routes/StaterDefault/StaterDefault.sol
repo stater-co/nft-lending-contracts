@@ -3,60 +3,17 @@ pragma solidity 0.7.6;
 pragma abicoder v2;
 import "../../LendingCore.sol";
 import "../../../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
-import "./params/CreateLoanMethod.sol";
+import "./params/DefaultCreateLoanMethod.sol";
 
 
-contract StaterDefault is Ownable, LendingCore, CreateLoanMethod {
+contract StaterDefault is Ownable, LendingCore, DefaultCreateLoanMethod {
     
-    /*
-     * @DIIMIIM : The loan events
-     */
-    event NewLoan(
-        address indexed owner,
-        address indexed currency,
-        uint256 indexed loanId,
-        address[] nftAddressArray,
-        uint256[] nftTokenIdArray,
-        uint8[] nftTokenTypeArray
-    );
-    event EditLoan(
-        address indexed currency,
-        uint256 indexed loanId,
-        uint256 loanAmount,
-        uint256 amountDue,
-        uint256 installmentAmount,
-        uint256 assetsValue,
-        uint256 frequencyTime,
-        uint256 frequencyTimeUnit
-    );
-    event LoanApproved(
-        address indexed lender,
-        uint256 indexed loanId,
-        uint256 loanPaymentEnd
-    );
-    event LoanCancelled(
-        uint256 indexed loanId
-    );
-    event ItemsWithdrawn(
-        address indexed requester,
-        uint256 indexed loanId,
-        Status status
-    );
-    event LoanPayment(
-        uint256 indexed loanId,
-        uint256 installmentAmount,
-        uint256 amountPaidAsInstallmentToLender,
-        uint256 interestPerInstallement,
-        uint256 interestToStaterPerInstallement,
-        Status status
-    );
-    
-    constructor(
-        address _discountsHandler
-    ) {
-        require(_discountsHandler != address(0), "A valid discounts handler is required");
-        discountsHandler = _discountsHandler;
-    }
+    address public loanHandler;
+    address public discountsHandler;
+    uint256 public ltv = 600;
+    uint256 public interestRate = 20;
+    uint256 public interestRateToStater = 40;
+    uint32 public lenderFee = 100;
     
     /*
      * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
@@ -74,7 +31,7 @@ contract StaterDefault is Ownable, LendingCore, CreateLoanMethod {
     
     // Borrower creates a loan
     function createLoan(
-        CreateLoanMethodParams memory loan
+        DefaultCreateLoanMethodParams memory loan
     ) external {
         require(loan.nrOfInstallments > 0 && loan.loanAmount > 0 && loan.nftAddressArray.length > 0);
         require(loan.nftAddressArray.length == loan.nftTokenIdArray.length && loan.nftTokenIdArray.length == loan.nftTokenTypeArray.length);

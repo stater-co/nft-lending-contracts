@@ -2,8 +2,8 @@
 pragma solidity 0.7.6;
 
 
-contract CreateLoanMethod {
-    struct CreateLoanMethodParams {
+contract DefaultCreateLoanMethod {
+    struct DefaultCreateLoanMethodParams {
         address currency;
         address[] nftAddressArray;
         uint256 loanAmount;

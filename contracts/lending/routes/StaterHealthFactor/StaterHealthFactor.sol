@@ -7,90 +7,45 @@ import "../../../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 import "../../../libs/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import '../../../libs/uniswap-v3-core/test/TickMathTest.sol';
 import "../../../libs/uniswap-v3-periphery/interfaces/INonfungiblePositionManager.sol";
-import "../../../libs/protocol-v2/contracts/interfaces/IPriceOracleGetter.sol";
 import '../../../libs/uniswap-v3-periphery/libraries/LiquidityAmounts.sol';
-import "./params/CreateLoanMethod.sol";
+import "./params/HealthFactorCreateLoanMethod.sol";
 
 
-contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, TickMathTest {
+contract StaterHealthFactor is Ownable, LendingCore, HealthFactorCreateLoanMethod, TickMathTest {
     
+    address public loanHandler;
+    address public discountsHandler;
+    uint256 public ltv = 600;
+    uint256 public interestRate = 20;
+    uint256 public interestRateToStater = 40;
+    uint32 public lenderFee = 100;
     uint256 public liquidationTreshold = .3 ether;
-    address public priceOracleGetter;
     address public uniswapV3NftAddress;
     mapping(address => bool) public whitelistedCurrencies;
     using LiquidityAmounts for uint160;
     
-    /*
-     * @DIIMIIM : The loan events
-     */
-    event NewLoan(
-        address indexed owner,
-        address indexed currency,
-        uint256 indexed loanId,
-        address[] nftAddressArray,
-        uint256[] nftTokenIdArray,
-        uint8[] nftTokenTypeArray
-    );
-    event EditLoan(
-        address indexed currency,
-        uint256 indexed loanId,
-        uint256 loanAmount,
-        uint256 amountDue,
-        uint256 installmentAmount,
-        uint256 assetsValue,
-        uint256 frequencyTime,
-        uint256 frequencyTimeUnit
-    );
-    event LoanApproved(
-        address indexed lender,
-        uint256 indexed loanId,
-        uint256 loanPaymentEnd
-    );
-    event LoanCancelled(
-        uint256 indexed loanId
-    );
-    event ItemsWithdrawn(
-        address indexed requester,
-        uint256 indexed loanId,
-        Status status
-    );
-    event LoanPayment(
-        uint256 indexed loanId,
-        uint256 installmentAmount,
-        uint256 amountPaidAsInstallmentToLender,
-        uint256 interestPerInstallement,
-        uint256 interestToStaterPerInstallement,
-        Status status
-    );
     
     constructor(
-        address _discountsHandler,
-        address _priceOracleGetter,
         address _uniswapV3NftAddress,
         address[] memory _whitelistedCurrencies
     ) {
-        require(_discountsHandler != address(0), "A valid discounts handler is required");
         require(_uniswapV3NftAddress != address(0), "A valid uniswap v3 address is required");
-        discountsHandler = _discountsHandler;
-        priceOracleGetter = _priceOracleGetter;
         uniswapV3NftAddress = _uniswapV3NftAddress;
         for ( uint256 i = 0; i < _whitelistedCurrencies.length; ++i )
             whitelistedCurrencies[_whitelistedCurrencies[i]] = true;
     }
     
-    function setGlobalRouteVariables(address _priceOracleGetter, address[] memory _whitelistedCurrencies, bool[] memory _status) external onlyOwner {
+    function setGlobalRouteVariables(address[] memory _whitelistedCurrencies, bool[] memory _status) external onlyOwner {
         require(_status.length == _whitelistedCurrencies.length, "Bad input");
-        priceOracleGetter = _priceOracleGetter;
         for ( uint256 i = 0; i < _whitelistedCurrencies.length; ++i )
             whitelistedCurrencies[_whitelistedCurrencies[i]] = _status[i];
     }
     
     function _positionBalance(uint256 positionId, bool isToken1) internal view returns(uint256) {
         (,,,,,int24 tickLower,int24 tickUpper,uint128 liquidity,,,,) = INonfungiblePositionManager(uniswapV3NftAddress).positions(positionId);
-        
         uint160 sqrtLower = getSqrtRatioAtTick(tickLower);
         uint160 sqrtUpper = getSqrtRatioAtTick(tickUpper);
-        return isToken1 ? sqrtUpper.getAmount1ForLiquidity(sqrtUpper,liquidity) : sqrtLower.getAmount0ForLiquidity(sqrtLower,liquidity);
+        return isToken1 ? sqrtUpper.getAmount1ForLiquidity(sqrtLower,liquidity) : sqrtLower.getAmount0ForLiquidity(sqrtUpper,liquidity);
     }
     
     function _positionBalance(uint256 positionId) internal view returns(uint256) {
@@ -115,24 +70,35 @@ contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, TickMathT
         return healthFactor / loan.nftTokenIdArray.length;
     }
     
+    function getLoanAssetsValue(HealthFactorCreateLoanMethodParams memory loan) external view returns(uint256) {
+        uint256 assetsValue;
+        for ( uint256 i = 0; i < loan.nftTokenIdArray.length; ++i ){
+            (,,address token0,address token1,,,,,,,,) = INonfungiblePositionManager(uniswapV3NftAddress).positions(loan.nftTokenIdArray[i]);
+            require(whitelistedCurrencies[token0] && whitelistedCurrencies[token1], "Pair of tokens not accepted");
+            assetsValue += _positionBalance(loan.nftTokenIdArray[i]);
+        }
+        return assetsValue;
+    }
+    
     // Borrower creates a loan
     function createLoan(
-        CreateLoanMethodParams memory loan
+        HealthFactorCreateLoanMethodParams memory loan
     ) external {
         require(loan.nrOfInstallments > 0, "Loan must have at least 1 installment");
         require(loan.nftTokenIdArray.length > 0, "Loan must have at least 1 NFT");
+        
         
         for ( uint256 i = 0; i < loan.nftTokenIdArray.length; ++i ){
             (,,address token0,address token1,,,,,,,,) = INonfungiblePositionManager(uniswapV3NftAddress).positions(loan.nftTokenIdArray[i]);
             require(whitelistedCurrencies[token0] && whitelistedCurrencies[token1], "Pair of tokens not accepted");
             loans[id].assetsValue += _positionBalance(loan.nftTokenIdArray[i]);
             loans[id].nftAddressArray.push(uniswapV3NftAddress);
-            loans[id].nftTokenTypeArray.push(1);
+            loans[id].nftTokenTypeArray.push(0);
             loans[id].nftTokenIdArray.push(loan.nftTokenIdArray[i]);
         }
         
-        require(_percent(loan.loanAmount, loans[id].assetsValue) <= ltv, "The LTV must be under 60%");
-        
+        require(loan.loanAmount <= (loans[id].assetsValue / 100) * (ltv / 10), "The LTV must be under 60%");
+    
         // Computing the defaulting limit
         if ( loan.nrOfInstallments <= 3 )
             loanControlPanels[id].defaultingLimit = 1;
@@ -161,7 +127,8 @@ contract StaterHealthFactor is Ownable, LendingCore, CreateLoanMethod, TickMathT
             loans[id].nftTokenIdArray,
             loans[id].nftTokenTypeArray
         );
-        
+    
+
         // Fire event
         emit NewLoan(
             msg.sender, 

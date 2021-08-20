@@ -8,15 +8,7 @@ interface StaterDiscounts {
 
 
 contract LendingCore is StaterTransfers {
-    
-    address public loanHandler;
-    address public promissoryHandler;
-    address public discountsHandler;
-    address public poolHandler;
-    uint256 public ltv;
-    uint256 public interestRate;
-    uint256 public interestRateToStater;
-    uint32 public lenderFee;
+
     
     /*
      * @DIIMIIM Public & global variables for the lending contract
@@ -42,6 +34,50 @@ contract LendingCore is StaterTransfers {
         WITHDRAWN 
     }
     
+
+    /*
+     * @DIIMIIM : The loan events
+     */
+    event NewLoan(
+        address indexed owner,
+        address indexed currency,
+        uint256 indexed loanId,
+        address[] nftAddressArray,
+        uint256[] nftTokenIdArray,
+        uint8[] nftTokenTypeArray
+    );
+    event EditLoan(
+        address indexed currency,
+        uint256 indexed loanId,
+        uint256 loanAmount,
+        uint256 amountDue,
+        uint256 installmentAmount,
+        uint256 assetsValue,
+        uint256 frequencyTime,
+        uint256 frequencyTimeUnit
+    );
+    event LoanApproved(
+        address indexed lender,
+        uint256 indexed loanId,
+        uint256 loanPaymentEnd
+    );
+    event LoanCancelled(
+        uint256 indexed loanId
+    );
+    event ItemsWithdrawn(
+        address indexed requester,
+        uint256 indexed loanId,
+        Status status
+    );
+    event LoanPayment(
+        uint256 indexed loanId,
+        uint256 installmentAmount,
+        uint256 amountPaidAsInstallmentToLender,
+        uint256 interestPerInstallement,
+        uint256 interestToStaterPerInstallement,
+        Status status
+    );
+
     
     /*
      * @DIIMIIM : The loan structure

@@ -2,8 +2,8 @@
 pragma solidity 0.7.6;
 
 
-contract CreateLoanMethod {
-    struct CreateLoanMethodParams {
+contract HealthFactorCreateLoanMethod {
+    struct HealthFactorCreateLoanMethodParams {
         address currency;
         uint256 installmentTime;
         uint256[] nftTokenIdArray;
