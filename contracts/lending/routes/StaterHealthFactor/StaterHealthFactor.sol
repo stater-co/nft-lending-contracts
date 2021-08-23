@@ -84,13 +84,13 @@ contract StaterHealthFactor is Ownable, LendingCore, HealthFactorCreateLoanMetho
     function createLoan(
         HealthFactorCreateLoanMethodParams memory loan
     ) external {
+        
         require(loan.nrOfInstallments > 0, "Loan must have at least 1 installment");
         require(loan.nftTokenIdArray.length > 0, "Loan must have at least 1 NFT");
         
-        
-        for ( uint256 i = 0; i < loan.nftTokenIdArray.length; ++i ){
+        for ( uint256 i = 0; i < loan.nftTokenIdArray.length; ++i ) {
             (,,address token0,address token1,,,,,,,,) = INonfungiblePositionManager(uniswapV3NftAddress).positions(loan.nftTokenIdArray[i]);
-            require(whitelistedCurrencies[token0] && whitelistedCurrencies[token1], "Pair of tokens not accepted");
+            //require(whitelistedCurrencies[token0] && whitelistedCurrencies[token1], "Pair of tokens not accepted");
             loans[id].assetsValue += _positionBalance(loan.nftTokenIdArray[i]);
             loans[id].nftAddressArray.push(uniswapV3NftAddress);
             loans[id].nftTokenTypeArray.push(0);
@@ -98,7 +98,7 @@ contract StaterHealthFactor is Ownable, LendingCore, HealthFactorCreateLoanMetho
         }
         
         require(loan.loanAmount <= (loans[id].assetsValue / 100) * (ltv / 10), "The LTV must be under 60%");
-    
+        
         // Computing the defaulting limit
         if ( loan.nrOfInstallments <= 3 )
             loanControlPanels[id].defaultingLimit = 1;
@@ -127,7 +127,6 @@ contract StaterHealthFactor is Ownable, LendingCore, HealthFactorCreateLoanMetho
             loans[id].nftTokenIdArray,
             loans[id].nftTokenTypeArray
         );
-    
 
         // Fire event
         emit NewLoan(
