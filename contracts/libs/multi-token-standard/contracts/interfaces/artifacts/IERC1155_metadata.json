@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.7.4+commit.3f05b770"
+		"version": "0.7.6+commit.7338295f"
 	},
 	"language": "Solidity",
 	"output": {
@@ -359,7 +359,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"../test/contracts/multi-token-standard/contracts/interfaces/IERC1155.sol": "IERC1155"
+			"contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": "IERC1155"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -367,18 +367,18 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
-		"../test/contracts/multi-token-standard/contracts/interfaces/IERC1155.sol": {
-			"keccak256": "0x4de965e4d3457269fa670aceb315bc6c57194b7cca08798176d39cc0ad841814",
+		"contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {
+			"keccak256": "0xf23dff0666ff46a967daa6d18891582e2c4e38bb702d7d52d654f2a467ee5349",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f0222db296984586ea87c35aece19e23c0ebc16505aed17c4427b8e3bc6a5b43",
-				"dweb:/ipfs/QmU1zSHN31CPKNe9d24w2jFk9nwjSRfeakPcsCi1tmaenw"
+				"bzz-raw://d0567002c86fdc7c4e62c8829b46ddc92ffe6adb717505c35a567889367d7817",
+				"dweb:/ipfs/QmNZ1niUwSpYGVtRMGhQBjbaWuTZ6PdpdwoBhCeTcFhdss"
 			]
 		}
 	},

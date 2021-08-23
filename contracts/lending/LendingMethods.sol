@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.7.4;
+pragma solidity 0.7.6;
 import "./LendingCore.sol";
 import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
@@ -8,38 +8,6 @@ import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 contract LendingMethods is Ownable, LendingCore {
     using SafeMath for uint256;
     using SafeMath for uint16;
-    using SafeMath for uint8;
-    
-    
-    /*
-     * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
-     * @ => TRUE = Loan has exceed the maximum unpaid installments limit, lender can terminate the loan and get the NFTs
-     * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
-     */
-    function lackOfPayment(uint256 loanId) public view returns(bool) {
-        return 
-            loans[loanId].status == Status.APPROVED 
-                && 
-            loans[loanId].startEnd[0].add(
-                loans[loanId].nrOfPayments.mul(
-                    loans[loanId].installmentTime.div(
-                        loans[loanId].nrOfInstallments
-                    )
-                )
-            ) <= block.timestamp.sub(
-                loans[loanId].defaultingLimit.mul(
-                    loans[loanId].installmentTime.div(
-                        loans[loanId].nrOfInstallments
-                    )
-                )
-            );
-    }
-
-    // Calculates loan to value ratio
-    function _percent(uint256 numerator, uint256 denominator) public pure returns(uint256) {
-        return numerator.mul(10000).div(denominator).add(5).div(10);
-    }
-    
     
     /*
      * @DIIMIIM : The loan events
@@ -220,8 +188,21 @@ contract LendingMethods is Ownable, LendingCore {
     
     // Lender approves a loan
     function approveLoan(uint256 loanId) external payable {
+        require(loans[loanId].lender == address(0));
+        require(loans[loanId].paidAmount == 0);
+        require(loans[loanId].status == Status.LISTED);
         
-        approveLoanCoreMechanism(loanId);
+        // Borrower assigned , status is 1 , first installment ( payment ) completed
+        loans[loanId].lender = msg.sender;
+        loans[loanId].startEnd[1] = block.timestamp.add(
+            loans[loanId].nrOfInstallments.mul(
+                loans[loanId].installmentTime.div(
+                    loans[loanId].nrOfInstallments
+                )
+            )
+        );
+        loans[loanId].status = Status.APPROVED;
+        loans[loanId].startEnd[0] = block.timestamp;
         uint256 discount = discounts.calculateDiscount(msg.sender);
         
         // We check if currency is ETH
@@ -236,28 +217,13 @@ contract LendingMethods is Ownable, LendingCore {
             loans[loanId].loanAmount,
             loans[loanId].loanAmount.div(lenderFee).div(discount)
         );
-
-    }
-    
-    function approveLoanWithPool(uint256 loanId, uint256 poolId) external payable {
-
-        approveLoanCoreMechanism(loanId);
         
-        // We check if currency is ETH
-        if ( loans[loanId].currency == address(0) )
-            require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee)));
-            
-        loans[loanId].poolId = poolId;
-
-        // We send the tokens here
-        transferTokens(
+        emit LoanApproved(
             msg.sender,
-            payable(loans[loanId].borrower),
-            loans[loanId].currency,
-            loans[loanId].loanAmount,
-            loans[loanId].loanAmount.div(lenderFee)
+            loanId,
+            loans[loanId].startEnd[1]
         );
-            
+
     }
 
     // Borrower cancels a loan
@@ -410,29 +376,5 @@ contract LendingMethods is Ownable, LendingCore {
                 require(loans[loanIds[i]].status == Status.APPROVED);
             promissoryPermissions[loanIds[i]] = allowed;
         }
-    }
-    
-    function approveLoanCoreMechanism(uint256 loanId) internal {
-        require(loans[loanId].lender == address(0));
-        require(loans[loanId].paidAmount == 0);
-        require(loans[loanId].status == Status.LISTED);
-
-        // Borrower assigned , status is 1 , first installment ( payment ) completed
-        loans[loanId].lender = msg.sender;
-        loans[loanId].startEnd[1] = block.timestamp.add(
-            loans[loanId].nrOfInstallments.mul(
-                loans[loanId].installmentTime.div(
-                    loans[loanId].nrOfInstallments
-                )
-            )
-        );
-        loans[loanId].status = Status.APPROVED;
-        loans[loanId].startEnd[0] = block.timestamp;
-
-        emit LoanApproved(
-            msg.sender,
-            loanId,
-            loans[loanId].startEnd[1]
-        );
     }
 }

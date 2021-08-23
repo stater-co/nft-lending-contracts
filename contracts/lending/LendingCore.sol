@@ -1,11 +1,15 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.7.4;
+pragma solidity 0.7.6;
 import "../plugins/StaterTransfers.sol";
+import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
 interface StaterDiscounts {
     function calculateDiscount(address requester) external view returns(uint256);
 }
 
+
 contract LendingCore is StaterTransfers {
+    using SafeMath for uint256;
+    using SafeMath for uint8;
     
     /*
      * @DIIMIIM Public & global variables for the lending contract
@@ -58,7 +62,6 @@ contract LendingCore is StaterTransfers {
         uint256 installmentAmount; // amount expected for each installment
         uint256 amountDue; // loanAmount + interest that needs to be paid back by borrower
         uint256 paidAmount; // the amount that has been paid back to the lender to date
-        uint256 poolId; // the pool ID in case the loan is owned via pool
         uint16 nrOfInstallments; // the number of installments that the borrower must pay.
         uint8 defaultingLimit; // the number of installments allowed to be missed without getting defaulted
         uint8[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
@@ -76,6 +79,35 @@ contract LendingCore is StaterTransfers {
     modifier isPromissoryNote {
         require(msg.sender == promissoryNoteAddress, "Lending Methods: Access denied");
         _;
+    }
+    
+    /*
+     * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
+     * @ => TRUE = Loan has exceed the maximum unpaid installments limit, lender can terminate the loan and get the NFTs
+     * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
+     */
+    function lackOfPayment(uint256 loanId) public view returns(bool) {
+        return 
+            loans[loanId].status == Status.APPROVED 
+                && 
+            loans[loanId].startEnd[0].add(
+                loans[loanId].nrOfPayments.mul(
+                    loans[loanId].installmentTime.div(
+                        loans[loanId].nrOfInstallments
+                    )
+                )
+            ) <= block.timestamp.sub(
+                loans[loanId].defaultingLimit.mul(
+                    loans[loanId].installmentTime.div(
+                        loans[loanId].nrOfInstallments
+                    )
+                )
+            );
+    }
+
+    // Calculates loan to value ratio
+    function _percent(uint256 numerator, uint256 denominator) public pure returns(uint256) {
+        return numerator.mul(10000).div(denominator).add(5).div(10);
     }
 
 }

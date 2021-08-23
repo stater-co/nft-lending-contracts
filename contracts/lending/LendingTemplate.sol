@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.7.4;
+pragma solidity 0.7.6;
 import "./LendingCore.sol";
 import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
@@ -55,13 +55,13 @@ contract LendingTemplate is Ownable, LendingCore {
         uint16 nrOfInstallments,
         address currency,
         uint256 assetsValue,
-        uint256[3] memory intallmentTime
+        uint256 installmentTime
     ) external lendingMethodsUp {
         
         (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
-                "editLoan(uint256,uint256,uint16,address,uint256,uint256[3])",
-                loanId,loanAmount,nrOfInstallments,currency,assetsValue,intallmentTime
+                "editLoan(uint256,uint256,uint16,address,uint256,uint256)",
+                loanId,loanAmount,nrOfInstallments,currency,assetsValue,installmentTime
             )
         );
         require(success,"Failed to editLoan via delegatecall");
@@ -75,19 +75,6 @@ contract LendingTemplate is Ownable, LendingCore {
             abi.encodeWithSignature(
                 "approveLoan(uint256)",
                 loanId
-            )
-        );
-        require(success,"Failed to approveLoan via delegatecall");
-    }
-    
-    
-    // Lender approves a loan
-    function approveLoanWithPool(uint256 loanId, uint256 poolId) external payable lendingMethodsUp {
-        
-        (bool success, ) = lendingMethodsAddress.delegatecall(
-            abi.encodeWithSignature(
-                "approveLoanWithPool(uint256,uint256)",
-                loanId,poolId
             )
         );
         require(success,"Failed to approveLoan via delegatecall");

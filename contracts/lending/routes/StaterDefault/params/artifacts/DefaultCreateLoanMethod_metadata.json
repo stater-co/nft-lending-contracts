@@ -1,0 +1,45 @@
+{
+	"compiler": {
+		"version": "0.7.6+commit.7338295f"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/lending/routes/StaterDefault/params/DefaultCreateLoanMethod.sol": "DefaultCreateLoanMethod"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/lending/routes/StaterDefault/params/DefaultCreateLoanMethod.sol": {
+			"keccak256": "0x3b47cfdd8eb1b9da3fbbe7b307405d5c521bfbeb1abeb878a38556b5d17f2214",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://123b21587c887bd35090f165aefa343b5aa10460e7078274350651eabe040c13",
+				"dweb:/ipfs/QmXwvXR4XEa982YdmqUJ854TD4qALs5JoBU1voVTiRGrfm"
+			]
+		}
+	},
+	"version": 1
+}
