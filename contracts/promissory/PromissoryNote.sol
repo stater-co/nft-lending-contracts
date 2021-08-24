@@ -44,9 +44,8 @@ contract StaterPromissoryNote is ERC721, Ownable {
     /* ********* */
 
 	//TODO: change the uri after the api implementation
-    constructor(address _lendingDataAddress, string memory name, string memory symbol) ERC721(name,symbol) {
-        lendingDataTemplate = LendingTemplate(_lendingDataAddress);
-    }
+	// Add the lendingDataAddress using the setter, no longer supported on smart contract constructor
+    constructor(string memory name, string memory symbol) ERC721(name,symbol) { }
     
     /* ********* */
     /* FUNCTIONS */

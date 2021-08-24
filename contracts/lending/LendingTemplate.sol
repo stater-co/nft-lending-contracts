@@ -123,22 +123,21 @@ contract LendingTemplate is Ownable, LendingCore {
 
   
     function setGlobalVariables(
-        uint256 _ltv, 
+        uint256 _ltv,  
         uint256 _interestRate, 
         uint256 _interestRateToStater, 
         uint32 _lenderFee,
         address _promissoryNoteAddress,
         address _lendingMethodsAddress,
         address _lendingDiscountsAddress
-    ) external onlyOwner lendingMethodsUp {
-        
-        (bool success, ) = lendingMethodsAddress.delegatecall(
-            abi.encodeWithSignature(
-                "setGlobalVariables(uint256,uint256,uint256,uint32,address,address,address)",
-                _ltv,_interestRate,_interestRateToStater,_lenderFee,_promissoryNoteAddress,_lendingMethodsAddress,_lendingDiscountsAddress
-            )
-        );
-        require(success,"Failed to setGlobalVariables via delegatecall");
+    ) external onlyOwner {
+        ltv = _ltv;
+        interestRate = _interestRate;
+        interestRateToStater = _interestRateToStater;
+        lenderFee = _lenderFee;
+        promissoryNoteAddress = _promissoryNoteAddress;
+        lendingMethodsAddress = _lendingMethodsAddress;
+        discounts = StaterDiscounts(_lendingDiscountsAddress);
     }
     
     function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external lendingMethodsUp promissoryNoteUp {
@@ -201,10 +200,6 @@ contract LendingTemplate is Ownable, LendingCore {
     
     function getLoanStartEnd(uint256 loanId) external view returns(uint256[2] memory) {
         return loans[loanId].startEnd;
-    }
-    
-    function getLoanApprovalCostOnly(uint256 loanId) external view returns(uint256) {
-        return loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discounts.calculateDiscount(msg.sender)));
     }
   
 }

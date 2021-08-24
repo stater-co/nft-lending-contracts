@@ -52,25 +52,6 @@ contract LendingMethods is Ownable, LendingCore {
         Status status
     );
     
-    
-    function setGlobalVariables(
-        uint256 _ltv,  
-        uint256 _interestRate, 
-        uint256 _interestRateToStater, 
-        uint32 _lenderFee,
-        address _promissoryNoteAddress,
-        address _lendingMethodsAddress,
-        address _lendingDiscountsAddress
-    ) external onlyOwner {
-        ltv = _ltv;
-        interestRate = _interestRate;
-        interestRateToStater = _interestRateToStater;
-        lenderFee = _lenderFee;
-        promissoryNoteAddress = _promissoryNoteAddress;
-        lendingMethodsAddress = _lendingMethodsAddress;
-        discounts = StaterDiscounts(_lendingDiscountsAddress);
-    }
-    
     // Borrower creates a loan
     function createLoan(
         uint256 loanAmount,
@@ -85,11 +66,9 @@ contract LendingMethods is Ownable, LendingCore {
         require(nftAddressArray.length == nftTokenIdArray.length && nftTokenIdArray.length == nftTokenTypeArray.length);
         
         loans[id].assetsValue = assetsValue;
-        /*
-         * @ Side note : _percent is missing from the LendingCore contract , in case of any error
-         */
-        // Compute loan to value ratio for current loan application
-        require(_percent(loanAmount, loans[id].assetsValue) <= ltv);
+        
+        // Checks the loan to value ration
+        checkLtv(loanAmount, loans[id].assetsValue);
         
         // Computing the defaulting limit
         if ( nrOfInstallments <= 3 )
@@ -150,7 +129,7 @@ contract LendingMethods is Ownable, LendingCore {
         require(nrOfInstallments > 0 && loanAmount > 0);
         require(loans[loanId].borrower == msg.sender);
         require(loans[loanId].status < Status.APPROVED);
-        require(_percent(loanAmount, assetsValue) <= ltv);
+        checkLtv(loanAmount, assetsValue);
         
 
         loans[loanId].installmentTime = installmentTime;
@@ -194,13 +173,7 @@ contract LendingMethods is Ownable, LendingCore {
         
         // Borrower assigned , status is 1 , first installment ( payment ) completed
         loans[loanId].lender = msg.sender;
-        loans[loanId].startEnd[1] = block.timestamp.add(
-            loans[loanId].nrOfInstallments.mul(
-                loans[loanId].installmentTime.div(
-                    loans[loanId].nrOfInstallments
-                )
-            )
-        );
+        loans[loanId].startEnd[1] = block.timestamp.add(loans[loanId].nrOfInstallments.mul(loans[loanId].installmentTime));
         loans[loanId].status = Status.APPROVED;
         loans[loanId].startEnd[0] = block.timestamp;
         uint256 discount = discounts.calculateDiscount(msg.sender);
@@ -232,9 +205,6 @@ contract LendingMethods is Ownable, LendingCore {
         require(loans[loanId].borrower == msg.sender);
         require(loans[loanId].status != Status.CANCELLED);
         require(loans[loanId].status == Status.LISTED);
-        
-        // We set its validity date as block.timestamp
-        loans[loanId].startEnd[1] = block.timestamp;
         loans[loanId].status = Status.CANCELLED;
 
         // We send the items back to him
@@ -304,12 +274,11 @@ contract LendingMethods is Ownable, LendingCore {
     function terminateLoan(uint256 loanId) external {
         require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender);
         require(loans[loanId].status != Status.WITHDRAWN);
-        require((block.timestamp >= loans[loanId].startEnd[1] || loans[loanId].paidAmount >= loans[loanId].amountDue) || lackOfPayment(loanId));
+        require((block.timestamp >= loans[loanId].startEnd[1] || loans[loanId].paidAmount >= loans[loanId].amountDue) || canBeTerminated(loanId));
         require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED);
 
-        if ( lackOfPayment(loanId) ) {
+        if ( canBeTerminated(loanId) ) {
             loans[loanId].status = Status.WITHDRAWN;
-            loans[loanId].startEnd[1] = block.timestamp;
             // We send the items back to lender
             transferItems(
                 address(this),

@@ -31,7 +31,7 @@ contract LendingCore is StaterTransfers {
     address public lendingMethodsAddress;
     StaterDiscounts public discounts;
     uint256 public id = 1; // the loan ID
-    uint256 public ltv = 600; // 60%
+    uint256 public ltv = 60; // 60%
     uint256 public interestRate = 20;
     uint256 public interestRateToStater = 40;
     uint32 public lenderFee = 100;
@@ -86,28 +86,19 @@ contract LendingCore is StaterTransfers {
      * @ => TRUE = Loan has exceed the maximum unpaid installments limit, lender can terminate the loan and get the NFTs
      * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
      */
-    function lackOfPayment(uint256 loanId) public view returns(bool) {
-        return 
-            loans[loanId].status == Status.APPROVED 
-                && 
-            loans[loanId].startEnd[0].add(
-                loans[loanId].nrOfPayments.mul(
-                    loans[loanId].installmentTime.div(
-                        loans[loanId].nrOfInstallments
-                    )
-                )
-            ) <= block.timestamp.sub(
-                loans[loanId].defaultingLimit.mul(
-                    loans[loanId].installmentTime.div(
-                        loans[loanId].nrOfInstallments
-                    )
-                )
-            );
+    function canBeTerminated(uint256 loanId) public view returns(bool) {
+        require(loans[loanId].status == Status.APPROVED, "Loan is not yet approved");
+        // return last paid installment date + defaultingLimit * installment time interval <= block.timestamp
+        return loans[loanId].startEnd[0].add(loans[loanId].nrOfPayments.mul(loans[loanId].installmentTime)).add(loans[loanId].defaultingLimit.mul(loans[loanId].installmentTime)) <= min(block.timestamp,loans[loanId].startEnd[1]);
     }
 
-    // Calculates loan to value ratio
-    function _percent(uint256 numerator, uint256 denominator) public pure returns(uint256) {
-        return numerator.mul(10000).div(denominator).add(5).div(10);
+    // Checks the loan to value ratio
+    function checkLtv(uint256 loanValue, uint256 assetsValue) internal view {
+        require(loanValue <= assetsValue / 100 * ltv, "LTV too high");
     }
 
+
+    function min(uint256 a, uint256 b) internal pure returns(uint256) {
+        return a < b ? a : b;
+    }
 }

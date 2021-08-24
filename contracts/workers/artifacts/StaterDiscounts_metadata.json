@@ -171,6 +171,30 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "tokenGeyser",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "getTotalStakedFor",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "owner",
 				"outputs": [
@@ -235,7 +259,7 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
@@ -282,11 +306,11 @@
 			]
 		},
 		"contracts/workers/StaterDiscounts.sol": {
-			"keccak256": "0xaa9da510c6a6098b47427bc6fa36eeaf696d8c45d55c80c4aef2c6755b9e52f0",
+			"keccak256": "0x9380e61866d4f233ed4c5a09c19b5faffe4486ba5768e4f7615174dfe8ef7f4f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c1820f73ece83bb225a3c8190241b042ffe71d87b6408fe35e2588918e0d6b97",
-				"dweb:/ipfs/QmcwZZGqZ34Gtv6HZKyBVHNbiCrGfi2WqEUZPkFdRDDMQN"
+				"bzz-raw://61f4f02a4b3a2a17866582a821e5e6245f38a5bafafc89a5c7cbc8ed25db6728",
+				"dweb:/ipfs/QmRP9BjDaH9E2i68mUFWRwjT66PsXrhPaa8kPbn43UvuNB"
 			]
 		}
 	},

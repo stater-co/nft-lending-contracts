@@ -52,31 +52,35 @@ contract StaterDiscounts is Ownable {
      */
     function calculateDiscount(address requester) public view returns(uint256){
         uint256 toReturn = 1;
-        for (uint i = 0; i < discountId; ++i){
+        for (uint i = 0; i < discountId; ++i) {
             
             // token type 1 is first to check to ensure the biggest discount will be applied
             // if user has a erc 1155 for discount
             if ( discounts[i].tokenType == 1 )
                 for (uint j = 0; j < discounts[i].tokenIds.length ; ++j)
-                    if ( toReturn < discounts[i].discount )
+                    if ( ( toReturn > discounts[i].discount || toReturn == 1 ) && discounts[i].discount > 1 )
                         if ( IERC1155(discounts[i].tokenContract).balanceOf(requester,discounts[i].tokenIds[j]) > 0 )
-        	                toReturn = discounts[i].discount;    
+                            toReturn = discounts[i].discount;    
 
             // if user has a geyser stake for discount
             if ( discounts[i].tokenType == 2 )
-                if ( toReturn < discounts[i].discount )
+                if ( ( toReturn > discounts[i].discount || toReturn == 1 ) && discounts[i].discount > 1 )
                     if ( Geyser(discounts[i].tokenContract).totalStakedFor(requester) > 0 )
-                        toReturn = discounts[i].discount;
-        	            
+    	                toReturn = discounts[i].discount;  
+
             // if user has a erc 721 for discount 
             if ( discounts[i].tokenType == 0 )
                 for (uint j = 0; j < discounts[i].tokenIds.length ; ++j)
-                    if ( toReturn < discounts[i].discount )
+                    if ( ( toReturn > discounts[i].discount || toReturn == 1 ) && discounts[i].discount > 1 )
                         if ( IERC721(discounts[i].tokenContract).ownerOf(discounts[i].tokenIds[j]) == requester )
-                            toReturn = discounts[i].discount;
+        	               toReturn = discounts[i].discount;  
                         
         }                
         return toReturn;
+    }
+    
+    function getTotalStakedFor(address tokenGeyser, address user) external view returns(uint256) {
+        return Geyser(tokenGeyser).totalStakedFor(user);
     }
 
 }
