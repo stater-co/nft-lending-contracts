@@ -4,6 +4,7 @@ const { ethers } = require("hardhat");
 
 
 let discounts, erc721, erc1155, tokenGeyser, stakingTokens, distributionTokens;
+const nrOfERC721Tokens = 100, nrOfERC1155Tokens = 100, quantityOfERC1155Tokens = 1000;
 
 
 describe("Smart Contracts Setup", function () {
@@ -59,27 +60,34 @@ describe("Smart Contracts Setup", function () {
 
 describe("Preparations", function () {
 
-  it("Create ERC721 token, 1", async function () {
-    let operation = await erc721.createItem("Token 1", "Token 1 description", "Token 1 URL");
-    expect(operation.hash).to.have.lengthOf(66);
-  });
-
-  it("Create ERC721 token, 2", async function () {
-    let operation = await erc721.createItem("Token 2", "Token 2 description", "Token 2 URL");
-    expect(operation.hash).to.have.lengthOf(66);
-  });
-
-  it("Create ERC721 token, 3", async function () {
-    let operation = await erc721.createItem("Token 3", "Token 3 description", "Token 3 URL");
-    expect(operation.hash).to.have.lengthOf(66);
+  it("Create " + nrOfERC721Tokens + " ERC721 tokens", async function () {
+    for ( let i = 0 ; i < nrOfERC721Tokens ; ++i ) {
+      let operation = await erc721.createItem("Token 1", "Token 1 description", "Token 1 URL");
+      expect(operation.hash).to.have.lengthOf(66);
+    }
   });
 
   it("Verify ERC721 tokens ownership", async function () {
     const [deployer] = await ethers.getSigners();
     let operation = await erc721.balanceOf(deployer.address);
-    expect(BigNumber.eq(BigNumber.from(3)));
+    expect(BigNumber.from(nrOfERC721Tokens) === operation.hex);
+  });
 
-    
+  it("Create " + nrOfERC1155Tokens + " ERC1155 tokens", async function () {
+    const [deployer] = await ethers.getSigners();
+    for ( let i = 0 ; i < nrOfERC1155Tokens ; ++i ) {
+      let operation = await erc1155.createTokens(deployer.address,i,quantityOfERC1155Tokens,'0x00',"name","description","image url");
+      expect(operation.hash).to.have.lengthOf(66);
+    }
+  });
+
+  it("Verify ERC1155 tokens ownership", async function () {
+    const [deployer] = await ethers.getSigners();
+    for ( let i = 0 ; i < nrOfERC1155Tokens ; ++i ) {
+      let operation = await erc1155.balanceOf(deployer.address,i);
+      console.log(">> " + i + " === " + JSON.stringify(operation));
+      expect(BigNumber.from(quantityOfERC1155Tokens) === operation.hex);
+    }
   });
 
 });
