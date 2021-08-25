@@ -15,7 +15,7 @@ contract LendingTemplate is Ownable, LendingCore {
     ) {
         promissoryNoteAddress = _promissoryNoteAddress;
         lendingMethodsAddress = _lendingMethodsAddress;
-        discounts = StaterDiscounts(_lendingDiscountsAddress);
+        discounts = IStaterDiscounts(_lendingDiscountsAddress);
     }
     
     modifier lendingMethodsUp {
@@ -137,7 +137,7 @@ contract LendingTemplate is Ownable, LendingCore {
         lenderFee = _lenderFee;
         promissoryNoteAddress = _promissoryNoteAddress;
         lendingMethodsAddress = _lendingMethodsAddress;
-        discounts = StaterDiscounts(_lendingDiscountsAddress);
+        discounts = IStaterDiscounts(_lendingDiscountsAddress);
     }
     
     function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external lendingMethodsUp promissoryNoteUp {

@@ -465,8 +465,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/workers/StaterDiscounts.sol": {
-      "lastModificationDate": 1629871544169,
-      "contentHash": "933143334b6bcbd8f896600f672b858a",
+      "lastModificationDate": 1629876672415,
+      "contentHash": "5c74c60180513c7c507258cc64086e80",
       "sourceName": "contracts/workers/StaterDiscounts.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -3142,45 +3142,6 @@
         "ERC1155Pausable"
       ]
     },
-    "/home/gheoneaemil5/nft-lending-contracts/contracts/external-workers/StaterDiscounts.sol": {
-      "lastModificationDate": 1629875612120,
-      "contentHash": "7213e572f0be2f9a7583aff5d2092f37",
-      "sourceName": "contracts/external-workers/StaterDiscounts.sol",
-      "solcConfig": {
-        "version": "0.7.6",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../libs/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol",
-        "../libs/multi-token-standard/contracts/interfaces/IERC1155.sol",
-        "../libs/openzeppelin-solidity/contracts/access/Ownable.sol"
-      ],
-      "versionPragmas": [
-        "0.7.6"
-      ],
-      "artifacts": [
-        "Geyser",
-        "StaterDiscounts"
-      ]
-    },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/access/TimelockController.sol": {
       "lastModificationDate": 1629871544165,
       "contentHash": "d1ad44453ff9ce36dfcfa4f5dd243d19",
@@ -3589,8 +3550,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingTemplate.sol": {
-      "lastModificationDate": 1629871544149,
-      "contentHash": "4675809a410ff4d89dd75861bc028607",
+      "lastModificationDate": 1629876775308,
+      "contentHash": "c26121ad4bcb007e50b4f5bb487da384",
       "sourceName": "contracts/lending/LendingTemplate.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -3627,8 +3588,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingCore.sol": {
-      "lastModificationDate": 1629871544149,
-      "contentHash": "66e84d184a8612d85a8ad092c18c04ac",
+      "lastModificationDate": 1629876754352,
+      "contentHash": "a0399afbc0d288d66291deb87a6b6435",
       "sourceName": "contracts/lending/LendingCore.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -3654,14 +3615,14 @@
       },
       "imports": [
         "../plugins/StaterTransfers.sol",
-        "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol"
+        "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol",
+        "../workers/IStaterDiscounts.sol"
       ],
       "versionPragmas": [
         "0.7.6"
       ],
       "artifacts": [
-        "LendingCore",
-        "StaterDiscounts"
+        "LendingCore"
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingMethods.sol": {
@@ -4322,6 +4283,40 @@
       ],
       "artifacts": [
         "SafeCast"
+      ]
+    },
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/workers/IStaterDiscounts.sol": {
+      "lastModificationDate": 1629876828228,
+      "contentHash": "fa0bf1d3f2d017adbaa2cdbbdb81f793",
+      "sourceName": "contracts/workers/IStaterDiscounts.sol",
+      "solcConfig": {
+        "version": "0.7.6",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.7.6"
+      ],
+      "artifacts": [
+        "IStaterDiscounts"
       ]
     }
   }

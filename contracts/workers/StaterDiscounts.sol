@@ -78,9 +78,4 @@ contract StaterDiscounts is Ownable {
         }                
         return toReturn;
     }
-    
-    function getTotalStakedFor(address tokenGeyser, address user) external view returns(uint256) {
-        return Geyser(tokenGeyser).totalStakedFor(user);
-    }
-
 }

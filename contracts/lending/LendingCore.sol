@@ -2,10 +2,7 @@
 pragma solidity 0.7.6;
 import "../plugins/StaterTransfers.sol";
 import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
-interface StaterDiscounts {
-    function calculateDiscount(address requester) external view returns(uint256);
-}
-
+import "../workers/IStaterDiscounts.sol";
 
 contract LendingCore is StaterTransfers {
     using SafeMath for uint256;
@@ -29,7 +26,7 @@ contract LendingCore is StaterTransfers {
      */
     address public promissoryNoteAddress;
     address public lendingMethodsAddress;
-    StaterDiscounts public discounts;
+    IStaterDiscounts public discounts;
     uint256 public id = 1; // the loan ID
     uint256 public ltv = 60; // 60%
     uint256 public interestRate = 20;
