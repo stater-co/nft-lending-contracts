@@ -3550,7 +3550,7 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingTemplate.sol": {
-      "lastModificationDate": 1629876775308,
+      "lastModificationDate": 1629897156569,
       "contentHash": "c26121ad4bcb007e50b4f5bb487da384",
       "sourceName": "contracts/lending/LendingTemplate.sol",
       "solcConfig": {
@@ -3588,8 +3588,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingCore.sol": {
-      "lastModificationDate": 1629876754352,
-      "contentHash": "a0399afbc0d288d66291deb87a6b6435",
+      "lastModificationDate": 1629896998292,
+      "contentHash": "0eb62ee51761dfbc4466d2cd61341e5e",
       "sourceName": "contracts/lending/LendingCore.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -3626,8 +3626,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingMethods.sol": {
-      "lastModificationDate": 1629871544149,
-      "contentHash": "5b8c21021366b0fb75b486f6452d3b5c",
+      "lastModificationDate": 1629897151565,
+      "contentHash": "c122129d7dfeff0407e81bc3df394402",
       "sourceName": "contracts/lending/LendingMethods.sol",
       "solcConfig": {
         "version": "0.7.6",
