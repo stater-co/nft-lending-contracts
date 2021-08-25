@@ -134,7 +134,7 @@ contract LendingCore is StaterTransfers {
 
     // Checks the loan to value ratio
     function checkLtv(uint256 loanValue, uint256 assetsValue) internal view {
-        require(loanValue <= assetsValue.div(uint256(100).mul(ltv)), "LTV too high");
+        require(loanValue <= assetsValue.div(100).mul(ltv), "LTV too high");
     }
 
 
