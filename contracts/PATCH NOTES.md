@@ -27,3 +27,15 @@
 #### 4. Support for custom token loan payments
 
 ##### Now the borrower will be able to pay his loan with custom tokens more efficiently, using the new custom tokens payment handler.
+
+<br />
+
+#### 5. Promissory Note
+
+##### Loans can now be used by promissory notes, a promissory note can have many loans, a loan can have only one promissory note.
+
+<br />
+
+#### 6. Stater discounts
+
+##### A fresh new smart contract to handle multiple discounts for lending users. Best discount will be automatically used for a user.

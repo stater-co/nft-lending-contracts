@@ -1,0 +1,22 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "LibEIP712",
+  "sourceName": "contracts/libs/multi-token-standard/contracts/mocks/ERC1271WalletValidationMock.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "domain_hash_1155",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "bytecode": "0x6080604052348015600f57600080fd5b506040516094380380609483398181016040526020811015602f57600080fd5b81019080805190602001909291905050508060008190555050603f8060556000396000f3fe6080604052600080fdfea264697066735822122027aea1db4714b57c1e8cb9ec53515d52ab0be3da0c25129cc42c986e21acafe664736f6c63430007060033",
+  "deployedBytecode": "0x6080604052600080fdfea264697066735822122027aea1db4714b57c1e8cb9ec53515d52ab0be3da0c25129cc42c986e21acafe664736f6c63430007060033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
