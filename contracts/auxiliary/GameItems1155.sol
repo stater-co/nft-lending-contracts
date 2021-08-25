@@ -20,7 +20,7 @@ contract GameItems1155 is ERC1155, Ownable {
     
     Item[] public items;
 
-    constructor(string memory uri) ERC1155(uri) {}
+    constructor() ERC1155("Test ERC1155") {}
     
     // Can be used for both fungible and non fungible tokens
     function createTokens(address receiver, uint256 tokenId, uint256 quantity, bytes memory info, string calldata name, string calldata description, string calldata image_url) external onlyOwner {

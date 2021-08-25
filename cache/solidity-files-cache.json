@@ -70,8 +70,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/auxiliary/GameItems1155.sol": {
-      "lastModificationDate": 1629871544149,
-      "contentHash": "951bd7f907f17aae107065b12269f5a4",
+      "lastModificationDate": 1629877152258,
+      "contentHash": "b4f3147c15e656447b45c6ce305c3ee5",
       "sourceName": "contracts/auxiliary/GameItems1155.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -2914,8 +2914,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/auxiliary/GameItems721.sol": {
-      "lastModificationDate": 1629871544149,
-      "contentHash": "d6653a5b5add59c4de82650dbd251055",
+      "lastModificationDate": 1629877164807,
+      "contentHash": "7620b8c729423f24362af491fe27c0b6",
       "sourceName": "contracts/auxiliary/GameItems721.sol",
       "solcConfig": {
         "version": "0.7.6",

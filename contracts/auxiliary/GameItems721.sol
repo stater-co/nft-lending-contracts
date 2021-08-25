@@ -12,7 +12,7 @@ import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 
 contract GameItems721 is ERC721, Ownable {
 
-    constructor() ERC721("GameItem", "ITM") {}
+    constructor() ERC721("Test ERC721", "TERC721") {}
 
     event ItemCreation(uint256 indexed itemId, address indexed owner, string name, string description, string image_url);
 
