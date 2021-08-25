@@ -171,30 +171,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "tokenGeyser",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "user",
-						"type": "address"
-					}
-				],
-				"name": "getTotalStakedFor",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "owner",
 				"outputs": [
@@ -306,11 +282,11 @@
 			]
 		},
 		"contracts/workers/StaterDiscounts.sol": {
-			"keccak256": "0x9380e61866d4f233ed4c5a09c19b5faffe4486ba5768e4f7615174dfe8ef7f4f",
+			"keccak256": "0xf08d3550d3b43c6b9709642ec90c3fcde5510965910669fe6c174f47f94f9582",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://61f4f02a4b3a2a17866582a821e5e6245f38a5bafafc89a5c7cbc8ed25db6728",
-				"dweb:/ipfs/QmRP9BjDaH9E2i68mUFWRwjT66PsXrhPaa8kPbn43UvuNB"
+				"bzz-raw://1223d8ee2167fbcd35e0f4297c74f749716af5763689271ad7a262a1350a5691",
+				"dweb:/ipfs/QmWounY7DkGayEVwksBea7hsh4uWk367zUYPxgngSvpGw4"
 			]
 		}
 	},
