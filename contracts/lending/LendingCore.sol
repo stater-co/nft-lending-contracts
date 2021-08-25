@@ -9,6 +9,49 @@ contract LendingCore is StaterTransfers {
     using SafeMath for uint8;
     
     /*
+     * @DIIMIIM : The loan events
+     */
+    event NewLoan(
+        address indexed owner,
+        address indexed currency,
+        uint256 indexed loanId,
+        address[] nftAddressArray,
+        uint256[] nftTokenIdArray,
+        uint8[] nftTokenTypeArray
+    );
+    event EditLoan(
+        address indexed currency,
+        uint256 indexed loanId,
+        uint256 loanAmount,
+        uint256 amountDue,
+        uint256 installmentAmount,
+        uint256 assetsValue,
+        uint256 frequencyTime,
+        uint256 frequencyTimeUnit
+    );
+    event LoanApproved(
+        address indexed lender,
+        uint256 indexed loanId,
+        uint256 loanPaymentEnd
+    );
+    event LoanCancelled(
+        uint256 indexed loanId
+    );
+    event ItemsWithdrawn(
+        address indexed requester,
+        uint256 indexed loanId,
+        Status status
+    );
+    event LoanPayment(
+        uint256 indexed loanId,
+        uint256 installmentAmount,
+        uint256 amountPaidAsInstallmentToLender,
+        uint256 interestPerInstallement,
+        uint256 interestToStaterPerInstallement,
+        Status status
+    );
+    
+    /*
      * @DIIMIIM Public & global variables for the lending contract
      * id : the loan ID, id will be the actual loans mapping length
      * ltv : max allowed 60%
@@ -91,7 +134,7 @@ contract LendingCore is StaterTransfers {
 
     // Checks the loan to value ratio
     function checkLtv(uint256 loanValue, uint256 assetsValue) internal view {
-        require(loanValue <= assetsValue / 100 * ltv, "LTV too high");
+        require(loanValue <= assetsValue.div(100).mul(ltv), "LTV too high");
     }
 
 
