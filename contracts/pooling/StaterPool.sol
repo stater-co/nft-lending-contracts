@@ -4,17 +4,14 @@ import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../libs/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 import "../plugins/StaterTransfers.sol";
-
-interface LendingTemplate {
-    function getLoanApprovalCostOnly(uint256 loanId) external view returns(uint256);
-}
+import "../lending/ILendingTemplate.sol";
 
 
 contract StaterPool is Ownable, StaterTransfers {
     using SafeMath for uint256;
     using SafeMath for uint32;
     uint256 public id = 1;
-    LendingTemplate public lendingDataTemplate;
+    ILendingTemplate public lendingDataTemplate;
     enum Status{ 
         LISTED, 
         CANCELLED,
@@ -110,7 +107,7 @@ contract StaterPool is Ownable, StaterTransfers {
 
     
     constructor(address _lendingDataAddress) {
-        lendingDataTemplate = LendingTemplate(_lendingDataAddress);
+        lendingDataTemplate = ILendingTemplate(_lendingDataAddress);
     }
 
 
@@ -260,7 +257,8 @@ contract StaterPool is Ownable, StaterTransfers {
                 loanId = pools[poolId].votes[i];
             }
         }
-        require(lendingDataTemplate.getLoanApprovalCostOnly(loanId) <= this.getPoolTotalFunds(pools[poolId].paid), "Not enough funds to pick this loan");
+        (uint256 loanApprovalCost,,,,) = lendingDataTemplate.getLoanApprovalCost(loanId);
+        require(loanApprovalCost <= this.getPoolTotalFunds(pools[poolId].paid), "Not enough funds to pick this loan");
         
         pools[poolId].loan = loanId;
         pools[poolId].status = Status.VOTED;

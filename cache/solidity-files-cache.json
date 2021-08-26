@@ -1774,8 +1774,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/pooling/StaterPool.sol": {
-      "lastModificationDate": 1629871544169,
-      "contentHash": "64f071e31d185d88ea5d9217982012eb",
+      "lastModificationDate": 1629961091030,
+      "contentHash": "8a62e579b155e93f66e3e1a7680f56e9",
       "sourceName": "contracts/pooling/StaterPool.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -1803,13 +1803,13 @@
         "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol",
         "../libs/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol",
         "../libs/openzeppelin-solidity/contracts/access/Ownable.sol",
-        "../plugins/StaterTransfers.sol"
+        "../plugins/StaterTransfers.sol",
+        "../lending/ILendingTemplate.sol"
       ],
       "versionPragmas": [
         "0.7.6"
       ],
       "artifacts": [
-        "LendingTemplate",
         "StaterPool"
       ]
     },
@@ -2760,8 +2760,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/promissory/PromissoryNote.sol": {
-      "lastModificationDate": 1629871544169,
-      "contentHash": "579b08d14f22cd8ada51231b248e40d6",
+      "lastModificationDate": 1629961373068,
+      "contentHash": "52528ad0fed5fce6481f425bd0de99ee",
       "sourceName": "contracts/promissory/PromissoryNote.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -2787,13 +2787,13 @@
       },
       "imports": [
         "../libs/openzeppelin-solidity/contracts/token/ERC721/ERC721.sol",
-        "../libs/openzeppelin-solidity/contracts/access/Ownable.sol"
+        "../libs/openzeppelin-solidity/contracts/access/Ownable.sol",
+        "../lending/ILendingTemplate.sol"
       ],
       "versionPragmas": [
         "0.7.6"
       ],
       "artifacts": [
-        "LendingTemplate",
         "StaterPromissoryNote"
       ]
     },
@@ -3769,42 +3769,6 @@
         "StakingTokens"
       ]
     },
-    "/home/gheoneaemil5/nft-lending-contracts/contracts/Greeter.sol": {
-      "lastModificationDate": 1629875200900,
-      "contentHash": "c3a9d9972705a6745dea9a493f9ec952",
-      "sourceName": "contracts/Greeter.sol",
-      "solcConfig": {
-        "version": "0.7.6",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "hardhat/console.sol"
-      ],
-      "versionPragmas": [
-        "^0.7.6"
-      ],
-      "artifacts": [
-        "Greeter"
-      ]
-    },
     "/home/gheoneaemil5/nft-lending-contracts/node_modules/hardhat/console.sol": {
       "lastModificationDate": 1629874789045,
       "contentHash": "cc4777addd464ea56fa35b1c45df0591",
@@ -4317,6 +4281,40 @@
       ],
       "artifacts": [
         "IStaterDiscounts"
+      ]
+    },
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/ILendingTemplate.sol": {
+      "lastModificationDate": 1629961333676,
+      "contentHash": "dfb3360d7b22d55f9819ea11d2f848eb",
+      "sourceName": "contracts/lending/ILendingTemplate.sol",
+      "solcConfig": {
+        "version": "0.7.6",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.7.6"
+      ],
+      "artifacts": [
+        "ILendingTemplate"
       ]
     }
   }

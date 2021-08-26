@@ -3,11 +3,8 @@
 pragma solidity 0.7.6;
 import "../libs/openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
+import "../lending/ILendingTemplate.sol";
 
-interface LendingTemplate {
-    function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external;
-    function setPromissoryPermissions(uint256[] calldata loanIds, address sender, address allowed) external;
-}
 
 /**
  * @title StaterPromissoryNote
@@ -37,7 +34,7 @@ contract StaterPromissoryNote is ERC721, Ownable {
     
     /// @dev It needs to start with 1 so 0 can be used as "no promissory note assigned" status on the lending smart contract
     uint256 public promissoryNoteId = 1;
-    LendingTemplate public lendingDataTemplate;
+    ILendingTemplate public lendingDataTemplate;
     
     /* ********* */
     /* CONSTANTS */
@@ -131,7 +128,7 @@ contract StaterPromissoryNote is ERC721, Ownable {
      * @param _lendingDataAddress The address of the stater lending contract
      */ 
     function setLendingDataAddress(address _lendingDataAddress) external onlyOwner {
-        lendingDataTemplate = LendingTemplate(_lendingDataAddress);
+        lendingDataTemplate = ILendingTemplate(_lendingDataAddress);
     }
     
     function _burn(uint256 _promissoryNoteId) internal override {
