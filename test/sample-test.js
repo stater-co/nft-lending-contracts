@@ -4,8 +4,22 @@ const { ethers } = require("hardhat");
 
 
 let discounts, erc721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote, lendingMethods, lendingTemplate, erc20;
-const nrOfERC721Tokens = 100, nrOfERC1155Tokens = 100, quantityOfERC1155Tokens = 1000;
-const nrOfWorkflowsToTest = 5;
+let currentErc721TokensUsage = 0, currentErc1155TokensUsage = 0;
+const address0x0 = "0x0000000000000000000000000000000000000000";
+const nrOfWorkflowsToTest = 10;
+const initialLoanId = 1;
+const nrOfERC721Tokens = 5000, nrOfERC1155Tokens = 1000, quantityOfERC1155Tokens = 50000;
+
+
+function generateLoanParams() {
+  let randomValue = Math.floor(Math.random() * 99999999) + 1;
+  let randomLtv = Math.floor(Math.random() * 60) + 1;
+  let assetsValue = randomValue;
+  let loanValue = parseInt((assetsValue / 100) * randomLtv);
+  let nrOfInstallments = Math.floor(Math.random() * 20) + 1;
+  let currency = Math.floor(Math.random() * 2) + 1 === 1 ? address0x0 : erc20.address;
+  return [assetsValue,loanValue,nrOfInstallments,currency];
+}
 
 
 describe("Smart Contracts Setup", function () {
@@ -128,7 +142,7 @@ describe("Preparations", function () {
   });
 
   it("Should create the ERC721 discount", async function () {
-    const operation = await discounts.addDiscount(0,erc721.address,4,[...Array(nrOfERC721Tokens).keys()]);
+    const operation = await discounts.addDiscount(0,erc721.address,4,[...Array(Math.min(nrOfERC721Tokens,100)).keys()]);
     expect(operation.hash).to.have.lengthOf(66);
   });
 
@@ -215,50 +229,112 @@ describe("Preparations", function () {
 
 describe("Lending Unit Tests", function () {
 
-  for ( let i = 0 , l = nrOfWorkflowsToTest; i < l; ++i ) {
-    it("Create loan: " + i, async function () {
-      const randomValue = Math.floor(Math.random() * 999999999999999) + 1;
-      const randomLtv = Math.floor(Math.random() * 60) + 1;
-      const assetsValue = randomValue;
-      const loanValue = parseInt((assetsValue / 100) * randomLtv);
-      const nrOfInstallments = Math.floor(Math.random() * 20) + 1;
-      const currency = Math.floor(Math.random() * 2) + 1 === 1 ? "0x0000000000000000000000000000000000000000" : erc20.address;
+  for ( let i = 1 , l = nrOfWorkflowsToTest; i <= l; ++i ) {
+
+    it("Create loan " + i, async function () {
+      const [deployer] = await ethers.getSigners();
       const nrOfAssets = Math.floor(Math.random() * 10) + 1;
+      let params = generateLoanParams();
+      let assetsValue = params[0];
+      let loanValue = params[1];
+      let nrOfInstallments = params[2];
+      let currency = params[3];
       let nftAddressArray = [];
       let nftTokenIdArray = [];
       let nftTokenTypeArray = [];
-      let randomTokenId;
+      console.log("Getting assets for loan: " + i);
       for ( let i = 0 , l = nrOfAssets; i < l; ++i ) {
         const assetType = Math.floor(Math.random() * 2);
         switch ( assetType ) {
           case 0:
             // ERC721
-            randomTokenId = Math.floor(Math.random() * nrOfERC721Tokens);
             nftAddressArray.push(erc721.address);
-            nftTokenIdArray.push(randomTokenId);
+            nftTokenIdArray.push(currentErc721TokensUsage++);
           break;
 
           case 1:
             // ERC1155
-            randomTokenId = Math.floor(Math.random() * nrOfERC1155Tokens);
             nftAddressArray.push(erc1155.address);
-            nftTokenIdArray.push(randomTokenId);
+            nftTokenIdArray.push(currentErc1155TokensUsage++);
           break;
         }
         nftTokenTypeArray.push(assetType);
       }
 
-      console.log("============= " + i + " =============");
-      console.log(loanValue + " | " + nrOfInstallments + " | " + currency + " | " + assetsValue + " | " + nftAddressArray + " | " + nftTokenIdArray + " | " + nftTokenTypeArray);
+      console.log("Create loan " + i + " with : " + nftTokenIdArray + " and " + nftTokenTypeArray);
       const operation = await lendingTemplate.createLoan(loanValue,nrOfInstallments,currency,assetsValue,nftAddressArray,nftTokenIdArray,nftTokenTypeArray);
       expect(operation.hash).to.have.lengthOf(66);
       
     });
 
     it("Check loan " + i + " existence", async function () {
-      const loan = await lendingTemplate.loans(i+1);
-      expect(loan !== undefined);
+      const loan = await lendingTemplate.loans(i);
+      expect(loan[0] !== address0x0);
     });
+
+    const willEdit = Math.floor(Math.random() * 2) + 1 === 1 ? true : false;
+  
+    if ( willEdit ) {
+      let initialLoan;
+
+      it("Edit loan " + i, async function () {
+
+        let params = generateLoanParams();
+        let assetsValue = params[0];
+        let loanValue = params[1];
+        let nrOfInstallments = params[2];
+        let currency = params[3];
+  
+        /* Somewhere between 1 week and 3 months */
+        let installmentTime = Math.floor(Math.random() * 7889231) + 604800;
+        
+        initialLoan = await lendingTemplate.loans(i);
+
+        console.log("Edit loan: " + i + " >> " + loanValue,nrOfInstallments,currency,assetsValue,installmentTime);
+        const operation = await lendingTemplate.editLoan(i,loanValue,nrOfInstallments,currency,assetsValue,installmentTime);
+        expect(operation.hash).to.have.lengthOf(66);
+
+      });
+
+      it("Check loan edit " + i, async function () {
+        const loan = await lendingTemplate.loans(i);
+        expect(loan[4].hex !== initialLoan[4].hex || loan[2] !== initialLoan[2] || loan[6].hex !== initialLoan[6].hex || loan[7].hex !== initialLoan[7].hex || loan[12] !== initialLoan[12]);
+      });
+      
+    }
+
+    const willCancel = Math.floor(Math.random() * 10) + 1 <= 2 ? true : false;
+    if ( willCancel ) {
+      it("Cancel loan " + i, async function () {
+        const operation = await lendingTemplate.cancelLoan(i);
+        expect(operation.hash).to.have.lengthOf(66);
+      });
+      it("Check loan " + i + " cancellation", async function () {
+        const cancelledLoan = await lendingTemplate.loans(i);
+        expect(cancelledLoan[3] === 3);
+      });
+    }
+
+    const willApprove = Math.floor(Math.random() * 10) + 1 > 2 ? true : false;
+    if ( willApprove ) {
+      it("Approve loan " + i, async function () {
+        const approvalCosts = await lendingTemplate.getLoanApprovalCost(i);
+        console.log(JSON.stringify(approvalCosts[0].hex) + " && " + approvalCosts[0].hex);
+        const operation = await lendingTemplate.approveLoan(i, { value: approvalCosts[0].hex });
+        expect(operation.hash).to.have.lengthOf(66);
+      });
+    }
+
   }
+
+});
+
+describe("Finishing Test Results", function () {
+
+  it("Check loan id", async function () {
+    const lastLoan = await lendingTemplate.loans(nrOfWorkflowsToTest);
+    const afterLastLoan = await lendingTemplate.loans(nrOfWorkflowsToTest + nrOfWorkflowsToTest);
+    expect(lastLoan[0] !== address0x0 && afterLastLoan === address0x0);
+  });
 
 });

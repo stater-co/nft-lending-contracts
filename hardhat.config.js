@@ -20,6 +20,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  */
 module.exports = {
   solidity: "0.7.6",
+  blockGasLimit: 90_000_000_000,
   networks: {
     rinkeby: {
       url: process.env.URL,
@@ -52,6 +53,20 @@ module.exports = {
     bsc: {
       url: process.env.URL,
       accounts: [process.env.ACCOUNT_PRIVATE_KEY]
+    },
+    hardhat: {
+
+      /**
+       * @DIIMIIM: This will set the block gas limit with 90kkk
+       * Available on local network only
+       */
+      blockGasLimit: 90_000_000_000
     }
+  },
+  mocha: {
+    /**
+     * @DIIMIIM: Required to surpass the default promise timeout (20k)
+     */
+    timeout: 100000
   }
 };
