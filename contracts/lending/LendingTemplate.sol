@@ -7,6 +7,7 @@ import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 
 contract LendingTemplate is Ownable, LendingCore {
     using SafeMath for uint256;
+    using SafeMath for uint16;
 
     constructor(
         address _promissoryNoteAddress,
@@ -78,6 +79,7 @@ contract LendingTemplate is Ownable, LendingCore {
             )
         );
         require(success,"Failed to approveLoan via delegatecall");
+
     }
     
 

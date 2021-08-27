@@ -70,8 +70,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/auxiliary/GameItems1155.sol": {
-      "lastModificationDate": 1629877152258,
-      "contentHash": "b4f3147c15e656447b45c6ce305c3ee5",
+      "lastModificationDate": 1630076911846,
+      "contentHash": "eb7f73cdbd8b78c2d59244acd829861b",
       "sourceName": "contracts/auxiliary/GameItems1155.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -97,7 +97,9 @@
       },
       "imports": [
         "../libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol",
-        "../libs/openzeppelin-solidity/contracts/access/Ownable.sol"
+        "../libs/openzeppelin-solidity/contracts/access/Ownable.sol",
+        "../libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Holder.sol",
+        "../libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Receiver.sol"
       ],
       "versionPragmas": [
         "0.7.6"
@@ -3550,8 +3552,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingTemplate.sol": {
-      "lastModificationDate": 1629897156569,
-      "contentHash": "c26121ad4bcb007e50b4f5bb487da384",
+      "lastModificationDate": 1630073756498,
+      "contentHash": "3ac93a2c1ff3cfea4edbbe52747864bb",
       "sourceName": "contracts/lending/LendingTemplate.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -3588,8 +3590,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingCore.sol": {
-      "lastModificationDate": 1629896998292,
-      "contentHash": "0eb62ee51761dfbc4466d2cd61341e5e",
+      "lastModificationDate": 1630054838882,
+      "contentHash": "76afa1078532157e4bd352ea60552848",
       "sourceName": "contracts/lending/LendingCore.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -3626,7 +3628,7 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingMethods.sol": {
-      "lastModificationDate": 1629897151565,
+      "lastModificationDate": 1630054254769,
       "contentHash": "c122129d7dfeff0407e81bc3df394402",
       "sourceName": "contracts/lending/LendingMethods.sol",
       "solcConfig": {
