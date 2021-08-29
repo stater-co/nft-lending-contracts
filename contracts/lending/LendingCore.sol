@@ -141,4 +141,9 @@ contract LendingCore is StaterTransfers {
     function min(uint256 a, uint256 b) internal pure returns(uint256) {
         return a < b ? a : b;
     }
+
+    function getLoanStartEnd(uint256 loanId) external view returns(uint256[2] memory) {
+        return loans[loanId].startEnd;
+    }
+
 }

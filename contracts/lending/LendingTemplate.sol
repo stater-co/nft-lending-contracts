@@ -68,7 +68,6 @@ contract LendingTemplate is Ownable, LendingCore {
         require(success,"Failed to editLoan via delegatecall");
     }
 
-
     // Lender approves a loan
     function approveLoan(uint256 loanId) external payable lendingMethodsUp {
         
@@ -81,7 +80,6 @@ contract LendingTemplate is Ownable, LendingCore {
         require(success,"Failed to approveLoan via delegatecall");
 
     }
-    
 
     // Borrower cancels a loan
     function cancelLoan(uint256 loanId) external lendingMethodsUp {
@@ -167,7 +165,6 @@ contract LendingTemplate is Ownable, LendingCore {
     function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {
         return loans[loanId].amountDue.sub(loans[loanId].paidAmount);
     }
-
     
     function getLoanApprovalCost(uint256 loanId) external view returns(uint256,uint256,uint256,uint256,address) {
         return (
@@ -198,10 +195,6 @@ contract LendingTemplate is Ownable, LendingCore {
         interestDiscounted = interestPerInstallement.mul(interestRateToStater).div(100).div(discount); // amount of interest saved per installment
         interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100).sub(interestDiscounted);
         amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); 
-    }
-    
-    function getLoanStartEnd(uint256 loanId) external view returns(uint256[2] memory) {
-        return loans[loanId].startEnd;
     }
   
 }

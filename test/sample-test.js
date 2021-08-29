@@ -3,9 +3,9 @@ const { BigNumber } = require("ethers");
 const { ethers } = require("hardhat");
 
 
-let discounts, erc721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote, lendingMethods, lendingTemplate, erc20, discountErc721, discountErc1155, discountTokenGeyser;
+let discounts, erc721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote, lendingMethods, lendingTemplate, erc20;
 const address0x0 = "0x0000000000000000000000000000000000000000";
-const nrOfWorkflowsToTest = 10;
+const nrOfWorkflowsToTest = 5;
 const ERC721_TYPE = 0;
 const ERC1155_TYPE = 1;
 const TOKEN_GEYSER_TYPE = 2;
@@ -54,44 +54,6 @@ describe("Smart Contracts Setup", function () {
     await _nft1155.deployed();
     expect(_nft1155.address).to.have.lengthOf(42);
     erc1155 = _nft1155;
-  });
-
-  it("Should deploy the ERC721 discount contract", async function () {
-    const NFT721 = await ethers.getContractFactory("GameItems721");
-    const _nft721 = await NFT721.deploy();
-    await _nft721.deployed();
-    expect(_nft721.address).to.have.lengthOf(42);
-    discountErc721 = _nft721;
-  });
-
-  it("Should deploy the ERC1155 discount contract", async function () {
-    const NFT1155 = await ethers.getContractFactory("GameItems1155");
-    const _nft1155 = await NFT1155.deploy();
-    await _nft1155.deployed();
-    expect(_nft1155.address).to.have.lengthOf(42);
-    discountErc1155 = _nft1155;
-  });
-
-  it("Should deploy the token geyser discount contract", async function () {
-
-    const StakingTokens = await ethers.getContractFactory("StakingTokens");
-    const _stakingTokens = await StakingTokens.deploy(BigNumber.from('1000000000000000000'),"Test Staking Tokens", "TST");
-    await _stakingTokens.deployed();
-    expect(_stakingTokens.address).to.have.lengthOf(42);
-    stakingTokens = _stakingTokens;
-
-    const Distributiontokens = await ethers.getContractFactory("DistributionTokens");
-    const _distributionTokens = await Distributiontokens.deploy(BigNumber.from('1000000000000000000'),"Test Distribution Tokens", "TDT");
-    await _distributionTokens.deployed();
-    expect(_distributionTokens.address).to.have.lengthOf(42);
-    distributionTokens = _distributionTokens;
-
-    const TokenGeyser = await ethers.getContractFactory("TokenGeyser");
-    const _tokenGeyser = await TokenGeyser.deploy(_stakingTokens.address,_distributionTokens.address,10000,100,1000,100);
-    await _tokenGeyser.deployed();
-    expect(_tokenGeyser.address).to.have.lengthOf(42);
-    discountTokenGeyser = _tokenGeyser;
-
   });
 
   it("Should deploy the promissory contract", async function () {
@@ -189,9 +151,12 @@ describe("Preparations", function () {
 
 
 describe("Lending Unit Tests", function () {
-
+  
   for ( let i = 1 , l = nrOfWorkflowsToTest; i <= l; ++i ) {
     let nrOfAssets;
+    let nftAddressArray = [];
+    let nftTokenIdArray = [];
+    let nftTokenTypeArray = [];
 
     it("Create loan " + i, async function () {
       const [deployer] = await ethers.getSigners();
@@ -201,9 +166,6 @@ describe("Lending Unit Tests", function () {
       let loanValue = params[1];
       let nrOfInstallments = params[2];
       let currency = params[3];
-      let nftAddressArray = [];
-      let nftTokenIdArray = [];
-      let nftTokenTypeArray = [];
       let newSupply, balanceOf, tokenId;
       await lendingTemplate.checkLtv(loanValue,assetsValue);
       for ( let j = 0 , k = nrOfAssets; j < k; ++j ) {
@@ -234,7 +196,7 @@ describe("Lending Unit Tests", function () {
         nftTokenTypeArray.push(assetType);
       }
 
-      console.log("Create loan " + i + " with: " + nftTokenIdArray + " , " + nftTokenTypeArray);
+      //console.log("Create loan " + i + " with: " + nftTokenIdArray + " , " + nftTokenTypeArray);
       const operation = await lendingTemplate.createLoan(loanValue,nrOfInstallments,currency,assetsValue,nftAddressArray,nftTokenIdArray,nftTokenTypeArray);
       expect(operation.hash).to.have.lengthOf(66);
 
@@ -294,29 +256,28 @@ describe("Lending Unit Tests", function () {
         try {
 
           const loan = await lendingTemplate.loans(i);
-          console.log("Loan " + i + " currency: " + loan[2]);
+          //console.log("Loan " + i + " currency: " + loan[2]);
           const approvalCosts = await lendingTemplate.getLoanApprovalCost(i);
 
           if ( loan[2] !== address0x0 ) {
             const [deployer] = await ethers.getSigners();
             const balanceOf = await erc20.balanceOf(deployer.address);
-            console.log("The balance of this token is >> " + Number((BigNumber.from(balanceOf._hex).toString())));
+            //console.log("The balance of this token is >> " + Number((BigNumber.from(balanceOf._hex).toString())));
 
             const approvetokens = await erc20.approve(lendingTemplate.address,Number((BigNumber.from(approvalCosts[0]._hex).toString())));
             expect(approvetokens.hash).to.have.lengthOf(66);
           }
           
           const operation = await lendingTemplate.approveLoan(i, { value: Number((BigNumber.from(approvalCosts[0]._hex).toString())) });
-          console.log("We're not ok !!!");
+          //console.log("We're not ok !!!");
           expect(false);
 
         } catch (err) {
-          console.log("We're ok !!!");
+          //console.log("We're ok !!!");
           expect(true);
         }
       });
-    }
-    else {
+    } else {
       const willApprove = Math.floor(Math.random() * 10) + 1 > 2 ? true : false;
       if ( willApprove ) {
 
@@ -325,17 +286,16 @@ describe("Lending Unit Tests", function () {
 
         if ( willUseDiscount ) {
 
-          /*
           if ( willUseExistingDiscount ) {
 
             it("Will edit discount before using it for loan " + i + " approval", async function () {
               const [deployer] = await ethers.getSigners();
               let discountId = await discounts.discountId();
-              console.log("1 >> " + discountId._hex);
+              //console.log("1 >> " + discountId._hex);
               discountId = Number((BigNumber.from(discountId._hex).toString())) -1;
 
-              console.log("1.5 >> ok && " + discountId);
-              const possibleDiscounts = [discountErc721.address,discountErc1155.address,discountTokenGeyser.address];
+              //console.log("1.5 >> ok && " + discountId);
+              const possibleDiscounts = [erc721.address,erc1155.address,tokenGeyser.address];
               const discountIndexToUse = Math.floor(Math.random() * possibleDiscounts.length);
               const discountValue = Math.floor(Math.random() * 9) + 2;
               let tokensForDiscount, erc721TotalSupply, usedErc1155TokenId;
@@ -344,7 +304,7 @@ describe("Lending Unit Tests", function () {
                 const discountToEdit = Math.floor(Math.random() * (discountId-1));
                 let usedErc1155TokenIds = [];
                 
-                console.log("Discount to edit : " + discountToEdit + " , " + discountIndexToUse);
+                //console.log("Discount to edit : " + discountToEdit + " , " + discountIndexToUse);
 
                 switch ( discountIndexToUse ) {
                   case 0:
@@ -353,14 +313,8 @@ describe("Lending Unit Tests", function () {
                     for ( let j = 0; j < tokensForDiscount; ++j )
                       await erc721.createItem("Token " + j, "Token " + j + " description", "Token " + j + " URL");
                     erc721TotalSupply = await erc721.totalSupply();
-                    console.log("2 >> " + erc721TotalSupply._hex);
+                    //console.log("2 >> " + erc721TotalSupply._hex);
                     erc721TotalSupply = Number((BigNumber.from(erc721TotalSupply._hex).toString()));
-                    
-                    console.log("0) Edit discount >> " +                      discountToEdit,
-                    possibleDiscounts[discountIndexToUse],
-                    discountValue,
-                    Array.from({length: tokensForDiscount}, (_, i) => i + erc721TotalSupply - tokensForDiscount),
-                    ERC721_TYPE);
                     await discounts.editDiscount(
                       discountToEdit,
                       possibleDiscounts[discountIndexToUse],
@@ -376,14 +330,8 @@ describe("Lending Unit Tests", function () {
                     for ( let j = 0; j < tokensForDiscount; ++j ) {
                       usedErc1155TokenId = Math.floor(Math.random() * 9) + 2;
                       usedErc1155TokenIds.push(usedErc1155TokenId);
-                      console.log("1) Edit discount >> " +                      discountToEdit,
-                      possibleDiscounts[discountIndexToUse],
-                      discountValue,
-                      usedErc1155TokenIds,
-                      ERC1155_TYPE);
                       await erc1155.createTokens(
                         deployer.address,
-                        usedErc1155TokenId,
                         Math.floor(Math.random() * nrOfAssets) + 1,
                         '0x00',
                         "name " + j,
@@ -401,12 +349,6 @@ describe("Lending Unit Tests", function () {
                   break;
 
                   case 2:
-
-                    console.log("2) Edit discount >> " +                      discountToEdit,
-                    possibleDiscounts[discountIndexToUse],
-                    discountValue,
-                    [],
-                    TOKEN_GEYSER_TYPE);
                     // Token Geyser
                     await discounts.editDiscount(
                       discountToEdit,
@@ -429,7 +371,7 @@ describe("Lending Unit Tests", function () {
                     for ( let j = 0; j < tokensForDiscount; ++j )
                       await erc721.createItem("Token " + j, "Token " + j + " description", "Token " + j + " URL");
                     erc721TotalSupply = await erc721.totalSupply();
-                    console.log("3 >> " + erc721TotalSupply._hex);
+                    //console.log("3 >> " + erc721TotalSupply._hex);
                     erc721TotalSupply = Number((BigNumber.from(erc721TotalSupply._hex).toString()));
                     usedTokens = Array.from({length: tokensForDiscount}, (_, i) => i + erc721TotalSupply - tokensForDiscount);
                   break;
@@ -442,7 +384,6 @@ describe("Lending Unit Tests", function () {
                       usedTokens.push(usedErc1155TokenId);
                       await erc1155.createTokens(
                         deployer.address,
-                        usedErc1155TokenId,
                         Math.floor(Math.random() * nrOfAssets) + 1,
                         '0x00',
                         "name " + j,
@@ -461,21 +402,21 @@ describe("Lending Unit Tests", function () {
                 await discounts.addDiscount(discountIndexToUse,possibleDiscounts[discountIndexToUse],discountValue,usedTokens);
 
               }
-              console.log("The discount id is >> " + discountId);
+              //console.log("The discount id is >> " + discountId);
 
               let __discountId = await discounts.discountId();
-              console.log("Discount id is >> " + JSON.stringify(__discountId));
+              //console.log("Discount id is >> " + JSON.stringify(__discountId));
               for ( let j = 0; j <  Number((BigNumber.from(__discountId._hex).toString())); ++j ){
                 let __discount = await discounts.discounts(j);
-                console.log(JSON.stringify(__discount));
+                //console.log(JSON.stringify(__discount));
               }
               
               
               lendingTemplate.getLoanApprovalCost(i).then((res1,res2,res3,res4,res5,res6,res7) => {
-                console.log("==================================================================\n" + JSON.toString(res1) + " , " + JSON.toString(res2) + " , " + JSON.toString(res3) + " , " + JSON.toString(res4) + " , " + JSON.toString(res5) + " , " + JSON.toString(res6) + " , " + JSON.toString(res7) + "\n=================================================================");
+                //console.log("==================================================================\n" + JSON.toString(res1) + " , " + JSON.toString(res2) + " , " + JSON.toString(res3) + " , " + JSON.toString(res4) + " , " + JSON.toString(res5) + " , " + JSON.toString(res6) + " , " + JSON.toString(res7) + "\n=================================================================");
               });
               
-              //console.log("4 " + JSON.stringify(approvalCosts));
+              ////console.log("4 " + JSON.stringify(approvalCosts));
               
              
               
@@ -485,14 +426,14 @@ describe("Lending Unit Tests", function () {
             });
 
           } else {
-          */
+          
 
             it("Will create a new discount before using it for loan " + i + " approval", async function () {
               const [deployer] = await ethers.getSigners();
-              const possibleDiscounts = [discountErc721.address,discountErc1155.address,discountTokenGeyser.address];
+              const possibleDiscounts = [erc721.address,erc1155.address,tokenGeyser.address];
               const discountIndexToUse = Math.floor(Math.random() * possibleDiscounts.length);
               const discountValue = Math.floor(Math.random() * 9) + 2;
-              let tokensForDiscount, erc721TotalSupply, usedErc1155TokenId;
+              let tokensForDiscount, erc721TotalSupply, erc1155TotalSupply;
               let usedTokens = [];
 
               switch ( discountIndexToUse ) {
@@ -510,7 +451,8 @@ describe("Lending Unit Tests", function () {
                   // ERC1155
                   tokensForDiscount = Math.floor(Math.random() * 4) + 1;
                   for ( let j = 0; j < tokensForDiscount; ++j ) {
-                    usedTokens.push(usedErc1155TokenId);
+                    erc1155TotalSupply = await erc1155.totalSupply();
+                    usedTokens.push(Number((BigNumber.from(erc1155TotalSupply._hex).toString())));
                     await erc1155.createTokens(
                       deployer.address,
                       Math.floor(Math.random() * nrOfAssets) + 1,
@@ -528,35 +470,66 @@ describe("Lending Unit Tests", function () {
                 break;
               }
   
-              console.log("Create discount >> " + discountIndexToUse,possibleDiscounts[discountIndexToUse],discountValue,usedTokens);
+              //console.log("Create discount >> " + discountIndexToUse,possibleDiscounts[discountIndexToUse],discountValue,usedTokens);
               await discounts.addDiscount(discountIndexToUse,possibleDiscounts[discountIndexToUse],discountValue,usedTokens);
 
             });
 
-          //}
+          }
         }
 
         it("Approve loan " + i, async function () {
           const [deployer] = await ethers.getSigners();
           const loan = await lendingTemplate.loans(i);
-          console.log("Loan " + i + " currency: " + loan[2]);
           const approvalCosts = await lendingTemplate.getLoanApprovalCost(i);
-          const approvalCost = Number((BigNumber.from(approvalCosts[0]._hex).toString()));
 
           if ( loan[2] !== address0x0 ) {
             
-            await erc20.transfer(deployer.address, approvalCost);
+            await erc20.transfer(deployer.address, approvalCosts[0]._hex);
             
-            const approvetokens = await erc20.approve(lendingTemplate.address,approvalCost);
+            const approvetokens = await erc20.approve(lendingTemplate.address,approvalCosts[0]._hex);
             expect(approvetokens.hash).to.have.lengthOf(66);
             
-
           }
           
-          const operation = await lendingTemplate.approveLoan(i, { from: deployer.address, value: approvalCost });
+          const operation = await lendingTemplate.approveLoan(i, { value: approvalCosts[0]._hex });
           expect(operation.hash).to.have.lengthOf(66);
 
         });
+
+        it("It will pay loan " + i + " with 1 installment", async function () {
+          const installmentCost = await lendingTemplate.getLoanInstallmentCost(i,1);
+          console.log(JSON.stringify(installmentCost));
+
+          const loan = await lendingTemplate.loans(i);
+
+          if ( loan[2] === address0x0 ) {
+            const operation = await lendingTemplate.payLoan(i,installmentCost[0]._hex,{ value : installmentCost[0]._hex });
+            expect(operation.hash).to.have.lengthOf(66);
+          } else {
+            
+          }
+        });
+
+        it("It will pay loan " + i + " 50% of its remaining installments", async function () {
+          const installmentCost = await lendingTemplate.getLoanInstallmentCost(i,1);
+          const loan = await lendingTemplate.loans(i);
+          const nrOfPayments = Number((BigNumber.from(loan[5]._hex).toString()));
+          const nrOfInstallments = Number((BigNumber.from(loan[12]._hex).toString()));
+          const remainingInstallments = nrOfInstallments - nrOfPayments;
+          const halfRemainingInstallments = remainingInstallments / 2;
+
+          for ( let j = 0; j < halfRemainingInstallments; ++j ) {
+            if ( loan[2] === address0x0 ) {
+              const operation = await lendingTemplate.payLoan(i,installmentCost[0]._hex,{ value : installmentCost[0]._hex });
+              expect(operation.hash).to.have.lengthOf(66);
+            } else {
+
+            }
+          }
+
+        });
+
       }
     }
 
