@@ -127,7 +127,7 @@ contract LendingCore is StaterTransfers {
      * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
      */
     function canBeTerminated(uint256 loanId) public view returns(bool) {
-        require(loans[loanId].status == Status.APPROVED, "Loan is not yet approved");
+        require(loans[loanId].status == Status.APPROVED || loans[loanId].status == Status.LIQUIDATED, "Loan is not yet approved");
         // return last paid installment date + defaultingLimit * installment time interval <= block.timestamp
         return loans[loanId].startEnd[0].add(loans[loanId].nrOfPayments.mul(loans[loanId].installmentTime)).add(loans[loanId].defaultingLimit.mul(loans[loanId].installmentTime)) <= min(block.timestamp,loans[loanId].startEnd[1]);
     }
