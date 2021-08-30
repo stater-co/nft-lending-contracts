@@ -57,14 +57,13 @@ contract StaterPromissoryNote is ERC721, Ownable {
         //Allow loans to be used in the Promissory Note
         require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
         
-        lendingDataTemplate.setPromissoryPermissions(loanIds,msg.sender,msg.sender);
-        
         //Set promissory note fields
         promissoryNotes[promissoryNoteId].loans = loanIds;
         promissoryNotes[promissoryNoteId].owner = msg.sender;
         
         for (uint i = 0; i < loanIds.length; ++i){
             require(promissoryLoans[loanIds[i]] == 0,"Stater Promissory Note: One of the loans is already used by another promissory note");
+            require(lendingDataTemplate.getPromissoryPermission(loanIds[i]) == msg.sender);
             promissoryLoans[loanIds[i]] = promissoryNoteId;
         }
         
@@ -72,7 +71,7 @@ contract StaterPromissoryNote is ERC721, Ownable {
         _safeMint(msg.sender, promissoryNoteId, "");
     
         emit WrapLoansAndMintPromissoryNote(promissoryNoteId);
-        promissoryNoteId++;
+        ++promissoryNoteId;
     }
     
     function safeTransferFrom(
@@ -138,7 +137,6 @@ contract StaterPromissoryNote is ERC721, Ownable {
     function burnPromissoryNote(uint256 _promissoryNoteId) external {
         require(promissoryNotes[_promissoryNoteId].owner == msg.sender, "You're not the owner of this promissory note");
         _burn(_promissoryNoteId);
-        lendingDataTemplate.setPromissoryPermissions(promissoryNotes[_promissoryNoteId].loans,msg.sender,address(0));
         for (uint i = 0; i < promissoryNotes[_promissoryNoteId].loans.length; ++i)
             promissoryLoans[promissoryNotes[_promissoryNoteId].loans[i]] = 0;
         delete promissoryNotes[_promissoryNoteId];

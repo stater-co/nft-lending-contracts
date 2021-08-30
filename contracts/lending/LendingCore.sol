@@ -146,4 +146,8 @@ contract LendingCore is StaterTransfers {
         return loans[loanId].startEnd;
     }
 
+    function getPromissoryPermission(uint256 loanId) external view returns(address) {
+        return promissoryPermissions[loanId];
+    }
+
 }

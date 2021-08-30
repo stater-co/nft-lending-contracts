@@ -45,6 +45,25 @@
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "loanId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getPromissoryPermission",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
           "name": "from",
           "type": "address"
@@ -61,29 +80,6 @@
         }
       ],
       "name": "promissoryExchange",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256[]",
-          "name": "loanIds",
-          "type": "uint256[]"
-        },
-        {
-          "internalType": "address",
-          "name": "sender",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "allowed",
-          "type": "address"
-        }
-      ],
-      "name": "setPromissoryPermissions",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

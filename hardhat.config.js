@@ -9,8 +9,6 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   }
 });
 
-//export ACCOUNT_ADDRESS=0xB29A60829E73C88f0A289c9260981245Bca2eAa4
-//export ACCOUNT_PRIVATE_KEY=0x7a93e9dc08ed1eaea7278e5428c7ba2724f12535f4cd3cc9838951b9a31edfd0
 
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more

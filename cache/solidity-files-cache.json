@@ -2762,8 +2762,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/promissory/PromissoryNote.sol": {
-      "lastModificationDate": 1629961373068,
-      "contentHash": "52528ad0fed5fce6481f425bd0de99ee",
+      "lastModificationDate": 1630329901263,
+      "contentHash": "32c330ec3ee944f6e65be33542381a6c",
       "sourceName": "contracts/promissory/PromissoryNote.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -3552,8 +3552,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingTemplate.sol": {
-      "lastModificationDate": 1630326773399,
-      "contentHash": "d3ca7a31968f471d901315007c0f86ab",
+      "lastModificationDate": 1630328971154,
+      "contentHash": "d3405bb46ce1cd2a9b49f1467b769f29",
       "sourceName": "contracts/lending/LendingTemplate.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -3590,8 +3590,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingCore.sol": {
-      "lastModificationDate": 1630326718170,
-      "contentHash": "7c0e1fd1373917e395fcf9f3bed4cfc4",
+      "lastModificationDate": 1630329144085,
+      "contentHash": "f3b1ee9fdaf97bbd9413571d1276a2d7",
       "sourceName": "contracts/lending/LendingCore.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -3628,8 +3628,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingMethods.sol": {
-      "lastModificationDate": 1630066646520,
-      "contentHash": "c122129d7dfeff0407e81bc3df394402",
+      "lastModificationDate": 1630328704001,
+      "contentHash": "fe6558dd8d7bdc6ec70e5128a065f951",
       "sourceName": "contracts/lending/LendingMethods.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -4286,8 +4286,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/ILendingTemplate.sol": {
-      "lastModificationDate": 1629961333676,
-      "contentHash": "dfb3360d7b22d55f9819ea11d2f848eb",
+      "lastModificationDate": 1630329151341,
+      "contentHash": "adb2dcba9f3cef1777f8a0da3f2485fc",
       "sourceName": "contracts/lending/ILendingTemplate.sol",
       "solcConfig": {
         "version": "0.7.6",

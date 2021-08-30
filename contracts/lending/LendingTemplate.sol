@@ -14,21 +14,14 @@ contract LendingTemplate is Ownable, LendingCore {
         address _lendingMethodsAddress,
         address _lendingDiscountsAddress
     ) {
+        require(_lendingMethodsAddress != address(0), "Lending Methods address not valid");
+        require(_promissoryNoteAddress != address(0), "Promissory Note address not valid");
+        require(_lendingDiscountsAddress != address(0), "Lending Discounts address not valid");
         promissoryNoteAddress = _promissoryNoteAddress;
         lendingMethodsAddress = _lendingMethodsAddress;
         discounts = IStaterDiscounts(_lendingDiscountsAddress);
     }
     
-    modifier lendingMethodsUp {
-        require(lendingMethodsAddress != address(0),"Lending methods contract not established");
-        _;
-    }
-
-    modifier promissoryNoteUp {
-        require(promissoryNoteAddress == msg.sender,"Promissory note contract not established");
-        _;
-    }
-
     // Borrower creates a loan
     function createLoan(
         uint256 loanAmount,
@@ -38,7 +31,7 @@ contract LendingTemplate is Ownable, LendingCore {
         address[] calldata nftAddressArray, 
         uint256[] calldata nftTokenIdArray,
         uint8[] calldata nftTokenTypeArray
-    ) external lendingMethodsUp {
+    ) external {
         
         // For 8 or more parameters via delegatecall >> Remix raises an error with no error message
         (bool success, ) = lendingMethodsAddress.delegatecall(
@@ -57,7 +50,7 @@ contract LendingTemplate is Ownable, LendingCore {
         address currency,
         uint256 assetsValue,
         uint256 installmentTime
-    ) external lendingMethodsUp {
+    ) external {
         
         (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
@@ -69,7 +62,7 @@ contract LendingTemplate is Ownable, LendingCore {
     }
 
     // Lender approves a loan
-    function approveLoan(uint256 loanId) external payable lendingMethodsUp {
+    function approveLoan(uint256 loanId) external payable {
         
         (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
@@ -82,7 +75,7 @@ contract LendingTemplate is Ownable, LendingCore {
     }
 
     // Borrower cancels a loan
-    function cancelLoan(uint256 loanId) external lendingMethodsUp {
+    function cancelLoan(uint256 loanId) external {
         
         (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
@@ -96,7 +89,7 @@ contract LendingTemplate is Ownable, LendingCore {
   
     // Borrower pays installment for loan
     // Multiple installments : OK
-    function payLoan(uint256 loanId,uint256 amount) external payable lendingMethodsUp {
+    function payLoan(uint256 loanId,uint256 amount) external payable {
         
         (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
@@ -110,7 +103,7 @@ contract LendingTemplate is Ownable, LendingCore {
 
     // Borrower can withdraw loan items if loan is LIQUIDATED
     // Lender can withdraw loan item is loan is DEFAULTED
-    function terminateLoan(uint256 loanId) external lendingMethodsUp {
+    function terminateLoan(uint256 loanId) external {
         
         (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
@@ -131,6 +124,9 @@ contract LendingTemplate is Ownable, LendingCore {
         address _lendingMethodsAddress,
         address _lendingDiscountsAddress
     ) external onlyOwner {
+        require(_lendingMethodsAddress != address(0), "Lending Methods address not valid");
+        require(_promissoryNoteAddress != address(0), "Promissory Note address not valid");
+        require(_lendingDiscountsAddress != address(0), "Lending Discounts address not valid");
         ltv = _ltv;
         interestRate = _interestRate;
         interestRateToStater = _interestRateToStater;
@@ -140,7 +136,7 @@ contract LendingTemplate is Ownable, LendingCore {
         discounts = IStaterDiscounts(_lendingDiscountsAddress);
     }
     
-    function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external lendingMethodsUp promissoryNoteUp {
+    function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external {
         
         (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
@@ -151,12 +147,12 @@ contract LendingTemplate is Ownable, LendingCore {
         require(success,"Lending Template: Failed to execute promissoryExchange via delegatecall");
     }
   
-    function setPromissoryPermissions(uint256[] calldata loanIds, address sender, address allowed) external lendingMethodsUp promissoryNoteUp {
+    function setPromissoryPermissions(uint256[] calldata loanIds, address allowed) external {
         
         (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
-                "setPromissoryPermissions(uint256[],address,address)",
-                loanIds,sender,allowed
+                "setPromissoryPermissions(uint256[],address)",
+                loanIds,allowed
             )
         );
         require(success,"Lending Template: Failed to execute setPromissoryPermissions via delegatecall");

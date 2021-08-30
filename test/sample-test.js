@@ -5,7 +5,7 @@ const { ethers } = require("hardhat");
 
 let discounts, erc721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote, lendingMethods, lendingTemplate, erc20;
 const address0x0 = "0x0000000000000000000000000000000000000000";
-const nrOfWorkflowsToTest = 500;
+const nrOfWorkflowsToTest = 5;
 const ERC721_TYPE = 0;
 const ERC1155_TYPE = 1;
 const TOKEN_GEYSER_TYPE = 2;
@@ -146,6 +146,10 @@ describe("Preparations", function () {
     expect(operation.hash).to.have.lengthOf(66);
   });
 
+  it("Configure Promissory Note connection to Lending Template", async function () {
+    const operation = await promissoryNote.setLendingDataAddress(lendingTemplate.address);
+    expect(operation.hash).to.have.lengthOf(66);
+  });
 
 });
 
@@ -283,6 +287,7 @@ describe("Lending Unit Tests", function () {
 
         const willUseDiscount = Math.floor(Math.random() * 10) + 1 <= 7 ? true : false;
         const willUseExistingDiscount = Math.floor(Math.random() * 10) + 1 <= 5 ? true : false;
+        const willCreatePromissoryNoteWithIt = Math.floor(Math.random() * 10) + 1 <= 4 ? true : false;
 
         if ( willUseDiscount ) {
 
@@ -496,6 +501,32 @@ describe("Lending Unit Tests", function () {
           expect(operation.hash).to.have.lengthOf(66);
 
         });
+
+        if ( willCreatePromissoryNoteWithIt ) {
+          it("Will allow the promissory note creation for loan " + i, async function () {
+            const [deployer] = await ethers.getSigners();
+            const operation = await lendingTemplate.setPromissoryPermissions([i],deployer.address);
+            expect(operation.hash).to.have.lengthOf(66);
+          });
+
+          it("Will create a promissory note for loan " + i, async function () {
+            const operation = await promissoryNote.createPromissoryNote([i]);
+            expect(operation.hash).to.have.lengthOf(66);
+          });
+
+          const willBurnPromissoryNote = Math.floor(Math.random() * 10) + 1 <= 3 ? true : false;
+
+          if ( willBurnPromissoryNote ) {
+            it("Will burn the promissory note " + i, async function () {
+              let promissoryNoteId = await promissoryNote.promissoryNoteId();
+              promissoryNoteId = Number((BigNumber.from(promissoryNoteId._hex).toString())) - 1;
+              const operation = await promissoryNote.burnPromissoryNote(promissoryNoteId);
+              expect(operation.hash).to.have.lengthOf(66);
+            });
+          } else {
+            
+          }
+        }
 
         it("It will pay loan " + i + " with 1 installment", async function () {
           const installmentCost = await lendingTemplate.getLoanInstallmentCost(i,1);

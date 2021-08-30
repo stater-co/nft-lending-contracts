@@ -295,11 +295,11 @@ contract LendingMethods is Ownable, LendingCore {
      * @notice Used by the Promissory Note contract to approve a list of loans to be used as a Promissory Note NFT
      * @param loanIds The ids of the loans that will be approved
      */
-     function setPromissoryPermissions(uint256[] calldata loanIds, address sender, address allowed) external isPromissoryNote {
-        for (uint256 i = 0; i < loanIds.length; ++i){
-            require(loans[loanIds[i]].lender == sender);
-            if (allowed != address(0))
-                require(loans[loanIds[i]].status == Status.APPROVED);
+     function setPromissoryPermissions(uint256[] calldata loanIds, address allowed) external {
+        require(allowed != address(0));
+        for (uint256 i = 0; i < loanIds.length; ++i) {
+            require(loans[loanIds[i]].lender == msg.sender);
+            require(loans[loanIds[i]].status == Status.APPROVED);
             promissoryPermissions[loanIds[i]] = allowed;
         }
     }
