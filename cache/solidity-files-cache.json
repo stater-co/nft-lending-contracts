@@ -3552,8 +3552,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingTemplate.sol": {
-      "lastModificationDate": 1630235935269,
-      "contentHash": "d3ca7a31968f471d901315007c0f86ab",
+      "lastModificationDate": 1630308459683,
+      "contentHash": "013a9ed8fd6c11b2006e4e949c7b5db4",
       "sourceName": "contracts/lending/LendingTemplate.sol",
       "solcConfig": {
         "version": "0.7.6",

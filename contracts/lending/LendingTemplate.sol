@@ -98,6 +98,7 @@ contract LendingTemplate is Ownable, LendingCore {
     // Multiple installments : OK
     function payLoan(uint256 loanId,uint256 amount) external payable lendingMethodsUp {
         
+        /*
         (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
                 "payLoan(uint256,uint256)",
@@ -105,6 +106,54 @@ contract LendingTemplate is Ownable, LendingCore {
             )
         );
         require(success,"Failed to payLoan via delegatecall");
+        */
+
+
+        require(loans[loanId].borrower == msg.sender, "test 1");
+        require(loans[loanId].status == Status.APPROVED, "test 2");
+        require(loans[loanId].startEnd[1] >= block.timestamp, "test 3");
+        require((msg.value > 0 && loans[loanId].currency == address(0) && msg.value == amount) || (loans[loanId].currency != address(0) && msg.value == 0 && amount > 0), "test 4");
+        
+        uint256 paidByBorrower = msg.value > 0 ? msg.value : amount;
+        uint256 amountPaidAsInstallmentToLender = paidByBorrower; // >> amount of installment that goes to lender
+        uint256 interestPerInstallement = paidByBorrower.mul(interestRate).div(100); // entire interest for installment
+        uint256 discount = discounts.calculateDiscount(msg.sender);
+        uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100);
+
+        if ( discount != 1 ){
+            if ( loans[loanId].currency == address(0) ){
+                require(msg.sender.send(interestToStaterPerInstallement.div(discount)), "test 5");
+                amountPaidAsInstallmentToLender = amountPaidAsInstallmentToLender.sub(interestToStaterPerInstallement.div(discount));
+            }
+            interestToStaterPerInstallement = interestToStaterPerInstallement.sub(interestToStaterPerInstallement.div(discount));
+        }
+        amountPaidAsInstallmentToLender = amountPaidAsInstallmentToLender.sub(interestToStaterPerInstallement);
+
+        loans[loanId].paidAmount = loans[loanId].paidAmount.add(paidByBorrower);
+        loans[loanId].nrOfPayments = loans[loanId].nrOfPayments.add(paidByBorrower.div(loans[loanId].installmentAmount));
+
+        if (loans[loanId].paidAmount >= loans[loanId].amountDue)
+        loans[loanId].status = Status.LIQUIDATED;
+
+        // We transfer the tokens to borrower here
+        transferTokens(
+            msg.sender,
+            loans[loanId].lender,
+            loans[loanId].currency,
+            amountPaidAsInstallmentToLender,
+            interestToStaterPerInstallement
+        );
+
+        emit LoanPayment(
+            loanId,
+            msg.value,
+            amountPaidAsInstallmentToLender,
+            interestPerInstallement,
+            interestToStaterPerInstallement,
+            loans[loanId].status
+        );
+
+
     }
 
 
