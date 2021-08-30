@@ -71,7 +71,6 @@ contract LendingTemplate is Ownable, LendingCore {
             )
         );
         require(success,"Failed to approveLoan via delegatecall");
-
     }
 
     // Borrower cancels a loan

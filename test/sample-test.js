@@ -5,7 +5,7 @@ const { ethers } = require("hardhat");
 
 let discounts, erc721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote, lendingMethods, lendingTemplate, erc20;
 const address0x0 = "0x0000000000000000000000000000000000000000";
-const nrOfWorkflowsToTest = 5;
+const nrOfWorkflowsToTest = 5000;
 const ERC721_TYPE = 0;
 const ERC1155_TYPE = 1;
 const TOKEN_GEYSER_TYPE = 2;
@@ -200,7 +200,6 @@ describe("Lending Unit Tests", function () {
         nftTokenTypeArray.push(assetType);
       }
 
-      //console.log("Create loan " + i + " with: " + nftTokenIdArray + " , " + nftTokenTypeArray);
       const operation = await lendingTemplate.createLoan(loanValue,nrOfInstallments,currency,assetsValue,nftAddressArray,nftTokenIdArray,nftTokenTypeArray);
       expect(operation.hash).to.have.lengthOf(66);
 
@@ -213,6 +212,7 @@ describe("Lending Unit Tests", function () {
 
     const willEdit = Math.floor(Math.random() * 2) + 1 === 1 ? true : false;
     const willApprove = Math.floor(Math.random() * 10) + 1 > 2 ? true : false;
+    let loanLenderTransferredViaPromissoryNote = false;
   
     if ( willEdit ) {
       let initialLoan;
@@ -261,24 +261,17 @@ describe("Lending Unit Tests", function () {
         try {
 
           const loan = await lendingTemplate.loans(i);
-          //console.log("Loan " + i + " currency: " + loan[2]);
           const approvalCosts = await lendingTemplate.getLoanApprovalCost(i);
 
           if ( loan[2] !== address0x0 ) {
-            const [deployer] = await ethers.getSigners();
-            const balanceOf = await erc20.balanceOf(deployer.address);
-            //console.log("The balance of this token is >> " + Number((BigNumber.from(balanceOf._hex).toString())));
-
             const approvetokens = await erc20.approve(lendingTemplate.address,Number((BigNumber.from(approvalCosts[0]._hex).toString())));
             expect(approvetokens.hash).to.have.lengthOf(66);
           }
           
-          const operation = await lendingTemplate.approveLoan(i, { value: Number((BigNumber.from(approvalCosts[0]._hex).toString())) });
-          //console.log("We're not ok !!!");
+          await lendingTemplate.approveLoan(i, { value: Number((BigNumber.from(approvalCosts[0]._hex).toString())) });
           expect(false);
 
         } catch (err) {
-          //console.log("We're ok !!!");
           expect(true);
         }
       });
@@ -296,10 +289,8 @@ describe("Lending Unit Tests", function () {
             it("Will edit discount before using it for loan " + i + " approval", async function () {
               const [deployer] = await ethers.getSigners();
               let discountId = await discounts.discountId();
-              //console.log("1 >> " + discountId._hex);
               discountId = Number((BigNumber.from(discountId._hex).toString())) -1;
 
-              //console.log("1.5 >> ok && " + discountId);
               const possibleDiscounts = [erc721.address,erc1155.address,tokenGeyser.address];
               const discountIndexToUse = Math.floor(Math.random() * possibleDiscounts.length);
               const discountValue = Math.floor(Math.random() * 9) + 2;
@@ -308,8 +299,6 @@ describe("Lending Unit Tests", function () {
               if ( discountId > 0 ) {
                 const discountToEdit = Math.floor(Math.random() * (discountId-1));
                 let usedErc1155TokenIds = [];
-                
-                //console.log("Discount to edit : " + discountToEdit + " , " + discountIndexToUse);
 
                 switch ( discountIndexToUse ) {
                   case 0:
@@ -318,7 +307,6 @@ describe("Lending Unit Tests", function () {
                     for ( let j = 0; j < tokensForDiscount; ++j )
                       await erc721.createItem("Token " + j, "Token " + j + " description", "Token " + j + " URL");
                     erc721TotalSupply = await erc721.totalSupply();
-                    //console.log("2 >> " + erc721TotalSupply._hex);
                     erc721TotalSupply = Number((BigNumber.from(erc721TotalSupply._hex).toString()));
                     await discounts.editDiscount(
                       discountToEdit,
@@ -376,7 +364,6 @@ describe("Lending Unit Tests", function () {
                     for ( let j = 0; j < tokensForDiscount; ++j )
                       await erc721.createItem("Token " + j, "Token " + j + " description", "Token " + j + " URL");
                     erc721TotalSupply = await erc721.totalSupply();
-                    //console.log("3 >> " + erc721TotalSupply._hex);
                     erc721TotalSupply = Number((BigNumber.from(erc721TotalSupply._hex).toString()));
                     usedTokens = Array.from({length: tokensForDiscount}, (_, i) => i + erc721TotalSupply - tokensForDiscount);
                   break;
@@ -407,27 +394,27 @@ describe("Lending Unit Tests", function () {
                 await discounts.addDiscount(discountIndexToUse,possibleDiscounts[discountIndexToUse],discountValue,usedTokens);
 
               }
-              //console.log("The discount id is >> " + discountId);
 
-              let __discountId = await discounts.discountId();
-              //console.log("Discount id is >> " + JSON.stringify(__discountId));
-              for ( let j = 0; j <  Number((BigNumber.from(__discountId._hex).toString())); ++j ){
-                let __discount = await discounts.discounts(j);
-                //console.log(JSON.stringify(__discount));
+              const loan = await lendingTemplate.loans(i);
+
+              if ( loan[1] === address0x0 ) {
+
+                const approvalCosts = await lendingTemplate.getLoanApprovalCost(i);              
+                
+                if ( loan[2] !== address0x0 ) {
+              
+                  await erc20.transfer(deployer.address, approvalCosts[0]._hex);
+                  
+                  const approvetokens = await erc20.approve(lendingTemplate.address,approvalCosts[0]._hex);
+                  expect(approvetokens.hash).to.have.lengthOf(66);
+                  
+                }
+
+                const operation = await lendingTemplate.approveLoan(i, { value: Number((BigNumber.from(approvalCosts[0]._hex).toString())) });
+                expect(operation.hash).to.have.lengthOf(66);
+              
               }
-              
-              
-              lendingTemplate.getLoanApprovalCost(i).then((res1,res2,res3,res4,res5,res6,res7) => {
-                //console.log("==================================================================\n" + JSON.toString(res1) + " , " + JSON.toString(res2) + " , " + JSON.toString(res3) + " , " + JSON.toString(res4) + " , " + JSON.toString(res5) + " , " + JSON.toString(res6) + " , " + JSON.toString(res7) + "\n=================================================================");
-              });
-              
-              ////console.log("4 " + JSON.stringify(approvalCosts));
-              
-             
-              
-              //const operation = await lendingTemplate.approveLoan(i, { value: Number((BigNumber.from(approvalCosts[0]._hex).toString())) });
-              //expect(operation.hash).to.have.lengthOf(66);
-              
+
             });
 
           } else {
@@ -475,7 +462,6 @@ describe("Lending Unit Tests", function () {
                 break;
               }
   
-              //console.log("Create discount >> " + discountIndexToUse,possibleDiscounts[discountIndexToUse],discountValue,usedTokens);
               await discounts.addDiscount(discountIndexToUse,possibleDiscounts[discountIndexToUse],discountValue,usedTokens);
 
             });
@@ -488,19 +474,25 @@ describe("Lending Unit Tests", function () {
           const loan = await lendingTemplate.loans(i);
           const approvalCosts = await lendingTemplate.getLoanApprovalCost(i);
 
-          if ( loan[2] !== address0x0 ) {
+          if ( loan[1] === address0x0 ) {
+
+            if ( loan[2] !== address0x0 ) {
+              
+              await erc20.transfer(deployer.address, approvalCosts[0]._hex);
+              
+              const approvetokens = await erc20.approve(lendingTemplate.address,approvalCosts[0]._hex);
+              expect(approvetokens.hash).to.have.lengthOf(66);
+              
+            }
             
-            await erc20.transfer(deployer.address, approvalCosts[0]._hex);
-            
-            const approvetokens = await erc20.approve(lendingTemplate.address,approvalCosts[0]._hex);
-            expect(approvetokens.hash).to.have.lengthOf(66);
-            
+            const operation = await lendingTemplate.approveLoan(i, { value: approvalCosts[0]._hex });
+            expect(operation.hash).to.have.lengthOf(66);
+
           }
-          
-          const operation = await lendingTemplate.approveLoan(i, { value: approvalCosts[0]._hex });
-          expect(operation.hash).to.have.lengthOf(66);
 
         });
+
+        const willBurnPromissoryNote = Math.floor(Math.random() * 10) + 1 <= 3 ? true : false;
 
         if ( willCreatePromissoryNoteWithIt ) {
           it("Will allow the promissory note creation for loan " + i, async function () {
@@ -514,50 +506,31 @@ describe("Lending Unit Tests", function () {
             expect(operation.hash).to.have.lengthOf(66);
           });
 
-          const willBurnPromissoryNote = Math.floor(Math.random() * 10) + 1 <= 3 ? true : false;
-
           if ( willBurnPromissoryNote ) {
-            it("Will burn the promissory note " + i, async function () {
+            it("Will burn the promissory note", async function () {
               let promissoryNoteId = await promissoryNote.promissoryNoteId();
               promissoryNoteId = Number((BigNumber.from(promissoryNoteId._hex).toString())) - 1;
               const operation = await promissoryNote.burnPromissoryNote(promissoryNoteId);
               expect(operation.hash).to.have.lengthOf(66);
             });
           } else {
-            
+            it("Will transfer the promissory note", async function () {
+              const [deployer] = await ethers.getSigners();
+              let promissoryNoteId = await promissoryNote.promissoryNoteId();
+              promissoryNoteId = Number((BigNumber.from(promissoryNoteId._hex).toString())) - 1;
+              const operation = await promissoryNote.transferFrom(deployer.address,lendingMethods.address,promissoryNoteId);
+              expect(operation.hash).to.have.lengthOf(66);
+              loanLenderTransferredViaPromissoryNote = true;
+            });
           }
         }
 
-        it("It will pay loan " + i + " with 1 installment", async function () {
-          const installmentCost = await lendingTemplate.getLoanInstallmentCost(i,1);
-          const loan = await lendingTemplate.loans(i);
+        if ( loanLenderTransferredViaPromissoryNote === false && willBurnPromissoryNote ) {
 
-          if ( loan[2] !== address0x0 ) {
+          it("It will pay loan " + i + " with 1 installment", async function () {
+            const installmentCost = await lendingTemplate.getLoanInstallmentCost(i,1);
+            const loan = await lendingTemplate.loans(i);
 
-            const approvetokens = await erc20.approve(lendingTemplate.address,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())));
-            expect(approvetokens.hash).to.have.lengthOf(66);
-
-            const operation = await lendingTemplate.payLoan(i,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())));
-            expect(operation.hash).to.have.lengthOf(66);
-
-          } else {
-
-            const operation = await lendingTemplate.payLoan(i,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())), { value : Number((BigNumber.from(installmentCost.overallInstallmentAmount))) });
-            expect(operation.hash).to.have.lengthOf(66);
-
-          }
-
-        });
-
-        it("It will pay loan " + i + " 50% of its remaining installments", async function () {
-          const installmentCost = await lendingTemplate.getLoanInstallmentCost(i,1);
-          const loan = await lendingTemplate.loans(i);
-          const nrOfPayments = Number((BigNumber.from(loan.nrOfPayments).toString()));
-          const nrOfInstallments = Number((BigNumber.from(loan.nrOfInstallments).toString()));
-          const remainingInstallments = nrOfInstallments - nrOfPayments;
-          const halfRemainingInstallments = remainingInstallments / 2;
-
-          for ( let j = 0; j < halfRemainingInstallments; ++j ) {
             if ( loan[2] !== address0x0 ) {
 
               const approvetokens = await erc20.approve(lendingTemplate.address,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())));
@@ -568,47 +541,75 @@ describe("Lending Unit Tests", function () {
 
             } else {
 
-              const operation = await lendingTemplate.payLoan(i,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())), { value : Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())) });
+              const operation = await lendingTemplate.payLoan(i,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())), { value : Number((BigNumber.from(installmentCost.overallInstallmentAmount))) });
               expect(operation.hash).to.have.lengthOf(66);
 
             }
 
-          }
+          });
 
-        });
+          it("It will pay loan " + i + " 50% of its remaining installments", async function () {
+            const installmentCost = await lendingTemplate.getLoanInstallmentCost(i,1);
+            const loan = await lendingTemplate.loans(i);
+            const nrOfPayments = Number((BigNumber.from(loan.nrOfPayments).toString()));
+            const nrOfInstallments = Number((BigNumber.from(loan.nrOfInstallments).toString()));
+            const remainingInstallments = nrOfInstallments - nrOfPayments;
+            const halfRemainingInstallments = remainingInstallments / 2;
 
-        it("It will pay loan " + i + " rest of the remaining installments", async function () {
-          const installmentCost = await lendingTemplate.getLoanInstallmentCost(i,1);
-          const loan = await lendingTemplate.loans(i);
-          const nrOfPayments = Number((BigNumber.from(loan.nrOfPayments).toString()));
-          const nrOfInstallments = Number((BigNumber.from(loan.nrOfInstallments).toString()));
-          const remainingInstallments = nrOfInstallments - nrOfPayments;
+            for ( let j = 0; j < halfRemainingInstallments; ++j ) {
+              if ( loan[2] !== address0x0 ) {
 
-          for ( let j = 0; j < remainingInstallments; ++j ) {
-            if ( loan[2] !== address0x0 ) {
+                const approvetokens = await erc20.approve(lendingTemplate.address,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())));
+                expect(approvetokens.hash).to.have.lengthOf(66);
 
-              const approvetokens = await erc20.approve(lendingTemplate.address,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())));
-              expect(approvetokens.hash).to.have.lengthOf(66);
+                const operation = await lendingTemplate.payLoan(i,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())));
+                expect(operation.hash).to.have.lengthOf(66);
 
-              const operation = await lendingTemplate.payLoan(i,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())));
-              expect(operation.hash).to.have.lengthOf(66);
+              } else {
 
-            } else {
+                const operation = await lendingTemplate.payLoan(i,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())), { value : Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())) });
+                expect(operation.hash).to.have.lengthOf(66);
 
-              const operation = await lendingTemplate.payLoan(i,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())), { value : Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())) });
-              expect(operation.hash).to.have.lengthOf(66);
+              }
 
             }
 
-          }
+          });
 
-        });
+          it("It will pay loan " + i + " rest of the remaining installments", async function () {
+            const installmentCost = await lendingTemplate.getLoanInstallmentCost(i,1);
+            const loan = await lendingTemplate.loans(i);
+            const nrOfPayments = Number((BigNumber.from(loan.nrOfPayments).toString()));
+            const nrOfInstallments = Number((BigNumber.from(loan.nrOfInstallments).toString()));
+            const remainingInstallments = nrOfInstallments - nrOfPayments;
+
+            for ( let j = 0; j < remainingInstallments; ++j ) {
+              if ( loan[2] !== address0x0 ) {
+
+                const approvetokens = await erc20.approve(lendingTemplate.address,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())));
+                expect(approvetokens.hash).to.have.lengthOf(66);
+
+                const operation = await lendingTemplate.payLoan(i,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())));
+                expect(operation.hash).to.have.lengthOf(66);
+
+              } else {
+
+                const operation = await lendingTemplate.payLoan(i,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())), { value : Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())) });
+                expect(operation.hash).to.have.lengthOf(66);
+
+              }
+
+            }
+
+          });
+
+        }
 
       }
     }
 
     let isTerminated;
-    if ( willCancel ) {
+    if ( willCancel && loanLenderTransferredViaPromissoryNote === false ) {
       it("It will try to terminate cancelled loan " + i, async function () {
         try {
           await lendingTemplate.terminateLoan(i);
@@ -620,10 +621,9 @@ describe("Lending Unit Tests", function () {
       });
     }
 
-    if ( willApprove ) {
+    if ( willApprove && loanLenderTransferredViaPromissoryNote === false ) {
       it("It will try to terminate approved loan " + i, async function () {
         const loan = await lendingTemplate.loans(i);
-        console.log(Number((BigNumber.from(loan.nrOfPayments).toString())) + " >= " + Number((BigNumber.from(loan.nrOfInstallments).toString())));
         if ( Number((BigNumber.from(loan.nrOfPayments).toString())) >= Number((BigNumber.from(loan.nrOfInstallments).toString())) ) {
           await lendingTemplate.terminateLoan(i);
           isTerminated = true;
@@ -631,7 +631,7 @@ describe("Lending Unit Tests", function () {
       });
     }
 
-    if ( isTerminated ) {
+    if ( isTerminated && loanLenderTransferredViaPromissoryNote === false ) {
       it("It will try to terminate terminated loan " + i, async function () {
         try {
           await lendingTemplate.terminateLoan(i);
