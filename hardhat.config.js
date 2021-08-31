@@ -21,35 +21,35 @@ module.exports = {
   blockGasLimit: 90_000_000_000,
   networks: {
     rinkeby: {
-      url: process.env.URL,
+      url: process.env.RINKEBY_PROVIDER,
       accounts: [process.env.ACCOUNT_PRIVATE_KEY]
     },
     ropsten: {
-      url: process.env.URL,
+      url: process.env.ROPSTEN_PROVIDER,
       accounts: [process.env.ACCOUNT_PRIVATE_KEY]
     },
     kovan: {
-      url: process.env.URL,
+      url: process.env.KOVAN_PROVIDER,
       accounts: [process.env.ACCOUNT_PRIVATE_KEY]
     },
     goerli: {
-      url: process.env.URL,
+      url: process.env.GOERLI_PROVIDER,
       accounts: [process.env.ACCOUNT_PRIVATE_KEY]
     },
     mainnet: {
-      url: process.env.URL,
+      url: process.env.MAINNET_PROVIDER,
       accounts: [process.env.ACCOUNT_PRIVATE_KEY]
     },
     matic: {
-      url: process.env.URL,
+      url: process.env.MATIC_PROVIDER,
       accounts: [process.env.ACCOUNT_PRIVATE_KEY]
     },
     polygon: {
-      url: process.env.URL,
+      url: process.env.POLYGON_PROVIDER,
       accounts: [process.env.ACCOUNT_PRIVATE_KEY]
     },
     bsc: {
-      url: process.env.URL,
+      url: process.env.BSC_PROVIDER,
       accounts: [process.env.ACCOUNT_PRIVATE_KEY]
     },
     hardhat: {

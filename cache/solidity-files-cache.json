@@ -1,8 +1,8 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/auxiliary/DistributionTokens.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/auxiliary/DistributionTokens.sol": {
+      "lastModificationDate": 1629871544149,
       "contentHash": "78949d46e3f11603002bbe1290062f66",
       "sourceName": "contracts/auxiliary/DistributionTokens.sol",
       "solcConfig": {
@@ -35,8 +35,8 @@
         "DistributionTokens"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/auxiliary/FungibleTokens.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/auxiliary/FungibleTokens.sol": {
+      "lastModificationDate": 1630331211019,
       "contentHash": "39cc9cac6bb33261e53c1d2eea065776",
       "sourceName": "contracts/auxiliary/FungibleTokens.sol",
       "solcConfig": {
@@ -69,8 +69,8 @@
         "FungibleTokens"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/auxiliary/GameItems1155.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/auxiliary/GameItems1155.sol": {
+      "lastModificationDate": 1630394972463,
       "contentHash": "eb7f73cdbd8b78c2d59244acd829861b",
       "sourceName": "contracts/auxiliary/GameItems1155.sol",
       "solcConfig": {
@@ -108,8 +108,8 @@
         "GameItems1155"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "6f1f870bdc340cf6ed1cb42556f5e6b5",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol",
       "solcConfig": {
@@ -150,8 +150,8 @@
         "ERC1155"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/access/Ownable.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/access/Ownable.sol": {
+      "lastModificationDate": 1630076694376,
       "contentHash": "727b77a156fcd81dbf7ad6642f3d6e4f",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/access/Ownable.sol",
       "solcConfig": {
@@ -186,8 +186,8 @@
         "Ownable"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Holder.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Holder.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "ca5387e1c39109d459f2ff8f22deafd4",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Holder.sol",
       "solcConfig": {
@@ -222,8 +222,8 @@
         "ERC1155Holder"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Receiver.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Receiver.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "879277e2ca79d0f4325186f399cf3055",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Receiver.sol",
       "solcConfig": {
@@ -259,8 +259,8 @@
         "ERC1155Receiver"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "cb9dc62067a205eeab4f390c72c7fe14",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155.sol",
       "solcConfig": {
@@ -295,8 +295,8 @@
         "IERC1155"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155MetadataURI.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155MetadataURI.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "9a313e25e2a837a50f7ae87017539457",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155MetadataURI.sol",
       "solcConfig": {
@@ -331,8 +331,8 @@
         "IERC1155MetadataURI"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155Receiver.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155Receiver.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "27af002e8fc1118d099c99fc8852bb73",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/IERC1155Receiver.sol",
       "solcConfig": {
@@ -367,8 +367,8 @@
         "IERC1155Receiver"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/Context.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/Context.sol": {
+      "lastModificationDate": 1630395520178,
       "contentHash": "2adbd82f6d055a4751566d4671512b03",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/GSN/Context.sol",
       "solcConfig": {
@@ -401,8 +401,8 @@
         "Context"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/ERC165.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/ERC165.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "c4e36d65c84a6af02f25cb08c9b2f149",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/introspection/ERC165.sol",
       "solcConfig": {
@@ -437,8 +437,8 @@
         "ERC165"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/math/SafeMath.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/math/SafeMath.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "4d29a22b28b7ec0e89c3cdf1c5e72b83",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/math/SafeMath.sol",
       "solcConfig": {
@@ -471,8 +471,8 @@
         "SafeMath"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Address.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Address.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "72d77402f6854b7ccf9af282e805f292",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/utils/Address.sol",
       "solcConfig": {
@@ -505,8 +505,8 @@
         "Address"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/IERC165.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/IERC165.sol": {
+      "lastModificationDate": 1630395530726,
       "contentHash": "0d62a8380952235f135dae91590f90a3",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/introspection/IERC165.sol",
       "solcConfig": {
@@ -539,8 +539,8 @@
         "IERC165"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/ERC721.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/ERC721.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "c23b39748da89dac7895efb4fad49c34",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC721/ERC721.sol",
       "solcConfig": {
@@ -585,8 +585,8 @@
         "ERC721"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol": {
+      "lastModificationDate": 1630393866210,
       "contentHash": "b7983b35319221315a13595768746bdf",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol",
       "solcConfig": {
@@ -621,8 +621,8 @@
         "IERC721"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721Metadata.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721Metadata.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "370e7a48f316401b5063bcb604843e1b",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721Metadata.sol",
       "solcConfig": {
@@ -657,8 +657,8 @@
         "IERC721Metadata"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721Enumerable.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721Enumerable.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "eaebc3874248c26f6ea0b13b9a140a94",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721Enumerable.sol",
       "solcConfig": {
@@ -693,8 +693,8 @@
         "IERC721Enumerable"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721Receiver.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721Receiver.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "fad0b3f4424bdbb4b35467b29ea8d334",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC721/IERC721Receiver.sol",
       "solcConfig": {
@@ -727,8 +727,8 @@
         "IERC721Receiver"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/EnumerableSet.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/EnumerableSet.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "7d5806dec94de00ddcfb1e9fdd6c9545",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/utils/EnumerableSet.sol",
       "solcConfig": {
@@ -761,8 +761,8 @@
         "EnumerableSet"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/EnumerableMap.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/EnumerableMap.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "8f02d41c25552d7894bdd98db412b9b0",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/utils/EnumerableMap.sol",
       "solcConfig": {
@@ -795,8 +795,8 @@
         "EnumerableMap"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Strings.sol": {
-      "lastModificationDate": 1630408201241,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Strings.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "32edba478e719cc27c3ec096284a44d6",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/utils/Strings.sol",
       "solcConfig": {
@@ -829,8 +829,8 @@
         "Strings"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/promissory/PromissoryNote.sol": {
-      "lastModificationDate": 1630408201241,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/promissory/PromissoryNote.sol": {
+      "lastModificationDate": 1630397162525,
       "contentHash": "f56753310b01fdb7df08bc54c9a2c096",
       "sourceName": "contracts/promissory/PromissoryNote.sol",
       "solcConfig": {
@@ -867,8 +867,8 @@
         "StaterPromissoryNote"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/lending/ILendingTemplate.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/ILendingTemplate.sol": {
+      "lastModificationDate": 1630394908655,
       "contentHash": "c039608c1f882c96c298a9a047fdc4b0",
       "sourceName": "contracts/lending/ILendingTemplate.sol",
       "solcConfig": {
@@ -901,8 +901,8 @@
         "ILendingTemplate"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/pooling/StaterPool.sol": {
-      "lastModificationDate": 1630408201241,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/pooling/StaterPool.sol": {
+      "lastModificationDate": 1630394975495,
       "contentHash": "8a62e579b155e93f66e3e1a7680f56e9",
       "sourceName": "contracts/pooling/StaterPool.sol",
       "solcConfig": {
@@ -941,8 +941,8 @@
         "StaterPool"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "e0a41531d159d3a32f84b7a3ecf9fabb",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol",
       "solcConfig": {
@@ -975,8 +975,8 @@
         "IERC20"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/plugins/StaterTransfers.sol": {
-      "lastModificationDate": 1630408201241,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/plugins/StaterTransfers.sol": {
+      "lastModificationDate": 1630395520042,
       "contentHash": "f44613924b066c871013f321c728b18b",
       "sourceName": "contracts/plugins/StaterTransfers.sol",
       "solcConfig": {
@@ -1016,8 +1016,8 @@
         "StaterTransfers"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {
+      "lastModificationDate": 1629871544161,
       "contentHash": "48789ebc3ca62c58d58772b2afa0503d",
       "sourceName": "contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol",
       "solcConfig": {
@@ -1050,8 +1050,8 @@
         "IERC1155"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol": {
+      "lastModificationDate": 1630393867250,
       "contentHash": "683d46b8e6a400847a831fc9623233cf",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol",
       "solcConfig": {
@@ -1086,8 +1086,8 @@
         "ERC721Holder"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/auxiliary/GameItems721.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/auxiliary/GameItems721.sol": {
+      "lastModificationDate": 1630230732918,
       "contentHash": "7620b8c729423f24362af491fe27c0b6",
       "sourceName": "contracts/auxiliary/GameItems721.sol",
       "solcConfig": {
@@ -1125,8 +1125,8 @@
         "GameItems721"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Counters.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Counters.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "304a56eb1322144704fb39f8c7e6d722",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/utils/Counters.sol",
       "solcConfig": {
@@ -1161,8 +1161,8 @@
         "Counters"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/workers/StaterDiscounts.sol": {
-      "lastModificationDate": 1630408201241,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/workers/StaterDiscounts.sol": {
+      "lastModificationDate": 1630397120085,
       "contentHash": "2f0fa0e805ab11fdc5345241236e1d33",
       "sourceName": "contracts/workers/StaterDiscounts.sol",
       "solcConfig": {
@@ -1200,8 +1200,8 @@
         "StaterDiscounts"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1155ReceiverMock.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1155ReceiverMock.sol": {
+      "lastModificationDate": 1629875308710,
       "contentHash": "1a2520ee417148fba5d85139707426f2",
       "sourceName": "contracts/libs/multi-token-standard/contracts/mocks/ERC1155ReceiverMock.sol",
       "solcConfig": {
@@ -1236,8 +1236,8 @@
         "ERC1155ReceiverMock"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1155OperatorMock.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1155OperatorMock.sol": {
+      "lastModificationDate": 1629875317314,
       "contentHash": "d57b2a6701092676c64689d877e230d0",
       "sourceName": "contracts/libs/multi-token-standard/contracts/mocks/ERC1155OperatorMock.sol",
       "solcConfig": {
@@ -1273,8 +1273,8 @@
         "ERC1155OperatorMock"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155Meta.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155Meta.sol": {
+      "lastModificationDate": 1629875326198,
       "contentHash": "d6654d49f0c1a87cff68115c55cab301",
       "sourceName": "contracts/libs/multi-token-standard/contracts/interfaces/IERC1155Meta.sol",
       "solcConfig": {
@@ -1307,8 +1307,8 @@
         "IERC1155Meta"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/tokens/ERC1155PackedBalance/ERC1155PackedBalance.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/tokens/ERC1155PackedBalance/ERC1155PackedBalance.sol": {
+      "lastModificationDate": 1629875336022,
       "contentHash": "3c8ce4362860d19a61958b90d63915cc",
       "sourceName": "contracts/libs/multi-token-standard/contracts/tokens/ERC1155PackedBalance/ERC1155PackedBalance.sol",
       "solcConfig": {
@@ -1347,8 +1347,8 @@
         "ERC1155PackedBalance"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/utils/SafeMath.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/utils/SafeMath.sol": {
+      "lastModificationDate": 1629875453329,
       "contentHash": "38e4421892b2d9531995f23089786dd8",
       "sourceName": "contracts/libs/multi-token-standard/contracts/utils/SafeMath.sol",
       "solcConfig": {
@@ -1381,8 +1381,8 @@
         "SafeMath"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155TokenReceiver.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155TokenReceiver.sol": {
+      "lastModificationDate": 1629875441770,
       "contentHash": "56414eb1d138882bb67af447747dbb4b",
       "sourceName": "contracts/libs/multi-token-standard/contracts/interfaces/IERC1155TokenReceiver.sol",
       "solcConfig": {
@@ -1415,8 +1415,8 @@
         "IERC1155TokenReceiver"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/utils/Address.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/utils/Address.sol": {
+      "lastModificationDate": 1629875431954,
       "contentHash": "0603944568471e1f41d66cb0d7b577da",
       "sourceName": "contracts/libs/multi-token-standard/contracts/utils/Address.sol",
       "solcConfig": {
@@ -1449,8 +1449,8 @@
         "Address"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/utils/ERC165.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/utils/ERC165.sol": {
+      "lastModificationDate": 1629875424202,
       "contentHash": "a43529aab440483b4eb80bbd566a285e",
       "sourceName": "contracts/libs/multi-token-standard/contracts/utils/ERC165.sol",
       "solcConfig": {
@@ -1483,8 +1483,8 @@
         "ERC165"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/tokens/ERC1155PackedBalance/ERC1155MintBurnPackedBalance.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/tokens/ERC1155PackedBalance/ERC1155MintBurnPackedBalance.sol": {
+      "lastModificationDate": 1629875346793,
       "contentHash": "b89cdaa4c5638e19e77735c307affe0a",
       "sourceName": "contracts/libs/multi-token-standard/contracts/tokens/ERC1155PackedBalance/ERC1155MintBurnPackedBalance.sol",
       "solcConfig": {
@@ -1519,8 +1519,8 @@
         "ERC1155MintBurnPackedBalance"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1155MintBurnPackedBalanceMock.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1155MintBurnPackedBalanceMock.sol": {
+      "lastModificationDate": 1629875368304,
       "contentHash": "8aa0aac02632e2a55da37e579a4f01d8",
       "sourceName": "contracts/libs/multi-token-standard/contracts/mocks/ERC1155MintBurnPackedBalanceMock.sol",
       "solcConfig": {
@@ -1556,8 +1556,8 @@
         "ERC1155MintBurnPackedBalanceMock"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/tokens/ERC1155/ERC1155Metadata.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/tokens/ERC1155/ERC1155Metadata.sol": {
+      "lastModificationDate": 1629875376156,
       "contentHash": "42a9ae966c86635a9e23b595e9102c80",
       "sourceName": "contracts/libs/multi-token-standard/contracts/tokens/ERC1155/ERC1155Metadata.sol",
       "solcConfig": {
@@ -1593,8 +1593,8 @@
         "ERC1155Metadata"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155Metadata.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155Metadata.sol": {
+      "lastModificationDate": 1629875603753,
       "contentHash": "4a3bec99673783eb5e6657b430bb46d5",
       "sourceName": "contracts/libs/multi-token-standard/contracts/interfaces/IERC1155Metadata.sol",
       "solcConfig": {
@@ -1627,8 +1627,8 @@
         "IERC1155Metadata"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1155MintBurnMock.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1155MintBurnMock.sol": {
+      "lastModificationDate": 1629875384688,
       "contentHash": "45cf27c07f7924ad22ef4fc1c53de301",
       "sourceName": "contracts/libs/multi-token-standard/contracts/mocks/ERC1155MintBurnMock.sol",
       "solcConfig": {
@@ -1664,8 +1664,8 @@
         "ERC1155MintBurnMock"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/tokens/ERC1155/ERC1155MintBurn.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/tokens/ERC1155/ERC1155MintBurn.sol": {
+      "lastModificationDate": 1629875396199,
       "contentHash": "33b759b13ce55e54aabbe6f0aa24b0a7",
       "sourceName": "contracts/libs/multi-token-standard/contracts/tokens/ERC1155/ERC1155MintBurn.sol",
       "solcConfig": {
@@ -1700,8 +1700,8 @@
         "ERC1155MintBurn"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/tokens/ERC1155/ERC1155.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/tokens/ERC1155/ERC1155.sol": {
+      "lastModificationDate": 1629875416111,
       "contentHash": "79b1a7913c01ff9ab07f8dd8698ed021",
       "sourceName": "contracts/libs/multi-token-standard/contracts/tokens/ERC1155/ERC1155.sol",
       "solcConfig": {
@@ -1740,8 +1740,8 @@
         "ERC1155"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC20Mock.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC20Mock.sol": {
+      "lastModificationDate": 1629875471125,
       "contentHash": "869835e7d907d26c95915e869aa86378",
       "sourceName": "contracts/libs/multi-token-standard/contracts/mocks/ERC20Mock.sol",
       "solcConfig": {
@@ -1778,8 +1778,8 @@
         "ERC20Mock"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC20.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC20.sol": {
+      "lastModificationDate": 1629875479580,
       "contentHash": "252f4662978cf390a1074918eb9c5a3a",
       "sourceName": "contracts/libs/multi-token-standard/contracts/interfaces/IERC20.sol",
       "solcConfig": {
@@ -1812,8 +1812,8 @@
         "IERC20"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/tokens/ERC1155PackedBalance/ERC1155MetaPackedBalance.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/tokens/ERC1155PackedBalance/ERC1155MetaPackedBalance.sol": {
+      "lastModificationDate": 1629875487108,
       "contentHash": "7e8085a55e93a260c71d9d15cffcc07e",
       "sourceName": "contracts/libs/multi-token-standard/contracts/tokens/ERC1155PackedBalance/ERC1155MetaPackedBalance.sol",
       "solcConfig": {
@@ -1852,8 +1852,8 @@
         "ERC1155MetaPackedBalance"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/utils/LibBytes.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/utils/LibBytes.sol": {
+      "lastModificationDate": 1629875517375,
       "contentHash": "a9c79e1a5ef839906ae8cc7e8eb0b137",
       "sourceName": "contracts/libs/multi-token-standard/contracts/utils/LibBytes.sol",
       "solcConfig": {
@@ -1886,8 +1886,8 @@
         "LibBytes"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/utils/SignatureValidator.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/utils/SignatureValidator.sol": {
+      "lastModificationDate": 1629875496132,
       "contentHash": "0962d6351ef206a7048a00e915b3979f",
       "sourceName": "contracts/libs/multi-token-standard/contracts/utils/SignatureValidator.sol",
       "solcConfig": {
@@ -1924,8 +1924,8 @@
         "SignatureValidator"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1271Wallet.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1271Wallet.sol": {
+      "lastModificationDate": 1629875542926,
       "contentHash": "715f44bf9d88a7ca17ac586fb573b289",
       "sourceName": "contracts/libs/multi-token-standard/contracts/interfaces/IERC1271Wallet.sol",
       "solcConfig": {
@@ -1958,8 +1958,8 @@
         "IERC1271Wallet"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/utils/LibEIP712.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/utils/LibEIP712.sol": {
+      "lastModificationDate": 1629875505847,
       "contentHash": "1ce114e0e1058e5a704fb61c5918224e",
       "sourceName": "contracts/libs/multi-token-standard/contracts/utils/LibEIP712.sol",
       "solcConfig": {
@@ -1992,8 +1992,8 @@
         "LibEIP712"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1271WalletValidationMock.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1271WalletValidationMock.sol": {
+      "lastModificationDate": 1629875535287,
       "contentHash": "9083331c6b5ae685ca39b15e15c482ff",
       "sourceName": "contracts/libs/multi-token-standard/contracts/mocks/ERC1271WalletValidationMock.sol",
       "solcConfig": {
@@ -2030,8 +2030,8 @@
         "LibEIP712"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/tokens/ERC1155/ERC1155Meta.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/tokens/ERC1155/ERC1155Meta.sol": {
+      "lastModificationDate": 1629875550422,
       "contentHash": "19ab5279311429a019fc97643a24acc9",
       "sourceName": "contracts/libs/multi-token-standard/contracts/tokens/ERC1155/ERC1155Meta.sol",
       "solcConfig": {
@@ -2070,8 +2070,8 @@
         "ERC1155Meta"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1155MetaMintBurnMock.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1155MetaMintBurnMock.sol": {
+      "lastModificationDate": 1629875560154,
       "contentHash": "11f2a1cc135b07089656a4109968d466",
       "sourceName": "contracts/libs/multi-token-standard/contracts/mocks/ERC1155MetaMintBurnMock.sol",
       "solcConfig": {
@@ -2108,8 +2108,8 @@
         "ERC1155MetaMintBurnMock"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1155MetadataMock.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1155MetadataMock.sol": {
+      "lastModificationDate": 1629875568394,
       "contentHash": "9cfa219b64c4869efac0640abe1cc0f4",
       "sourceName": "contracts/libs/multi-token-standard/contracts/mocks/ERC1155MetadataMock.sol",
       "solcConfig": {
@@ -2144,8 +2144,8 @@
         "ERC1155MetadataMock"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1155MetaMintBurnPackedBalanceMock.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/ERC1155MetaMintBurnPackedBalanceMock.sol": {
+      "lastModificationDate": 1629875581065,
       "contentHash": "4ff218e857f9867c3d4b0f2a5e0262e4",
       "sourceName": "contracts/libs/multi-token-standard/contracts/mocks/ERC1155MetaMintBurnPackedBalanceMock.sol",
       "solcConfig": {
@@ -2182,8 +2182,8 @@
         "ERC1155MetaMintBurnPackedBalanceMock"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Pausable.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Pausable.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "90de6a370710a61994975feed325e093",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Pausable.sol",
       "solcConfig": {
@@ -2219,8 +2219,8 @@
         "ERC1155Pausable"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Pausable.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Pausable.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "8e1426287776ef63005695dfc289ec56",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/utils/Pausable.sol",
       "solcConfig": {
@@ -2255,8 +2255,8 @@
         "Pausable"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/ERC721Pausable.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/ERC721Pausable.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "46f79ddd76e77a7c5bf841b830d0ed1e",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC721/ERC721Pausable.sol",
       "solcConfig": {
@@ -2292,8 +2292,8 @@
         "ERC721Pausable"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/presets/ERC721PresetMinterPauserAutoId.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/presets/ERC721PresetMinterPauserAutoId.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "88fa53d283b53c53e143c9fe1c191a18",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/presets/ERC721PresetMinterPauserAutoId.sol",
       "solcConfig": {
@@ -2333,8 +2333,8 @@
         "ERC721PresetMinterPauserAutoId"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/access/AccessControl.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/access/AccessControl.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "80fba54514bd6969409886d7f3d9ec78",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/access/AccessControl.sol",
       "solcConfig": {
@@ -2371,8 +2371,8 @@
         "AccessControl"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/ERC721Burnable.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC721/ERC721Burnable.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "36eba6b896e5b04a5a71f02ce01087fe",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC721/ERC721Burnable.sol",
       "solcConfig": {
@@ -2408,8 +2408,8 @@
         "ERC721Burnable"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC777/ERC777.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC777/ERC777.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "908206b190e60731e24ef3e0a5c6f6a2",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC777/ERC777.sol",
       "solcConfig": {
@@ -2451,8 +2451,8 @@
         "ERC777"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC777/IERC777.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC777/IERC777.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "5833aafefffbdbdb5f5ee567a3f51b86",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC777/IERC777.sol",
       "solcConfig": {
@@ -2485,8 +2485,8 @@
         "IERC777"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC777/IERC777Recipient.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC777/IERC777Recipient.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "c611b2349e7afbb03e4fd314878861e0",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC777/IERC777Recipient.sol",
       "solcConfig": {
@@ -2519,8 +2519,8 @@
         "IERC777Recipient"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC777/IERC777Sender.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC777/IERC777Sender.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "c59a76b8a23eaef6f259de54f672d59e",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC777/IERC777Sender.sol",
       "solcConfig": {
@@ -2553,8 +2553,8 @@
         "IERC777Sender"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/IERC1820Registry.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/IERC1820Registry.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "820888c202bc007f6112423ee95b9cf0",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/introspection/IERC1820Registry.sol",
       "solcConfig": {
@@ -2587,8 +2587,8 @@
         "IERC1820Registry"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/proxy/UpgradeableProxy.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/proxy/UpgradeableProxy.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "686980f2a53d793b815368f676364b8e",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/proxy/UpgradeableProxy.sol",
       "solcConfig": {
@@ -2624,8 +2624,8 @@
         "UpgradeableProxy"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/proxy/Proxy.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/proxy/Proxy.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "a6f1021015ca14abd4852d6a1e22861c",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/proxy/Proxy.sol",
       "solcConfig": {
@@ -2658,8 +2658,8 @@
         "Proxy"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/proxy/TransparentUpgradeableProxy.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/proxy/TransparentUpgradeableProxy.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "c6d0338de5744b70a7c6cdcda5310a99",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/proxy/TransparentUpgradeableProxy.sol",
       "solcConfig": {
@@ -2694,8 +2694,8 @@
         "TransparentUpgradeableProxy"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/proxy/ProxyAdmin.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/proxy/ProxyAdmin.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "1fb4daec0de5a54ffe01e92fc9cc5aa4",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/proxy/ProxyAdmin.sol",
       "solcConfig": {
@@ -2731,8 +2731,8 @@
         "ProxyAdmin"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/payment/escrow/Escrow.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/payment/escrow/Escrow.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "ff1d5619edddf81b163071835903272d",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/payment/escrow/Escrow.sol",
       "solcConfig": {
@@ -2769,8 +2769,8 @@
         "Escrow"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/payment/PullPayment.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/payment/PullPayment.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "629b6b6c6ce2547851a7a650e1336380",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/payment/PullPayment.sol",
       "solcConfig": {
@@ -2805,8 +2805,8 @@
         "PullPayment"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20Snapshot.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20Snapshot.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "1d275c09f45d34743142f399a40258a1",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20Snapshot.sol",
       "solcConfig": {
@@ -2844,8 +2844,8 @@
         "ERC20Snapshot"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Arrays.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Arrays.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "1dbebf76b7e090e7b226ed3fcc29058b",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/utils/Arrays.sol",
       "solcConfig": {
@@ -2880,8 +2880,8 @@
         "Arrays"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "1d93743f6ca9d2ecf9b3c26718faf610",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol",
       "solcConfig": {
@@ -2918,8 +2918,8 @@
         "ERC20"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/math/Math.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/math/Math.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "e5c844515b04deabacef7eb872abc384",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/math/Math.sol",
       "solcConfig": {
@@ -2952,8 +2952,8 @@
         "Math"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20Capped.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20Capped.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "4cef998c21c9cfceba627ea47b5a5b28",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20Capped.sol",
       "solcConfig": {
@@ -2988,8 +2988,8 @@
         "ERC20Capped"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20Pausable.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20Pausable.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "42c0638e45b2c33154488610fe3091fe",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20Pausable.sol",
       "solcConfig": {
@@ -3025,8 +3025,8 @@
         "ERC20Pausable"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/presets/ERC20PresetMinterPauser.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/presets/ERC20PresetMinterPauser.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "79adb927bc2f4af9231ff1951ee7a707",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/presets/ERC20PresetMinterPauser.sol",
       "solcConfig": {
@@ -3065,8 +3065,8 @@
         "ERC20PresetMinterPauser"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20Burnable.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20Burnable.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "f4a80522fa4ffe888e0cfbd5ba56de6b",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC20/ERC20Burnable.sol",
       "solcConfig": {
@@ -3102,8 +3102,8 @@
         "ERC20Burnable"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/presets/ERC1155PresetMinterPauser.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/presets/ERC1155PresetMinterPauser.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "18c0222a0b261ae01068e92a59f3964d",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/presets/ERC1155PresetMinterPauser.sol",
       "solcConfig": {
@@ -3142,8 +3142,8 @@
         "ERC1155PresetMinterPauser"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Burnable.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Burnable.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "e9e23a67a9d60cd0e6d133323b704b8d",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Burnable.sol",
       "solcConfig": {
@@ -3178,8 +3178,8 @@
         "ERC1155Burnable"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/access/TimelockController.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/access/TimelockController.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "d1ad44453ff9ce36dfcfa4f5dd243d19",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/access/TimelockController.sol",
       "solcConfig": {
@@ -3215,8 +3215,8 @@
         "TimelockController"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "33e22842646d746e5c4124c2fdc051aa",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol",
       "solcConfig": {
@@ -3253,8 +3253,8 @@
         "SafeERC20"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/TokenTimelock.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/token/ERC20/TokenTimelock.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "8c436bb9f5a3643ed1f64cf370c277f0",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/token/ERC20/TokenTimelock.sol",
       "solcConfig": {
@@ -3289,8 +3289,8 @@
         "TokenTimelock"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/GSNRecipientERC20Fee.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/GSNRecipientERC20Fee.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "c8e2094331111d20cf525223560d67f1",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/GSN/GSNRecipientERC20Fee.sol",
       "solcConfig": {
@@ -3330,8 +3330,8 @@
         "__unstable__ERC20Owned"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/GSNRecipient.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/GSNRecipient.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "b1c354497eceaa86f2f253502d5693b9",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/GSN/GSNRecipient.sol",
       "solcConfig": {
@@ -3368,8 +3368,8 @@
         "GSNRecipient"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/IRelayRecipient.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/IRelayRecipient.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "0bf08baf48262eb41bc206529963621d",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/GSN/IRelayRecipient.sol",
       "solcConfig": {
@@ -3402,8 +3402,8 @@
         "IRelayRecipient"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/IRelayHub.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/IRelayHub.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "3d76829bda93b091eafa44820d8a7596",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/GSN/IRelayHub.sol",
       "solcConfig": {
@@ -3436,8 +3436,8 @@
         "IRelayHub"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/GSNRecipientSignature.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/GSN/GSNRecipientSignature.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "cfa3c366a1a8c8b8411df236b763cc20",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/GSN/GSNRecipientSignature.sol",
       "solcConfig": {
@@ -3473,8 +3473,8 @@
         "GSNRecipientSignature"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/cryptography/ECDSA.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/cryptography/ECDSA.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "06d35974124c53de900f77f0b35bb077",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/cryptography/ECDSA.sol",
       "solcConfig": {
@@ -3507,8 +3507,8 @@
         "ECDSA"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/auxiliary/TokenGeyser.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/auxiliary/TokenGeyser.sol": {
+      "lastModificationDate": 1630150606171,
       "contentHash": "ea50ee4fc52564d8824aee3bbd336f8b",
       "sourceName": "contracts/auxiliary/TokenGeyser.sol",
       "solcConfig": {
@@ -3548,8 +3548,8 @@
         "TokenPool"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/payment/PaymentSplitter.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/payment/PaymentSplitter.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "d7a2cefa8bcd057cbd1266070ca314ed",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/payment/PaymentSplitter.sol",
       "solcConfig": {
@@ -3585,8 +3585,8 @@
         "PaymentSplitter"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/lending/LendingTemplate.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingTemplate.sol": {
+      "lastModificationDate": 1630397196357,
       "contentHash": "33f8a17e50130b82efdb7da29eac2f8a",
       "sourceName": "contracts/lending/LendingTemplate.sol",
       "solcConfig": {
@@ -3623,8 +3623,8 @@
         "LendingTemplate"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/lending/LendingCore.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingCore.sol": {
+      "lastModificationDate": 1630394971403,
       "contentHash": "9ef1c360f7c69652f1d946bd1bf0ebba",
       "sourceName": "contracts/lending/LendingCore.sol",
       "solcConfig": {
@@ -3661,8 +3661,8 @@
         "LendingCore"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/workers/IStaterDiscounts.sol": {
-      "lastModificationDate": 1630408201241,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/workers/IStaterDiscounts.sol": {
+      "lastModificationDate": 1629876828228,
       "contentHash": "fa0bf1d3f2d017adbaa2cdbbdb81f793",
       "sourceName": "contracts/workers/IStaterDiscounts.sol",
       "solcConfig": {
@@ -3695,8 +3695,8 @@
         "IStaterDiscounts"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/lending/LendingMethods.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/lending/LendingMethods.sol": {
+      "lastModificationDate": 1630397191353,
       "contentHash": "fe6558dd8d7bdc6ec70e5128a065f951",
       "sourceName": "contracts/lending/LendingMethods.sol",
       "solcConfig": {
@@ -3733,8 +3733,8 @@
         "LendingMethods"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/payment/escrow/ConditionalEscrow.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/payment/escrow/ConditionalEscrow.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "aa3e8c91094948828e236ec0a5603e58",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/payment/escrow/ConditionalEscrow.sol",
       "solcConfig": {
@@ -3769,8 +3769,8 @@
         "ConditionalEscrow"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/payment/escrow/RefundEscrow.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/payment/escrow/RefundEscrow.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "3a60b76e68f4a9ddd7486fc020081120",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/payment/escrow/RefundEscrow.sol",
       "solcConfig": {
@@ -3805,8 +3805,8 @@
         "RefundEscrow"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/auxiliary/StakingTokens.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/auxiliary/StakingTokens.sol": {
+      "lastModificationDate": 1629871544149,
       "contentHash": "b378dfc4eaa62d60986dedb7eda1a551",
       "sourceName": "contracts/auxiliary/StakingTokens.sol",
       "solcConfig": {
@@ -3839,8 +3839,8 @@
         "StakingTokens"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155MintBurn.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC1155MintBurn.sol": {
+      "lastModificationDate": 1629875620168,
       "contentHash": "0d8851c6b29cfe4b0c220eb215c4d04e",
       "sourceName": "contracts/libs/multi-token-standard/contracts/interfaces/IERC1155MintBurn.sol",
       "solcConfig": {
@@ -3873,8 +3873,8 @@
         "IERC1155MintBurn"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC165.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/interfaces/IERC165.sol": {
+      "lastModificationDate": 1629875626556,
       "contentHash": "5abc8c6b13ed7e11ef81a512be79a002",
       "sourceName": "contracts/libs/multi-token-standard/contracts/interfaces/IERC165.sol",
       "solcConfig": {
@@ -3907,8 +3907,8 @@
         "IERC165"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/OwnableMock.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/mocks/OwnableMock.sol": {
+      "lastModificationDate": 1629875637068,
       "contentHash": "c460de5f4ad972edae2d0a32af473242",
       "sourceName": "contracts/libs/multi-token-standard/contracts/mocks/OwnableMock.sol",
       "solcConfig": {
@@ -3943,8 +3943,8 @@
         "OwnableMock"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/utils/Ownable.sol": {
-      "lastModificationDate": 1630408201225,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/multi-token-standard/contracts/utils/Ownable.sol": {
+      "lastModificationDate": 1629875644960,
       "contentHash": "f7ececfa96859c2a1f469e441695e4a5",
       "sourceName": "contracts/libs/multi-token-standard/contracts/utils/Ownable.sol",
       "solcConfig": {
@@ -3977,8 +3977,8 @@
         "Ownable"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/cryptography/MerkleProof.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/cryptography/MerkleProof.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "44bd823687d58263d3b1da555235f93e",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/cryptography/MerkleProof.sol",
       "solcConfig": {
@@ -4011,8 +4011,8 @@
         "MerkleProof"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/ERC165Checker.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/ERC165Checker.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "33e1e632b2a4fc45f845e42a99bc56a4",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/introspection/ERC165Checker.sol",
       "solcConfig": {
@@ -4045,8 +4045,8 @@
         "ERC165Checker"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/ERC1820Implementer.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/ERC1820Implementer.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "a44e936347d0c6d6aeb7b0acf404d175",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/introspection/ERC1820Implementer.sol",
       "solcConfig": {
@@ -4081,8 +4081,8 @@
         "ERC1820Implementer"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/IERC1820Implementer.sol": {
-      "lastModificationDate": 1630408201229,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/introspection/IERC1820Implementer.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "663251cfa9462cad6003a81bc876c938",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/introspection/IERC1820Implementer.sol",
       "solcConfig": {
@@ -4115,8 +4115,8 @@
         "IERC1820Implementer"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/math/SignedSafeMath.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/math/SignedSafeMath.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "159169e078460f380436878421b73431",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/math/SignedSafeMath.sol",
       "solcConfig": {
@@ -4149,8 +4149,8 @@
         "SignedSafeMath"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/proxy/Initializable.sol": {
-      "lastModificationDate": 1630408201233,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/proxy/Initializable.sol": {
+      "lastModificationDate": 1629871544165,
       "contentHash": "99bd69d93b6e25a9cdf9c04550e1780f",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/proxy/Initializable.sol",
       "solcConfig": {
@@ -4183,8 +4183,8 @@
         "Initializable"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Create2.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/Create2.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "79d4a7e7426effc35937c12ad475b2dc",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/utils/Create2.sol",
       "solcConfig": {
@@ -4217,8 +4217,8 @@
         "Create2"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "8610bead2aa403a692a9729f9e8e710b",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol",
       "solcConfig": {
@@ -4251,8 +4251,8 @@
         "ReentrancyGuard"
       ]
     },
-    "/home/raziel/Documents/stater/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/SafeCast.sol": {
-      "lastModificationDate": 1630408201237,
+    "/home/gheoneaemil5/nft-lending-contracts/contracts/libs/openzeppelin-solidity/contracts/utils/SafeCast.sol": {
+      "lastModificationDate": 1629871544169,
       "contentHash": "c227dcf457382aabf2d78218f6457799",
       "sourceName": "contracts/libs/openzeppelin-solidity/contracts/utils/SafeCast.sol",
       "solcConfig": {
