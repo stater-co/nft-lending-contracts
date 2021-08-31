@@ -10,6 +10,7 @@ package-lock.json
 .vscode
 .env
 
+artifacts/
 **/contracts/artifacts/
 **/contracts/auxiliary/artifacts/
 **/contracts/lending/artifacts/
