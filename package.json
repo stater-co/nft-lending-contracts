@@ -1,6 +1,7 @@
 {
   "name": "hardhat-project",
   "scripts": {
+    "rinkeby-production-deploy": "npx hardhat run scripts/deploy.js --network rinkeby",
     "rinkeby-development-deploy": "npx hardhat run scripts/debug.js --network rinkeby",
     "mainnet-production-deploy": "npx hardhat run scripts/deploy.js --network mainnet",
     "kovan-development-deploy": "npx hardhat run scripts/debug.js --network kovan",
