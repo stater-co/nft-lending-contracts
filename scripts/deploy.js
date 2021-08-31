@@ -54,7 +54,7 @@ async function main() {
   console.log('PromissoryNote: Got Deployed Contract');
   await lendingMethods.deployed();
   console.log('LendingMethods: Got Deployed Contract');
-  deployedPromissoryNote.setLendingDataAddress(lendingTemplate.address);
+  await deployedPromissoryNote.setLendingDataAddress(lendingTemplate.address);
   console.log('PromissoryNote: Set Lending Data Address');
 
   console.log('\n=========================================================================\n')
