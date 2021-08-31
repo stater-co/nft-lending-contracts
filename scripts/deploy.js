@@ -39,7 +39,7 @@ async function main() {
 
   const deployedPromissoryNote = await promissoryNote.deployed();
   await lendingMethods.deployed();
-  deployedPromissoryNote.setLendingDataAddress(lendingTemplate.address);
+  await deployedPromissoryNote.setLendingDataAddress(lendingTemplate.address);
 
 
   console.log("Discounts deployed to:", discounts.address);
