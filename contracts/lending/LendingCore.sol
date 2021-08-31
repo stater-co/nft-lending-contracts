@@ -147,6 +147,7 @@ contract LendingCore is StaterTransfers {
     }
 
     function getPromissoryPermission(uint256 loanId) external view returns(address) {
+        require(loans[loanId].status == Status.APPROVED, "Loan is no longer approved");
         return promissoryPermissions[loanId];
     }
 

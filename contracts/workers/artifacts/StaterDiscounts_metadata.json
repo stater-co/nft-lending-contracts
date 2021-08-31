@@ -301,11 +301,11 @@
 			]
 		},
 		"contracts/workers/StaterDiscounts.sol": {
-			"keccak256": "0xa37196c253c56210d874f6e4f39cb24bfd2fecf2030c31f093003a5178a95990",
+			"keccak256": "0x9aaf6ee220ea9bc2dde28e2c68507bf84e47a00add0645690bd9e84bab5e87e3",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f03c3d7e94d37a6970c4011e53ace73f11e69ee99ccf42dd87c829f703581ff1",
-				"dweb:/ipfs/QmV9r5GeJ8EzCDtgadM1BwR84cTbzbJYPPqPsJkeagyqxs"
+				"bzz-raw://8d936af804af74a07cb91e2c6e2099e28f167087c801064c9cad0689400d7a2f",
+				"dweb:/ipfs/QmUFTMePphPfDtP78Gkvr6hf4VdVEDKT9AeNLrxDd3GrNn"
 			]
 		}
 	},

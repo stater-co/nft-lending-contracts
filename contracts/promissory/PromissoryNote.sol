@@ -52,17 +52,17 @@ contract StaterPromissoryNote is ERC721, Ownable {
      * @dev Allows a user to lock approved loans in the contract and mint a new Promissory Note 
      */ 
     function createPromissoryNote(uint256[] calldata loanIds) external {
-        require(loanIds.length > 0, "Stater Promissory Note: You must submit an array with at least one element");
+        require(loanIds.length > 0, "You must submit an array with at least one element");
         
         //Allow loans to be used in the Promissory Note
-        require(address(lendingDataTemplate) != address(0),"Promissory Note: Lending contract not established");
+        require(address(lendingDataTemplate) != address(0),"Lending contract not established");
         
         //Set promissory note fields
         promissoryNotes[promissoryNoteId].loans = loanIds;
         promissoryNotes[promissoryNoteId].owner = msg.sender;
         
         for (uint i = 0; i < loanIds.length; ++i){
-            require(promissoryLoans[loanIds[i]] == 0,"Stater Promissory Note: One of the loans is already used by another promissory note");
+            require(promissoryLoans[loanIds[i]] == 0,"One of the loans is already used by another promissory note");
             require(lendingDataTemplate.getPromissoryPermission(loanIds[i]) == msg.sender);
             promissoryLoans[loanIds[i]] = promissoryNoteId;
         }
@@ -94,8 +94,8 @@ contract StaterPromissoryNote is ERC721, Ownable {
         public
         override
     {
-    	require(address(lendingDataTemplate) != address(0),"Stater Promissory Note: Lending contract not established");
-        require(id < promissoryNoteId, "Stater Promissory Note: Invalid promissory ID");
+    	require(address(lendingDataTemplate) != address(0),"Lending contract not established");
+        require(id < promissoryNoteId, "Invalid promissory ID");
 
 	    //Allow loans to be used in the Promissory Note
 	    super.safeTransferFrom(from,to,id,_data);
@@ -112,8 +112,8 @@ contract StaterPromissoryNote is ERC721, Ownable {
         public
         override
     {
-     	require(address(lendingDataTemplate) != address(0),"Stater Promissory Note: Lending contract not established");
-        require(id < promissoryNoteId, "Stater Promissory Note: Invalid promissory ID");
+     	require(address(lendingDataTemplate) != address(0),"Lending contract not established");
+        require(id < promissoryNoteId, "Invalid promissory ID");
 
         //Allow loans to be used in the Promissory Note
 	    super.transferFrom(from,to,id);
