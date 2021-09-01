@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.7.6;
-pragma abicoder v2;
+pragma solidity 0.6.12;
+pragma experimental ABIEncoderV2;
 import "./LendingCore.sol";
 import "./LendingCoreMethods.sol";
 import "../plugins/StaterProxy/StaterProxy.sol";
@@ -19,7 +19,7 @@ contract LendingTemplate is LendingCore, LendingCoreMethods, StaterProxy {
     constructor(
         address _discountsHandler,
         address _loanHandler
-    ) {
+    ) public {
         require(_discountsHandler != address(0), "A valid discounts handler is required");
         require(_loanHandler != address(0), "A valid loan handler is required");
         discountsHandler = _discountsHandler;
