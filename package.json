@@ -1,39 +1,13 @@
 {
-  "name": "opensea-erc1155",
+  "name": "staterpool",
   "version": "1.0.0",
-  "description": "Starter contracts for an ERC-1155 project.",
-  "main": "index.js",
-  "scripts": {
-    "bootstrap": "npm install --python=/usr/bin/python2.7",
-    "global-truffle-install": "sudo npm install --unsafe-perm -g truffle",
-    "build": "truffle compile",
-    "test": "truffle test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ProjectOpenSea/opensea-erc1155.git"
-  },
-  "author": "alex.atallah@opensea.io",
-  "license": "ISC",
+  "description": "Starter Lending Contract enhanced with Aave V2 pool, enabling auto lending for Uniswap V3 positions",
+  "author": "emilian@stater.co",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ProjectOpenSea/opensea-erc1155/issues"
+    "url": "https://github.com/stater-co/nft-lending-contracts/issues"
   },
-  "homepage": "https://github.com/ProjectOpenSea/opensea-erc1155#readme",
-  "dependencies": {
-    "@0x/subproviders": "^2.1.4",
-    "ganache-cli": "^6.12.1",
-    "multi-token-standard": "^1.0.1",
-    "opensea-js": "^1.1.5",
-    "openzeppelin-solidity": "^3.3.0",
-    "truffle": "^5.1.60",
-    "truffle-assertions": "^0.9.2",
-    "truffle-flattener": "1.4.2",
-    "truffle-hdwallet-provider": "1.0.17",
-    "web3": "1.0.0-beta.34"
-  },
-  "devDependencies": {
-    "eth-gas-reporter": "^0.2.14"
-  },
+  "homepage": "https://github.com/stater-co/nft-lending-contracts",
   "engines": {
     "node": ">=8.11.x",
     "npm": ">=5.6.x"
