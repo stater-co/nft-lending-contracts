@@ -17,7 +17,8 @@ contract StaterHealthFactor is Ownable, LendingCore, HealthFactorCreateLoanMetho
     
     address public loanHandler;
     address public discountsHandler;
-    uint256 public ltv = 600;
+    uint256 public ltv = 60;
+    uint256 public iltv = 50;
     uint256 public interestRate = 20;
     uint256 public interestRateToStater = 40;
     uint32 public lenderFee = 100;
@@ -106,7 +107,7 @@ contract StaterHealthFactor is Ownable, LendingCore, HealthFactorCreateLoanMetho
             loans[id].nftTokenIdArray.push(loan.nftTokenIdArray[i]);
         }
         
-        require(loan.loanAmount <= (loans[id].assetsValue / 100) * (ltv / 10), "The LTV must be under 60%");
+        require(loan.loanAmount <= (loans[id].assetsValue / 100) * ltv, "The LTV must be under 60%");
         
         // Computing the defaulting limit
         if ( loan.nrOfInstallments <= 3 )
@@ -147,6 +148,11 @@ contract StaterHealthFactor is Ownable, LendingCore, HealthFactorCreateLoanMetho
             loans[id].nftTokenTypeArray
         );
         ++id;
+        
+        if ( loans[id].loanAmount <= (loans[id].assetsValue / 100) * iltv ) {
+            uint256 totalEtherAsked = loans[id].currency != address(0) ? priceOracleGetter.getAssetPrice(loans[id].currency) * loans[id].loanAmount : loans[id].loanAmount;
+            
+        }
     }
 
 

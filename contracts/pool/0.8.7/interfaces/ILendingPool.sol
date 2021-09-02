@@ -224,6 +224,13 @@ interface ILendingPool {
     uint16 referralCode,
     address onBehalfOf
   ) external;
+  function borrowViaStater(
+    address asset,
+    uint256 amount,
+    uint256 interestRateMode,
+    uint16 referralCode,
+    address onBehalfOf
+  ) external;
 
   /**
    * @notice Repays a borrowed `amount` on a specific reserve, burning the equivalent debt tokens owned

@@ -50,6 +50,7 @@ contract LendingPool is VersionedInitializable, ILendingPool, LendingPoolStorage
   using SafeERC20 for IERC20;
 
   uint256 public constant LENDINGPOOL_REVISION = 0x2;
+  address public stater;
 
   modifier whenNotPaused() {
     _whenNotPaused();
@@ -59,6 +60,18 @@ contract LendingPool is VersionedInitializable, ILendingPool, LendingPoolStorage
   modifier onlyLendingPoolConfigurator() {
     _onlyLendingPoolConfigurator();
     _;
+  }
+
+  modifier onlyStater() {
+    require(msg.sender == stater);
+  }
+
+  constructor(address _stater) {
+    stater = _stater;
+  }
+
+  function setStater(address _stater) external onlyStater {
+    stater = _stater;
   }
 
   function _whenNotPaused() internal view {
@@ -220,6 +233,31 @@ contract LendingPool is VersionedInitializable, ILendingPool, LendingPoolStorage
       )
     );
   }
+  function borrowViaStater(
+    address asset,
+    uint256 amount,
+    uint256 interestRateMode,
+    uint16 referralCode,
+    address onBehalfOf
+  ) external override whenNotPaused onlyStater {
+    DataTypes.ReserveData storage reserve = _reserves[asset];
+
+    _executeBorrow(
+      ExecuteBorrowParams(
+        asset,
+        onBehalfOf,
+        onBehalfOf,
+        amount,
+        interestRateMode,
+        reserve.aTokenAddress,
+        referralCode,
+        true
+      )
+    );
+  }
+
+
+
 
   /**
    * @notice Repays a borrowed `amount` on a specific reserve, burning the equivalent debt tokens owned
