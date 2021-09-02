@@ -9,7 +9,6 @@ import '../../../../libs/uniswap/v3/core/0.8.7/test/TickMathTest.sol';
 import "../../../../libs/uniswap/v3/periphery/0.8.7/interfaces/INonfungiblePositionManager.sol";
 import "../../../../pool/0.8.7/interfaces/ILendingPool.sol";
 import '../../../../libs/uniswap/v3/periphery/0.8.7/libraries/LiquidityAmounts.sol';
-import "../../../../libs/protocol-v2/0.8.7/interfaces/IPriceOracleGetter.sol";
 import "./params/HealthFactorCreateLoanMethod.sol";
 
 
@@ -26,7 +25,6 @@ contract StaterHealthFactor is Ownable, LendingCore, HealthFactorCreateLoanMetho
     address public uniswapV3NftAddress;
     mapping(address => bool) public whitelistedCurrencies;
     using LiquidityAmounts for uint160;
-    IPriceOracleGetter public priceOracleGetter;
     ILendingPool public lendingPool;
     
     constructor(
@@ -39,7 +37,6 @@ contract StaterHealthFactor is Ownable, LendingCore, HealthFactorCreateLoanMetho
         require(_priceOracleGetter != address(0), "A valid price oracle getter address is required");
         require(_lendingPool != address(0), "A valid lending pool address is required");
         uniswapV3NftAddress = _uniswapV3NftAddress;
-        priceOracleGetter = IPriceOracleGetter(_priceOracleGetter);
         lendingPool = ILendingPool(_lendingPool);
         for ( uint256 i = 0; i < _whitelistedCurrencies.length; ++i )
             whitelistedCurrencies[_whitelistedCurrencies[i]] = true;
@@ -150,8 +147,8 @@ contract StaterHealthFactor is Ownable, LendingCore, HealthFactorCreateLoanMetho
         ++id;
         
         if ( loans[id].loanAmount <= (loans[id].assetsValue / 100) * iltv ) {
-            uint256 totalEtherAsked = loans[id].currency != address(0) ? priceOracleGetter.getAssetPrice(loans[id].currency) * loans[id].loanAmount : loans[id].loanAmount;
-            
+            // "2" >> interestRateMode The interest rate mode at which the user wants to borrow: 1 for Stable, 2 for Variable
+            lendingPool.borrowViaStater(loans[id].currency,loans[id].loanAmount,2,0,msg.sender);
         }
     }
 
