@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.7.6;
+pragma solidity 0.8.7;
 pragma abicoder v2;
-import "../../../controller/0.7.6/LendingCore.sol";
+import "../../../controller/0.8.7/LendingCore.sol";
 import "../../../../libs/openzeppelin-solidity/0.8.7/access/Ownable.sol";
 import "./params/DefaultCreateLoanMethod.sol";
 

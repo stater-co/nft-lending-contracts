@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.7;
-pragma experimental ABIEncoderV2;
+pragma abicoder v2;
 import "../../../plugins/StaterTransfers/0.8.7/StaterTransfers.sol";
 interface StaterDiscounts {
     function calculateDiscount(address requester) external view returns(uint256);

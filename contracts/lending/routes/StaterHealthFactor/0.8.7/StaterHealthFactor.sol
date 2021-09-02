@@ -5,8 +5,8 @@ pragma abicoder v2;
 import "../../../controller/0.8.7/LendingCore.sol";
 import "../../../../libs/openzeppelin-solidity/0.8.7/access/Ownable.sol";
 import "../../../../libs/openzeppelin-solidity/0.8.7/token/ERC20/ERC20.sol";
-import '../../../libs/uniswap-v3-core/test/TickMathTest.sol';
-import "../../../libs/uniswap-v3-periphery/interfaces/INonfungiblePositionManager.sol";
+import '../../../../libs/uniswap/v3/core/0.8.7/test/TickMathTest.sol';
+import "../../../../libs/uniswap/v3/periphery/0.8.7/interfaces/INonfungiblePositionManager.sol";
 import '../../../../libs/uniswap/v3/periphery/0.8.7/libraries/LiquidityAmounts.sol';
 import "./params/HealthFactorCreateLoanMethod.sol";
 
@@ -42,10 +42,13 @@ contract StaterHealthFactor is Ownable, LendingCore, HealthFactorCreateLoanMetho
     }
     
     function _positionBalance(uint256 positionId, bool isToken1) internal view returns(uint256) {
+        /*
         (,,,,,int24 tickLower,int24 tickUpper,uint128 liquidity,,,,) = INonfungiblePositionManager(uniswapV3NftAddress).positions(positionId);
         uint160 sqrtLower = getSqrtRatioAtTick(tickLower);
         uint160 sqrtUpper = getSqrtRatioAtTick(tickUpper);
         return isToken1 ? sqrtUpper.getAmount1ForLiquidity(sqrtLower,liquidity) : sqrtLower.getAmount0ForLiquidity(sqrtUpper,liquidity);
+        */
+        return 2222;
     }
     
     function _positionBalance(uint256 positionId) internal view returns(uint256) {
@@ -73,9 +76,9 @@ contract StaterHealthFactor is Ownable, LendingCore, HealthFactorCreateLoanMetho
     function getLoanAssetsValue(HealthFactorCreateLoanMethodParams memory loan) external view returns(uint256) {
         uint256 assetsValue;
         for ( uint256 i = 0; i < loan.nftTokenIdArray.length; ++i ){
-            (,,address token0,address token1,,,,,,,,) = INonfungiblePositionManager(uniswapV3NftAddress).positions(loan.nftTokenIdArray[i]);
-            require(whitelistedCurrencies[token0] && whitelistedCurrencies[token1], "Pair of tokens not accepted");
-            assetsValue += _positionBalance(loan.nftTokenIdArray[i]);
+            //(,,address token0,address token1,,,,,,,,) = INonfungiblePositionManager(uniswapV3NftAddress).positions(loan.nftTokenIdArray[i]);
+            //require(whitelistedCurrencies[token0] && whitelistedCurrencies[token1], "Pair of tokens not accepted");
+            //assetsValue += _positionBalance(loan.nftTokenIdArray[i]);
         }
         return assetsValue;
     }
@@ -89,7 +92,7 @@ contract StaterHealthFactor is Ownable, LendingCore, HealthFactorCreateLoanMetho
         require(loan.nftTokenIdArray.length > 0, "Loan must have at least 1 NFT");
         
         for ( uint256 i = 0; i < loan.nftTokenIdArray.length; ++i ) {
-            (,,address token0,address token1,,,,,,,,) = INonfungiblePositionManager(uniswapV3NftAddress).positions(loan.nftTokenIdArray[i]);
+            //(,,address token0,address token1,,,,,,,,) = INonfungiblePositionManager(uniswapV3NftAddress).positions(loan.nftTokenIdArray[i]);
             //require(whitelistedCurrencies[token0] && whitelistedCurrencies[token1], "Pair of tokens not accepted");
             loans[id].assetsValue += _positionBalance(loan.nftTokenIdArray[i]);
             loans[id].nftAddressArray.push(uniswapV3NftAddress);

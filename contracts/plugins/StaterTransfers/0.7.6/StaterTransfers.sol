@@ -4,8 +4,8 @@ import "../../../libs/openzeppelin-solidity/0.7.6/access/Ownable.sol";
 import "../../../libs/openzeppelin-solidity/0.7.6/token/ERC20/IERC20.sol";
 import "../../../libs/openzeppelin-solidity/0.7.6/token/ERC721/IERC721.sol";
 import "../../../libs/openzeppelin-solidity/0.7.6/token/ERC1155/IERC1155.sol";
-import "../../../libs/openzeppelin-solidity/0.7.6/token/ERC721/utils/ERC721Holder.sol";
-import "../../../libs/openzeppelin-solidity/0.7.6/token/ERC1155/utils/ERC1155Holder.sol";
+import "../../../libs/openzeppelin-solidity/0.7.6/token/ERC721/ERC721Holder.sol";
+import "../../../libs/openzeppelin-solidity/0.7.6/token/ERC1155/ERC1155Holder.sol";
 
 contract StaterTransfers is Ownable, ERC721Holder, ERC1155Holder {
     

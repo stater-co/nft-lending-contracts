@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.7;
+pragma solidity 0.7.6;
 
 interface ILendingCoreMethods {
     function getLoanRemainToPay(uint256 loanId) external view returns(uint256);
