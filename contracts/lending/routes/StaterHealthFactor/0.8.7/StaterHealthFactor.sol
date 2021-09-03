@@ -29,12 +29,10 @@ contract StaterHealthFactor is Ownable, LendingCore, HealthFactorCreateLoanMetho
     
     constructor(
         address _uniswapV3NftAddress,
-        address _priceOracleGetter,
         address _lendingPool,
         address[] memory _whitelistedCurrencies
     ) {
         require(_uniswapV3NftAddress != address(0), "A valid uniswap v3 address is required");
-        require(_priceOracleGetter != address(0), "A valid price oracle getter address is required");
         require(_lendingPool != address(0), "A valid lending pool address is required");
         uniswapV3NftAddress = _uniswapV3NftAddress;
         lendingPool = ILendingPool(_lendingPool);
