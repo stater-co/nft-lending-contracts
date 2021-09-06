@@ -1,4 +1,4 @@
-# Stater NFT Collateralized Lending Contracts
+# Stater Lending Protocol V1
 
 ## Requirements
 
