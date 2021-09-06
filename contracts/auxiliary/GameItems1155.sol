@@ -1,8 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.6;
 
+<<<<<<< HEAD:contracts/auxiliary/GameItems1155.sol
 import "../libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol";
 import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
+=======
+import "./openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol";
+import "./openzeppelin-solidity/contracts/access/Ownable.sol";
+import "./openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
+>>>>>>> master:contracts/GameItems1155.sol
 
 contract GameItems1155 is ERC1155, Ownable {
     
