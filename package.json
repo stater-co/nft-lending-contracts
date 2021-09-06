@@ -7,17 +7,6 @@
   "bugs": {
     "url": "https://github.com/stater-co/nft-lending-contracts/issues"
   },
-  "homepage": "https://github.com/ProjectOpenSea/opensea-erc1155#readme",
-  "dependencies": {
-    "multi-token-standard": "1.0.1",
-    "openzeppelin-solidity": "3.4.1",
-    "@0x/subproviders": "2.1.11",
-    "ganache-cli": "6.12.2",
-    "truffle": "5.4.0",
-    "truffle-assertions": "0.9.2",
-    "truffle-flattener": "1.4.2",
-    "truffle-hdwallet-provider": "1.0.17"
-  },
   "homepage": "https://github.com/stater-co/nft-lending-contracts",
   "engines": {
     "node": ">=8.11.x",
