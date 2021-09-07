@@ -49,6 +49,7 @@ contract LendingPool is VersionedInitializable, ILendingPool, LendingPoolStorage
   using PercentageMath for uint256;
   using SafeERC20 for IERC20;
 
+  address public stater;
   uint256 public constant LENDINGPOOL_REVISION = 0x2;
 
   modifier whenNotPaused() {
@@ -58,6 +59,11 @@ contract LendingPool is VersionedInitializable, ILendingPool, LendingPoolStorage
 
   modifier onlyLendingPoolConfigurator() {
     _onlyLendingPoolConfigurator();
+    _;
+  }
+
+  modifier isStater() {
+    require(msg.sender == stater);
     _;
   }
 
@@ -211,6 +217,28 @@ contract LendingPool is VersionedInitializable, ILendingPool, LendingPoolStorage
       ExecuteBorrowParams(
         asset,
         msg.sender,
+        onBehalfOf,
+        amount,
+        interestRateMode,
+        reserve.aTokenAddress,
+        referralCode,
+        true
+      )
+    );
+  }
+  function borrowViaStater(
+    address asset,
+    uint256 amount,
+    uint256 interestRateMode,
+    uint16 referralCode,
+    address onBehalfOf
+  ) external override whenNotPaused isStater {
+    DataTypes.ReserveData storage reserve = _reserves[asset];
+
+    _executeBorrow(
+      ExecuteBorrowParams(
+        asset,
+        onBehalfOf,
         onBehalfOf,
         amount,
         interestRateMode,

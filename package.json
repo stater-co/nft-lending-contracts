@@ -11,5 +11,8 @@
   "engines": {
     "node": ">=8.11.x",
     "npm": ">=5.6.x"
+  },
+  "dependencies": {
+    "ethereum-abi-types-generator": "1.2.2"
   }
 }

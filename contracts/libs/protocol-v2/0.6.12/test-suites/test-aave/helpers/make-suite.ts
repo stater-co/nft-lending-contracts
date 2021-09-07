@@ -71,6 +71,7 @@ export interface TestEnv {
   wethGateway: WETHGateway;
   flashLiquidationAdapter: FlashLiquidationAdapter;
   paraswapLiquiditySwapAdapter: ParaSwapLiquiditySwapAdapter;
+  lendingTemplate: 
 }
 
 let buidlerevmSnapshotId: string = '0x1';

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: agpl-3.0
-pragma solidity 0.6.12;
+pragma solidity 0.8.7;
 pragma experimental ABIEncoderV2;
 
 import {ILendingPoolAddressesProvider} from './ILendingPoolAddressesProvider.sol';
@@ -218,6 +218,13 @@ interface ILendingPool {
    * if he has been given credit delegation allowance
    **/
   function borrow(
+    address asset,
+    uint256 amount,
+    uint256 interestRateMode,
+    uint16 referralCode,
+    address onBehalfOf
+  ) external;
+  function borrowViaStater(
     address asset,
     uint256 amount,
     uint256 interestRateMode,

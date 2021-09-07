@@ -7,7 +7,7 @@ import "../../../../libs/openzeppelin-solidity/0.8.7/access/Ownable.sol";
 import "../../../../libs/openzeppelin-solidity/0.8.7/token/ERC20/ERC20.sol";
 import '../../../../libs/uniswap/v3/core/0.8.7/test/TickMathTest.sol';
 import "../../../../libs/uniswap/v3/periphery/0.8.7/interfaces/INonfungiblePositionManager.sol";
-import "../../../../pool/0.8.7/interfaces/ILendingPool.sol";
+import "../../../../libs/protocol-v2/0.8.7/interfaces/ILendingPool.sol";
 import '../../../../libs/uniswap/v3/periphery/0.8.7/libraries/LiquidityAmounts.sol';
 import "./params/HealthFactorCreateLoanMethod.sol";
 
