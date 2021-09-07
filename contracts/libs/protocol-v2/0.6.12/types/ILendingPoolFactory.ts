@@ -440,6 +440,39 @@ const _abi = [
         type: "uint256",
       },
       {
+        internalType: "uint256",
+        name: "interestRateMode",
+        type: "uint256",
+      },
+      {
+        internalType: "uint16",
+        name: "referralCode",
+        type: "uint16",
+      },
+      {
+        internalType: "address",
+        name: "onBehalfOf",
+        type: "address",
+      },
+    ],
+    name: "borrowViaStater",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "asset",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
         internalType: "address",
         name: "onBehalfOf",
         type: "address",

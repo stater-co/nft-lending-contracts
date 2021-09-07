@@ -27,6 +27,7 @@ interface LendingPoolInterface extends ethers.utils.Interface {
     "MAX_NUMBER_RESERVES()": FunctionFragment;
     "MAX_STABLE_RATE_BORROW_SIZE_PERCENT()": FunctionFragment;
     "borrow(address,uint256,uint256,uint16,address)": FunctionFragment;
+    "borrowViaStater(address,uint256,uint256,uint16,address)": FunctionFragment;
     "deposit(address,uint256,address,uint16)": FunctionFragment;
     "finalizeTransfer(address,address,address,uint256,uint256,uint256)": FunctionFragment;
     "flashLoan(address,address[],uint256[],uint256[],address,bytes,uint16)": FunctionFragment;
@@ -48,6 +49,7 @@ interface LendingPoolInterface extends ethers.utils.Interface {
     "setPause(bool)": FunctionFragment;
     "setReserveInterestRateStrategyAddress(address,address)": FunctionFragment;
     "setUserUseReserveAsCollateral(address,bool)": FunctionFragment;
+    "stater()": FunctionFragment;
     "swapBorrowRateMode(address,uint256)": FunctionFragment;
     "withdraw(address,uint256,address)": FunctionFragment;
   };
@@ -70,6 +72,10 @@ interface LendingPoolInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "borrow",
+    values: [string, BigNumberish, BigNumberish, BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "borrowViaStater",
     values: [string, BigNumberish, BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
@@ -155,6 +161,7 @@ interface LendingPoolInterface extends ethers.utils.Interface {
     functionFragment: "setUserUseReserveAsCollateral",
     values: [string, boolean]
   ): string;
+  encodeFunctionData(functionFragment: "stater", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "swapBorrowRateMode",
     values: [string, BigNumberish]
@@ -181,6 +188,10 @@ interface LendingPoolInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "borrow", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "borrowViaStater",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "finalizeTransfer",
@@ -247,6 +258,7 @@ interface LendingPoolInterface extends ethers.utils.Interface {
     functionFragment: "setUserUseReserveAsCollateral",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "stater", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "swapBorrowRateMode",
     data: BytesLike
@@ -346,6 +358,24 @@ export class LendingPool extends Contract {
     ): Promise<ContractTransaction>;
 
     "borrow(address,uint256,uint256,uint16,address)"(
+      asset: string,
+      amount: BigNumberish,
+      interestRateMode: BigNumberish,
+      referralCode: BigNumberish,
+      onBehalfOf: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    borrowViaStater(
+      asset: string,
+      amount: BigNumberish,
+      interestRateMode: BigNumberish,
+      referralCode: BigNumberish,
+      onBehalfOf: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "borrowViaStater(address,uint256,uint256,uint16,address)"(
       asset: string,
       amount: BigNumberish,
       interestRateMode: BigNumberish,
@@ -709,6 +739,14 @@ export class LendingPool extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    stater(overrides?: CallOverrides): Promise<{
+      0: string;
+    }>;
+
+    "stater()"(overrides?: CallOverrides): Promise<{
+      0: string;
+    }>;
+
     swapBorrowRateMode(
       asset: string,
       rateMode: BigNumberish,
@@ -766,6 +804,24 @@ export class LendingPool extends Contract {
   ): Promise<ContractTransaction>;
 
   "borrow(address,uint256,uint256,uint16,address)"(
+    asset: string,
+    amount: BigNumberish,
+    interestRateMode: BigNumberish,
+    referralCode: BigNumberish,
+    onBehalfOf: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  borrowViaStater(
+    asset: string,
+    amount: BigNumberish,
+    interestRateMode: BigNumberish,
+    referralCode: BigNumberish,
+    onBehalfOf: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "borrowViaStater(address,uint256,uint256,uint16,address)"(
     asset: string,
     amount: BigNumberish,
     interestRateMode: BigNumberish,
@@ -1097,6 +1153,10 @@ export class LendingPool extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  stater(overrides?: CallOverrides): Promise<string>;
+
+  "stater()"(overrides?: CallOverrides): Promise<string>;
+
   swapBorrowRateMode(
     asset: string,
     rateMode: BigNumberish,
@@ -1154,6 +1214,24 @@ export class LendingPool extends Contract {
     ): Promise<void>;
 
     "borrow(address,uint256,uint256,uint16,address)"(
+      asset: string,
+      amount: BigNumberish,
+      interestRateMode: BigNumberish,
+      referralCode: BigNumberish,
+      onBehalfOf: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    borrowViaStater(
+      asset: string,
+      amount: BigNumberish,
+      interestRateMode: BigNumberish,
+      referralCode: BigNumberish,
+      onBehalfOf: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "borrowViaStater(address,uint256,uint256,uint16,address)"(
       asset: string,
       amount: BigNumberish,
       interestRateMode: BigNumberish,
@@ -1479,6 +1557,10 @@ export class LendingPool extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    stater(overrides?: CallOverrides): Promise<string>;
+
+    "stater()"(overrides?: CallOverrides): Promise<string>;
+
     swapBorrowRateMode(
       asset: string,
       rateMode: BigNumberish,
@@ -1624,6 +1706,24 @@ export class LendingPool extends Contract {
     ): Promise<BigNumber>;
 
     "borrow(address,uint256,uint256,uint16,address)"(
+      asset: string,
+      amount: BigNumberish,
+      interestRateMode: BigNumberish,
+      referralCode: BigNumberish,
+      onBehalfOf: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    borrowViaStater(
+      asset: string,
+      amount: BigNumberish,
+      interestRateMode: BigNumberish,
+      referralCode: BigNumberish,
+      onBehalfOf: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "borrowViaStater(address,uint256,uint256,uint16,address)"(
       asset: string,
       amount: BigNumberish,
       interestRateMode: BigNumberish,
@@ -1873,6 +1973,10 @@ export class LendingPool extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    stater(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "stater()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     swapBorrowRateMode(
       asset: string,
       rateMode: BigNumberish,
@@ -1943,6 +2047,24 @@ export class LendingPool extends Contract {
     ): Promise<PopulatedTransaction>;
 
     "borrow(address,uint256,uint256,uint16,address)"(
+      asset: string,
+      amount: BigNumberish,
+      interestRateMode: BigNumberish,
+      referralCode: BigNumberish,
+      onBehalfOf: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    borrowViaStater(
+      asset: string,
+      amount: BigNumberish,
+      interestRateMode: BigNumberish,
+      referralCode: BigNumberish,
+      onBehalfOf: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "borrowViaStater(address,uint256,uint256,uint16,address)"(
       asset: string,
       amount: BigNumberish,
       interestRateMode: BigNumberish,
@@ -2206,6 +2328,10 @@ export class LendingPool extends Contract {
       useAsCollateral: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
+
+    stater(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "stater()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     swapBorrowRateMode(
       asset: string,

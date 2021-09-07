@@ -16,6 +16,7 @@ import {
   getFlashLiquidationAdapter,
   getParaSwapLiquiditySwapAdapter,
 } from '../../../helpers/contracts-getters';
+import { ABI } from '../../../../../../../types/ABI';
 import { eEthereumNetwork, eNetwork, tEthereumAddress } from '../../../helpers/types';
 import { LendingPool } from '../../../types/LendingPool';
 import { AaveProtocolDataProvider } from '../../../types/AaveProtocolDataProvider';
@@ -71,7 +72,7 @@ export interface TestEnv {
   wethGateway: WETHGateway;
   flashLiquidationAdapter: FlashLiquidationAdapter;
   paraswapLiquiditySwapAdapter: ParaSwapLiquiditySwapAdapter;
-  lendingTemplate: 
+  staterHealthFactor: ABI
 }
 
 let buidlerevmSnapshotId: string = '0x1';
@@ -99,6 +100,7 @@ const testEnv: TestEnv = {
   paraswapLiquiditySwapAdapter: {} as ParaSwapLiquiditySwapAdapter,
   registry: {} as LendingPoolAddressesProviderRegistry,
   wethGateway: {} as WETHGateway,
+  staterHealthFactor: {} as ABI
 } as TestEnv;
 
 export async function initializeMakeSuite() {
