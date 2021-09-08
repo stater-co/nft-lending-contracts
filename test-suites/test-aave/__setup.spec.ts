@@ -31,6 +31,7 @@ import {
   deployMockParaSwapAugustusRegistry,
   deployParaSwapLiquiditySwapAdapter,
   authorizeWETHGateway,
+  deployStaterHealthFactor,
 } from "../../helpers/contracts-deployments";
 import { eEthereumNetwork } from "../../helpers/types";
 import { Signer } from "ethers";
@@ -140,6 +141,7 @@ const buildTestEnv = async (deployer: Signer, secondaryWallet: Signer) => {
   );
 
   const lendingPoolImpl = await deployLendingPool();
+  await deployStaterHealthFactor();
 
   await waitForTx(
     await addressesProvider.setLendingPoolImpl(lendingPoolImpl.address)

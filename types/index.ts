@@ -131,5 +131,5 @@ export { StaterTransfersFactory } from "./StaterTransfersFactory";
 export type { StaterTransfers } from "./StaterTransfers";
 export { StaterPromissoryNoteFactory } from "./StaterPromissoryNoteFactory";
 export type { StaterPromissoryNote } from "./StaterPromissoryNote";
-export { StaterDiscounts087Factory } from "./StaterDiscounts087Factory";
-export type { StaterDiscounts087 } from "./StaterDiscounts087";
+export { StaterDiscountsFactory } from "./StaterDiscountsFactory";
+export type { StaterDiscounts } from "./StaterDiscounts";

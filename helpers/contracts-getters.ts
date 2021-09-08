@@ -32,10 +32,11 @@ import {
   WalletBalanceProviderFactory,
   WETH9MockedFactory,
   WETHGatewayFactory,
-  FlashLiquidationAdapterFactory,
+  FlashLiquidationAdapterFactory, //,
+  //StaterHealthFactorFactory,
+  //StaterHealthFactor
 } from "../types";
 import { IERC20DetailedFactory } from "../types/IERC20DetailedFactory";
-import { ABI } from "../../../../../types/ABI";
 import { getEthersSigners, MockTokenMap } from "./contracts-helpers";
 import { DRE, getDb, notFalsyOrZeroAddress } from "./misc-utils";
 import {
@@ -474,6 +475,47 @@ export const getAaveOracle = async (address?: tEthereumAddress) =>
       ).address,
     await getFirstSigner()
   );
+
+export const getStaterHealth = async () => {
+  //console.log("> " + JSON.stringify(eContractid));
+  /*
+  for ( let i in DRE ) {
+    console.log(">> " + i);
+    for ( let j in DRE[i] )
+      console.log(">>> " + j);
+  }
+  */
+  /*
+  console.log("= " + DRE.network.name);
+  console.log("== " + eContractid.StaterHealthFactor);
+  let obj = await getDb().get(`${eContractid.AaveOracle}.${DRE.network.name}`); //.value();
+  console.log("=== " + JSON.stringify(obj));
+  */
+  /*
+  let _staterHealthFactor: StaterHealthFactor = await StaterHealthFactorFactory.connect(
+    (
+      await getDb()
+        .get(`${eContractid.AaveOracle}.${DRE.network.name}`)
+        .value()
+    ).address,
+    await getFirstSigner()
+  );
+  */
+  /*
+  let iltv = await _staterHealthFactor["iltv()"].call();
+  console.log("ILTV >> " + iltv);
+  */
+  /*
+  await StaterHealthFactorFactory.connect(
+    (
+      await getDb()
+        .get(`${eContractid.AaveOracle}.${DRE.network.name}`)
+        .value()
+    ).address,
+    await getFirstSigner()
+  )
+  */
+};
 
 export const getMockUniswapRouter = async (address?: tEthereumAddress) =>
   await MockUniswapV2Router02Factory.connect(

@@ -4371,8 +4371,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/adapters/BaseParaSwapAdapter.sol": {
-      "lastModificationDate": 1631094590110,
-      "contentHash": "642e87fb4a0539e6de19a7208d9af44e",
+      "lastModificationDate": 1631100013879,
+      "contentHash": "9b404ccc307aaae682b3a2460928f7d8",
       "sourceName": "contracts/adapters/BaseParaSwapAdapter.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4417,8 +4417,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/SafeMath.sol": {
-      "lastModificationDate": 1631097372662,
-      "contentHash": "cf6dbbc25d7163c47e5260b755361955",
+      "lastModificationDate": 1631100043163,
+      "contentHash": "870bbf15e3bc13e33994e94f4ece56d9",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/SafeMath.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4452,8 +4452,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/IERC20.sol": {
-      "lastModificationDate": 1631097331406,
-      "contentHash": "91c0afdd4eb122474c0d0c040dab794a",
+      "lastModificationDate": 1631100042947,
+      "contentHash": "b5a60009feea8ae93e8ec082a5a74b8d",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/IERC20.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4487,8 +4487,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/IERC20Detailed.sol": {
-      "lastModificationDate": 1631097332702,
-      "contentHash": "0448c76ea7803fca57646a5beb17e8a2",
+      "lastModificationDate": 1631100042959,
+      "contentHash": "3b1248348f48a8709f13cb1ad70d77ca",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/IERC20Detailed.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4524,8 +4524,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/SafeERC20.sol": {
-      "lastModificationDate": 1631097369426,
-      "contentHash": "7274eaf096edf0d7dde9b3282e4fcb42",
+      "lastModificationDate": 1631100043127,
+      "contentHash": "f7fdd68185686adad0cbf28760c09287",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/SafeERC20.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4563,8 +4563,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/Ownable.sol": {
-      "lastModificationDate": 1631097365414,
-      "contentHash": "3a26559bf41678544468876fb3343b7c",
+      "lastModificationDate": 1631100043063,
+      "contentHash": "e885040b2dd4acc5d7092e04ce37112a",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/Ownable.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4600,8 +4600,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/ILendingPoolAddressesProvider.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "a487bfd067ce6e71ddc7e9cc91302bae",
+      "lastModificationDate": 1631100044103,
+      "contentHash": "a2aa97dd079073449c93d4c35030cbd4",
       "sourceName": "contracts/interfaces/ILendingPoolAddressesProvider.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4635,8 +4635,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/libraries/types/DataTypes.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "2127b8d36674faba96bc703f72164a1a",
+      "lastModificationDate": 1631100046995,
+      "contentHash": "5b7afe5d9de898a47bf1d3f97139b4db",
       "sourceName": "contracts/protocol/libraries/types/DataTypes.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4670,8 +4670,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IPriceOracleGetter.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "56181b85c44591f931b25fa0b92ed581",
+      "lastModificationDate": 1631100044223,
+      "contentHash": "925c7a9654962efe089be1c35c54e33e",
       "sourceName": "contracts/interfaces/IPriceOracleGetter.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4705,8 +4705,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IERC20WithPermit.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "cd97ed0a4faa085377a953815750d216",
+      "lastModificationDate": 1631100044011,
+      "contentHash": "71e728435701b43498bb21048be65973",
       "sourceName": "contracts/interfaces/IERC20WithPermit.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4742,8 +4742,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/flashloan/base/FlashLoanReceiverBase.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "342099eb47e5ca9af28b333264a5a149",
+      "lastModificationDate": 1631100043903,
+      "contentHash": "55ba5ad1eec46b732b692190379e8c2d",
       "sourceName": "contracts/flashloan/base/FlashLoanReceiverBase.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4784,8 +4784,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/Address.sol": {
-      "lastModificationDate": 1631097312022,
-      "contentHash": "bdb6e9218c297368a6ccd434a6ceb0ff",
+      "lastModificationDate": 1631100013895,
+      "contentHash": "3d9ab25bddaf4897ceef9ca5bf233050",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/Address.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4819,8 +4819,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/Context.sol": {
-      "lastModificationDate": 1631097313954,
-      "contentHash": "35c596d58cea32ae629aeb27ad2ead6c",
+      "lastModificationDate": 1631100013895,
+      "contentHash": "b23f1bf925cccdd0ba4a054aae9ab8f4",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/Context.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4854,8 +4854,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/flashloan/interfaces/IFlashLoanReceiver.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "5e569987e7faa6a858ede0e47939966b",
+      "lastModificationDate": 1631100043919,
+      "contentHash": "700aa4759c1304d3692fe23e1ae68ea9",
       "sourceName": "contracts/flashloan/interfaces/IFlashLoanReceiver.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4892,8 +4892,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/ILendingPool.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "7429fd6cca8ce604a20561e44a9d217b",
+      "lastModificationDate": 1631100044083,
+      "contentHash": "332aab7af48f0d62875fbc8817485812",
       "sourceName": "contracts/interfaces/ILendingPool.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4930,8 +4930,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/adapters/BaseParaSwapSellAdapter.sol": {
-      "lastModificationDate": 1631094590110,
-      "contentHash": "76e39d875a7877ae2b059228898a4b85",
+      "lastModificationDate": 1631100013879,
+      "contentHash": "b55b24fbbbdbd000c57e930858cdc60c",
       "sourceName": "contracts/adapters/BaseParaSwapSellAdapter.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -4972,8 +4972,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/libraries/math/PercentageMath.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "ac3f1f6dfed160907baca58211bb6d37",
+      "lastModificationDate": 1631100046927,
+      "contentHash": "da358559ebb920bd995a2e90baff39f5",
       "sourceName": "contracts/protocol/libraries/math/PercentageMath.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5009,8 +5009,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IParaSwapAugustus.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "7f59fc18908a105e0ad90de5eec1fd40",
+      "lastModificationDate": 1631100044183,
+      "contentHash": "a8e225d9f5c52896a4c05593eb875469",
       "sourceName": "contracts/interfaces/IParaSwapAugustus.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5044,8 +5044,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IParaSwapAugustusRegistry.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "60a83ecbc2cfaf3e9342e1166c647a75",
+      "lastModificationDate": 1631100044199,
+      "contentHash": "f657eaf6f8b3832d55f78dc3e92c1352",
       "sourceName": "contracts/interfaces/IParaSwapAugustusRegistry.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5079,8 +5079,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/libraries/helpers/Errors.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "f9f147c0810b2cf78866930180648be5",
+      "lastModificationDate": 1631100046443,
+      "contentHash": "10348180221e5b68c054526581936f6c",
       "sourceName": "contracts/protocol/libraries/helpers/Errors.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5114,8 +5114,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/adapters/ParaSwapLiquiditySwapAdapter.sol": {
-      "lastModificationDate": 1631094590110,
-      "contentHash": "50d62a1756db4345ad95ef0a678f19d7",
+      "lastModificationDate": 1631100013879,
+      "contentHash": "6614d9ff9086148e88c630e87c7f7db3",
       "sourceName": "contracts/adapters/ParaSwapLiquiditySwapAdapter.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5157,8 +5157,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/ReentrancyGuard.sol": {
-      "lastModificationDate": 1631097366994,
-      "contentHash": "1c60f58cee45c61469e1aea31e4dd879",
+      "lastModificationDate": 1631100043083,
+      "contentHash": "db2f2cc9284bcaa20d57fc9434918100",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/ReentrancyGuard.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5192,8 +5192,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/swap/MockParaSwapAugustus.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "98d4b0f86f818f75c510d38fe682477c",
+      "lastModificationDate": 1631100045107,
+      "contentHash": "f2cffecebac669125e53675f845635dd",
       "sourceName": "contracts/mocks/swap/MockParaSwapAugustus.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5232,8 +5232,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/swap/MockParaSwapTokenTransferProxy.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "67f139e847568926ec5bc666969fa35c",
+      "lastModificationDate": 1631100045139,
+      "contentHash": "717279127000a98bb9117306e342c292",
       "sourceName": "contracts/mocks/swap/MockParaSwapTokenTransferProxy.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5270,8 +5270,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/tokens/MintableERC20.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "79dd5fd193bd7e8ee1dfb805489712fd",
+      "lastModificationDate": 1631100045255,
+      "contentHash": "5099a05fc7562688c15a8167ea0ccead",
       "sourceName": "contracts/mocks/tokens/MintableERC20.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5307,8 +5307,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/ERC20.sol": {
-      "lastModificationDate": 1631097320346,
-      "contentHash": "1c9ef76d716ea1e56f8e93d99a49bb10",
+      "lastModificationDate": 1631100042735,
+      "contentHash": "9d750cde1336b6d7bd8378bbd1927941",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/ERC20.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5347,8 +5347,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/swap/MockUniswapV2Router02.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "99a2dca6d1d755059e31da5e751b0ab7",
+      "lastModificationDate": 1631100045219,
+      "contentHash": "1027af1472bfc75a09e5c389a9e04b6d",
       "sourceName": "contracts/mocks/swap/MockUniswapV2Router02.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5386,8 +5386,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IUniswapV2Router02.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "e6a3fa068b9ccc4f9d95180fbc8536f4",
+      "lastModificationDate": 1631100044299,
+      "contentHash": "efcf41f4f909aa7bef6d0afa203971a7",
       "sourceName": "contracts/interfaces/IUniswapV2Router02.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5456,8 +5456,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/adapters/UniswapRepayAdapter.sol": {
-      "lastModificationDate": 1631094590110,
-      "contentHash": "6fd39f9dbf395553165724c6e0654eea",
+      "lastModificationDate": 1631100013879,
+      "contentHash": "9b057f2febe9e07ec7a345ca83a94122",
       "sourceName": "contracts/adapters/UniswapRepayAdapter.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5497,8 +5497,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/adapters/BaseUniswapAdapter.sol": {
-      "lastModificationDate": 1631094590110,
-      "contentHash": "865cf347d6d906fb50a90f811e6a42fc",
+      "lastModificationDate": 1631100013879,
+      "contentHash": "633f4efadaae42c19d6b706c62c61479",
       "sourceName": "contracts/adapters/BaseUniswapAdapter.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5546,8 +5546,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/adapters/interfaces/IBaseUniswapAdapter.sol": {
-      "lastModificationDate": 1631094590110,
-      "contentHash": "a62c64a0a9901e9f9806fb32b0366a01",
+      "lastModificationDate": 1631100013883,
+      "contentHash": "a53a7b2376877bd575abee6339f3c68d",
       "sourceName": "contracts/adapters/interfaces/IBaseUniswapAdapter.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5584,8 +5584,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/lendingpool/LendingPoolCollateralManager.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "bd0641b34d2bdf3a679abf9e1f34acea",
+      "lastModificationDate": 1631100045951,
+      "contentHash": "43882096ccf9a8e245cbf736a4b76f95",
       "sourceName": "contracts/protocol/lendingpool/LendingPoolCollateralManager.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5637,8 +5637,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IAToken.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "325b239ba3bede374aaa1931b90550d5",
+      "lastModificationDate": 1631100043935,
+      "contentHash": "1a3590a24a4b3c5139eff45fa2a3b018",
       "sourceName": "contracts/interfaces/IAToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5677,8 +5677,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IStableDebtToken.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "6d656f4723458d67c74ae39244e77643",
+      "lastModificationDate": 1631100044271,
+      "contentHash": "8dc34dd8ba460e7a0205c440c9605048",
       "sourceName": "contracts/interfaces/IStableDebtToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5715,8 +5715,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IVariableDebtToken.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "297a4e07a70791964b5e5b96fee1572a",
+      "lastModificationDate": 1631100044315,
+      "contentHash": "3fe799cd1d68f134387df25d5713a022",
       "sourceName": "contracts/interfaces/IVariableDebtToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5754,8 +5754,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/ILendingPoolCollateralManager.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "7b3bff7810d10b985d9e2fca06efb374",
+      "lastModificationDate": 1631100044131,
+      "contentHash": "171119977b5341dbc96a2b6e65830a4d",
       "sourceName": "contracts/interfaces/ILendingPoolCollateralManager.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5789,8 +5789,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/libraries/aave-upgradeability/VersionedInitializable.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "e46d1675e7ec7446ef0536ab7c3db963",
+      "lastModificationDate": 1631100046211,
+      "contentHash": "8a9cca87b5579a40096ee28390827369",
       "sourceName": "contracts/protocol/libraries/aave-upgradeability/VersionedInitializable.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5824,8 +5824,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/libraries/logic/GenericLogic.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "63c0b6b808431eddcdd4f72f15116e1c",
+      "lastModificationDate": 1631100046567,
+      "contentHash": "48085563bd24ccb1e6b07ec97f8ee678",
       "sourceName": "contracts/protocol/libraries/logic/GenericLogic.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5869,8 +5869,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/libraries/helpers/Helpers.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "2c6f19fbad822bd9fc72c2012188eedc",
+      "lastModificationDate": 1631100046463,
+      "contentHash": "c6fa3d987d6d87dc4d359acfd923cb66",
       "sourceName": "contracts/protocol/libraries/helpers/Helpers.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5907,8 +5907,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/libraries/math/WadRayMath.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "bf062018f7a0f55c2c54909629b3028d",
+      "lastModificationDate": 1631100046979,
+      "contentHash": "68ddb88fe55bf77d1dff650c9d4704ff",
       "sourceName": "contracts/protocol/libraries/math/WadRayMath.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5944,8 +5944,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/libraries/logic/ValidationLogic.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "956cfd1dde7c76c40951271fc7ab70aa",
+      "lastModificationDate": 1631100046851,
+      "contentHash": "877fabce34567805cb7a7ab54fed091d",
       "sourceName": "contracts/protocol/libraries/logic/ValidationLogic.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -5993,8 +5993,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/lendingpool/LendingPoolStorage.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "71ed7efdbf03ef30cf22a32e94aee84e",
+      "lastModificationDate": 1631100046143,
+      "contentHash": "a634e7fe36f9bfd0d7abb401078f5fb7",
       "sourceName": "contracts/protocol/lendingpool/LendingPoolStorage.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6034,8 +6034,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IScaledBalanceToken.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "05f5c83b51e4b04e17785f92ca7840de",
+      "lastModificationDate": 1631100044251,
+      "contentHash": "c08a9f35d17f3d466e817529cf6d93d9",
       "sourceName": "contracts/interfaces/IScaledBalanceToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6069,8 +6069,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IInitializableAToken.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "b408cb493b8651eca053fc831bea1cd8",
+      "lastModificationDate": 1631100044039,
+      "contentHash": "6b6320026b5fe613088c9d42022532c5",
       "sourceName": "contracts/interfaces/IInitializableAToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6107,8 +6107,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IAaveIncentivesController.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "1725f1f5b918f80a686a21794d0601c1",
+      "lastModificationDate": 1631100043955,
+      "contentHash": "3eac062cde189d26c2d48af006fcaefd",
       "sourceName": "contracts/interfaces/IAaveIncentivesController.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6142,8 +6142,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IInitializableDebtToken.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "ae4d2dc34379e54d05226248c41da496",
+      "lastModificationDate": 1631100044051,
+      "contentHash": "3e23b441e8bac0d528caab6db3839837",
       "sourceName": "contracts/interfaces/IInitializableDebtToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6180,8 +6180,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/libraries/logic/ReserveLogic.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "d15ddc108407134c8293813a2bf3d2bb",
+      "lastModificationDate": 1631100046687,
+      "contentHash": "24b03d3d47759a08748e77a7719e0634",
       "sourceName": "contracts/protocol/libraries/logic/ReserveLogic.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6229,8 +6229,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/libraries/configuration/ReserveConfiguration.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "c0f46e3d5df412e9da76cd291344f026",
+      "lastModificationDate": 1631100046335,
+      "contentHash": "927906866bba6724e7fb470abc85364f",
       "sourceName": "contracts/protocol/libraries/configuration/ReserveConfiguration.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6267,8 +6267,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/libraries/configuration/UserConfiguration.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "14cd911a7c407bdc1b0d23cb7a258a54",
+      "lastModificationDate": 1631100046407,
+      "contentHash": "41a258a6f465cdd6ba08c1273490f019",
       "sourceName": "contracts/protocol/libraries/configuration/UserConfiguration.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6305,8 +6305,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IReserveInterestRateStrategy.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "b11d9c14920ab9302b232bd3f7226e36",
+      "lastModificationDate": 1631100044239,
+      "contentHash": "2d32312ea0e6916527726fb4e12efa63",
       "sourceName": "contracts/interfaces/IReserveInterestRateStrategy.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6340,8 +6340,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/libraries/math/MathUtils.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "11581a64630b7297869b359ac31927e7",
+      "lastModificationDate": 1631100046891,
+      "contentHash": "9e42fc5cd2c183ef2d9dabdc6321f5a9",
       "sourceName": "contracts/protocol/libraries/math/MathUtils.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6378,8 +6378,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/flashloan/MockFlashLoanReceiver.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "6078d580dd7157b6831bc0215b87978e",
+      "lastModificationDate": 1631100044967,
+      "contentHash": "0121118936af2f73974dbbe55e6ae809",
       "sourceName": "contracts/mocks/flashloan/MockFlashLoanReceiver.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6420,8 +6420,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/misc/WalletBalanceProvider.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "3f8f7c5fe582fc84f541ca363efb5a3e",
+      "lastModificationDate": 1631100044735,
+      "contentHash": "38e201c333f2a66526f09f3755996035",
       "sourceName": "contracts/misc/WalletBalanceProvider.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6463,8 +6463,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/misc/WETHGateway.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "cb2cfb673f837bf5a8a3c74bf73365fa",
+      "lastModificationDate": 1631100044671,
+      "contentHash": "c5dfc4e9434c96f04c7bdad33a96f46a",
       "sourceName": "contracts/misc/WETHGateway.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6509,8 +6509,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/misc/interfaces/IWETH.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "ab2af8b1175a4e9dfdf3f7754dbee9a5",
+      "lastModificationDate": 1631100044827,
+      "contentHash": "7176978c4bfb01df40e469da6a6b8638",
       "sourceName": "contracts/misc/interfaces/IWETH.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6544,8 +6544,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/misc/interfaces/IWETHGateway.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "d56a0efb3776bfcbb0e887dcf33d5016",
+      "lastModificationDate": 1631100044843,
+      "contentHash": "707fcf2438b7db9621d0093d87dab7b9",
       "sourceName": "contracts/misc/interfaces/IWETHGateway.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6579,8 +6579,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/lendingpool/DefaultReserveInterestRateStrategy.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "1ab472d3c8ee11fe95bc934213cfa8ac",
+      "lastModificationDate": 1631100045503,
+      "contentHash": "7dda3ef24c6e5373bdf43f934c35cc56",
       "sourceName": "contracts/protocol/lendingpool/DefaultReserveInterestRateStrategy.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6622,8 +6622,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/ILendingRateOracle.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "dc30a43ed82b7bfe230593226324c891",
+      "lastModificationDate": 1631100044171,
+      "contentHash": "b39bcad84158c27669c1da3c36add4ac",
       "sourceName": "contracts/interfaces/ILendingRateOracle.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6657,8 +6657,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/misc/UiPoolDataProvider.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "8c62d55aa0e0e70d45f65d61b9388c8c",
+      "lastModificationDate": 1631100044603,
+      "contentHash": "5ff00404d4c93dd0e3224b33b4a6ac51",
       "sourceName": "contracts/misc/UiPoolDataProvider.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6707,8 +6707,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/misc/interfaces/IUiPoolDataProvider.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "731bb8b93b2757dc218864444e340771",
+      "lastModificationDate": 1631100044771,
+      "contentHash": "cf2fbca6636d3cecf79938faa1a6d8d9",
       "sourceName": "contracts/misc/interfaces/IUiPoolDataProvider.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6745,8 +6745,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/misc/AaveProtocolDataProvider.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "8b8de07327a400bba8b27b197762f8fb",
+      "lastModificationDate": 1631100044487,
+      "contentHash": "f5e0094645ee8b4e4fc1a113770cdec0",
       "sourceName": "contracts/misc/AaveProtocolDataProvider.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6789,8 +6789,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/tokenization/VariableDebtToken.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "46ae51546a44c7d66e49bb017eeb4985",
+      "lastModificationDate": 1631100047423,
+      "contentHash": "d93dbbd0b0b8e4f5105bce9eef108b93",
       "sourceName": "contracts/protocol/tokenization/VariableDebtToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6831,8 +6831,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/tokenization/base/DebtTokenBase.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "c7a46dce60aa28172ccb12e1eee3143d",
+      "lastModificationDate": 1631100047471,
+      "contentHash": "038d3264c28187c4acda927912bd9311",
       "sourceName": "contracts/protocol/tokenization/base/DebtTokenBase.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6872,8 +6872,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/ICreditDelegationToken.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "9d4c60aae9eb8093c9475ab517bdcd99",
+      "lastModificationDate": 1631100043983,
+      "contentHash": "5b44b7177137b279d434057e7f6d4e49",
       "sourceName": "contracts/interfaces/ICreditDelegationToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6907,8 +6907,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/tokenization/IncentivizedERC20.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "2eaf57d54f36c3017a3596f77be8532d",
+      "lastModificationDate": 1631100047215,
+      "contentHash": "691efde456b5dfa3284f3ea1f452128f",
       "sourceName": "contracts/protocol/tokenization/IncentivizedERC20.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6948,8 +6948,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/upgradeability/MockVariableDebtToken.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "9d0b10d9a3cae8bc3ace26265574aa55",
+      "lastModificationDate": 1631100045311,
+      "contentHash": "3f13f0f54ccb0acca526cf8a9be5b1ad",
       "sourceName": "contracts/mocks/upgradeability/MockVariableDebtToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -6985,8 +6985,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/upgradeability/MockAToken.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "6295cd444714e8621a695d0d8a6c5d3b",
+      "lastModificationDate": 1631100045287,
+      "contentHash": "a3634c8624b9ca272b36812f30be3d70",
       "sourceName": "contracts/mocks/upgradeability/MockAToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7024,8 +7024,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/tokenization/AToken.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "618e6f62742873950a54f2d6cbe4950c",
+      "lastModificationDate": 1631100047111,
+      "contentHash": "347f0e791cd66cf750f0b87b14c5e910",
       "sourceName": "contracts/protocol/tokenization/AToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7069,8 +7069,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/lending/routes/StaterHealthFactor/StaterHealthFactor.sol": {
-      "lastModificationDate": 1631099384099,
-      "contentHash": "66434d6a817e7355d7a833eb0c858e2c",
+      "lastModificationDate": 1631100048311,
+      "contentHash": "eceb1c825d999af9ae4883bc2895309a",
       "sourceName": "contracts/stater/lending/routes/StaterHealthFactor/StaterHealthFactor.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7113,8 +7113,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/lending/controller/LendingCore.sol": {
-      "lastModificationDate": 1631099221674,
-      "contentHash": "ddf26854f729e5d3ae610e507f09a875",
+      "lastModificationDate": 1631100047507,
+      "contentHash": "ed8b68e64cd7274ec6e74ab975cd9ce4",
       "sourceName": "contracts/stater/lending/controller/LendingCore.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7151,8 +7151,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/uniswap/v3/TickMathTest.sol": {
-      "lastModificationDate": 1631097510083,
-      "contentHash": "8314ef2e458af8ff49463090340b0a8a",
+      "lastModificationDate": 1631100043775,
+      "contentHash": "d13ee2d80f5562cbfed53cd9f8ade1a2",
       "sourceName": "contracts/dependencies/uniswap/v3/TickMathTest.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7188,8 +7188,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/uniswap/v3/INonfungiblePositionManager.sol": {
-      "lastModificationDate": 1631099048549,
-      "contentHash": "1951030cf86bc4adc67809f9dcc43cb5",
+      "lastModificationDate": 1631100043467,
+      "contentHash": "dc214f54ef7dca3bec19748a9c611307",
       "sourceName": "contracts/dependencies/uniswap/v3/INonfungiblePositionManager.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7231,8 +7231,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/uniswap/v3/LiquidityAmounts.sol": {
-      "lastModificationDate": 1631097473595,
-      "contentHash": "12e8ac7dcda0ff0a0c3c930e89131395",
+      "lastModificationDate": 1631100043567,
+      "contentHash": "438ac7d4cb7c1d48288818538ddee6d6",
       "sourceName": "contracts/dependencies/uniswap/v3/LiquidityAmounts.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7269,8 +7269,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/lending/routes/StaterHealthFactor/params/HealthFactorCreateLoanMethod.sol": {
-      "lastModificationDate": 1631099213658,
-      "contentHash": "4cd840ed0184f98bc0bccde3b7780a78",
+      "lastModificationDate": 1631100048327,
+      "contentHash": "036401b5cfcffc3f2ecea593b810bbaa",
       "sourceName": "contracts/stater/lending/routes/StaterHealthFactor/params/HealthFactorCreateLoanMethod.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7304,8 +7304,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/plugins/StaterTransfers/StaterTransfers.sol": {
-      "lastModificationDate": 1631098481462,
-      "contentHash": "05bd9bd373fa0d35ea4cc592c4bfc0e1",
+      "lastModificationDate": 1631100048423,
+      "contentHash": "26190c1938af39f137fc83f3079d4dd7",
       "sourceName": "contracts/stater/plugins/StaterTransfers/StaterTransfers.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7346,8 +7346,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/IERC721.sol": {
-      "lastModificationDate": 1631097334858,
-      "contentHash": "d999cb08d75a408ec015789281bbd227",
+      "lastModificationDate": 1631100042975,
+      "contentHash": "0b0fd58c79d4e737e12745d34751b3bb",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/IERC721.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7383,8 +7383,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/IERC1155.sol": {
-      "lastModificationDate": 1631097327530,
-      "contentHash": "c5f6d6c7079fa0ebbfbb1f4fdb50decd",
+      "lastModificationDate": 1631100042907,
+      "contentHash": "7363029cfa644fdc1b812eee3894736e",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/IERC1155.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7420,8 +7420,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/ERC721Holder.sol": {
-      "lastModificationDate": 1631097321774,
-      "contentHash": "7c2c657c85a0e22422ef209b770c9b8d",
+      "lastModificationDate": 1631100042891,
+      "contentHash": "a930234d7d8efc8d5c3247cfe48514ef",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/ERC721Holder.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7457,8 +7457,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/ERC1155Holder.sol": {
-      "lastModificationDate": 1631097315318,
-      "contentHash": "ac986987e15cac25bf0b91ceecc645aa",
+      "lastModificationDate": 1631100013895,
+      "contentHash": "174db06931ad33b89bd667588ec02ca1",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/ERC1155Holder.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7494,8 +7494,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/IERC165.sol": {
-      "lastModificationDate": 1631097330098,
-      "contentHash": "f489dc8c3b0fb483792b78e87cafecdd",
+      "lastModificationDate": 1631100042931,
+      "contentHash": "7bdd4fdd6fb036f9ed8945470380ab94",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/IERC165.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7529,8 +7529,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/IERC721Receiver.sol": {
-      "lastModificationDate": 1631097363462,
-      "contentHash": "32f6241abf26e41da000e4792e57e3e1",
+      "lastModificationDate": 1631100043031,
+      "contentHash": "dc54594d7bebd159db8de85e79dc6575",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/IERC721Receiver.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7564,8 +7564,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/ERC1155Receiver.sol": {
-      "lastModificationDate": 1631097316774,
-      "contentHash": "6e1cc9484d102fab5bb17cb9e6d2e619",
+      "lastModificationDate": 1631100013895,
+      "contentHash": "787fc9f843506dc9a4e61a2b16d0499b",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/ERC1155Receiver.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7602,8 +7602,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/IERC1155Receiver.sol": {
-      "lastModificationDate": 1631097328790,
-      "contentHash": "38db29ba6a6640681aec3ca2acbd56e8",
+      "lastModificationDate": 1631100042923,
+      "contentHash": "84a2d1de93c38d54e556d4c31a4455a1",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/IERC1155Receiver.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7639,8 +7639,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/ERC165.sol": {
-      "lastModificationDate": 1631097318094,
-      "contentHash": "3b710d5b6b62537dc007c5e45e2daf1b",
+      "lastModificationDate": 1631100042635,
+      "contentHash": "bea09abafccb977773d43df710c258db",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/ERC165.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7676,8 +7676,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/uniswap/v3/TickMath.sol": {
-      "lastModificationDate": 1631097488663,
-      "contentHash": "e5b67615ab8d1da8208d612486c75d78",
+      "lastModificationDate": 1631100043751,
+      "contentHash": "e01b5d5488570a242a071bb7ee6b0eef",
       "sourceName": "contracts/dependencies/uniswap/v3/TickMath.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7711,8 +7711,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/IERC721Metadata.sol": {
-      "lastModificationDate": 1631097345246,
-      "contentHash": "2bc7249e47fa047bf5ae88f12589248c",
+      "lastModificationDate": 1631100043007,
+      "contentHash": "498a98afdcef6d9c47a3b4852b020de8",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/IERC721Metadata.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7748,8 +7748,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/IERC721Enumerable.sol": {
-      "lastModificationDate": 1631097342746,
-      "contentHash": "5a8918e6f205244aa7904199f123083f",
+      "lastModificationDate": 1631100042991,
+      "contentHash": "8dc10a73c31d69c8ca81df7fb35f92a3",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/IERC721Enumerable.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7785,7 +7785,7 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/uniswap/v3/IPoolInitializer.sol": {
-      "lastModificationDate": 1631097469419,
+      "lastModificationDate": 1631100013895,
       "contentHash": "268f76d47712b6580dbbc93b42e065d4",
       "sourceName": "contracts/dependencies/uniswap/v3/IPoolInitializer.sol",
       "solcConfig": {
@@ -7820,8 +7820,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/IERC721Permit.sol": {
-      "lastModificationDate": 1631097361486,
-      "contentHash": "1c3d6a3de82bca7ecf5c7ed486b53aa6",
+      "lastModificationDate": 1631100043019,
+      "contentHash": "7e1b77123eb9fddb2f308e114b722269",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/IERC721Permit.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7857,8 +7857,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/uniswap/v3/IPeripheryPayments.sol": {
-      "lastModificationDate": 1631097466847,
-      "contentHash": "f5a82005e856a9d53e72e7a9f90909d5",
+      "lastModificationDate": 1631100043487,
+      "contentHash": "4fca2f598e2560fa07ec23d29313b1f3",
       "sourceName": "contracts/dependencies/uniswap/v3/IPeripheryPayments.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7892,7 +7892,7 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/uniswap/v3/IPeripheryImmutableState.sol": {
-      "lastModificationDate": 1631097466395,
+      "lastModificationDate": 1631100013899,
       "contentHash": "b90ac13bf45032fe1f8b5179dac82569",
       "sourceName": "contracts/dependencies/uniswap/v3/IPeripheryImmutableState.sol",
       "solcConfig": {
@@ -7927,8 +7927,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/uniswap/v3/PoolAddress.sol": {
-      "lastModificationDate": 1631097481551,
-      "contentHash": "af340d16ca32ecab4f3053dfec589605",
+      "lastModificationDate": 1631100043627,
+      "contentHash": "0cd596c2d099968709c74a002dec1546",
       "sourceName": "contracts/dependencies/uniswap/v3/PoolAddress.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7962,8 +7962,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/uniswap/v3/FullMath.sol": {
-      "lastModificationDate": 1631097393546,
-      "contentHash": "65707ea926c5a0e785cde5db4213879f",
+      "lastModificationDate": 1631100043443,
+      "contentHash": "92d0f616dae699a1e6296f794287bb3b",
       "sourceName": "contracts/dependencies/uniswap/v3/FullMath.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -7997,7 +7997,7 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/uniswap/v3/FixedPoint96.sol": {
-      "lastModificationDate": 1631097391898,
+      "lastModificationDate": 1631100013899,
       "contentHash": "8b1dbc0c30da998033a3fc775e095e8b",
       "sourceName": "contracts/dependencies/uniswap/v3/FixedPoint96.sol",
       "solcConfig": {
@@ -8032,8 +8032,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/workers/StaterDiscounts.sol": {
-      "lastModificationDate": 1631098863176,
-      "contentHash": "0fe71d05280510c3b281caa4820b3208",
+      "lastModificationDate": 1631101585639,
+      "contentHash": "abfaaa622d7814b240d8256d5a8f8655",
       "sourceName": "contracts/stater/workers/StaterDiscounts.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8068,12 +8068,12 @@
       ],
       "artifacts": [
         "Geyser",
-        "StaterDiscounts087"
+        "StaterDiscounts"
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/promissory/PromissoryNote.sol": {
-      "lastModificationDate": 1631098755015,
-      "contentHash": "575e1be160e7cfd4ec7ab76c4af08baf",
+      "lastModificationDate": 1631100048495,
+      "contentHash": "c8dec72c40c4d18a3a788e1a061d054b",
       "sourceName": "contracts/stater/promissory/PromissoryNote.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8111,8 +8111,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/ERC721.sol": {
-      "lastModificationDate": 1631098741703,
-      "contentHash": "a6ee5d26e76d526a1d6bca76ca45da07",
+      "lastModificationDate": 1631100042875,
+      "contentHash": "f7dd775f9afe4bec322d707088c73900",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/ERC721.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8154,8 +8154,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/Strings.sol": {
-      "lastModificationDate": 1631098692391,
-      "contentHash": "507924c146619548e7a3db8dba53f120",
+      "lastModificationDate": 1631100043211,
+      "contentHash": "fc962f6518347e99cff7a102d70e2645",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/Strings.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8189,8 +8189,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/misc/AaveOracle.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "87938d647b7d2e0efb54db04f3bc1547",
+      "lastModificationDate": 1631100044379,
+      "contentHash": "ec77fbf29d0a5878293bac63bfb2ec9d",
       "sourceName": "contracts/misc/AaveOracle.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8230,8 +8230,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IChainlinkAggregator.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "7a25050278be7e9f3ac7424c0d69a049",
+      "lastModificationDate": 1631100043971,
+      "contentHash": "b98f4656b49f6398bd79f14ef6f21164",
       "sourceName": "contracts/interfaces/IChainlinkAggregator.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8265,8 +8265,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/lendingpool/LendingPoolConfigurator.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "a450e1be0037ab48cc05717afb1e6889",
+      "lastModificationDate": 1631100046119,
+      "contentHash": "ea6765a2da3ae10fe229f70464145f62",
       "sourceName": "contracts/protocol/lendingpool/LendingPoolConfigurator.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8315,8 +8315,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/libraries/aave-upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "b6341ef33dcb8301a510795e68fdfb47",
+      "lastModificationDate": 1631100046187,
+      "contentHash": "70c56d0a2aa83fd38ee5c0d6c50e68a9",
       "sourceName": "contracts/protocol/libraries/aave-upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8353,8 +8353,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/ILendingPoolConfigurator.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "26bc9369a4456e17626fe2c3a8a6d6db",
+      "lastModificationDate": 1631100044155,
+      "contentHash": "0664dd84ca4b8572f98bf5d22ffc32d1",
       "sourceName": "contracts/interfaces/ILendingPoolConfigurator.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8388,8 +8388,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/libraries/aave-upgradeability/BaseImmutableAdminUpgradeabilityProxy.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "c2f279451bae93b05a05b4dfe73965cc",
+      "lastModificationDate": 1631100046171,
+      "contentHash": "c2060b6ad40fb2a60f2ad74dab6754f2",
       "sourceName": "contracts/protocol/libraries/aave-upgradeability/BaseImmutableAdminUpgradeabilityProxy.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8425,8 +8425,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/upgradeability/InitializableUpgradeabilityProxy.sol": {
-      "lastModificationDate": 1631097382466,
-      "contentHash": "4578675ddb0759973506da311540ec82",
+      "lastModificationDate": 1631100043355,
+      "contentHash": "c0cc5609f0e283d0861c966a3f110b8e",
       "sourceName": "contracts/dependencies/openzeppelin/upgradeability/InitializableUpgradeabilityProxy.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8462,8 +8462,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/upgradeability/BaseUpgradeabilityProxy.sol": {
-      "lastModificationDate": 1631097377806,
-      "contentHash": "843dbecc88a254c6e02012b1efb48bcc",
+      "lastModificationDate": 1631100043287,
+      "contentHash": "bc8ccb12f052e99a0d52701c1d338c7e",
       "sourceName": "contracts/dependencies/openzeppelin/upgradeability/BaseUpgradeabilityProxy.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8500,8 +8500,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/upgradeability/Proxy.sol": {
-      "lastModificationDate": 1631097384166,
-      "contentHash": "ebf21fde26904e77797d7ada834c29e5",
+      "lastModificationDate": 1631100043371,
+      "contentHash": "ad2e7e4aa642f3fcc74a19903046ee38",
       "sourceName": "contracts/dependencies/openzeppelin/upgradeability/Proxy.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8535,8 +8535,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/tokenization/DelegationAwareAToken.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "04f040cdfc28acce298999828702fa64",
+      "lastModificationDate": 1631100047131,
+      "contentHash": "297ecee480d0a477c196ed4773758159",
       "sourceName": "contracts/protocol/tokenization/DelegationAwareAToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8575,8 +8575,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IDelegationToken.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "082e2de4fca3cfa794b548eb64959089",
+      "lastModificationDate": 1631100043999,
+      "contentHash": "d3b20d1f608f4746aba329d59f32fcb9",
       "sourceName": "contracts/interfaces/IDelegationToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8610,8 +8610,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/configuration/LendingPoolAddressesProviderRegistry.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "15a1e88b6cd45ae8e6d6bac72f9e87be",
+      "lastModificationDate": 1631100045419,
+      "contentHash": "c6777d99fbcdad977d3c7eecc0b3560b",
       "sourceName": "contracts/protocol/configuration/LendingPoolAddressesProviderRegistry.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8649,8 +8649,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/ILendingPoolAddressesProviderRegistry.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "249239470e9a5ff454bf3c1aa2f5bfd3",
+      "lastModificationDate": 1631100044119,
+      "contentHash": "6cb516dddf35d340eda4e7dd836e719b",
       "sourceName": "contracts/interfaces/ILendingPoolAddressesProviderRegistry.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8684,8 +8684,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/tokenization/StableDebtToken.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "475b6b590c6350c6d9d664f0b648db69",
+      "lastModificationDate": 1631100047351,
+      "contentHash": "09905f54f856cfbfceef5d43f717626d",
       "sourceName": "contracts/protocol/tokenization/StableDebtToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8727,8 +8727,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/upgradeability/MockStableDebtToken.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "4ab5a951ea6ba42e9aab3f3a33bb04fd",
+      "lastModificationDate": 1631100045299,
+      "contentHash": "aed3b7fbb883410063680e034e48ed38",
       "sourceName": "contracts/mocks/upgradeability/MockStableDebtToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8764,8 +8764,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/lendingpool/LendingPool.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "b9936f5cfebb03ce73ab344bccbacd91",
+      "lastModificationDate": 1631100045811,
+      "contentHash": "f26904872e5c49a595fd2f1f01a93956",
       "sourceName": "contracts/protocol/lendingpool/LendingPool.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8823,8 +8823,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/adapters/UniswapLiquiditySwapAdapter.sol": {
-      "lastModificationDate": 1631094590110,
-      "contentHash": "11dbb42a3bae79b9f0ca43fcca69625c",
+      "lastModificationDate": 1631100013879,
+      "contentHash": "6ae3b7274f12b7de881bc0483c68d7b0",
       "sourceName": "contracts/adapters/UniswapLiquiditySwapAdapter.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8863,8 +8863,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/adapters/FlashLiquidationAdapter.sol": {
-      "lastModificationDate": 1631094590110,
-      "contentHash": "32701d733ab5ba66408cb8939382aa2f",
+      "lastModificationDate": 1631100013879,
+      "contentHash": "92699e5da3245adfc2f4017305964062",
       "sourceName": "contracts/adapters/FlashLiquidationAdapter.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8908,8 +8908,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/upgradeability/InitializableAdminUpgradeabilityProxy.sol": {
-      "lastModificationDate": 1631097381138,
-      "contentHash": "02d15f5e79d44c710cb65d24f96e8a61",
+      "lastModificationDate": 1631100043331,
+      "contentHash": "119936d57657d5d4d92bc15f769bd12d",
       "sourceName": "contracts/dependencies/openzeppelin/upgradeability/InitializableAdminUpgradeabilityProxy.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8946,8 +8946,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/upgradeability/BaseAdminUpgradeabilityProxy.sol": {
-      "lastModificationDate": 1631097376494,
-      "contentHash": "2bd0cc4dc7392dc2c414ca903c3e2ada",
+      "lastModificationDate": 1631100043263,
+      "contentHash": "eb84622fcc50d7d294185ceedecb3620",
       "sourceName": "contracts/dependencies/openzeppelin/upgradeability/BaseAdminUpgradeabilityProxy.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -8983,8 +8983,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/upgradeability/UpgradeabilityProxy.sol": {
-      "lastModificationDate": 1631097390354,
-      "contentHash": "0f693cbb0e05cb04aa30f79b105385b1",
+      "lastModificationDate": 1631100043391,
+      "contentHash": "9bf89b80c172ecdb672d59e33e97d6b8",
       "sourceName": "contracts/dependencies/openzeppelin/upgradeability/UpgradeabilityProxy.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9020,8 +9020,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/upgradeability/AdminUpgradeabilityProxy.sol": {
-      "lastModificationDate": 1631097374598,
-      "contentHash": "1895075e0d13e7bfddc4deee8a19a368",
+      "lastModificationDate": 1631100043231,
+      "contentHash": "0357840f8f2438abe772cd700e91172f",
       "sourceName": "contracts/dependencies/openzeppelin/upgradeability/AdminUpgradeabilityProxy.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9057,8 +9057,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/protocol/configuration/LendingPoolAddressesProvider.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "c7a933bb7c54957268e6889c75ba6158",
+      "lastModificationDate": 1631100045383,
+      "contentHash": "50804e032a30229250adc69a4d14dab0",
       "sourceName": "contracts/protocol/configuration/LendingPoolAddressesProvider.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9096,8 +9096,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/deployments/ATokensAndRatesHelper.sol": {
-      "lastModificationDate": 1631097524159,
-      "contentHash": "45bd2d089344a4c3baefda66a72b38ac",
+      "lastModificationDate": 1631100043835,
+      "contentHash": "d802b27fa4ebdcd613ad7a148733e351",
       "sourceName": "contracts/deployments/ATokensAndRatesHelper.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9139,8 +9139,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/deployments/StringLib.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "062b80046c48b7a0945936544e868b62",
+      "lastModificationDate": 1631100043887,
+      "contentHash": "96fcf899f3965772c6f376139beb6a3f",
       "sourceName": "contracts/deployments/StringLib.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9174,8 +9174,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/deployments/StableAndVariableTokensHelper.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "54833bad78c142b27ac0ec19df58faf0",
+      "lastModificationDate": 1631100043871,
+      "contentHash": "79dd9da7a4bdbf1b3178c298cfc1a22b",
       "sourceName": "contracts/deployments/StableAndVariableTokensHelper.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9215,8 +9215,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/oracle/LendingRateOracle.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "d43c7781f902fb9aff858d7a1d5cfde3",
+      "lastModificationDate": 1631100045047,
+      "contentHash": "1013bcf8e1195d290f6f192c606ad877",
       "sourceName": "contracts/mocks/oracle/LendingRateOracle.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9253,8 +9253,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/tokens/MintableDelegationERC20.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "3ac76949d15be4c32fb63f4341fc5fa8",
+      "lastModificationDate": 1631100045235,
+      "contentHash": "bfb37c2f4c810127ef365c59d0bf75ad",
       "sourceName": "contracts/mocks/tokens/MintableDelegationERC20.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9290,8 +9290,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IExchangeAdapter.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "0b4971bce9c94dba30de0d4f92394ebe",
+      "lastModificationDate": 1631100044023,
+      "contentHash": "08a0bb5922a3505b03ebc33f2bbd70ef",
       "sourceName": "contracts/interfaces/IExchangeAdapter.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9327,8 +9327,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/lending/routes/StaterDefault/StaterDefault.sol": {
-      "lastModificationDate": 1631099528004,
-      "contentHash": "b49e034315be7fd604b8ef9f71ee25c0",
+      "lastModificationDate": 1631100047987,
+      "contentHash": "c0d10d0921e8855ca8ea777dcea29b32",
       "sourceName": "contracts/stater/lending/routes/StaterDefault/StaterDefault.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9366,8 +9366,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/lending/routes/StaterDefault/params/DefaultCreateLoanMethod.sol": {
-      "lastModificationDate": 1631099520808,
-      "contentHash": "96727e2594bf3518588c803e64f4d579",
+      "lastModificationDate": 1631100047999,
+      "contentHash": "e73ba50ab53c8daf6e2cb34935a7cd6e",
       "sourceName": "contracts/stater/lending/routes/StaterDefault/params/DefaultCreateLoanMethod.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9401,8 +9401,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/lending/controller/LendingTemplate.sol": {
-      "lastModificationDate": 1631099237490,
-      "contentHash": "e260b2da469555b7818563ff9d1607ea",
+      "lastModificationDate": 1631100047603,
+      "contentHash": "5683b040f0acef11ef1fc78d52a5e172",
       "sourceName": "contracts/stater/lending/controller/LendingTemplate.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9441,8 +9441,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/lending/controller/LendingCoreMethods.sol": {
-      "lastModificationDate": 1631099225054,
-      "contentHash": "369f2d599848b34576fbc0dd9d4e7651",
+      "lastModificationDate": 1631100047575,
+      "contentHash": "f2440125ed48a76ad8a9820c9721b3e9",
       "sourceName": "contracts/stater/lending/controller/LendingCoreMethods.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9478,8 +9478,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/plugins/StaterProxy/StaterProxy.sol": {
-      "lastModificationDate": 1631098480518,
-      "contentHash": "6bb211d23fba6a1d90a1108ed5b3b709",
+      "lastModificationDate": 1631100048371,
+      "contentHash": "21fe09ca2c67b8d3f3fbec4916a3b14f",
       "sourceName": "contracts/stater/plugins/StaterProxy/StaterProxy.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9516,8 +9516,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/plugins/StaterProxy/ProxyCore.sol": {
-      "lastModificationDate": 1631098295740,
-      "contentHash": "e96208b66a10ccd873d29c09df456236",
+      "lastModificationDate": 1631100048343,
+      "contentHash": "65d24dbdab281228c21dbd23aa4de3c7",
       "sourceName": "contracts/stater/plugins/StaterProxy/ProxyCore.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9551,8 +9551,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/plugins/StaterProxy/StaterProxyAdmin.sol": {
-      "lastModificationDate": 1631098479730,
-      "contentHash": "a04cd66e672987a43fa02ddb7d656031",
+      "lastModificationDate": 1631100048387,
+      "contentHash": "0df7bf0f7206a8db25cb164b29a69ecf",
       "sourceName": "contracts/stater/plugins/StaterProxy/StaterProxyAdmin.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9589,8 +9589,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/swap/MockParaSwapAugustusRegistry.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "fa38abcc65288618f695defaeecfb2e1",
+      "lastModificationDate": 1631100045123,
+      "contentHash": "c52ccedb58bcd9181672f58c1a356650",
       "sourceName": "contracts/mocks/swap/MockParaSwapAugustusRegistry.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9626,8 +9626,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/upgradeability/Initializable.sol": {
-      "lastModificationDate": 1631097379166,
-      "contentHash": "13ee7092ae365253018384630bc40f37",
+      "lastModificationDate": 1631100043307,
+      "contentHash": "85f2896c021225c5710918ce3bdc73ba",
       "sourceName": "contracts/dependencies/openzeppelin/upgradeability/Initializable.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9661,8 +9661,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IPriceOracle.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "2f743812a3f5003b3a8aad85caa6e335",
+      "lastModificationDate": 1631100044211,
+      "contentHash": "d6549c90aff0a790d731ad0055a4b3f4",
       "sourceName": "contracts/interfaces/IPriceOracle.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9696,8 +9696,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/oracle/PriceOracle.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "2593d848f2b4fd8909c77f41eccc907f",
+      "lastModificationDate": 1631100045071,
+      "contentHash": "73b741fc738ecc4f83a83bdfb10b1ea5",
       "sourceName": "contracts/mocks/oracle/PriceOracle.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9733,8 +9733,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/interfaces/IUniswapExchange.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "02272f4b5f947c3607168fc3eaaaa29d",
+      "lastModificationDate": 1631100044283,
+      "contentHash": "86cf107688f7970df1a0a58a2ccf826a",
       "sourceName": "contracts/interfaces/IUniswapExchange.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9768,8 +9768,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/misc/interfaces/IERC20DetailedBytes.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "ca7eceb3285ab76efb59fd93d468ad41",
+      "lastModificationDate": 1631100044747,
+      "contentHash": "f054e606b08e3e7f8f717a6b52b8d157",
       "sourceName": "contracts/misc/interfaces/IERC20DetailedBytes.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9803,8 +9803,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/misc/interfaces/IUniswapV2Router01.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "4e9a370698f8a3b06afe7e5f89d85186",
+      "lastModificationDate": 1631100044799,
+      "contentHash": "43171eb21f82d217bcc9865588ccb441",
       "sourceName": "contracts/misc/interfaces/IUniswapV2Router01.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9838,8 +9838,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/misc/interfaces/IUniswapV2Router02.sol": {
-      "lastModificationDate": 1631094590118,
-      "contentHash": "d75fbd3aaa9e4f38730e4faf2b8fbe56",
+      "lastModificationDate": 1631100044815,
+      "contentHash": "7ca057ceac961919900b3ab1822c0cd8",
       "sourceName": "contracts/misc/interfaces/IUniswapV2Router02.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9875,8 +9875,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/attacks/SefldestructTransfer.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "ed16f0edec9773b8bc25fc80e145c3c0",
+      "lastModificationDate": 1631100044855,
+      "contentHash": "32a3f4308a6fe864c487faafccc348e8",
       "sourceName": "contracts/mocks/attacks/SefldestructTransfer.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9910,8 +9910,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/dependencies/weth/WETH9.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "5175625bc241ea512297dba1b5711d06",
+      "lastModificationDate": 1631100044915,
+      "contentHash": "597b29037b3a548b20276c578c6136e1",
       "sourceName": "contracts/mocks/dependencies/weth/WETH9.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9945,8 +9945,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/tokens/WETH9Mocked.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "11ba6b97c698a623974d2b9b4c420629",
+      "lastModificationDate": 1631100045275,
+      "contentHash": "1cd69cf21f560b0415ecf90fd3bccce0",
       "sourceName": "contracts/mocks/tokens/WETH9Mocked.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -9982,8 +9982,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/oracle/ChainlinkUSDETHOracleI.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "2c81bceee227fa7898f696f3cffd0abf",
+      "lastModificationDate": 1631100044999,
+      "contentHash": "cb2e15fe73bfb961d766eca17a5bed92",
       "sourceName": "contracts/mocks/oracle/ChainlinkUSDETHOracleI.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10017,8 +10017,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/oracle/CLAggregators/MockAggregator.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "14719f5b7dc1aa0718c6d8b1fa8c66ec",
+      "lastModificationDate": 1631100044987,
+      "contentHash": "60fb1c9e456f07fd04bbdc16cf2a7ba8",
       "sourceName": "contracts/mocks/oracle/CLAggregators/MockAggregator.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10052,8 +10052,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/oracle/GenericOracleI.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "5a53cc0b4d73f6587b7151710be72fc9",
+      "lastModificationDate": 1631100045011,
+      "contentHash": "34b75e0339b9731fb27a6c15e2bdd78b",
       "sourceName": "contracts/mocks/oracle/GenericOracleI.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10087,8 +10087,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/mocks/oracle/IExtendedPriceAggregator.sol": {
-      "lastModificationDate": 1631094590122,
-      "contentHash": "03959a5a1fa940eacb23f234b5706a92",
+      "lastModificationDate": 1631100045027,
+      "contentHash": "b64d216d8979364dd22988be99c4cd47",
       "sourceName": "contracts/mocks/oracle/IExtendedPriceAggregator.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10122,8 +10122,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/lending/controller/interfaces/ILendingCoreMethods.sol": {
-      "lastModificationDate": 1631099239486,
-      "contentHash": "362fecff80edbecb17af62c4cbca1240",
+      "lastModificationDate": 1631100047623,
+      "contentHash": "1177c6e3c3c711f5f7d319bbc2837fb0",
       "sourceName": "contracts/stater/lending/controller/interfaces/ILendingCoreMethods.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10157,8 +10157,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/lending/controller/interfaces/ILendingTemplate.sol": {
-      "lastModificationDate": 1631099243330,
-      "contentHash": "737e749aee5dc785d498378499fb3457",
+      "lastModificationDate": 1631100047639,
+      "contentHash": "9a5ccb9b57bbdc3cca21d3e7994f5bb9",
       "sourceName": "contracts/stater/lending/controller/interfaces/ILendingTemplate.sol",
       "solcConfig": {
         "version": "0.6.12",

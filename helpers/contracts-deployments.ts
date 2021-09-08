@@ -14,7 +14,7 @@ import {
 import { MintableERC20 } from "../types/MintableERC20";
 import { MockContract } from "ethereum-waffle";
 import { getReservesConfigByPool } from "./configuration";
-import { getFirstSigner } from "./contracts-getters";
+import { getFirstSigner, getLendingPoolImpl } from "./contracts-getters";
 import { ZERO_ADDRESS } from "./constants";
 import {
   AaveProtocolDataProviderFactory,
@@ -52,6 +52,7 @@ import {
   WETH9MockedFactory,
   WETHGatewayFactory,
   FlashLiquidationAdapterFactory,
+  StaterHealthFactorFactory,
 } from "../types";
 import {
   withSaveAndVerify,
@@ -232,6 +233,29 @@ export const deployLendingPool = async (verify?: boolean) => {
     eContractid.LendingPool,
     [],
     verify
+  );
+};
+
+/* Deploys the stater health factor contract */
+export const deployStaterHealthFactor = async () => {
+  const staterHealthFactorImpl = await new StaterHealthFactorFactory(
+    await getFirstSigner()
+  ).deploy(
+    "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+    "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+    ["0xC36442b4a4522E871399CD717aBDD847Ab11FE88"]
+  );
+
+  await insertContractAddressInDb(
+    eContractid.StaterHealthFactor,
+    staterHealthFactorImpl.address
+  );
+
+  return withSaveAndVerify(
+    staterHealthFactorImpl,
+    eContractid.StaterHealthFactor,
+    [],
+    false
   );
 };
 

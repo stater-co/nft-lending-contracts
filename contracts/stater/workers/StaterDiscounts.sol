@@ -9,7 +9,7 @@ interface Geyser {
     function totalStakedFor(address addr) external view returns (uint256);
 }
 
-contract StaterDiscounts087 is Ownable {
+contract StaterDiscounts is Ownable {
     uint256 public discountId;
     struct Discount {
         uint8 tokenType; // 0 - erc721 , 1 - erc1155 , 2 - geyser
