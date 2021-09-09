@@ -34,6 +34,7 @@ import {
   WETHGatewayFactory,
   FlashLiquidationAdapterFactory,
   StaterHealthFactorFactory,
+  GameItems1155Factory,
 } from "../types";
 import { IERC20DetailedFactory } from "../types/IERC20DetailedFactory";
 import { getEthersSigners, MockTokenMap } from "./contracts-helpers";
@@ -480,6 +481,17 @@ export const getStaterHealth = async () => {
     (
       await getDb()
         .get(`${eContractid.StaterHealthFactor}.${DRE.network.name}`)
+        .value()
+    ).address,
+    await getFirstSigner()
+  );
+};
+
+export const getGameItems1155 = async () => {
+  return await GameItems1155Factory.connect(
+    (
+      await getDb()
+        .get(`${eContractid.GameItems1155}.${DRE.network.name}`)
         .value()
     ).address,
     await getFirstSigner()

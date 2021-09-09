@@ -16,6 +16,7 @@ import {
   getFlashLiquidationAdapter,
   getParaSwapLiquiditySwapAdapter,
   getStaterHealth,
+  getGameItems1155,
 } from "../../../helpers/contracts-getters";
 import {
   eEthereumNetwork,
@@ -44,7 +45,12 @@ import { WETH9Mocked } from "../../../types/WETH9Mocked";
 import { WETHGateway } from "../../../types/WETHGateway";
 import { solidity } from "ethereum-waffle";
 import { AaveConfig } from "../../../markets/aave";
-import { FlashLiquidationAdapter, StaterHealthFactor } from "../../../types";
+import {
+  FlashLiquidationAdapter,
+  GameItems1155,
+  GameItems1155Factory,
+  StaterHealthFactor,
+} from "../../../types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { usingTenderly } from "../../../helpers/tenderly-utils";
 
@@ -77,6 +83,7 @@ export interface TestEnv {
   flashLiquidationAdapter: FlashLiquidationAdapter;
   paraswapLiquiditySwapAdapter: ParaSwapLiquiditySwapAdapter;
   staterHealthFactor: StaterHealthFactor;
+  gameItems1155: GameItems1155;
 }
 
 let buidlerevmSnapshotId: string = "0x1";
@@ -105,6 +112,7 @@ const testEnv: TestEnv = {
   registry: {} as LendingPoolAddressesProviderRegistry,
   wethGateway: {} as WETHGateway,
   staterHealthFactor: {} as StaterHealthFactor,
+  gameItems1155: {} as GameItems1155,
 } as TestEnv;
 
 export async function initializeMakeSuite() {
@@ -181,6 +189,7 @@ export async function initializeMakeSuite() {
   testEnv.weth = await getWETHMocked(wethAddress);
   testEnv.wethGateway = await getWETHGateway();
   testEnv.staterHealthFactor = await getStaterHealth();
+  testEnv.gameItems1155 = await getGameItems1155();
 
   testEnv.uniswapLiquiditySwapAdapter = await getUniswapLiquiditySwapAdapter();
   testEnv.uniswapRepayAdapter = await getUniswapRepayAdapter();

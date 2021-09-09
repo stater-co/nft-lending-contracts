@@ -53,6 +53,7 @@ import {
   WETHGatewayFactory,
   FlashLiquidationAdapterFactory,
   StaterHealthFactorFactory,
+  GameItems1155Factory,
 } from "../types";
 import {
   withSaveAndVerify,
@@ -257,6 +258,25 @@ export const deployStaterHealthFactor = async () => {
   return withSaveAndVerify(
     staterHealthFactorImpl,
     eContractid.StaterHealthFactor,
+    [],
+    false
+  );
+};
+
+/* Deploys the erc1155 contract */
+export const deployGameItems1155 = async () => {
+  const gameItems1155Impl = await new GameItems1155Factory(
+    await getFirstSigner()
+  ).deploy("test");
+
+  await insertContractAddressInDb(
+    eContractid.GameItems1155,
+    gameItems1155Impl.address
+  );
+
+  return withSaveAndVerify(
+    gameItems1155Impl,
+    eContractid.GameItems1155,
     [],
     false
   );

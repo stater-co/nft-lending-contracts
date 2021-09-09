@@ -265,36 +265,36 @@
   },
   "ReserveLogic": {
     "hardhat": {
-      "address": "0x2E5a2652BDB3da24249EaDf9028a6D75e20D86C5",
+      "address": "0xb1DcE3617838AcbCa7f9CC84d475eF4414d92C06",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
   "GenericLogic": {
     "hardhat": {
-      "address": "0xb1DcE3617838AcbCa7f9CC84d475eF4414d92C06",
+      "address": "0x63b9792E7A95e3aa037255E8cAa0Dfd76f7383e7",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
   "ValidationLogic": {
     "hardhat": {
-      "address": "0x63b9792E7A95e3aa037255E8cAa0Dfd76f7383e7",
+      "address": "0xc783bfC59158E888dA3E9c7768aaDC7a58ee7809",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
   "LendingPoolImpl": {
     "hardhat": {
-      "address": "0xc783bfC59158E888dA3E9c7768aaDC7a58ee7809"
+      "address": "0x2dD8146Ad2138ac61F93E549f8F917927B47E28a"
     }
   },
   "LendingPool": {
     "hardhat": {
-      "address": "0xc783bfC59158E888dA3E9c7768aaDC7a58ee7809",
+      "address": "0x2dD8146Ad2138ac61F93E549f8F917927B47E28a",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
   "LendingPoolConfiguratorImpl": {
     "hardhat": {
-      "address": "0x57965788BD1a93639CE738a58176e1A3d6F4d04f"
+      "address": "0xBbC60A8fAf66552554e460d55Ac0563Fb9e76c01"
     }
   },
   "LendingPoolConfigurator": {
@@ -304,234 +304,240 @@
   },
   "StableAndVariableTokensHelper": {
     "hardhat": {
-      "address": "0xdDD96662ea11dA6F289A5D00da41Ec5F3b67d2b4",
+      "address": "0xecE50C63d1Ae02Ba306c2b2E1579d0327220196e",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
   "ATokensAndRatesHelper": {
     "hardhat": {
-      "address": "0xecE50C63d1Ae02Ba306c2b2E1579d0327220196e",
+      "address": "0x0D8448C0fBB84c30395838C8b3fD64722ea94532",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
   "PriceOracle": {
     "hardhat": {
-      "address": "0x0D8448C0fBB84c30395838C8b3fD64722ea94532",
+      "address": "0x053568617FFccEe2F75073975CC0e1549Ff9db71",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
   "MockAggregator": {
     "hardhat": {
-      "address": "0x7fAeC7791277Ff512c41CA903c177B2Ed952dDAc",
+      "address": "0x33958cC3535Fc328369EAC2B2Bebd120D67C7fa1",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
   "AaveOracle": {
     "hardhat": {
-      "address": "0x33958cC3535Fc328369EAC2B2Bebd120D67C7fa1",
+      "address": "0x2cBbbBE1B75Ad7848F0844215816F551f429c64f",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
   "LendingRateOracle": {
     "hardhat": {
-      "address": "0xbAc762e2000b6815268587b081Fd17aC25519aD5",
+      "address": "0xa43Ba00FCA75B805D17f67F9433b971E9a398690",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
   "AaveProtocolDataProvider": {
     "hardhat": {
-      "address": "0x603A373A1571783bD82b708C20a5A4b019BAB78F"
+      "address": "0xFf130817Aa9863B3D809A2A11617c05646245d80"
     }
   },
   "StableDebtToken": {
-    "hardhat": {
-      "address": "0xFf130817Aa9863B3D809A2A11617c05646245d80",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "VariableDebtToken": {
     "hardhat": {
       "address": "0x987D8EE0F70EdC8e9651c9E6a1618B8Bc8B9FB61",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
-  "AToken": {
+  "VariableDebtToken": {
     "hardhat": {
       "address": "0xAF4AC65bBdFfA029335436d85E1B57c77995C59B",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
-  "aTokenImpl": {
+  "AToken": {
     "hardhat": {
-      "address": "0xAF4AC65bBdFfA029335436d85E1B57c77995C59B"
-    }
-  },
-  "DelegationAwareAToken": {
-    "hardhat": {
-      "address": "0x2E5a2652BDB3da24249EaDf9028a6D75e20D86C5",
+      "address": "0x3D0ED84712f1635e755870d63D9D30B33BaEaDc4",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
-  "delegationAwareATokenImpl": {
+  "aTokenImpl": {
     "hardhat": {
       "address": "0x3D0ED84712f1635e755870d63D9D30B33BaEaDc4"
     }
   },
-  "DefaultReserveInterestRateStrategy": {
-    "hardhat": {
-      "address": "0x7997A4c8b8E97d289989431B996AB1C6a9975Ad9",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "rateStrategyAAVE": {
-    "hardhat": {
-      "address": "0xF11e5B522cDbc30b67dCcE3607C1e9796F55e9C3"
-    }
-  },
-  "rateStrategyVolatileOne": {
-    "hardhat": {
-      "address": "0x173ecAdAf173Cc423919B996D811368552cCa219"
-    }
-  },
-  "rateStrategyStableOne": {
-    "hardhat": {
-      "address": "0x65A7D8d33E148D5Bf9fe11FD1425D31A4Bf3d9E1"
-    }
-  },
-  "rateStrategyStableTwo": {
-    "hardhat": {
-      "address": "0x90b17b801434FB1c48a4f1888dd6C410d11Bda59"
-    }
-  },
-  "rateStrategyVolatileTwo": {
-    "hardhat": {
-      "address": "0xB8054085AF605D93c32E6B829d3d7eA2A8C84F9A"
-    }
-  },
-  "rateStrategyVolatileThree": {
-    "hardhat": {
-      "address": "0x95A1C22E8A89f7b3cCa63a9ea3c064E72C96CAa0"
-    }
-  },
-  "rateStrategyStableThree": {
-    "hardhat": {
-      "address": "0xCF47ee4243c408bD2B74F6a92baC184d594f1127"
-    }
-  },
-  "rateStrategyWETH": {
-    "hardhat": {
-      "address": "0x7858c6c8497A5DD3d02EE63849351F33d9141211"
-    }
-  },
-  "rateStrategyVolatileFour": {
-    "hardhat": {
-      "address": "0x4fC52C5a06b508d1257566e79Fe6268C3319291b"
-    }
-  },
-  "LendingPoolCollateralManagerImpl": {
-    "hardhat": {
-      "address": "0x626FdE749F9d499d3777320CAf29484B624ab84a"
-    }
-  },
-  "LendingPoolCollateralManager": {
-    "hardhat": {
-      "address": "0x626FdE749F9d499d3777320CAf29484B624ab84a",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "MockFlashLoanReceiver": {
-    "hardhat": {
-      "address": "0x830bceA96E56DBC1F8578f75fBaC0AF16B32A07d",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "MockUniswapV2Router02": {
-    "hardhat": {
-      "address": "0xA0AB1cB92A4AF81f84dCd258155B5c25D247b54E",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "UniswapLiquiditySwapAdapter": {
-    "hardhat": {
-      "address": "0x7997A4c8b8E97d289989431B996AB1C6a9975Ad9",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "UniswapRepayAdapter": {
-    "hardhat": {
-      "address": "0x09d7cb7a0606a7f10DC8a37b3e0E420F39f0FAF1",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "FlashLiquidationAdapter": {
-    "hardhat": {
-      "address": "0x7997A4c8b8E97d289989431B996AB1C6a9975Ad9",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "MockParaSwapAugustus": {
-    "hardhat": {
-      "address": "0x4977FC58783ceBCC310311C800B786EcAf45F98f",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "MockParaSwapAugustusRegistry": {
-    "hardhat": {
-      "address": "0x32eF223A01fB55Fd862E6E30d5F4A3b2d44f9586",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "ParaSwapLiquiditySwapAdapter": {
-    "hardhat": {
-      "address": "0x7997A4c8b8E97d289989431B996AB1C6a9975Ad9",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "WalletBalanceProvider": {
-    "hardhat": {
-      "address": "0x7F0936Be36D1961D68b3334eC751Ad8F934f1739",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "WETHGateway": {
-    "hardhat": {
-      "address": "0xbC7Ab6F930D83CB7e80A207d4dD3DD80aA8a2153",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "MintableDelegationERC20": {
-    "hardhat": {
-      "address": "0x7997A4c8b8E97d289989431B996AB1C6a9975Ad9",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "MockAToken": {
-    "hardhat": {
-      "address": "0x7997A4c8b8E97d289989431B996AB1C6a9975Ad9",
-      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
-    }
-  },
-  "MockStableDebtToken": {
+  "DelegationAwareAToken": {
     "hardhat": {
       "address": "0xb1DcE3617838AcbCa7f9CC84d475eF4414d92C06",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
+  "delegationAwareATokenImpl": {
+    "hardhat": {
+      "address": "0xF11e5B522cDbc30b67dCcE3607C1e9796F55e9C3"
+    }
+  },
+  "DefaultReserveInterestRateStrategy": {
+    "hardhat": {
+      "address": "0x2E5a2652BDB3da24249EaDf9028a6D75e20D86C5",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "rateStrategyAAVE": {
+    "hardhat": {
+      "address": "0x4E43773D3A3aca08449fe18D3f26759CD43CBC2b"
+    }
+  },
+  "rateStrategyVolatileOne": {
+    "hardhat": {
+      "address": "0x5D74e15E36492a9CC6fda503b3cFf0CA10d90a83"
+    }
+  },
+  "rateStrategyStableOne": {
+    "hardhat": {
+      "address": "0x314B40e9232177AB0B54E874A7d351c781eFe44d"
+    }
+  },
+  "rateStrategyStableTwo": {
+    "hardhat": {
+      "address": "0xeB80313502EA077FA9B8E89b45e4a1B236cA17Ea"
+    }
+  },
+  "rateStrategyVolatileTwo": {
+    "hardhat": {
+      "address": "0xA3Ab089388B0C1BA83B3496696242FcA3F8eb9D5"
+    }
+  },
+  "rateStrategyVolatileThree": {
+    "hardhat": {
+      "address": "0x5A33C3341Aedf4C5f9bbCeDf52D619D12f76f7Fb"
+    }
+  },
+  "rateStrategyStableThree": {
+    "hardhat": {
+      "address": "0xb3a9b7B5728416227cB09d047fAE2Df36Df04819"
+    }
+  },
+  "rateStrategyWETH": {
+    "hardhat": {
+      "address": "0x84d1CE12E078B2901985804c603d343cA3a1c875"
+    }
+  },
+  "rateStrategyVolatileFour": {
+    "hardhat": {
+      "address": "0xd44937448A9f229bfae84e7d256810Ba4C4a93cC"
+    }
+  },
+  "LendingPoolCollateralManagerImpl": {
+    "hardhat": {
+      "address": "0xB660Fdd109a95718cB9d20E3A89EE6cE342aDcB6"
+    }
+  },
+  "LendingPoolCollateralManager": {
+    "hardhat": {
+      "address": "0xB660Fdd109a95718cB9d20E3A89EE6cE342aDcB6",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "MockFlashLoanReceiver": {
+    "hardhat": {
+      "address": "0xA0AB1cB92A4AF81f84dCd258155B5c25D247b54E",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "MockUniswapV2Router02": {
+    "hardhat": {
+      "address": "0x5f7134cd38C826a7649f9Cc47dda24d834DD2967",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "UniswapLiquiditySwapAdapter": {
+    "hardhat": {
+      "address": "0x2E5a2652BDB3da24249EaDf9028a6D75e20D86C5",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "UniswapRepayAdapter": {
+    "hardhat": {
+      "address": "0x5Ea694f66BD0CBd08FC7967af01b67Dcef68cC5c",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "FlashLiquidationAdapter": {
+    "hardhat": {
+      "address": "0x2E5a2652BDB3da24249EaDf9028a6D75e20D86C5",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "MockParaSwapAugustus": {
+    "hardhat": {
+      "address": "0x32eF223A01fB55Fd862E6E30d5F4A3b2d44f9586",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "MockParaSwapAugustusRegistry": {
+    "hardhat": {
+      "address": "0x20CbDcC1d471D4c41382eD6013d9561070C3eD48",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "ParaSwapLiquiditySwapAdapter": {
+    "hardhat": {
+      "address": "0x2E5a2652BDB3da24249EaDf9028a6D75e20D86C5",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "WalletBalanceProvider": {
+    "hardhat": {
+      "address": "0xbC7Ab6F930D83CB7e80A207d4dD3DD80aA8a2153",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "WETHGateway": {
+    "hardhat": {
+      "address": "0xf45C720549136d5E2d6a5A2F12573A36E36C3411",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "MintableDelegationERC20": {
+    "hardhat": {
+      "address": "0x2E5a2652BDB3da24249EaDf9028a6D75e20D86C5",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "MockAToken": {
+    "hardhat": {
+      "address": "0x2E5a2652BDB3da24249EaDf9028a6D75e20D86C5",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "MockStableDebtToken": {
+    "hardhat": {
+      "address": "0x63b9792E7A95e3aa037255E8cAa0Dfd76f7383e7",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
   "MockVariableDebtToken": {
     "hardhat": {
-      "address": "0xc783bfC59158E888dA3E9c7768aaDC7a58ee7809",
+      "address": "0x2dD8146Ad2138ac61F93E549f8F917927B47E28a",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
   "SelfdestructTransferMock": {
     "hardhat": {
-      "address": "0x2E5a2652BDB3da24249EaDf9028a6D75e20D86C5",
+      "address": "0xb1DcE3617838AcbCa7f9CC84d475eF4414d92C06",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   },
   "StaterHealthFactor": {
     "hardhat": {
       "address": "0x8565Fb7dfB5D36b2aA00086ffc920cfF20db4F2f",
+      "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
+    }
+  },
+  "GameItems1155": {
+    "hardhat": {
+      "address": "0x93C1e99C8dD990D77232821f9476c308FBad47f5",
       "deployer": "0xc783df8a850f42e7F7e57013759C285caa701eB6"
     }
   }

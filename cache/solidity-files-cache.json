@@ -10192,8 +10192,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/auxiliary/GameItems1155.sol": {
-      "lastModificationDate": 1631186811744,
-      "contentHash": "c49424c10c1430b868594528f98683e0",
+      "lastModificationDate": 1631187367188,
+      "contentHash": "fbf5520cc3bd72a5493bb66fd81fd4fa",
       "sourceName": "contracts/stater/auxiliary/GameItems1155.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10231,8 +10231,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/ERC1155.sol": {
-      "lastModificationDate": 1631186837080,
-      "contentHash": "4484f4af203442c0f2278cef9be1b6f8",
+      "lastModificationDate": 1631187366820,
+      "contentHash": "c0bd4dfbeb28284b094ea5cadc39caa4",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/ERC1155.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10310,8 +10310,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/auxiliary/GameItems721.sol": {
-      "lastModificationDate": 1631186835420,
-      "contentHash": "d06a877a931f0271b836daebb5c9733c",
+      "lastModificationDate": 1631187367240,
+      "contentHash": "2af3f6215b4f2cb1ed716e2fa4d18949",
       "sourceName": "contracts/stater/auxiliary/GameItems721.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10350,8 +10350,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/dependencies/openzeppelin/contracts/Counters.sol": {
-      "lastModificationDate": 1631186834628,
-      "contentHash": "808d6769efe3f1138506d2b6dd55d9e1",
+      "lastModificationDate": 1631187366452,
+      "contentHash": "57cf09699373f416886acce69bd7a6e8",
       "sourceName": "contracts/dependencies/openzeppelin/contracts/Counters.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10387,8 +10387,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/auxiliary/TokenGeyser.sol": {
-      "lastModificationDate": 1631186827596,
-      "contentHash": "a08713d76c4e8fbda03f3ec501abdb11",
+      "lastModificationDate": 1631187367628,
+      "contentHash": "712c764cc7c87805323efb985c6db725",
       "sourceName": "contracts/stater/auxiliary/TokenGeyser.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10429,8 +10429,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/auxiliary/Encoder.sol": {
-      "lastModificationDate": 1631186824636,
-      "contentHash": "e095929ea429ce3a1d4e39782ca0715a",
+      "lastModificationDate": 1631187367044,
+      "contentHash": "d89949354db35d2d7e68fc1ecea1e98e",
       "sourceName": "contracts/stater/auxiliary/Encoder.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10467,8 +10467,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/auxiliary/DelegateCalled.sol": {
-      "lastModificationDate": 1631186822248,
-      "contentHash": "f07d9993fb279489b27eef04ea1c2dd8",
+      "lastModificationDate": 1631187366860,
+      "contentHash": "24e05ada9ad9cdb470a2e5a1acad4518",
       "sourceName": "contracts/stater/auxiliary/DelegateCalled.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10502,8 +10502,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/auxiliary/DelegateCaller.sol": {
-      "lastModificationDate": 1631186822872,
-      "contentHash": "a4f6494258989077fa81821bfc1bbf4c",
+      "lastModificationDate": 1631187366880,
+      "contentHash": "9a2db1e64b670c34bde44ea68865a8ca",
       "sourceName": "contracts/stater/auxiliary/DelegateCaller.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10537,8 +10537,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/auxiliary/DistributionTokens.sol": {
-      "lastModificationDate": 1631186823740,
-      "contentHash": "a1196bbd3b16d3f66d2c342c30c47093",
+      "lastModificationDate": 1631187367008,
+      "contentHash": "cabe9a5dbbdc68f2dd434958a8bf2cd1",
       "sourceName": "contracts/stater/auxiliary/DistributionTokens.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10572,8 +10572,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/auxiliary/FungibleTokens.sol": {
-      "lastModificationDate": 1631186826008,
-      "contentHash": "4bf1a32352ccafccbb76d63553327172",
+      "lastModificationDate": 1631187367144,
+      "contentHash": "20609c996267b7279262324d4f502c41",
       "sourceName": "contracts/stater/auxiliary/FungibleTokens.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -10607,8 +10607,8 @@
       ]
     },
     "/home/gheoneaemil5/nft-lending-contracts/contracts/stater/auxiliary/StakingTokens.sol": {
-      "lastModificationDate": 1631186826856,
-      "contentHash": "28f93601c460d5f0b0dd47f33ad1567c",
+      "lastModificationDate": 1631187367324,
+      "contentHash": "ed68fc1faeac1dfc0c478c36e0a9f86d",
       "sourceName": "contracts/stater/auxiliary/StakingTokens.sol",
       "solcConfig": {
         "version": "0.6.12",
