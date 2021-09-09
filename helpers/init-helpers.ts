@@ -35,6 +35,7 @@ import { isZeroAddress } from "ethereumjs-util";
 import {
   DefaultReserveInterestRateStrategy,
   DelegationAwareAToken,
+  StaterHealthFactorFactory,
 } from "../types";
 import { config } from "process";
 
@@ -200,6 +201,19 @@ export const initReservesByHelper = async (
       "Strategy address for asset %s: %s",
       symbol,
       strategyAddressPerAsset[symbol]
+    );
+
+    const staterHealthFactor = await StaterHealthFactorFactory.connect(
+      (
+        await getDb()
+          .get(`${eContractid.StaterHealthFactor}.${DRE.network.name}`)
+          .value()
+      ).address,
+      await getFirstSigner()
+    );
+    await staterHealthFactor.setGlobalRouteVariables(
+      [strategyAddressPerAsset[symbol]],
+      [true]
     );
 
     if (aTokenImpl === eContractid.AToken) {

@@ -180,7 +180,7 @@ export async function initializeMakeSuite() {
   testEnv.aave = await getMintableERC20(aaveAddress);
   testEnv.weth = await getWETHMocked(wethAddress);
   testEnv.wethGateway = await getWETHGateway();
-  /*testEnv.staterHealthFactor =*/ await getStaterHealth();
+  testEnv.staterHealthFactor = await getStaterHealth();
 
   testEnv.uniswapLiquiditySwapAdapter = await getUniswapLiquiditySwapAdapter();
   testEnv.uniswapRepayAdapter = await getUniswapRepayAdapter();

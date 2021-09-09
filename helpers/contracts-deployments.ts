@@ -1,5 +1,5 @@
 import { Contract } from "ethers";
-import { DRE } from "./misc-utils";
+import { DRE, getDb } from "./misc-utils";
 import {
   tEthereumAddress,
   eContractid,
@@ -238,12 +238,15 @@ export const deployLendingPool = async (verify?: boolean) => {
 
 /* Deploys the stater health factor contract */
 export const deployStaterHealthFactor = async () => {
+  const lendingPoolAddress = await getDb()
+    .get(`${eContractid.LendingPool}.${DRE.network.name}`)
+    .value().address;
   const staterHealthFactorImpl = await new StaterHealthFactorFactory(
     await getFirstSigner()
   ).deploy(
     "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
-    "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
-    ["0xC36442b4a4522E871399CD717aBDD847Ab11FE88"]
+    lendingPoolAddress,
+    []
   );
 
   await insertContractAddressInDb(
