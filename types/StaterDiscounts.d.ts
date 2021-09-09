@@ -13,6 +13,7 @@ import {
 import {
   Contract,
   ContractTransaction,
+  Overrides,
   CallOverrides,
 } from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
@@ -21,20 +22,84 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface StaterDiscountsInterface extends ethers.utils.Interface {
   functions: {
+    "addDiscount(uint8,address,uint8,uint256[])": FunctionFragment;
     "calculateDiscount(address)": FunctionFragment;
+    "discountId()": FunctionFragment;
+    "discounts(uint256)": FunctionFragment;
+    "editDiscount(uint256,address,uint8,uint256[],uint8)": FunctionFragment;
+    "getDiscountTokenId(uint256,uint256)": FunctionFragment;
+    "owner()": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "addDiscount",
+    values: [BigNumberish, string, BigNumberish, BigNumberish[]]
+  ): string;
   encodeFunctionData(
     functionFragment: "calculateDiscount",
     values: [string]
   ): string;
+  encodeFunctionData(
+    functionFragment: "discountId",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "discounts",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "editDiscount",
+    values: [BigNumberish, string, BigNumberish, BigNumberish[], BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getDiscountTokenId",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [string]
+  ): string;
 
+  decodeFunctionResult(
+    functionFragment: "addDiscount",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "calculateDiscount",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "discountId", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "discounts", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "editDiscount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getDiscountTokenId",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
 
-  events: {};
+  events: {
+    "OwnershipTransferred(address,address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 }
 
 export class StaterDiscounts extends Contract {
@@ -51,6 +116,22 @@ export class StaterDiscounts extends Contract {
   interface: StaterDiscountsInterface;
 
   functions: {
+    addDiscount(
+      _tokenType: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "addDiscount(uint8,address,uint8,uint256[])"(
+      _tokenType: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     calculateDiscount(
       requester: string,
       overrides?: CallOverrides
@@ -64,7 +145,111 @@ export class StaterDiscounts extends Contract {
     ): Promise<{
       0: BigNumber;
     }>;
+
+    discountId(overrides?: CallOverrides): Promise<{
+      0: BigNumber;
+    }>;
+
+    "discountId()"(overrides?: CallOverrides): Promise<{
+      0: BigNumber;
+    }>;
+
+    discounts(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      tokenType: number;
+      tokenContract: string;
+      discount: number;
+      0: number;
+      1: string;
+      2: number;
+    }>;
+
+    "discounts(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      tokenType: number;
+      tokenContract: string;
+      discount: number;
+      0: number;
+      1: string;
+      2: number;
+    }>;
+
+    editDiscount(
+      _discountId: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      _tokenType: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "editDiscount(uint256,address,uint8,uint256[],uint8)"(
+      _discountId: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      _tokenType: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    getDiscountTokenId(
+      _discountId: BigNumberish,
+      tokenIdIndex: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      0: BigNumber;
+    }>;
+
+    "getDiscountTokenId(uint256,uint256)"(
+      _discountId: BigNumberish,
+      tokenIdIndex: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      0: BigNumber;
+    }>;
+
+    owner(overrides?: CallOverrides): Promise<{
+      0: string;
+    }>;
+
+    "owner()"(overrides?: CallOverrides): Promise<{
+      0: string;
+    }>;
+
+    renounceOwnership(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "renounceOwnership()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transferOwnership(address)"(
+      newOwner: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
   };
+
+  addDiscount(
+    _tokenType: BigNumberish,
+    _tokenContract: string,
+    _discount: BigNumberish,
+    _tokenIds: BigNumberish[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "addDiscount(uint8,address,uint8,uint256[])"(
+    _tokenType: BigNumberish,
+    _tokenContract: string,
+    _discount: BigNumberish,
+    _tokenIds: BigNumberish[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
   calculateDiscount(
     requester: string,
@@ -76,7 +261,99 @@ export class StaterDiscounts extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  discountId(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "discountId()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  discounts(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<{
+    tokenType: number;
+    tokenContract: string;
+    discount: number;
+    0: number;
+    1: string;
+    2: number;
+  }>;
+
+  "discounts(uint256)"(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<{
+    tokenType: number;
+    tokenContract: string;
+    discount: number;
+    0: number;
+    1: string;
+    2: number;
+  }>;
+
+  editDiscount(
+    _discountId: BigNumberish,
+    _tokenContract: string,
+    _discount: BigNumberish,
+    _tokenIds: BigNumberish[],
+    _tokenType: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "editDiscount(uint256,address,uint8,uint256[],uint8)"(
+    _discountId: BigNumberish,
+    _tokenContract: string,
+    _discount: BigNumberish,
+    _tokenIds: BigNumberish[],
+    _tokenType: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  getDiscountTokenId(
+    _discountId: BigNumberish,
+    tokenIdIndex: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "getDiscountTokenId(uint256,uint256)"(
+    _discountId: BigNumberish,
+    tokenIdIndex: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  owner(overrides?: CallOverrides): Promise<string>;
+
+  "owner()"(overrides?: CallOverrides): Promise<string>;
+
+  renounceOwnership(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "renounceOwnership()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+  transferOwnership(
+    newOwner: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transferOwnership(address)"(
+    newOwner: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   callStatic: {
+    addDiscount(
+      _tokenType: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "addDiscount(uint8,address,uint8,uint256[])"(
+      _tokenType: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     calculateDiscount(
       requester: string,
       overrides?: CallOverrides
@@ -86,11 +363,108 @@ export class StaterDiscounts extends Contract {
       requester: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    discountId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "discountId()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    discounts(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      tokenType: number;
+      tokenContract: string;
+      discount: number;
+      0: number;
+      1: string;
+      2: number;
+    }>;
+
+    "discounts(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<{
+      tokenType: number;
+      tokenContract: string;
+      discount: number;
+      0: number;
+      1: string;
+      2: number;
+    }>;
+
+    editDiscount(
+      _discountId: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      _tokenType: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "editDiscount(uint256,address,uint8,uint256[],uint8)"(
+      _discountId: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      _tokenType: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    getDiscountTokenId(
+      _discountId: BigNumberish,
+      tokenIdIndex: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getDiscountTokenId(uint256,uint256)"(
+      _discountId: BigNumberish,
+      tokenIdIndex: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<string>;
+
+    "owner()"(overrides?: CallOverrides): Promise<string>;
+
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    "renounceOwnership()"(overrides?: CallOverrides): Promise<void>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "transferOwnership(address)"(
+      newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    OwnershipTransferred(
+      previousOwner: string | null,
+      newOwner: string | null
+    ): EventFilter;
+  };
 
   estimateGas: {
+    addDiscount(
+      _tokenType: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "addDiscount(uint8,address,uint8,uint256[])"(
+      _tokenType: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     calculateDiscount(
       requester: string,
       overrides?: CallOverrides
@@ -99,10 +473,88 @@ export class StaterDiscounts extends Contract {
     "calculateDiscount(address)"(
       requester: string,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    discountId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "discountId()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    discounts(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "discounts(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    editDiscount(
+      _discountId: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      _tokenType: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "editDiscount(uint256,address,uint8,uint256[],uint8)"(
+      _discountId: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      _tokenType: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    getDiscountTokenId(
+      _discountId: BigNumberish,
+      tokenIdIndex: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getDiscountTokenId(uint256,uint256)"(
+      _discountId: BigNumberish,
+      tokenIdIndex: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    renounceOwnership(overrides?: Overrides): Promise<BigNumber>;
+
+    "renounceOwnership()"(overrides?: Overrides): Promise<BigNumber>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transferOwnership(address)"(
+      newOwner: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    addDiscount(
+      _tokenType: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "addDiscount(uint8,address,uint8,uint256[])"(
+      _tokenType: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     calculateDiscount(
       requester: string,
       overrides?: CallOverrides
@@ -111,6 +563,68 @@ export class StaterDiscounts extends Contract {
     "calculateDiscount(address)"(
       requester: string,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    discountId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "discountId()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    discounts(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "discounts(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    editDiscount(
+      _discountId: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      _tokenType: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "editDiscount(uint256,address,uint8,uint256[],uint8)"(
+      _discountId: BigNumberish,
+      _tokenContract: string,
+      _discount: BigNumberish,
+      _tokenIds: BigNumberish[],
+      _tokenType: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    getDiscountTokenId(
+      _discountId: BigNumberish,
+      tokenIdIndex: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getDiscountTokenId(uint256,uint256)"(
+      _discountId: BigNumberish,
+      tokenIdIndex: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "owner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    renounceOwnership(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "renounceOwnership()"(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transferOwnership(address)"(
+      newOwner: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

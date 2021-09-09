@@ -20,6 +20,12 @@ makeSuite("Stater Lending Routes", (testEnv: TestEnv) => {
     await gameItems1155.setApprovalForAll(staterHealthFactor.address, true);
   });
 
+  it("Tries to get the uniswap v3 nft address", async () => {
+    const { staterHealthFactor } = testEnv;
+    const theAddress = await staterHealthFactor.uniswapV3NftAddress();
+    console.log(">> " + theAddress);
+  });
+  /*
   it("Tries to create a loan", async () => {
     const { staterHealthFactor, dai } = testEnv;
     await staterHealthFactor.createLoan({
@@ -27,7 +33,8 @@ makeSuite("Stater Lending Routes", (testEnv: TestEnv) => {
       installmentTime: 70000000,
       nftTokenIdArray: [0, 0, 0],
       loanAmount: 6000000,
-      nrOfInstallments: 7,
+      nrOfInstallments: 7
     });
   });
+  */
 });
