@@ -5,10 +5,10 @@ pragma experimental ABIEncoderV2;
 import "../../controller/LendingCore.sol";
 import "../../../../dependencies/openzeppelin/contracts/Ownable.sol";
 import "../../../../dependencies/openzeppelin/contracts/ERC20.sol";
-import "../../../../dependencies/uniswap/v3/TickMathTest.sol";
-import "../../../../dependencies/uniswap/v3/INonfungiblePositionManager.sol";
+import "../../../../dependencies/uniswap/v3/core/contracts/test/TickMathTest.sol";
+import "../../../../dependencies/uniswap/v3/periphery/contracts/interfaces/INonfungiblePositionManager.sol";
 import "../../../../interfaces/ILendingPool.sol";
-import "../../../../dependencies/uniswap/v3/LiquidityAmounts.sol";
+import "../../../../dependencies/uniswap/v3/periphery/contracts/libraries/LiquidityAmounts.sol";
 import "./params/HealthFactorCreateLoanMethod.sol";
 
 contract StaterHealthFactor is
