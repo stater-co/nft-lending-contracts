@@ -8,15 +8,14 @@ import '../../../core/contracts/libraries/TickMath.sol';
 
 import '../libraries/PoolAddress.sol';
 import '../libraries/CallbackValidation.sol';
-//import '../libraries/LiquidityAmounts.sol';
+import '../libraries/LiquidityAmounts.sol';
 
 import './PeripheryPayments.sol';
 import './PeripheryImmutableState.sol';
 
 /// @title Liquidity management functions
 /// @notice Internal functions for safely managing liquidity in Uniswap V3
-abstract contract LiquidityManagement /* is IUniswapV3MintCallback, PeripheryImmutableState, PeripheryPayments */ {
-    /*
+abstract contract LiquidityManagement is IUniswapV3MintCallback, PeripheryImmutableState, PeripheryPayments {
     struct MintCallbackData {
         PoolAddress.PoolKey poolKey;
         address payer;
@@ -88,5 +87,4 @@ abstract contract LiquidityManagement /* is IUniswapV3MintCallback, PeripheryImm
 
         require(amount0 >= params.amount0Min && amount1 >= params.amount1Min, 'Price slippage check');
     }
-    */
 }

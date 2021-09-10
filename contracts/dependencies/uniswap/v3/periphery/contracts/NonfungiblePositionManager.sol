@@ -5,10 +5,9 @@ pragma experimental ABIEncoderV2;
 import '../../core/contracts/interfaces/IUniswapV3Pool.sol';
 import '../../core/contracts/libraries/FixedPoint128.sol';
 import '../../core/contracts/libraries/FullMath.sol';
+
 import './interfaces/INonfungiblePositionManager.sol';
 import './interfaces/INonfungibleTokenPositionDescriptor.sol';
-
-
 import './libraries/PositionKey.sol';
 import './libraries/PoolAddress.sol';
 import './base/LiquidityManagement.sol';
@@ -139,7 +138,6 @@ contract NonfungiblePositionManager is
         )
     {
         IUniswapV3Pool pool;
-        /*
         (liquidity, amount0, amount1, pool) = addLiquidity(
             AddLiquidityParams({
                 token0: params.token0,
@@ -154,7 +152,6 @@ contract NonfungiblePositionManager is
                 amount1Min: params.amount1Min
             })
         );
-        */
 
         _mint(params.recipient, (tokenId = _nextId++));
 
@@ -193,32 +190,9 @@ contract NonfungiblePositionManager is
         require(_exists(tokenId));
         return INonfungibleTokenPositionDescriptor(_tokenDescriptor).tokenURI(this, tokenId);
     }
-    
-    function refundETH() external payable override {
-        
-    }
 
     // save bytecode by removing implementation of unused method
-    function baseURI() public pure returns (string memory) {
-        string memory ok;
-        return ok;
-    }
-    
-    function tokenByIndex(uint256 index) external override view returns (uint256) {
-        return index;
-    }
-
-    function tokenOfOwnerByIndex(address owner, uint256 index) external override view returns (uint256 tokenId) {
-        return index + uint160(owner);        
-    }
-
-    function totalSupply() external override view returns (uint256) {
-        return 5;
-    }
-    
-    function unwrapWETH9(uint256 amountMinimum, address recipient) external payable override {
-        
-    }
+    function baseURI() public pure override returns (string memory) {}
 
     /// @inheritdoc INonfungiblePositionManager
     function increaseLiquidity(IncreaseLiquidityParams calldata params)
@@ -234,10 +208,9 @@ contract NonfungiblePositionManager is
     {
         Position storage position = _positions[params.tokenId];
 
-        //PoolAddress.PoolKey memory poolKey = _poolIdToPoolKey[position.poolId];
+        PoolAddress.PoolKey memory poolKey = _poolIdToPoolKey[position.poolId];
 
         IUniswapV3Pool pool;
-        /*
         (liquidity, amount0, amount1, pool) = addLiquidity(
             AddLiquidityParams({
                 token0: poolKey.token0,
@@ -252,7 +225,6 @@ contract NonfungiblePositionManager is
                 recipient: address(this)
             })
         );
-        */
 
         bytes32 positionKey = PositionKey.compute(address(this), position.tickLower, position.tickUpper);
 
@@ -279,15 +251,6 @@ contract NonfungiblePositionManager is
         position.liquidity += liquidity;
 
         emit IncreaseLiquidity(params.tokenId, liquidity, amount0, amount1);
-    }
-    
-    /// @inheritdoc IPeripheryPayments
-    function sweepToken(
-        address token,
-        uint256 amountMinimum,
-        address recipient
-    ) external payable override {
-
     }
 
     /// @inheritdoc INonfungiblePositionManager
