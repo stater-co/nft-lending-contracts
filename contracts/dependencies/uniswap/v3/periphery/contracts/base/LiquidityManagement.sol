@@ -1,21 +1,22 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity =0.7.6;
-pragma abicoder v2;
+pragma solidity 0.6.12;
+pragma experimental ABIEncoderV2;
 
-import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol';
-import '@uniswap/v3-core/contracts/interfaces/callback/IUniswapV3MintCallback.sol';
-import '@uniswap/v3-core/contracts/libraries/TickMath.sol';
+import '../../../core/contracts/interfaces/IUniswapV3Factory.sol';
+import '../../../core/contracts/interfaces/callback/IUniswapV3MintCallback.sol';
+import '../../../core/contracts/libraries/TickMath.sol';
 
 import '../libraries/PoolAddress.sol';
 import '../libraries/CallbackValidation.sol';
-import '../libraries/LiquidityAmounts.sol';
+//import '../libraries/LiquidityAmounts.sol';
 
 import './PeripheryPayments.sol';
 import './PeripheryImmutableState.sol';
 
 /// @title Liquidity management functions
 /// @notice Internal functions for safely managing liquidity in Uniswap V3
-abstract contract LiquidityManagement is IUniswapV3MintCallback, PeripheryImmutableState, PeripheryPayments {
+abstract contract LiquidityManagement /* is IUniswapV3MintCallback, PeripheryImmutableState, PeripheryPayments */ {
+    /*
     struct MintCallbackData {
         PoolAddress.PoolKey poolKey;
         address payer;
@@ -87,4 +88,5 @@ abstract contract LiquidityManagement is IUniswapV3MintCallback, PeripheryImmuta
 
         require(amount0 >= params.amount0Min && amount1 >= params.amount1Min, 'Price slippage check');
     }
+    */
 }

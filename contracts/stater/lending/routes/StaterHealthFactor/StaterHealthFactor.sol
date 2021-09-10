@@ -5,7 +5,7 @@ pragma experimental ABIEncoderV2;
 import "../../controller/LendingCore.sol";
 import "../../../../dependencies/openzeppelin/contracts/Ownable.sol";
 import "../../../../dependencies/openzeppelin/contracts/ERC20.sol";
-import "../../../../dependencies/uniswap/v3/core/contracts/test/TickMathTest.sol";
+import "../../../../dependencies/uniswap/v3/core/contracts/libraries/TickMath.sol";
 import "../../../../dependencies/uniswap/v3/periphery/contracts/interfaces/INonfungiblePositionManager.sol";
 import "../../../../interfaces/ILendingPool.sol";
 import "../../../../dependencies/uniswap/v3/periphery/contracts/libraries/LiquidityAmounts.sol";
@@ -14,8 +14,7 @@ import "./params/HealthFactorCreateLoanMethod.sol";
 contract StaterHealthFactor is
     Ownable,
     LendingCore,
-    HealthFactorCreateLoanMethod,
-    TickMathTest
+    HealthFactorCreateLoanMethod 
 {
     address public loanHandler;
     address public discountsHandler;
@@ -80,8 +79,8 @@ contract StaterHealthFactor is
             INonfungiblePositionManager(uniswapV3NftAddress).positions(
                 positionId
             );
-        uint160 sqrtLower = getSqrtRatioAtTick(tickLower);
-        uint160 sqrtUpper = getSqrtRatioAtTick(tickUpper);
+        uint160 sqrtLower = TickMath.getSqrtRatioAtTick(tickLower);
+        uint160 sqrtUpper = TickMath.getSqrtRatioAtTick(tickUpper);
         return
             isToken1
                 ? sqrtUpper.getAmount1ForLiquidity(sqrtLower, liquidity)
