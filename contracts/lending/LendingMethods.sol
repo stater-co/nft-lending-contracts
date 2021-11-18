@@ -218,7 +218,7 @@ contract LendingMethods is Ownable, LendingCore {
 
         emit LoanPayment(
             loanId,
-            msg.value,
+            paidByBorrower,
             amountPaidAsInstallmentToLender,
             interestPerInstallement,
             interestToStaterPerInstallement,
