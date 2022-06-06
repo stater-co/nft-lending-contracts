@@ -49,15 +49,6 @@ contract LendingMethods is Ownable, LendingCore {
         loans[id].nftTokenTypeArray = nftTokenTypeArray;
         loans[id].installmentTime = 1 weeks;
         
-        // Transfer the items from lender to stater contract
-        transferItems(
-            msg.sender, 
-            address(this), 
-            nftAddressArray, 
-            nftTokenIdArray,
-            nftTokenTypeArray
-        );
-        
         // Fire event
         emit NewLoan(
             msg.sender, 
