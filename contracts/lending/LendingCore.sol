@@ -102,7 +102,7 @@ contract LendingCore is StaterTransfers {
         uint16 nrOfInstallments; // the number of installments that the borrower must pay.
         uint8 defaultingLimit; // the number of installments allowed to be missed without getting defaulted
         uint8[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
-        uint256[] offers;
+        mapping(address => uint256) offers;
     }
     
     /*

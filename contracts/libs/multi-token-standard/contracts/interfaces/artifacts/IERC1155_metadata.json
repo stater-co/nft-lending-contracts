@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.7.6+commit.7338295f"
+		"version": "0.8.14+commit.80d49f37"
 	},
 	"language": "Solidity",
 	"output": {
@@ -361,24 +361,24 @@
 		"compilationTarget": {
 			"contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": "IERC1155"
 		},
-		"evmVersion": "istanbul",
+		"evmVersion": "london",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"contracts/libs/multi-token-standard/contracts/interfaces/IERC1155.sol": {
-			"keccak256": "0xf23dff0666ff46a967daa6d18891582e2c4e38bb702d7d52d654f2a467ee5349",
+			"keccak256": "0xc7d7df5105d5ad42ccb86d16030774a7b7a2546b1d85cd3d9a0ecff82a0a8a17",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d0567002c86fdc7c4e62c8829b46ddc92ffe6adb717505c35a567889367d7817",
-				"dweb:/ipfs/QmNZ1niUwSpYGVtRMGhQBjbaWuTZ6PdpdwoBhCeTcFhdss"
+				"bzz-raw://30aafa328f731337c14681b01328a1ab2e93df252f0318cf4b12e2badc1a819e",
+				"dweb:/ipfs/QmRvdsReNdTreDbV3e6d1pD6GX48AP3TGzg9znenUceuQf"
 			]
 		}
 	},
