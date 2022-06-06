@@ -155,15 +155,6 @@ contract LendingMethods is Ownable, LendingCore {
         require(loans[loanId].status == Status.LISTED);
         loans[loanId].status = Status.CANCELLED;
 
-        // We send the items back to him
-        transferItems(
-        address(this), 
-            loans[loanId].borrower, 
-            loans[loanId].nftAddressArray, 
-            loans[loanId].nftTokenIdArray,
-            loans[loanId].nftTokenTypeArray
-        );
-
         emit LoanCancelled(
             loanId
         );
