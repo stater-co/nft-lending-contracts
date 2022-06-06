@@ -1,12 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.7.6;
+pragma solidity 0.8.14;
 import "../plugins/StaterTransfers.sol";
-import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../workers/IStaterDiscounts.sol";
 
 contract LendingCore is StaterTransfers {
-    using SafeMath for uint256;
-    using SafeMath for uint8;
     
     /*
      * @DIIMIIM : The loan events

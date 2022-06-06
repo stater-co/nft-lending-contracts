@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.7.6;
+pragma solidity 0.8.14;
 import "./LendingCore.sol";
 import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";

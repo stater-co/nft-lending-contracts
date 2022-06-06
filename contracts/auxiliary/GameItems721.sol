@@ -3,7 +3,7 @@
 /* 
  * Stater.co
  */
-pragma solidity 0.7.6;
+pragma solidity 0.8.14;
 
 import "../libs/openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "../libs/openzeppelin-solidity/contracts/utils/Counters.sol";
