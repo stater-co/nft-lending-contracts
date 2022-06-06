@@ -63,6 +63,19 @@ contract LendingMethods is Ownable, LendingCore {
 
 
     /*
+     * @ Make loan offer
+     * @ Accessible for lenders as long as the loan is available
+     */
+    function offer(
+        uint256 loanId,
+        uint256 offer
+    ) external payable {
+        require(loans[loanId].status == Status.LISTED);
+        require(offer <= loans[loanId].loanAmount);
+    }
+
+
+    /*
      * @ Edit loan
      * @ Accessible for borrower until a lender is found
      */
