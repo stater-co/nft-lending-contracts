@@ -7,14 +7,11 @@ import "./LendingCore.sol";
 contract LendingTemplate is Ownable, LendingCore {
 
     constructor(
-        address _promissoryNoteAddress,
         address _lendingMethodsAddress,
         address _lendingDiscountsAddress
     ) {
         require(_lendingMethodsAddress != address(0), "Lending Methods address not valid");
-        require(_promissoryNoteAddress != address(0), "Promissory Note address not valid");
         require(_lendingDiscountsAddress != address(0), "Lending Discounts address not valid");
-        promissoryNoteAddress = _promissoryNoteAddress;
         lendingMethodsAddress = _lendingMethodsAddress;
         discounts = IStaterDiscounts(_lendingDiscountsAddress);
     }
@@ -116,51 +113,26 @@ contract LendingTemplate is Ownable, LendingCore {
         uint256 _interestRate, 
         uint256 _interestRateToStater, 
         uint32 _lenderFee,
-        address _promissoryNoteAddress,
         address _lendingMethodsAddress,
         address _lendingDiscountsAddress
     ) external onlyOwner {
         require(_lendingMethodsAddress != address(0), "Lending Methods address not valid");
-        require(_promissoryNoteAddress != address(0), "Promissory Note address not valid");
         require(_lendingDiscountsAddress != address(0), "Lending Discounts address not valid");
         ltv = _ltv;
         interestRate = _interestRate;
         interestRateToStater = _interestRateToStater;
         lenderFee = _lenderFee;
-        promissoryNoteAddress = _promissoryNoteAddress;
         lendingMethodsAddress = _lendingMethodsAddress;
         discounts = IStaterDiscounts(_lendingDiscountsAddress);
     }
     
-    function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external {
-        
-        (bool success, ) = lendingMethodsAddress.delegatecall(
-            abi.encodeWithSignature(
-                "promissoryExchange(address,address,uint256[])",
-                from,to,loanIds
-            )
-        );
-        require(success,"Lending Template: Failed to execute promissoryExchange via delegatecall");
-    }
-  
-    function setPromissoryPermissions(uint256[] calldata loanIds, address allowed) external {
-        
-        (bool success, ) = lendingMethodsAddress.delegatecall(
-            abi.encodeWithSignature(
-                "setPromissoryPermissions(uint256[],address)",
-                loanIds,allowed
-            )
-        );
-        require(success,"Lending Template: Failed to execute setPromissoryPermissions via delegatecall");
-    }
-    
     function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {
-        return loans[loanId].amountDue.sub(loans[loanId].paidAmount);
+        return loans[loanId].amountDue - loans[loanId].paidAmount;
     }
     
     function getLoanApprovalCost(uint256 loanId) external view returns(uint256,uint256,uint256,uint256,address) {
         return (
-            loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discounts.calculateDiscount(msg.sender))),
+            loans[loanId].loanAmount + (loans[loanId].loanAmount / lenderFee / discounts.calculateDiscount(msg.sender)),
             loans[loanId].loanAmount,
             lenderFee,
             discounts.calculateDiscount(msg.sender),
@@ -182,11 +154,11 @@ contract LendingTemplate is Ownable, LendingCore {
         uint256 discount = discounts.calculateDiscount(msg.sender);
         interestDiscounted = 0;
         
-        overallInstallmentAmount = uint256(loans[loanId].installmentAmount.mul(nrOfInstallments));
-        interestPerInstallement = uint256(overallInstallmentAmount.mul(interestRate).div(100).div(loans[loanId].nrOfInstallments));
-        interestDiscounted = interestPerInstallement.mul(interestRateToStater).div(100).div(discount); // amount of interest saved per installment
-        interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100).sub(interestDiscounted);
-        amountPaidAsInstallmentToLender = interestPerInstallement.mul(uint256(100).sub(interestRateToStater)).div(100); 
+        overallInstallmentAmount = uint256(loans[loanId].installmentAmount * nrOfInstallments);
+        interestPerInstallement = uint256(overallInstallmentAmount * interestRate / 100 / loans[loanId].nrOfInstallments);
+        interestDiscounted = interestPerInstallement * interestRateToStater / 100 / discount; // amount of interest saved per installment
+        interestToStaterPerInstallement = interestPerInstallement * interestRateToStater / 100 - interestDiscounted;
+        amountPaidAsInstallmentToLender = interestPerInstallement * (100 - interestRateToStater) / 100; 
     }
   
 }

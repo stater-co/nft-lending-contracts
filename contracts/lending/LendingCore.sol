@@ -82,7 +82,6 @@ contract LendingCore is StaterTransfers {
      *   CANCELLED - loan is cancelled before a lender to be assigned
      *   WITHDRAWN - loan is LIQUIDATED and items are withdrawn to either lender or borrower
      */
-    address public promissoryNoteAddress;
     address public lendingMethodsAddress;
     IStaterDiscounts public discounts;
     uint256 public id = 1; // the loan ID
@@ -130,13 +129,6 @@ contract LendingCore is StaterTransfers {
      */
     mapping(uint256 => Loan) public loans;
     
-    // @notice Mapping for all the loans that are approved by the owner in order to be used in the promissory note
-    mapping(uint256 => address) public promissoryPermissions;
-    
-    modifier isPromissoryNote {
-        require(msg.sender == promissoryNoteAddress, "Lending Methods: Access denied");
-        _;
-    }
     
     /*
      * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
@@ -161,11 +153,6 @@ contract LendingCore is StaterTransfers {
 
     function getLoanStartEnd(uint256 loanId) external view returns(uint256[2] memory) {
         return loans[loanId].startEnd;
-    }
-
-    function getPromissoryPermission(uint256 loanId) external view returns(address) {
-        require(loans[loanId].status == Status.APPROVED, "Loan is no longer approved");
-        return promissoryPermissions[loanId];
     }
 
 }
