@@ -93,7 +93,6 @@ contract LendingMethods is Ownable, LendingCore {
         uint256 loanId,
         uint256 position
     ) external {
-        require(loans[loanId].status == Status.LISTED);
         require(loans[loanId].offerers[position] == msg.sender);
 
         // We send the tokens here
@@ -160,6 +159,49 @@ contract LendingMethods is Ownable, LendingCore {
         );
 
     }
+
+    function approveLoanOffer(uint256 loanId, uint256 offerId) external {
+        require(loans[loanId].lender == address(0));
+        require(loans[loanId].paidAmount == 0);
+        require(loans[loanId].status == Status.LISTED);
+
+        // Borrower assigned , status is 1 , first installment ( payment ) completed
+        loans[loanId].lender = payable(loans[loanId].offerers[offerId]);
+        loans[loanId].startEnd[1] = block.timestamp + loans[loanId].nrOfInstallments * loans[loanId].installmentTime;
+        loans[loanId].status = Status.APPROVED;
+        loans[loanId].startEnd[0] = block.timestamp;
+        uint256 discount = discounts.calculateDiscount(msg.sender);
+
+        // We send the tokens here
+        transferTokens(
+            address(this),
+            payable(msg.sender),
+            loans[loanId].currency,
+            loans[loanId].offers[offerId],
+            loans[loanId].offers[offerId] / lenderFee / discount
+        );
+
+        emit LoanOfferApproved(
+            msg.sender,
+            loanId,
+            offerId,
+            loans[loanId].offers[offerId],
+            loans[loanId].startEnd[1]
+        );
+
+        loans[loanId].offers[offerId] = 0;
+
+        for ( uint256 i = 0 ; i < loans[loanId].offerers.length ; ++i ) {
+            transferTokens(
+                address(this),
+                payable(loans[loanId].offerers[i]),
+                loans[loanId].currency,
+                loans[loanId].offers[i],
+                0
+            );
+        }
+
+    }
     
     // Lender approves a loan
     function approveLoan(uint256 loanId) external payable {
@@ -186,6 +228,16 @@ contract LendingMethods is Ownable, LendingCore {
             loans[loanId].loanAmount,
             loans[loanId].loanAmount / lenderFee / discount
         );
+
+        for ( uint256 i = 0 ; i < loans[loanId].offerers.length ; ++i ) {
+            transferTokens(
+                address(this),
+                payable(loans[loanId].offerers[i]),
+                loans[loanId].currency,
+                loans[loanId].offers[i],
+                0
+            );
+        }
         
         emit LoanApproved(
             msg.sender,

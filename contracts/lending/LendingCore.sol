@@ -50,13 +50,20 @@ contract LendingCore is StaterTransfers {
     event LoanOffer(
         uint256 indexed loanId,
         address indexed offerer,
-        uint256 offer,
+        uint256 offerId,
         uint256 indexed position
     );
     event CloseLoanOffer(
         uint256 indexed loanId,
         address indexed offerer,
         uint256 indexed position
+    );
+    event LoanOfferApproved(
+        address indexed lender,
+        uint256 indexed loanId,
+        uint256 indexed offerId,
+        uint256 offerAmount,
+        uint256 loanPaymentEnd
     );
     
     /*
@@ -140,10 +147,6 @@ contract LendingCore is StaterTransfers {
         require(loans[loanId].status == Status.APPROVED || loans[loanId].status == Status.LIQUIDATED, "Loan is not yet approved");
         // return last paid installment date + defaultingLimit * installment time interval <= block.timestamp
         return ( loans[loanId].startEnd[0] + loans[loanId].nrOfPayments * loans[loanId].installmentTime ) + loans[loanId].defaultingLimit * loans[loanId].installmentTime <= min(block.timestamp,loans[loanId].startEnd[1]);
-    }
-
-    function offerer(uint256 loanId, address account) external view returns(uint256) {
-        return loans[loanId].offers[account];
     }
 
     // Checks the loan to value ratio

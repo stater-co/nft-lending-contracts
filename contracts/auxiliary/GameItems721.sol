@@ -28,7 +28,6 @@ contract GameItems721 is ERC721, Ownable, ERC721Holder {
     function createItem(string calldata name, string calldata description, string calldata image_url) external onlyOwner {
         emit ItemCreation(items.length,msg.sender,name,description,image_url);
         _mint(msg.sender, items.length);
-        _setTokenURI(items.length, image_url);
         items.push(Item(
             msg.sender,
             name,
