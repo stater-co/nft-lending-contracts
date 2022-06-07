@@ -47,6 +47,17 @@ contract LendingCore is StaterTransfers {
         uint256 interestToStaterPerInstallement,
         Status status
     );
+    event LoanOffer(
+        uint256 indexed loanId,
+        address indexed offerer,
+        uint256 offer,
+        uint256 indexed position
+    );
+    event CloseLoanOffer(
+        uint256 indexed loanId,
+        address indexed offerer,
+        uint256 indexed position
+    );
     
     /*
      * @DIIMIIM Public & global variables for the lending contract
@@ -86,11 +97,13 @@ contract LendingCore is StaterTransfers {
      */
     struct Loan {
         address[] nftAddressArray; // the adderess of the ERC721
+        address[] offerers; // the array of offerers
         address payable borrower; // the address who receives the loan
         address payable lender; // the address who gives/offers the loan to the borrower
         address currency; // the token that the borrower lends, address(0) for ETH
         Status status; // the loan status
         uint256[] nftTokenIdArray; // the unique identifier of the NFT token that the borrower uses as collateral
+        uint256[] offers;
         uint256 installmentTime; // the installment unix timestamp
         uint256 nrOfPayments; // the number of installments paid
         uint256 loanAmount; // the amount, denominated in tokens (see next struct entry), the borrower lends
@@ -102,7 +115,6 @@ contract LendingCore is StaterTransfers {
         uint16 nrOfInstallments; // the number of installments that the borrower must pay.
         uint8 defaultingLimit; // the number of installments allowed to be missed without getting defaulted
         uint8[] nftTokenTypeArray; // the token types : ERC721 , ERC1155 , ...
-        mapping(address => uint256) offers;
     }
     
     /*
@@ -127,12 +139,16 @@ contract LendingCore is StaterTransfers {
     function canBeTerminated(uint256 loanId) public view returns(bool) {
         require(loans[loanId].status == Status.APPROVED || loans[loanId].status == Status.LIQUIDATED, "Loan is not yet approved");
         // return last paid installment date + defaultingLimit * installment time interval <= block.timestamp
-        return loans[loanId].startEnd[0].add(loans[loanId].nrOfPayments.mul(loans[loanId].installmentTime)).add(loans[loanId].defaultingLimit.mul(loans[loanId].installmentTime)) <= min(block.timestamp,loans[loanId].startEnd[1]);
+        return ( loans[loanId].startEnd[0] + loans[loanId].nrOfPayments * loans[loanId].installmentTime ) + loans[loanId].defaultingLimit * loans[loanId].installmentTime <= min(block.timestamp,loans[loanId].startEnd[1]);
+    }
+
+    function offerer(uint256 loanId, address account) external view returns(uint256) {
+        return loans[loanId].offers[account];
     }
 
     // Checks the loan to value ratio
     function checkLtv(uint256 loanValue, uint256 assetsValue) public view {
-        require(loanValue <= assetsValue.div(100).mul(ltv), "LTV too high");
+        require(loanValue <= assetsValue / 100 * ltv, "LTV too high");
     }
 
 

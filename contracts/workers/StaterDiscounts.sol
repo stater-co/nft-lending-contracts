@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.14;
-import "../libs/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
-import "../libs/multi-token-standard/contracts/interfaces/IERC1155.sol";
-import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
+import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
+import '@openzeppelin/contracts/token/ERC1155/IERC1155.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
 interface Geyser{ function totalStakedFor(address addr) external view returns(uint256); }
 
 contract StaterDiscounts is Ownable {

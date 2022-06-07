@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.14;
+import '@openzeppelin/contracts/access/Ownable.sol';
 import "./LendingCore.sol";
-import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 
 
 contract LendingTemplate is Ownable, LendingCore {
-    using SafeMath for uint256;
-    using SafeMath for uint16;
 
     constructor(
         address _promissoryNoteAddress,

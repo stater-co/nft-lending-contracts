@@ -4,13 +4,13 @@
  * Stater.co
  */
 pragma solidity 0.8.14;
+import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
+import '@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol';
+import '@openzeppelin/contracts/utils/Counters.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
 
-import "../libs/openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
-import "../libs/openzeppelin-solidity/contracts/utils/Counters.sol";
-import "../libs/openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
-import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 
-contract GameItems721 is ERC721, Ownable {
+contract GameItems721 is ERC721, Ownable, ERC721Holder {
 
     constructor() ERC721("Test ERC721", "TERC721") {}
 

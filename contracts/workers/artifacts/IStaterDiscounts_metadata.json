@@ -1,0 +1,89 @@
+{
+	"compiler": {
+		"version": "0.8.14+commit.80d49f37"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "requester",
+						"type": "address"
+					}
+				],
+				"name": "calculateDiscount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_discountId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenIdIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "getDiscountTokenId",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/workers/IStaterDiscounts.sol": "IStaterDiscounts"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/workers/IStaterDiscounts.sol": {
+			"keccak256": "0xce08f458990c5b99c72e7ccec9937788a74d8939915cbb3ad8a0d3d46bca46f3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://493c73186454b29f4d914c702b500ab69354791889cfa47c3df494a8ad224f1a",
+				"dweb:/ipfs/QmWEMNqMVkJpFV7CRXbeyfeftJcGhUWRpc2UAfJ9BtnZF8"
+			]
+		}
+	},
+	"version": 1
+}

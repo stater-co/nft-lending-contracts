@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.14;
-
-import "../libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155.sol";
-import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
-import "../libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Holder.sol";
-import "../libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Receiver.sol";
+import '@openzeppelin/contracts/token/ERC1155/ERC1155.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
 
 
-contract GameItems1155 is ERC1155, Ownable, ERC1155Receiver, ERC1155Holder {
+contract GameItems1155 is Ownable, ERC1155 {
     
     event ItemCreation(uint256 indexed itemId, uint256 indexed tokenId, address indexed owner, string name, string description, string image_url);
 
