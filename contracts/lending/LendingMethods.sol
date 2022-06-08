@@ -107,48 +107,43 @@ contract LendingMethods is LendingCore {
      * @ Accessible for borrower until a lender is found
      */
     function editLoan(
-        uint256 loanId,
-        uint256 loanAmount,
-        uint16 nrOfInstallments,
-        address currency,
-        uint256 assetsValue,
-        uint256 installmentTime
+        EditLoanParams.Struct memory input
     ) external {
-        require(nrOfInstallments > 0 && loanAmount > 0);
-        require(loans[loanId].borrower == msg.sender);
-        require(loans[loanId].status < Status.APPROVED);
-        checkLtv(loanAmount, assetsValue);
+        require(input.nrOfInstallments > 0 && input.loanAmount > 0);
+        require(loans[input.loanId].borrower == msg.sender);
+        require(loans[input.loanId].status < Status.APPROVED);
+        checkLtv(input.loanAmount, input.assetsValue);
         
 
-        loans[loanId].installmentTime = installmentTime;
-        loans[loanId].loanAmount = loanAmount;
-        loans[loanId].amountDue = loanAmount * (interestRate + 100) / 100;
-        loans[loanId].installmentAmount = loans[loanId].amountDue % nrOfInstallments > 0 ? loans[loanId].amountDue / nrOfInstallments + 1 : loans[loanId].amountDue / nrOfInstallments;
-        loans[loanId].assetsValue = assetsValue;
-        loans[loanId].nrOfInstallments = nrOfInstallments;
-        loans[loanId].currency = currency;
+        loans[input.loanId].installmentTime = input.installmentTime;
+        loans[input.loanId].loanAmount = input.loanAmount;
+        loans[input.loanId].amountDue = input.loanAmount * (interestRate + 100) / 100;
+        loans[input.loanId].installmentAmount = loans[input.loanId].amountDue % input.nrOfInstallments > 0 ? loans[input.loanId].amountDue / input.nrOfInstallments + 1 : loans[input.loanId].amountDue / input.nrOfInstallments;
+        loans[input.loanId].assetsValue = input.assetsValue;
+        loans[input.loanId].nrOfInstallments = input.nrOfInstallments;
+        loans[input.loanId].currency = input.currency;
         
         
         /*
          * Computing the defaulting limit
          */
-        if ( nrOfInstallments <= 3 )
-            loans[loanId].defaultingLimit = 1;
-        else if ( nrOfInstallments <= 5 )
-            loans[loanId].defaultingLimit = 2;
-        else if ( nrOfInstallments >= 6 )
-            loans[loanId].defaultingLimit = 3;
+        if ( input.nrOfInstallments <= 3 )
+            loans[input.loanId].defaultingLimit = 1;
+        else if ( input.nrOfInstallments <= 5 )
+            loans[input.loanId].defaultingLimit = 2;
+        else if ( input.nrOfInstallments >= 6 )
+            loans[input.loanId].defaultingLimit = 3;
 
         // Fire event
         emit EditLoan(
-            currency, 
-            loanId,
-            loanAmount,
-            loans[loanId].amountDue,
-            loans[loanId].installmentAmount,
-            loans[loanId].assetsValue,
-            installmentTime,
-            nrOfInstallments
+            input.currency, 
+            input.loanId,
+            input.loanAmount,
+            loans[input.loanId].amountDue,
+            loans[input.loanId].installmentAmount,
+            loans[input.loanId].assetsValue,
+            input.installmentTime,
+            input.nrOfInstallments
         );
 
     }

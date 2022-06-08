@@ -5,11 +5,6 @@ import "./LendingCore.sol";
 
 contract LendingTemplate is LendingCore {
 
-    constructor(LendingConstructor.Struct memory input) {
-        lendingMethodsAddress = input.methods;
-        discounts = IStaterDiscounts(input.discounts);
-    }
-    
     // Borrower creates a loan
     function createLoan(
         CreateLoanParams.Struct memory input
@@ -26,18 +21,13 @@ contract LendingTemplate is LendingCore {
     }
 
     function editLoan(
-        uint256 loanId,
-        uint256 loanAmount,
-        uint16 nrOfInstallments,
-        address currency,
-        uint256 assetsValue,
-        uint256 installmentTime
+        EditLoanParams.Struct memory input
     ) external {
         
         (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
-                "editLoan(uint256,uint256,uint16,address,uint256,uint256)",
-                loanId,loanAmount,nrOfInstallments,currency,assetsValue,installmentTime
+                "editLoan((uint256,uint256,uint16,address,uint256,uint256))",
+                input
             )
         );
         require(success,"Failed to editLoan via delegatecall");

@@ -1,6 +1,7 @@
 {
   "name": "hardhat-project",
   "scripts": {
+    "typegenall": "typechain artifacts/contracts/lending/LendingMethods.sol/LendingMethods.json --target=ethers-v5 --out-dir=types --always-generate-overloads && typechain artifacts/contracts/lending/LendingTemplate.sol/LendingTemplate.json --target=ethers-v5 --out-dir=types --always-generate-overloads && typechain artifacts/contracts/workers/StaterDiscounts.sol/StaterDiscounts.json --target=ethers-v5 --out-dir=types --always-generate-overloads",
     "rinkeby-production-deploy": "npx hardhat run scripts/deploy.js --network rinkeby",
     "rinkeby-development-deploy": "npx hardhat run scripts/debug.js --network rinkeby",
     "mainnet-production-deploy": "npx hardhat run scripts/deploy.js --network mainnet",
@@ -8,9 +9,17 @@
     "ropsten-development-deploy": "npx hardhat run scripts/debug.js --network ropsten",
     "goerli-development-deploy": "npx hardhat run scripts/debug.js --network goerli",
     "matic-development-deploy": "npx hardhat run scripts/deploy.js --network matic",
-    "polygon-development-deploy": "npx hardhat run scripts/deploy.js --network polygon"
+    "polygon-development-deploy": "npx hardhat run scripts/deploy.js --network polygon",
+    "compile": "hardhat compile",
+    "test": "hardhat test"
   },
+  "files": [
+    "artifacts/contracts/**/**/*.json",
+    "!artifacts/contracts/**/**/*.dbg.json"
+  ],
   "devDependencies": {
+    "@typechain/ethers-v5": "^9.0.0",
+    "typechain": "^8.0.0",
     "@nomiclabs/hardhat-ethers": "^2.0.6",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@types/mocha": "^9.1.1",
