@@ -908,8 +908,8 @@
       ]
     },
     "/home/diimiim/nft-lending-contracts/contracts/lending/LendingCore.sol": {
-      "lastModificationDate": 1654615495824,
-      "contentHash": "dfdbfb8ab6f45a69542fa45a04e0dbf0",
+      "lastModificationDate": 1654671020581,
+      "contentHash": "9380b0a6d0b3fba9d0d49cb5e82dcdcf",
       "sourceName": "contracts/lending/LendingCore.sol",
       "solcConfig": {
         "version": "0.8.14",
@@ -935,7 +935,8 @@
       },
       "imports": [
         "../plugins/StaterTransfers.sol",
-        "../workers/IStaterDiscounts.sol"
+        "../workers/IStaterDiscounts.sol",
+        "hardhat/console.sol"
       ],
       "versionPragmas": [
         "0.8.14"
@@ -1016,8 +1017,8 @@
       ]
     },
     "/home/diimiim/nft-lending-contracts/contracts/lending/LendingMethods.sol": {
-      "lastModificationDate": 1654615508556,
-      "contentHash": "bb07b30ade6472f6d73d0703e683a045",
+      "lastModificationDate": 1654671238588,
+      "contentHash": "f0d4d8dea0c13d8f04630595f0cf7d15",
       "sourceName": "contracts/lending/LendingMethods.sol",
       "solcConfig": {
         "version": "0.8.14",
@@ -1050,6 +1051,40 @@
       ],
       "artifacts": [
         "LendingMethods"
+      ]
+    },
+    "/home/diimiim/nft-lending-contracts/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1654610248221,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
       ]
     }
   }

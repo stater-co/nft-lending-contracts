@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.14;
-import "../plugins/StaterTransfers.sol";
-import "../workers/IStaterDiscounts.sol";
+import '@openzeppelin/contracts/access/Ownable.sol';
+import '../plugins/StaterTransfers.sol';
+import '../workers/IStaterDiscounts.sol';
+import '../params/LendingConstructor.sol';
+import '../params/CreateLoanParams.sol';
+import 'hardhat/console.sol';
 
-contract LendingCore is StaterTransfers {
+contract LendingCore is Ownable, StaterTransfers {
     
     /*
      * @DIIMIIM : The loan events
@@ -136,14 +140,14 @@ contract LendingCore is StaterTransfers {
      * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
      */
     function canBeTerminated(uint256 loanId) public view returns(bool) {
-        require(loans[loanId].status == Status.APPROVED || loans[loanId].status == Status.LIQUIDATED, "Loan is not yet approved");
+        require(loans[loanId].status == Status.APPROVED || loans[loanId].status == Status.LIQUIDATED, 'Loan is not yet approved');
         // return last paid installment date + defaultingLimit * installment time interval <= block.timestamp
         return ( loans[loanId].startEnd[0] + loans[loanId].nrOfPayments * loans[loanId].installmentTime ) + loans[loanId].defaultingLimit * loans[loanId].installmentTime <= min(block.timestamp,loans[loanId].startEnd[1]);
     }
 
     // Checks the loan to value ratio
     function checkLtv(uint256 loanValue, uint256 assetsValue) public view {
-        require(loanValue <= assetsValue / 100 * ltv, "LTV too high");
+        require(loanValue <= assetsValue / 100 * ltv, 'LTV too high');
     }
 
 

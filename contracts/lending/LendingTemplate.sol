@@ -1,37 +1,25 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.14;
-import '@openzeppelin/contracts/access/Ownable.sol';
 import "./LendingCore.sol";
 
 
-contract LendingTemplate is Ownable, LendingCore {
+contract LendingTemplate is LendingCore {
 
-    constructor(
-        address _lendingMethodsAddress,
-        address _lendingDiscountsAddress
-    ) {
-        require(_lendingMethodsAddress != address(0), "Lending Methods address not valid");
-        require(_lendingDiscountsAddress != address(0), "Lending Discounts address not valid");
-        lendingMethodsAddress = _lendingMethodsAddress;
-        discounts = IStaterDiscounts(_lendingDiscountsAddress);
+    constructor(LendingConstructor.Struct memory input) {
+        lendingMethodsAddress = input.methods;
+        discounts = IStaterDiscounts(input.discounts);
     }
     
     // Borrower creates a loan
     function createLoan(
-        uint256 loanAmount,
-        uint16 nrOfInstallments,
-        address currency,
-        uint256 assetsValue, 
-        address[] calldata nftAddressArray, 
-        uint256[] calldata nftTokenIdArray,
-        uint8[] calldata nftTokenTypeArray
+        CreateLoanParams.Struct memory input
     ) external {
         
         // For 8 or more parameters via delegatecall >> Remix raises an error with no error message
         (bool success, ) = lendingMethodsAddress.delegatecall(
             abi.encodeWithSignature(
-                "createLoan(uint256,uint16,address,uint256,address[],uint256[],uint8[])",
-                loanAmount,nrOfInstallments,currency,assetsValue,nftAddressArray,nftTokenIdArray,nftTokenTypeArray
+                "createLoan((uint256,uint16,address,uint256,address[],uint256[],uint8[]))",
+                input
             )
         );
         require(success,"Failed to createLoan via delegatecall");

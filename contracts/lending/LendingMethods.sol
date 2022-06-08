@@ -1,59 +1,52 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.14;
-import '@openzeppelin/contracts/access/Ownable.sol';
 import "./LendingCore.sol";
 
 
-contract LendingMethods is Ownable, LendingCore {
+contract LendingMethods is LendingCore {
     
     // Borrower creates a loan
     function createLoan(
-        uint256 loanAmount,
-        uint16 nrOfInstallments,
-        address currency,
-        uint256 assetsValue,
-        address[] calldata nftAddressArray, 
-        uint256[] calldata nftTokenIdArray,
-        uint8[] calldata nftTokenTypeArray
+        CreateLoanParams.Struct memory input
     ) external {
-        require(nrOfInstallments > 0 && loanAmount > 0 && nftAddressArray.length > 0);
-        require(nftAddressArray.length == nftTokenIdArray.length && nftTokenIdArray.length == nftTokenTypeArray.length);
+        require(input.nrOfInstallments > 0 && input.loanAmount > 0 && input.nftAddressArray.length > 0);
+        require(input.nftAddressArray.length == input.nftTokenIdArray.length && input.nftTokenIdArray.length == input.nftTokenTypeArray.length);
         
-        loans[id].assetsValue = assetsValue;
+        loans[id].assetsValue = input.assetsValue;
         
         // Checks the loan to value ration
-        checkLtv(loanAmount, loans[id].assetsValue);
+        checkLtv(input.loanAmount, loans[id].assetsValue);
         
         // Computing the defaulting limit
-        if ( nrOfInstallments <= 3 )
+        if ( input.nrOfInstallments <= 3 )
             loans[id].defaultingLimit = 1;
-        else if ( nrOfInstallments <= 5 )
+        else if ( input.nrOfInstallments <= 5 )
             loans[id].defaultingLimit = 2;
-        else if ( nrOfInstallments >= 6 )
+        else if ( input.nrOfInstallments >= 6 )
             loans[id].defaultingLimit = 3;
         
         // Set loan fields
         
-        loans[id].nftTokenIdArray = nftTokenIdArray;
-        loans[id].loanAmount = loanAmount;
-        loans[id].amountDue = loanAmount * (interestRate + 100) / 100; // interest rate >> 20%
-        loans[id].nrOfInstallments = nrOfInstallments;
-        loans[id].installmentAmount = loans[id].amountDue % nrOfInstallments > 0 ? loans[id].amountDue / nrOfInstallments + 1 : loans[id].amountDue / nrOfInstallments;
+        loans[id].nftTokenIdArray = input.nftTokenIdArray;
+        loans[id].loanAmount = input.loanAmount;
+        loans[id].amountDue = input.loanAmount * (interestRate + 100) / 100; // interest rate >> 20%
+        loans[id].nrOfInstallments = input.nrOfInstallments;
+        loans[id].installmentAmount = loans[id].amountDue % input.nrOfInstallments > 0 ? loans[id].amountDue / input.nrOfInstallments + 1 : loans[id].amountDue / input.nrOfInstallments;
         loans[id].status = Status.LISTED;
-        loans[id].nftAddressArray = nftAddressArray;
+        loans[id].nftAddressArray = input.nftAddressArray;
         loans[id].borrower = payable(msg.sender);
-        loans[id].currency = currency;
-        loans[id].nftTokenTypeArray = nftTokenTypeArray;
+        loans[id].currency = input.currency;
+        loans[id].nftTokenTypeArray = input.nftTokenTypeArray;
         loans[id].installmentTime = 1 weeks;
         
         // Fire event
         emit NewLoan(
             msg.sender, 
-            currency, 
+            input.currency, 
             id,
-            nftAddressArray,
-            nftTokenIdArray,
-            nftTokenTypeArray
+            input.nftAddressArray,
+            input.nftTokenIdArray,
+            input.nftTokenTypeArray
         );
         ++id;
     }
@@ -316,7 +309,9 @@ contract LendingMethods is Ownable, LendingCore {
         require((block.timestamp >= loans[loanId].startEnd[1] || loans[loanId].paidAmount >= loans[loanId].amountDue) || canBeTerminated(loanId));
         require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED);
 
+        console.log("Ok 1");
         if ( canBeTerminated(loanId) ) {
+            console.log("Ok 2");
             loans[loanId].status = Status.WITHDRAWN;
             // We send the items back to lender
             transferItems(
@@ -327,7 +322,9 @@ contract LendingMethods is Ownable, LendingCore {
                 loans[loanId].nftTokenTypeArray
             );
         } else {
+            console.log("Ok 3");
             if ( block.timestamp >= loans[loanId].startEnd[1] && loans[loanId].paidAmount < loans[loanId].amountDue ) {
+                console.log("Ok 4");
                 loans[loanId].status = Status.WITHDRAWN;
                 // We send the items back to lender
                 transferItems(
@@ -338,6 +335,7 @@ contract LendingMethods is Ownable, LendingCore {
                     loans[loanId].nftTokenTypeArray
                 );
             } else if ( loans[loanId].paidAmount >= loans[loanId].amountDue ){
+                console.log("Ok 5");
                 loans[loanId].status = Status.WITHDRAWN;
                 // We send the items back to borrower
                 transferItems(
