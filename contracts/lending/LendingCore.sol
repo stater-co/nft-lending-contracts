@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.14;
 import '@openzeppelin/contracts/access/Ownable.sol';
+import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
+import '@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol';
+import '@openzeppelin/contracts/utils/Counters.sol';
 import '../plugins/StaterTransfers.sol';
 import '../workers/IStaterDiscounts.sol';
 import '../params/LendingConstructor.sol';
@@ -8,7 +11,7 @@ import '../params/CreateLoanParams.sol';
 import '../params/EditLoanParams.sol';
 import 'hardhat/console.sol';
 
-contract LendingCore is Ownable, StaterTransfers {
+contract LendingCore is Ownable, StaterTransfers, ERC721, ERC721Holder {
     
     /*
      * @DIIMIIM : The loan events
@@ -133,6 +136,10 @@ contract LendingCore is Ownable, StaterTransfers {
      *   loans - the loans mapping
      */
     mapping(uint256 => Loan) public loans;
+
+    constructor(string memory name, string memory symbol) ERC721(name,symbol) {
+        
+    }
     
     
     /*
