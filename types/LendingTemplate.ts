@@ -23,15 +23,6 @@ import type {
   OnEvent,
 } from "./common";
 
-export declare namespace LendingConstructor {
-  export type StructStruct = { methods: string; discounts: string };
-
-  export type StructStructOutput = [string, string] & {
-    methods: string;
-    discounts: string;
-  };
-}
-
 export declare namespace CreateLoanParams {
   export type StructStruct = {
     loanAmount: BigNumberish;
@@ -92,7 +83,9 @@ export declare namespace EditLoanParams {
 export interface LendingTemplateInterface extends utils.Interface {
   contractName: "LendingTemplate";
   functions: {
+    "approve(address,uint256)": FunctionFragment;
     "approveLoan(uint256)": FunctionFragment;
+    "balanceOf(address)": FunctionFragment;
     "canBeTerminated(uint256)": FunctionFragment;
     "cancelLoan(uint256)": FunctionFragment;
     "checkLtv(uint256,uint256)": FunctionFragment;
@@ -100,6 +93,7 @@ export interface LendingTemplateInterface extends utils.Interface {
     "createLoan((uint256,uint16,address,uint256,address[],uint256[],uint8[]))": FunctionFragment;
     "discounts()": FunctionFragment;
     "editLoan((uint256,uint256,uint16,address,uint256,uint256))": FunctionFragment;
+    "getApproved(uint256)": FunctionFragment;
     "getLoanApprovalCost(uint256)": FunctionFragment;
     "getLoanInstallmentCost(uint256,uint256)": FunctionFragment;
     "getLoanRemainToPay(uint256)": FunctionFragment;
@@ -107,28 +101,39 @@ export interface LendingTemplateInterface extends utils.Interface {
     "id()": FunctionFragment;
     "interestRate()": FunctionFragment;
     "interestRateToStater()": FunctionFragment;
+    "isApprovedForAll(address,address)": FunctionFragment;
     "lenderFee()": FunctionFragment;
     "lendingMethodsAddress()": FunctionFragment;
     "loans(uint256)": FunctionFragment;
     "ltv()": FunctionFragment;
-    "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
-    "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
+    "name()": FunctionFragment;
     "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
     "owner()": FunctionFragment;
+    "ownerOf(uint256)": FunctionFragment;
     "payLoan(uint256,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "safeTransferFrom(address,address,uint256)": FunctionFragment;
+    "setApprovalForAll(address,bool)": FunctionFragment;
     "setGlobalVariables(uint256,uint256,uint256,uint32,address,address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
+    "symbol()": FunctionFragment;
     "terminateLoan(uint256)": FunctionFragment;
+    "tokenURI(uint256)": FunctionFragment;
+    "transferFrom(address,address,uint256)": FunctionFragment;
     "transferItems(address,address,address[],uint256[],uint8[])": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "transferTokens(address,address,address,uint256,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
+    functionFragment: "approve",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "approveLoan",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
     functionFragment: "canBeTerminated",
     values: [BigNumberish]
@@ -155,6 +160,10 @@ export interface LendingTemplateInterface extends utils.Interface {
     values: [EditLoanParams.StructStruct]
   ): string;
   encodeFunctionData(
+    functionFragment: "getApproved",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getLoanApprovalCost",
     values: [BigNumberish]
   ): string;
@@ -179,6 +188,10 @@ export interface LendingTemplateInterface extends utils.Interface {
     functionFragment: "interestRateToStater",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "isApprovedForAll",
+    values: [string, string]
+  ): string;
   encodeFunctionData(functionFragment: "lenderFee", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "lendingMethodsAddress",
@@ -186,19 +199,16 @@ export interface LendingTemplateInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "loans", values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: "ltv", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "onERC1155BatchReceived",
-    values: [string, string, BigNumberish[], BigNumberish[], BytesLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "onERC1155Received",
-    values: [string, string, BigNumberish, BigNumberish, BytesLike]
-  ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "onERC721Received",
     values: [string, string, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "ownerOf",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "payLoan",
     values: [BigNumberish, BigNumberish]
@@ -206,6 +216,14 @@ export interface LendingTemplateInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "safeTransferFrom",
+    values: [string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setApprovalForAll",
+    values: [string, boolean]
   ): string;
   encodeFunctionData(
     functionFragment: "setGlobalVariables",
@@ -222,9 +240,18 @@ export interface LendingTemplateInterface extends utils.Interface {
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "terminateLoan",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tokenURI",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferFrom",
+    values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "transferItems",
@@ -239,10 +266,12 @@ export interface LendingTemplateInterface extends utils.Interface {
     values: [string, string, string, BigNumberish, BigNumberish]
   ): string;
 
+  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "approveLoan",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "canBeTerminated",
     data: BytesLike
@@ -256,6 +285,10 @@ export interface LendingTemplateInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "createLoan", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "discounts", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "editLoan", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getApproved",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "getLoanApprovalCost",
     data: BytesLike
@@ -281,6 +314,10 @@ export interface LendingTemplateInterface extends utils.Interface {
     functionFragment: "interestRateToStater",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "isApprovedForAll",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "lenderFee", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "lendingMethodsAddress",
@@ -288,22 +325,24 @@ export interface LendingTemplateInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "loans", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ltv", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "onERC1155BatchReceived",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "onERC1155Received",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "onERC721Received",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "payLoan", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "safeTransferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setApprovalForAll",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -314,8 +353,14 @@ export interface LendingTemplateInterface extends utils.Interface {
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "terminateLoan",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -332,6 +377,8 @@ export interface LendingTemplateInterface extends utils.Interface {
   ): Result;
 
   events: {
+    "Approval(address,address,uint256)": EventFragment;
+    "ApprovalForAll(address,address,bool)": EventFragment;
     "CloseLoanOffer(uint256,address,uint256)": EventFragment;
     "EditLoan(address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)": EventFragment;
     "ItemsWithdrawn(address,uint256,uint8)": EventFragment;
@@ -342,8 +389,11 @@ export interface LendingTemplateInterface extends utils.Interface {
     "LoanPayment(uint256,uint256,uint256,uint256,uint256,uint8)": EventFragment;
     "NewLoan(address,address,uint256,address[],uint256[],uint8[])": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "Transfer(address,address,uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CloseLoanOffer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "EditLoan"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ItemsWithdrawn"): EventFragment;
@@ -354,7 +404,22 @@ export interface LendingTemplateInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "LoanPayment"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NewLoan"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
+
+export type ApprovalEvent = TypedEvent<
+  [string, string, BigNumber],
+  { owner: string; approved: string; tokenId: BigNumber }
+>;
+
+export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>;
+
+export type ApprovalForAllEvent = TypedEvent<
+  [string, string, boolean],
+  { owner: string; operator: string; approved: boolean }
+>;
+
+export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
 
 export type CloseLoanOfferEvent = TypedEvent<
   [BigNumber, string, BigNumber],
@@ -468,6 +533,13 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
+export type TransferEvent = TypedEvent<
+  [string, string, BigNumber],
+  { from: string; to: string; tokenId: BigNumber }
+>;
+
+export type TransferEventFilter = TypedEventFilter<TransferEvent>;
+
 export interface LendingTemplate extends BaseContract {
   contractName: "LendingTemplate";
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -496,6 +568,18 @@ export interface LendingTemplate extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    approve(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    "approve(address,uint256)"(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     approveLoan(
       loanId: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
@@ -505,6 +589,13 @@ export interface LendingTemplate extends BaseContract {
       loanId: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "balanceOf(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     canBeTerminated(
       loanId: BigNumberish,
@@ -573,6 +664,16 @@ export interface LendingTemplate extends BaseContract {
       input: EditLoanParams.StructStruct,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    getApproved(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    "getApproved(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     getLoanApprovalCost(
       loanId: BigNumberish,
@@ -643,6 +744,18 @@ export interface LendingTemplate extends BaseContract {
     interestRateToStater(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "interestRateToStater()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    isApprovedForAll(
+      owner: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "isApprovedForAll(address,address)"(
+      owner: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     lenderFee(overrides?: CallOverrides): Promise<[number]>;
 
@@ -726,41 +839,9 @@ export interface LendingTemplate extends BaseContract {
 
     "ltv()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    onERC1155BatchReceived(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish[],
-      arg3: BigNumberish[],
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    name(overrides?: CallOverrides): Promise<[string]>;
 
-    "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish[],
-      arg3: BigNumberish[],
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    onERC1155Received(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BigNumberish,
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    "onERC1155Received(address,address,uint256,uint256,bytes)"(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BigNumberish,
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    "name()"(overrides?: CallOverrides): Promise<[string]>;
 
     onERC721Received(
       arg0: string,
@@ -782,6 +863,16 @@ export interface LendingTemplate extends BaseContract {
 
     "owner()"(overrides?: CallOverrides): Promise<[string]>;
 
+    ownerOf(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    "ownerOf(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     payLoan(
       loanId: BigNumberish,
       amount: BigNumberish,
@@ -799,6 +890,33 @@ export interface LendingTemplate extends BaseContract {
     ): Promise<ContractTransaction>;
 
     "renounceOwnership()"(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    "safeTransferFrom(address,address,uint256)"(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    "safeTransferFrom(address,address,uint256,bytes)"(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      _data: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setApprovalForAll(
+      operator: string,
+      approved: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    "setApprovalForAll(address,bool)"(
+      operator: string,
+      approved: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -832,6 +950,10 @@ export interface LendingTemplate extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    symbol(overrides?: CallOverrides): Promise<[string]>;
+
+    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
+
     terminateLoan(
       loanId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -839,6 +961,30 @@ export interface LendingTemplate extends BaseContract {
 
     "terminateLoan(uint256)"(
       loanId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    tokenURI(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    "tokenURI(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -889,6 +1035,18 @@ export interface LendingTemplate extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
+  approve(
+    to: string,
+    tokenId: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  "approve(address,uint256)"(
+    to: string,
+    tokenId: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   approveLoan(
     loanId: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
@@ -898,6 +1056,13 @@ export interface LendingTemplate extends BaseContract {
     loanId: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "balanceOf(address)"(
+    owner: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   canBeTerminated(
     loanId: BigNumberish,
@@ -966,6 +1131,16 @@ export interface LendingTemplate extends BaseContract {
     input: EditLoanParams.StructStruct,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  getApproved(
+    tokenId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  "getApproved(uint256)"(
+    tokenId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   getLoanApprovalCost(
     loanId: BigNumberish,
@@ -1036,6 +1211,18 @@ export interface LendingTemplate extends BaseContract {
   interestRateToStater(overrides?: CallOverrides): Promise<BigNumber>;
 
   "interestRateToStater()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  isApprovedForAll(
+    owner: string,
+    operator: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  "isApprovedForAll(address,address)"(
+    owner: string,
+    operator: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   lenderFee(overrides?: CallOverrides): Promise<number>;
 
@@ -1119,41 +1306,9 @@ export interface LendingTemplate extends BaseContract {
 
   "ltv()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-  onERC1155BatchReceived(
-    arg0: string,
-    arg1: string,
-    arg2: BigNumberish[],
-    arg3: BigNumberish[],
-    arg4: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  name(overrides?: CallOverrides): Promise<string>;
 
-  "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"(
-    arg0: string,
-    arg1: string,
-    arg2: BigNumberish[],
-    arg3: BigNumberish[],
-    arg4: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  onERC1155Received(
-    arg0: string,
-    arg1: string,
-    arg2: BigNumberish,
-    arg3: BigNumberish,
-    arg4: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  "onERC1155Received(address,address,uint256,uint256,bytes)"(
-    arg0: string,
-    arg1: string,
-    arg2: BigNumberish,
-    arg3: BigNumberish,
-    arg4: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  "name()"(overrides?: CallOverrides): Promise<string>;
 
   onERC721Received(
     arg0: string,
@@ -1175,6 +1330,13 @@ export interface LendingTemplate extends BaseContract {
 
   "owner()"(overrides?: CallOverrides): Promise<string>;
 
+  ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  "ownerOf(uint256)"(
+    tokenId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   payLoan(
     loanId: BigNumberish,
     amount: BigNumberish,
@@ -1192,6 +1354,33 @@ export interface LendingTemplate extends BaseContract {
   ): Promise<ContractTransaction>;
 
   "renounceOwnership()"(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  "safeTransferFrom(address,address,uint256)"(
+    from: string,
+    to: string,
+    tokenId: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  "safeTransferFrom(address,address,uint256,bytes)"(
+    from: string,
+    to: string,
+    tokenId: BigNumberish,
+    _data: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setApprovalForAll(
+    operator: string,
+    approved: boolean,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  "setApprovalForAll(address,bool)"(
+    operator: string,
+    approved: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1225,6 +1414,10 @@ export interface LendingTemplate extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  symbol(overrides?: CallOverrides): Promise<string>;
+
+  "symbol()"(overrides?: CallOverrides): Promise<string>;
+
   terminateLoan(
     loanId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -1232,6 +1425,27 @@ export interface LendingTemplate extends BaseContract {
 
   "terminateLoan(uint256)"(
     loanId: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  "tokenURI(uint256)"(
+    tokenId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  transferFrom(
+    from: string,
+    to: string,
+    tokenId: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  "transferFrom(address,address,uint256)"(
+    from: string,
+    to: string,
+    tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1282,12 +1496,31 @@ export interface LendingTemplate extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    approve(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "approve(address,uint256)"(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     approveLoan(loanId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     "approveLoan(uint256)"(
       loanId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balanceOf(address)"(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     canBeTerminated(
       loanId: BigNumberish,
@@ -1353,6 +1586,16 @@ export interface LendingTemplate extends BaseContract {
       input: EditLoanParams.StructStruct,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    getApproved(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    "getApproved(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     getLoanApprovalCost(
       loanId: BigNumberish,
@@ -1423,6 +1666,18 @@ export interface LendingTemplate extends BaseContract {
     interestRateToStater(overrides?: CallOverrides): Promise<BigNumber>;
 
     "interestRateToStater()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    isApprovedForAll(
+      owner: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "isApprovedForAll(address,address)"(
+      owner: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     lenderFee(overrides?: CallOverrides): Promise<number>;
 
@@ -1506,41 +1761,9 @@ export interface LendingTemplate extends BaseContract {
 
     "ltv()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    onERC1155BatchReceived(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish[],
-      arg3: BigNumberish[],
-      arg4: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    name(overrides?: CallOverrides): Promise<string>;
 
-    "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish[],
-      arg3: BigNumberish[],
-      arg4: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    onERC1155Received(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BigNumberish,
-      arg4: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    "onERC1155Received(address,address,uint256,uint256,bytes)"(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BigNumberish,
-      arg4: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    "name()"(overrides?: CallOverrides): Promise<string>;
 
     onERC721Received(
       arg0: string,
@@ -1562,6 +1785,13 @@ export interface LendingTemplate extends BaseContract {
 
     "owner()"(overrides?: CallOverrides): Promise<string>;
 
+    ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    "ownerOf(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     payLoan(
       loanId: BigNumberish,
       amount: BigNumberish,
@@ -1577,6 +1807,33 @@ export interface LendingTemplate extends BaseContract {
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     "renounceOwnership()"(overrides?: CallOverrides): Promise<void>;
+
+    "safeTransferFrom(address,address,uint256)"(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "safeTransferFrom(address,address,uint256,bytes)"(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      _data: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setApprovalForAll(
+      operator: string,
+      approved: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "setApprovalForAll(address,bool)"(
+      operator: string,
+      approved: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setGlobalVariables(
       _ltv: BigNumberish,
@@ -1608,6 +1865,10 @@ export interface LendingTemplate extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    symbol(overrides?: CallOverrides): Promise<string>;
+
+    "symbol()"(overrides?: CallOverrides): Promise<string>;
+
     terminateLoan(
       loanId: BigNumberish,
       overrides?: CallOverrides
@@ -1615,6 +1876,27 @@ export interface LendingTemplate extends BaseContract {
 
     "terminateLoan(uint256)"(
       loanId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    "tokenURI(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "transferFrom(address,address,uint256)"(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1666,6 +1948,28 @@ export interface LendingTemplate extends BaseContract {
   };
 
   filters: {
+    "Approval(address,address,uint256)"(
+      owner?: string | null,
+      approved?: string | null,
+      tokenId?: BigNumberish | null
+    ): ApprovalEventFilter;
+    Approval(
+      owner?: string | null,
+      approved?: string | null,
+      tokenId?: BigNumberish | null
+    ): ApprovalEventFilter;
+
+    "ApprovalForAll(address,address,bool)"(
+      owner?: string | null,
+      operator?: string | null,
+      approved?: null
+    ): ApprovalForAllEventFilter;
+    ApprovalForAll(
+      owner?: string | null,
+      operator?: string | null,
+      approved?: null
+    ): ApprovalForAllEventFilter;
+
     "CloseLoanOffer(uint256,address,uint256)"(
       loanId?: BigNumberish | null,
       offerer?: string | null,
@@ -1795,9 +2099,32 @@ export interface LendingTemplate extends BaseContract {
       previousOwner?: string | null,
       newOwner?: string | null
     ): OwnershipTransferredEventFilter;
+
+    "Transfer(address,address,uint256)"(
+      from?: string | null,
+      to?: string | null,
+      tokenId?: BigNumberish | null
+    ): TransferEventFilter;
+    Transfer(
+      from?: string | null,
+      to?: string | null,
+      tokenId?: BigNumberish | null
+    ): TransferEventFilter;
   };
 
   estimateGas: {
+    approve(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    "approve(address,uint256)"(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     approveLoan(
       loanId: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
@@ -1806,6 +2133,13 @@ export interface LendingTemplate extends BaseContract {
     "approveLoan(uint256)"(
       loanId: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balanceOf(address)"(
+      owner: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     canBeTerminated(
@@ -1876,6 +2210,16 @@ export interface LendingTemplate extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    getApproved(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getApproved(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getLoanApprovalCost(
       loanId: BigNumberish,
       overrides?: CallOverrides
@@ -1930,6 +2274,18 @@ export interface LendingTemplate extends BaseContract {
 
     "interestRateToStater()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    isApprovedForAll(
+      owner: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "isApprovedForAll(address,address)"(
+      owner: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     lenderFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     "lenderFee()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1949,41 +2305,9 @@ export interface LendingTemplate extends BaseContract {
 
     "ltv()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    onERC1155BatchReceived(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish[],
-      arg3: BigNumberish[],
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    name(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish[],
-      arg3: BigNumberish[],
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    onERC1155Received(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BigNumberish,
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    "onERC1155Received(address,address,uint256,uint256,bytes)"(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BigNumberish,
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     onERC721Received(
       arg0: string,
@@ -2005,6 +2329,16 @@ export interface LendingTemplate extends BaseContract {
 
     "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    ownerOf(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "ownerOf(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     payLoan(
       loanId: BigNumberish,
       amount: BigNumberish,
@@ -2022,6 +2356,33 @@ export interface LendingTemplate extends BaseContract {
     ): Promise<BigNumber>;
 
     "renounceOwnership()"(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    "safeTransferFrom(address,address,uint256)"(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    "safeTransferFrom(address,address,uint256,bytes)"(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      _data: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setApprovalForAll(
+      operator: string,
+      approved: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    "setApprovalForAll(address,bool)"(
+      operator: string,
+      approved: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -2055,6 +2416,10 @@ export interface LendingTemplate extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     terminateLoan(
       loanId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -2062,6 +2427,30 @@ export interface LendingTemplate extends BaseContract {
 
     "terminateLoan(uint256)"(
       loanId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    tokenURI(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "tokenURI(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    "transferFrom(address,address,uint256)"(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -2113,6 +2502,18 @@ export interface LendingTemplate extends BaseContract {
   };
 
   populateTransaction: {
+    approve(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "approve(address,uint256)"(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     approveLoan(
       loanId: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
@@ -2121,6 +2522,16 @@ export interface LendingTemplate extends BaseContract {
     "approveLoan(uint256)"(
       loanId: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    balanceOf(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "balanceOf(address)"(
+      owner: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     canBeTerminated(
@@ -2191,6 +2602,16 @@ export interface LendingTemplate extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    getApproved(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getApproved(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getLoanApprovalCost(
       loanId: BigNumberish,
       overrides?: CallOverrides
@@ -2249,6 +2670,18 @@ export interface LendingTemplate extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    isApprovedForAll(
+      owner: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "isApprovedForAll(address,address)"(
+      owner: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     lenderFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "lenderFee()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -2275,41 +2708,9 @@ export interface LendingTemplate extends BaseContract {
 
     "ltv()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    onERC1155BatchReceived(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish[],
-      arg3: BigNumberish[],
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish[],
-      arg3: BigNumberish[],
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    onERC1155Received(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BigNumberish,
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "onERC1155Received(address,address,uint256,uint256,bytes)"(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BigNumberish,
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     onERC721Received(
       arg0: string,
@@ -2331,6 +2732,16 @@ export interface LendingTemplate extends BaseContract {
 
     "owner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    ownerOf(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "ownerOf(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     payLoan(
       loanId: BigNumberish,
       amount: BigNumberish,
@@ -2348,6 +2759,33 @@ export interface LendingTemplate extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     "renounceOwnership()"(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "safeTransferFrom(address,address,uint256)"(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "safeTransferFrom(address,address,uint256,bytes)"(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      _data: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setApprovalForAll(
+      operator: string,
+      approved: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "setApprovalForAll(address,bool)"(
+      operator: string,
+      approved: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2381,6 +2819,10 @@ export interface LendingTemplate extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     terminateLoan(
       loanId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -2388,6 +2830,30 @@ export interface LendingTemplate extends BaseContract {
 
     "terminateLoan(uint256)"(
       loanId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    tokenURI(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "tokenURI(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

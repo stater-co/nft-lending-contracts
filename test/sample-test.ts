@@ -1,17 +1,13 @@
+import "mocha";
 import { expect } from "chai";
-import { BigNumber, Contract, Wallet } from "ethers";
-import { ethers } from "hardhat";
+import { Contract } from "ethers";
 import { deployERC20 } from './routines/deploy-erc20/index';
-import { params, IndexParams as ERC20Params, ERC20Constructor } from './routines/deploy-erc20/index-params.dto';
+import { ERC20Constructor } from './routines/contract/erc20.dto';
 import { deployNoConstructor } from "./routines/deploy-no-constructor";
-import { IndexParams as NoConstructorIndexParams } from './routines/deploy-no-constructor/index-params.dto';
-import { CreateLoanParams, EditLoanParams, LendingMethods } from '../types/LendingMethods';
-import { LendingConstructor, LendingTemplate } from '../types/LendingTemplate';
-import { LendingMethods__factory } from '../types/factories/LendingMethods__factory';
-import { LendingTemplate__factory } from '../types/factories/LendingTemplate__factory';
-import { StaterDiscounts__factory } from '../types/factories/StaterDiscounts__factory';
-import { main as LendingTemplateValidator } from './routines/checks/valid-lending-template';
-import { StaterDiscounts } from "../types/StaterDiscounts";
+import { main as LendingTemplateValidator } from './routines/checks/validate-lending-template/valid-lending-template';
+import { deployERC721 } from "./routines/deploy-erc721";
+import { ERC721Constructor } from './routines/contract/erc721.dto';
+import { ValidLendingTemplateParams } from './routines/checks/validate-lending-template/index-params.dto';
 
 
 let ERC20: Contract;
@@ -20,82 +16,103 @@ let ERC721: Contract;
 let ERC1155: Contract;
 let ERC20_STAKING: Contract;
 let ERC20_DISTRIBUTION: Contract;
-let DISCOUNTS_CONNECTED: StaterDiscounts;
 let LENDING_METHODS: Contract;
-let LENDING_METHODS_CONNECTION: LendingMethods;
 let LENDING_TEMPLATE: Contract;
-let LENDING_TEMPLATE_CONNECTION: LendingTemplate;
 
 
 
-describe("<< Environment Smart Contracts Setup >>", async function () {
-  ERC20 = await deployERC20(params);
-  DISCOUNTS = await deployNoConstructor(new NoConstructorIndexParams({
-    contractName: "StaterDiscounts",
-    describeLabel: "Deploy Discounts contract",
-    itLabel: "Deployment"
-  }));
-  const wallet = new Wallet(String(process.env.ACCOUNT_PRIVATE_KEY));
-  DISCOUNTS_CONNECTED = StaterDiscounts__factory.connect(DISCOUNTS.address,wallet);
-  ERC721 = await deployNoConstructor(new NoConstructorIndexParams({
-    contractName: "GameItems721",
-    describeLabel: "Deploy ERC721 contract",
-    itLabel: "Deployment"
-  }));
-  ERC1155 = await deployNoConstructor(new NoConstructorIndexParams({
-    contractName: "GameItems1155",
-    describeLabel: "Deploy ERC1155 contract",
-    itLabel: "Deployment"
-  }));
-  ERC20_STAKING = await deployERC20(new ERC20Params({
-    contractName: params.contractName,
-    describeLabel: "Deploy the Staking contract",
-    itLabel: "Deployment",
-    constructorParams: new ERC20Constructor({
-      name: "Test Staking Tokens",
-      symbol: "TST",
-      totalSupply: params.constructorParams.totalSupply
-    })
-  }));
-  ERC20_DISTRIBUTION = await deployERC20(new ERC20Params({
-    contractName: params.contractName,
-    describeLabel: "Deploy the Distribution contract",
-    itLabel: "Deployment",
-    constructorParams: new ERC20Constructor({
-      name: "Test Distribution Tokens",
-      symbol: "TDT",
-      totalSupply: params.constructorParams.totalSupply
-    })
-  }));
+describe("<< Environment Smart Contracts Setup >>", function () {
+
+  describe("Deploy ERC20 contract", function () {
+    it("Deployment", async function () {
+      ERC20 = await deployERC20(new ERC20Constructor({
+        contractName: "FungibleTokens",
+        name: "ERC20",
+        symbol: "ERC20",
+        totalSupply: "0x174876E800"
+      }));
+    });
+  });
+  
+  describe("Deploy Discounts contract", function () {
+    it("Deployment", async function () {
+      DISCOUNTS = await deployNoConstructor("StaterDiscounts");
+    });
+  });
+
+  describe("Deploy ERC721 contract", function () {
+    it("Deployment", async function () {
+      ERC721 = await deployNoConstructor("GameItems721");
+    });
+  });
+
+  describe("Deploy ERC1155 contract", function () {
+    it("Deployment", async function () {
+      ERC1155 = await deployNoConstructor("GameItems1155");
+    });
+  });
+
+  describe("Deploy the Staking contract", function () {
+    it("Deployment", async function () {
+      ERC20_STAKING = await deployERC20(new ERC20Constructor({
+        contractName: "FungibleTokens",
+        name: "Test Staking Tokens",
+        symbol: "TST",
+        totalSupply: "0x174876E800"
+      }));
+    });
+  });
+
+  describe("Deploy the Distribution contract", function () {
+    it("Deployment", async function () {
+      ERC20_DISTRIBUTION = await deployERC20(new ERC20Constructor({
+        contractName: "FungibleTokens",
+        name: "Test Distribution Tokens",
+        symbol: "TDT",
+        totalSupply: "0x174876E800"
+      }));
+    });
+  });
+
 });
 
 
 
-describe("<< Lending Smart Contracts Setup >>", async function () {
-  console.log("ok 1");
-  LENDING_METHODS = await deployNoConstructor(new NoConstructorIndexParams({
-    contractName: "LendingMethods",
-    describeLabel: "Deploy the Lending Methods contract",
-    itLabel: "Deployment"
-  }));
-  console.log("ok 2");
-  const wallet = new Wallet(String(process.env.ACCOUNT_PRIVATE_KEY));
-  LENDING_METHODS_CONNECTION = LendingMethods__factory.connect(LENDING_METHODS.address,wallet);
-  console.log("ok 3");
-  LENDING_TEMPLATE = await deployNoConstructor(new NoConstructorIndexParams({
-    contractName: "LendingTemplate",
-    describeLabel: "Deploy the Lending Template contract",
-    itLabel: "Deployment"
-  }));
-  console.log("ok 4");
-  LENDING_TEMPLATE_CONNECTION = LendingTemplate__factory.connect(LENDING_TEMPLATE.address,wallet);
-  console.log("ok 5");
-  it('Verify Lending Template props', async () => await LendingTemplateValidator(
-    LENDING_TEMPLATE_CONNECTION,
-    LENDING_TEMPLATE_CONNECTION.address,
-    LENDING_METHODS_CONNECTION,
-    LENDING_METHODS_CONNECTION.address
-  ));
-  console.log("ok 6");
-});
+describe("<< Lending Smart Contracts Setup >>", function () {
 
+  describe("Deploy the lending methods contract", function () {
+    it("Deployment", async function () {
+      LENDING_METHODS = await deployERC721(new ERC721Constructor({
+        contractName: "LendingMethods",
+        name: "Lending Methods",
+        symbol: "LM"
+      }));
+    });
+  });
+
+  describe("Deploy the lending template contract", function () {
+    it("Deployment", async function () {
+      LENDING_TEMPLATE = await deployERC721(new ERC721Constructor({
+        contractName: "LendingTemplate",
+        name: "Lending Template",
+        symbol: "LT"
+      }));
+    });
+  });
+
+  describe("Verify lending contracts", async function () {
+    it("Verification", async function () {
+      let validation: Boolean = await LendingTemplateValidator(new ValidLendingTemplateParams({
+        lendingMethods: LENDING_METHODS,
+        lendingMethodsAddress: LENDING_METHODS.address,
+        lendingTemplate: LENDING_TEMPLATE,
+        lendingTemplateAddress: LENDING_TEMPLATE.address,
+        discountsAddress: DISCOUNTS.address
+      }));
+      if ( !validation ) {
+        expect.fail("Failed");
+      }
+    });
+  });
+
+});

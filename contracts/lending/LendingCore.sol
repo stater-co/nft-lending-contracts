@@ -140,6 +140,11 @@ contract LendingCore is Ownable, StaterTransfers, ERC721, ERC721Holder {
     constructor(string memory name, string memory symbol) ERC721(name,symbol) {
         
     }
+
+    function setGlobalParameters(address lending, address discountsAddress) external onlyOwner {
+        lendingMethodsAddress = lending;
+        discounts = IStaterDiscounts(discountsAddress);
+    }
     
     
     /*

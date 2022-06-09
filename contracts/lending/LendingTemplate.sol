@@ -5,6 +5,10 @@ import "./LendingCore.sol";
 
 contract LendingTemplate is LendingCore {
 
+    constructor(string memory name, string memory symbol) LendingCore(name,symbol) {
+        
+    }
+
     // Borrower creates a loan
     function createLoan(
         CreateLoanParams.Struct memory input

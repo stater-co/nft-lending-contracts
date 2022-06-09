@@ -6,7 +6,7 @@
       "esModuleInterop": true,
       "outDir": "dist",
       "typeRoots": ["./typechain", "./node_modules/@types"],
-      "types": ["@nomiclabs/hardhat-ethers", "@nomiclabs/hardhat-waffle"]
+      "types": ["@nomiclabs/hardhat-ethers", "@nomiclabs/hardhat-waffle", "@types/mocha"]
     },
     "ts-node": {
       "esm": true

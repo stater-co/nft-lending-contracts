@@ -1,8 +1,46 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
+    "/home/diimiim/nft-lending-contracts/contracts/auxiliary/ERC1155.sol": {
+      "lastModificationDate": 1654685850994,
+      "contentHash": "240e0ad221c2735476d6258d7fcfcd79",
+      "sourceName": "contracts/auxiliary/ERC1155.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "0.8.14"
+      ],
+      "artifacts": [
+        "GameItems1155"
+      ]
+    },
     "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC1155/ERC1155.sol": {
-      "lastModificationDate": 1654694071068,
+      "lastModificationDate": 1654776741252,
       "contentHash": "792473360274d02eed0fe4c691d67d16",
       "sourceName": "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
       "solcConfig": {
@@ -44,7 +82,7 @@
       ]
     },
     "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
-      "lastModificationDate": 1654694071692,
+      "lastModificationDate": 1654776741824,
       "contentHash": "8398972af73b4e9e5ff3b31cad86234f",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
       "solcConfig": {
@@ -81,7 +119,7 @@
       ]
     },
     "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC1155/IERC1155.sol": {
-      "lastModificationDate": 1654694071492,
+      "lastModificationDate": 1654776741644,
       "contentHash": "59e1bc5713fdebc7f821dc52f4d3e0ef",
       "sourceName": "@openzeppelin/contracts/token/ERC1155/IERC1155.sol",
       "solcConfig": {
@@ -118,7 +156,7 @@
       ]
     },
     "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol": {
-      "lastModificationDate": 1654694071508,
+      "lastModificationDate": 1654776741660,
       "contentHash": "9f8822b72fe2702979e40160cb6d9636",
       "sourceName": "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol",
       "solcConfig": {
@@ -155,7 +193,7 @@
       ]
     },
     "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol": {
-      "lastModificationDate": 1654694071500,
+      "lastModificationDate": 1654776741652,
       "contentHash": "9148c2e10c4efb12c71a7f080da5559b",
       "sourceName": "@openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol",
       "solcConfig": {
@@ -192,7 +230,7 @@
       ]
     },
     "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/utils/Address.sol": {
-      "lastModificationDate": 1654694070864,
+      "lastModificationDate": 1654776741012,
       "contentHash": "ad714a6368ee7d43cded6bbe8af0b155",
       "sourceName": "@openzeppelin/contracts/utils/Address.sol",
       "solcConfig": {
@@ -227,7 +265,7 @@
       ]
     },
     "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/utils/Context.sol": {
-      "lastModificationDate": 1654694070920,
+      "lastModificationDate": 1654776741076,
       "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
@@ -262,7 +300,7 @@
       ]
     },
     "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
-      "lastModificationDate": 1654694071148,
+      "lastModificationDate": 1654776741320,
       "contentHash": "0e7db055ce108f9da7bb6686a00287c0",
       "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
       "solcConfig": {
@@ -299,7 +337,7 @@
       ]
     },
     "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
-      "lastModificationDate": 1654694071536,
+      "lastModificationDate": 1654776741680,
       "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
       "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
       "solcConfig": {
@@ -374,7 +412,7 @@
       ]
     },
     "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
-      "lastModificationDate": 1654694071576,
+      "lastModificationDate": 1654776741712,
       "contentHash": "cd8e72e5859bddd5fd26b2fb5c51c846",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
       "solcConfig": {
@@ -411,8 +449,8 @@
       ]
     },
     "/home/diimiim/nft-lending-contracts/contracts/plugins/StaterTransfers.sol": {
-      "lastModificationDate": 1654602919260,
-      "contentHash": "56cb77b35956ff78da55a8be756f8e20",
+      "lastModificationDate": 1654709934695,
+      "contentHash": "f535e95e6309a2b0b114ee7274894be5",
       "sourceName": "contracts/plugins/StaterTransfers.sol",
       "solcConfig": {
         "version": "0.8.14",
@@ -441,9 +479,7 @@
         "@openzeppelin/contracts/token/ERC1155/IERC1155.sol",
         "@openzeppelin/contracts/access/Ownable.sol",
         "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@openzeppelin/contracts/token/ERC721/IERC721.sol",
-        "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol",
-        "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol"
+        "@openzeppelin/contracts/token/ERC721/IERC721.sol"
       ],
       "versionPragmas": [
         "0.8.14"
@@ -453,7 +489,7 @@
       ]
     },
     "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
-      "lastModificationDate": 1654694071556,
+      "lastModificationDate": 1654776741692,
       "contentHash": "ad7c2d0af148c8f9f097d65deeb4da6b",
       "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
       "solcConfig": {
@@ -487,10 +523,10 @@
         "IERC20"
       ]
     },
-    "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol": {
-      "lastModificationDate": 1654694071304,
-      "contentHash": "54062ff887823a306b33ea6494a220bc",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol",
+    "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
+      "lastModificationDate": 1654776741724,
+      "contentHash": "efbc0d15b80a74e34dbe8da0f3e879bb",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
       "solcConfig": {
         "version": "0.8.14",
         "settings": {
@@ -515,127 +551,17 @@
         }
       },
       "imports": [
-        "../IERC721Receiver.sol"
+        "../IERC721.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "ERC721Holder"
-      ]
-    },
-    "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol": {
-      "lastModificationDate": 1654694071112,
-      "contentHash": "88079762e28b246888129028f757e047",
-      "sourceName": "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./ERC1155Receiver.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "ERC1155Holder"
-      ]
-    },
-    "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
-      "lastModificationDate": 1654694071592,
-      "contentHash": "c22d4395e33763de693fd440c6fd10e1",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IERC721Receiver"
-      ]
-    },
-    "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC1155/utils/ERC1155Receiver.sol": {
-      "lastModificationDate": 1654694071136,
-      "contentHash": "55b180cf664783e9a2baac20e82683fb",
-      "sourceName": "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Receiver.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../IERC1155Receiver.sol",
-        "../../../utils/introspection/ERC165.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "ERC1155Receiver"
+        "IERC721Metadata"
       ]
     },
     "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
-      "lastModificationDate": 1654694071280,
+      "lastModificationDate": 1654776741452,
       "contentHash": "21b9f3bdb3e60f56ea81361c37420136",
       "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721.sol",
       "solcConfig": {
@@ -677,10 +603,10 @@
         "ERC721"
       ]
     },
-    "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
-      "lastModificationDate": 1654694071588,
-      "contentHash": "efbc0d15b80a74e34dbe8da0f3e879bb",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
+    "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
+      "lastModificationDate": 1654776741728,
+      "contentHash": "c22d4395e33763de693fd440c6fd10e1",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
       "solcConfig": {
         "version": "0.8.14",
         "settings": {
@@ -704,18 +630,16 @@
           }
         }
       },
-      "imports": [
-        "../IERC721.sol"
-      ],
+      "imports": [],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "IERC721Metadata"
+        "IERC721Receiver"
       ]
     },
     "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
-      "lastModificationDate": 1654694071772,
+      "lastModificationDate": 1654776741900,
       "contentHash": "9c54c6c065d9e590fdcdd72c451425b9",
       "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
       "solcConfig": {
@@ -749,10 +673,10 @@
         "Strings"
       ]
     },
-    "/home/diimiim/nft-lending-contracts/contracts/lending/ILendingTemplate.sol": {
-      "lastModificationDate": 1654615501392,
-      "contentHash": "6dc547a4b41994d44f2c0fb93384dfa4",
-      "sourceName": "contracts/lending/ILendingTemplate.sol",
+    "/home/diimiim/nft-lending-contracts/contracts/lending/LendingCore.sol": {
+      "lastModificationDate": 1654778198976,
+      "contentHash": "07cff0a61e4609a75d83b85d729a7d9a",
+      "sourceName": "contracts/lending/LendingCore.sol",
       "solcConfig": {
         "version": "0.8.14",
         "settings": {
@@ -776,16 +700,64 @@
           }
         }
       },
-      "imports": [],
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+        "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol",
+        "@openzeppelin/contracts/utils/Counters.sol",
+        "../plugins/StaterTransfers.sol",
+        "../workers/IStaterDiscounts.sol",
+        "../params/LendingConstructor.sol",
+        "../params/CreateLoanParams.sol",
+        "../params/EditLoanParams.sol",
+        "hardhat/console.sol"
+      ],
       "versionPragmas": [
         "0.8.14"
       ],
       "artifacts": [
-        "ILendingTemplate"
+        "LendingCore"
+      ]
+    },
+    "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol": {
+      "lastModificationDate": 1654776741472,
+      "contentHash": "54062ff887823a306b33ea6494a220bc",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../IERC721Receiver.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC721Holder"
       ]
     },
     "/home/diimiim/nft-lending-contracts/node_modules/@openzeppelin/contracts/utils/Counters.sol": {
-      "lastModificationDate": 1654694070928,
+      "lastModificationDate": 1654776741076,
       "contentHash": "74654e3ae5d7f39555055dfe244dab7a",
       "sourceName": "@openzeppelin/contracts/utils/Counters.sol",
       "solcConfig": {
@@ -817,49 +789,6 @@
       ],
       "artifacts": [
         "Counters"
-      ]
-    },
-    "/home/diimiim/nft-lending-contracts/contracts/lending/LendingCore.sol": {
-      "lastModificationDate": 1654690169815,
-      "contentHash": "522d7abe2774e5b7cd09d555609281e2",
-      "sourceName": "contracts/lending/LendingCore.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "../plugins/StaterTransfers.sol",
-        "../workers/IStaterDiscounts.sol",
-        "../params/LendingConstructor.sol",
-        "../params/CreateLoanParams.sol",
-        "../params/EditLoanParams.sol",
-        "hardhat/console.sol"
-      ],
-      "versionPragmas": [
-        "0.8.14"
-      ],
-      "artifacts": [
-        "LendingCore"
       ]
     },
     "/home/diimiim/nft-lending-contracts/contracts/workers/IStaterDiscounts.sol": {
@@ -895,193 +824,6 @@
       ],
       "artifacts": [
         "IStaterDiscounts"
-      ]
-    },
-    "/home/diimiim/nft-lending-contracts/contracts/lending/LendingTemplate.sol": {
-      "lastModificationDate": 1654705208879,
-      "contentHash": "3998d4526858a2bf59bacd3192cbd9cb",
-      "sourceName": "contracts/lending/LendingTemplate.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./LendingCore.sol"
-      ],
-      "versionPragmas": [
-        "0.8.14"
-      ],
-      "artifacts": [
-        "LendingTemplate"
-      ]
-    },
-    "/home/diimiim/nft-lending-contracts/contracts/lending/LendingMethods.sol": {
-      "lastModificationDate": 1654693685665,
-      "contentHash": "45e358dc8fd483856e42258009190812",
-      "sourceName": "contracts/lending/LendingMethods.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./LendingCore.sol"
-      ],
-      "versionPragmas": [
-        "0.8.14"
-      ],
-      "artifacts": [
-        "LendingMethods"
-      ]
-    },
-    "/home/diimiim/nft-lending-contracts/node_modules/hardhat/console.sol": {
-      "lastModificationDate": 1654694072940,
-      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
-      "sourceName": "hardhat/console.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.4.22 <0.9.0"
-      ],
-      "artifacts": [
-        "console"
-      ]
-    },
-    "/home/diimiim/nft-lending-contracts/contracts/auxiliary/ERC1155.sol": {
-      "lastModificationDate": 1654685850994,
-      "contentHash": "240e0ad221c2735476d6258d7fcfcd79",
-      "sourceName": "contracts/auxiliary/ERC1155.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
-        "@openzeppelin/contracts/access/Ownable.sol"
-      ],
-      "versionPragmas": [
-        "0.8.14"
-      ],
-      "artifacts": [
-        "GameItems1155"
-      ]
-    },
-    "/home/diimiim/nft-lending-contracts/contracts/auxiliary/ERC721.sol": {
-      "lastModificationDate": 1654685855438,
-      "contentHash": "7f7be1a7063bc4d31dffe46c6d725ec4",
-      "sourceName": "contracts/auxiliary/ERC721.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 1
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol",
-        "@openzeppelin/contracts/utils/Counters.sol",
-        "@openzeppelin/contracts/access/Ownable.sol"
-      ],
-      "versionPragmas": [
-        "0.8.14"
-      ],
-      "artifacts": [
-        "GameItems721"
       ]
     },
     "/home/diimiim/nft-lending-contracts/contracts/params/LendingConstructor.sol": {
@@ -1154,6 +896,190 @@
         "CreateLoanParams"
       ]
     },
+    "/home/diimiim/nft-lending-contracts/contracts/params/EditLoanParams.sol": {
+      "lastModificationDate": 1654693528356,
+      "contentHash": "7439500ec0d9a0ad24ff3474e0fbda2a",
+      "sourceName": "contracts/params/EditLoanParams.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.14"
+      ],
+      "artifacts": [
+        "EditLoanParams"
+      ]
+    },
+    "/home/diimiim/nft-lending-contracts/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1654776743052,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
+    "/home/diimiim/nft-lending-contracts/contracts/lending/LendingTemplate.sol": {
+      "lastModificationDate": 1654757921994,
+      "contentHash": "e47b5bad970fb7e5b3927c2868c2f743",
+      "sourceName": "contracts/lending/LendingTemplate.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./LendingCore.sol"
+      ],
+      "versionPragmas": [
+        "0.8.14"
+      ],
+      "artifacts": [
+        "LendingTemplate"
+      ]
+    },
+    "/home/diimiim/nft-lending-contracts/contracts/lending/LendingMethods.sol": {
+      "lastModificationDate": 1654757912134,
+      "contentHash": "c18f2da8e52375feac5b32d21efc6b69",
+      "sourceName": "contracts/lending/LendingMethods.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./LendingCore.sol"
+      ],
+      "versionPragmas": [
+        "0.8.14"
+      ],
+      "artifacts": [
+        "LendingMethods"
+      ]
+    },
+    "/home/diimiim/nft-lending-contracts/contracts/auxiliary/ERC721.sol": {
+      "lastModificationDate": 1654685855438,
+      "contentHash": "7f7be1a7063bc4d31dffe46c6d725ec4",
+      "sourceName": "contracts/auxiliary/ERC721.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+        "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol",
+        "@openzeppelin/contracts/utils/Counters.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "0.8.14"
+      ],
+      "artifacts": [
+        "GameItems721"
+      ]
+    },
     "/home/diimiim/nft-lending-contracts/contracts/auxiliary/ERC20.sol": {
       "lastModificationDate": 1654685859658,
       "contentHash": "37576f38a1226518c0a906a08de233cf",
@@ -1189,10 +1115,10 @@
         "FungibleTokens"
       ]
     },
-    "/home/diimiim/nft-lending-contracts/contracts/params/EditLoanParams.sol": {
-      "lastModificationDate": 1654693528356,
-      "contentHash": "7439500ec0d9a0ad24ff3474e0fbda2a",
-      "sourceName": "contracts/params/EditLoanParams.sol",
+    "/home/diimiim/nft-lending-contracts/contracts/lending/ILendingTemplate.sol": {
+      "lastModificationDate": 1654615501392,
+      "contentHash": "6dc547a4b41994d44f2c0fb93384dfa4",
+      "sourceName": "contracts/lending/ILendingTemplate.sol",
       "solcConfig": {
         "version": "0.8.14",
         "settings": {
@@ -1221,7 +1147,7 @@
         "0.8.14"
       ],
       "artifacts": [
-        "EditLoanParams"
+        "ILendingTemplate"
       ]
     }
   }
