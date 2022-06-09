@@ -1,13 +1,14 @@
-import "mocha";
 import { expect } from "chai";
 import { Contract } from "ethers";
 import { deployERC20 } from './routines/deploy-erc20/index';
 import { ERC20Constructor } from './routines/contract/erc20.dto';
 import { deployNoConstructor } from "./routines/deploy-no-constructor";
-import { main as LendingTemplateValidator } from './routines/checks/validate-lending-template/valid-lending-template';
+import { main as LendingTemplateValidator } from './routines/checks/validate-lending-template';
 import { deployERC721 } from "./routines/deploy-erc721";
 import { ERC721Constructor } from './routines/contract/erc721.dto';
 import { ValidLendingTemplateParams } from './routines/checks/validate-lending-template/index-params.dto';
+import { main as CreateLoan } from './routines/create-loan/index';
+import { CreateLoanParams } from './routines/create-loan/index-params.dto';
 
 
 let ERC20: Contract;
@@ -112,6 +113,23 @@ describe("<< Lending Smart Contracts Setup >>", function () {
       if ( !validation ) {
         expect.fail("Failed");
       }
+    });
+  });
+
+});
+
+
+
+describe("<< Lending Workflow >>", function () {
+
+  describe("Create loan", function () {
+    it("Creation", async function () {
+      let loan: any = await CreateLoan(new CreateLoanParams({
+        erc1155: ERC1155,
+        erc20: ERC20,
+        erc721: ERC721,
+        lending: LENDING_TEMPLATE
+      }));
     });
   });
 

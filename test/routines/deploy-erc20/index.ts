@@ -11,7 +11,9 @@ export async function deployERC20(input: ERC20Constructor): Promise<Contract> {
         input.name,
         input.symbol
     );
+    
     await deployed.deployed();
     expect(deployed.address).to.have.lengthOf(42);
+
     return deployed;
 }
