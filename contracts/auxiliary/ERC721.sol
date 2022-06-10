@@ -24,6 +24,7 @@ contract GameItems721 is ERC721, Ownable, ERC721Holder {
     }
 
     Item[] public items;
+    uint256 public totalCreated;
 
     function createItem(string calldata name, string calldata description, string calldata image_url) external onlyOwner {
         emit ItemCreation(items.length,msg.sender,name,description,image_url);
@@ -34,6 +35,7 @@ contract GameItems721 is ERC721, Ownable, ERC721Holder {
             description,
             image_url
         ));
+        ++totalCreated;
     }
     
     function updateUrl(uint256 itemId, string calldata image_url) external {

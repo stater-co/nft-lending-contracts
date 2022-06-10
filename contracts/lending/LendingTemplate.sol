@@ -13,14 +13,7 @@ contract LendingTemplate is LendingCore {
     function createLoan(
         CreateLoanParams.Struct memory input
     ) external {
-        
-        // For 8 or more parameters via delegatecall >> Remix raises an error with no error message
-        (bool success, ) = lendingMethodsAddress.delegatecall(
-            abi.encodeWithSignature(
-                "createLoan((uint256,uint16,address,uint256,address[],uint256[],uint8[]))",
-                input
-            )
-        );
+        (bool success, ) = lendingMethodsAddress.delegatecall(msg.data);
         require(success,"Failed to createLoan via delegatecall");
     }
 

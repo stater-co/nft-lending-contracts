@@ -29,9 +29,10 @@ export async function main(
                 "description",
                 "image_url"
             );
+            let itemId = await input.erc721.totalCreated();
             await input.erc721.setApprovalForAll(input.lending.address,true);
             nftAddressArray.push(input.erc721.address);
-            nftTokenIdArray.push(input.erc721.items.length);
+            nftTokenIdArray.push(Number(itemId)-1);
             nftTokenTypeArray.push(0);
         } else {
             await input.erc1155.createTokens(
@@ -42,9 +43,11 @@ export async function main(
                 "description",
                 "image_url"
             );
+            // let items = await input.erc1155.items(i);
+            // console.log(items);
             await input.erc1155.setApprovalForAll(input.lending.address,true);
             nftAddressArray.push(input.erc1155.address);
-            nftTokenIdArray.push(input.erc1155.items.length);
+            nftTokenIdArray.push(1);
             nftTokenTypeArray.push(0);
         }
     }

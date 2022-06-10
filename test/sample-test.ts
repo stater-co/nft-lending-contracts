@@ -3,10 +3,10 @@ import { Contract } from "ethers";
 import { deployERC20 } from './routines/deploy-erc20/index';
 import { ERC20Constructor } from './routines/contract/erc20.dto';
 import { deployNoConstructor } from "./routines/deploy-no-constructor";
-import { main as LendingTemplateValidator } from './routines/checks/validate-lending-template';
+import { main as LendingTemplateValidator } from './routines/checks/lending-control-variables';
 import { deployERC721 } from "./routines/deploy-erc721";
 import { ERC721Constructor } from './routines/contract/erc721.dto';
-import { ValidLendingTemplateParams } from './routines/checks/validate-lending-template/index-params.dto';
+import { LendingTemplateControlVariables } from './routines/checks/lending-control-variables/index-params.dto';
 import { main as CreateLoan } from './routines/create-loan/index';
 import { CreateLoanParams } from './routines/create-loan/index-params.dto';
 
@@ -101,13 +101,11 @@ describe("<< Lending Smart Contracts Setup >>", function () {
     });
   });
 
-  describe("Verify lending contracts", async function () {
+  describe("Verify lending contracts", function () {
     it("Verification", async function () {
-      let validation: Boolean = await LendingTemplateValidator(new ValidLendingTemplateParams({
+      let validation: Boolean = await LendingTemplateValidator(new LendingTemplateControlVariables({
         lendingMethods: LENDING_METHODS,
-        lendingMethodsAddress: LENDING_METHODS.address,
         lendingTemplate: LENDING_TEMPLATE,
-        lendingTemplateAddress: LENDING_TEMPLATE.address,
         discountsAddress: DISCOUNTS.address
       }));
       if ( !validation ) {

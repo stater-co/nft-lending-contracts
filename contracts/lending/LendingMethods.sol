@@ -308,9 +308,7 @@ contract LendingMethods is LendingCore {
         require((block.timestamp >= loans[loanId].startEnd[1] || loans[loanId].paidAmount >= loans[loanId].amountDue) || canBeTerminated(loanId));
         require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED);
 
-        console.log("Ok 1");
         if ( canBeTerminated(loanId) ) {
-            console.log("Ok 2");
             loans[loanId].status = Status.WITHDRAWN;
             // We send the items back to lender
             transferItems(
@@ -321,9 +319,7 @@ contract LendingMethods is LendingCore {
                 loans[loanId].nftTokenTypeArray
             );
         } else {
-            console.log("Ok 3");
             if ( block.timestamp >= loans[loanId].startEnd[1] && loans[loanId].paidAmount < loans[loanId].amountDue ) {
-                console.log("Ok 4");
                 loans[loanId].status = Status.WITHDRAWN;
                 // We send the items back to lender
                 transferItems(
@@ -334,7 +330,6 @@ contract LendingMethods is LendingCore {
                     loans[loanId].nftTokenTypeArray
                 );
             } else if ( loans[loanId].paidAmount >= loans[loanId].amountDue ){
-                console.log("Ok 5");
                 loans[loanId].status = Status.WITHDRAWN;
                 // We send the items back to borrower
                 transferItems(

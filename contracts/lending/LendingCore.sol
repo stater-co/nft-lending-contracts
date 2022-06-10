@@ -9,7 +9,7 @@ import '../workers/IStaterDiscounts.sol';
 import '../params/LendingConstructor.sol';
 import '../params/CreateLoanParams.sol';
 import '../params/EditLoanParams.sol';
-import 'hardhat/console.sol';
+
 
 contract LendingCore is Ownable, StaterTransfers, ERC721, ERC721Holder {
     

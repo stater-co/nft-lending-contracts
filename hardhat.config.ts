@@ -20,12 +20,6 @@ module.exports = {
     ]
   },
   blockGasLimit: 90_000_000_000,
-  settings: {
-    optimizer: {
-      enabled: true,
-      runs: 1,
-    },
-  },
   networks: {
     rinkeby: {
       url: process.env.RINKEBY_PROVIDER,
