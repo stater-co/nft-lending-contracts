@@ -19,8 +19,19 @@ contract LendingMethods is LendingCore {
         loans[id].assetsValue = input.assetsValue;
         
         // Checks the loan to value ration
-        checkLtv(input.loanAmount, loans[id].assetsValue);
+        checkLtv(
+            input.loanAmount, 
+            loans[id].assetsValue
+        );
         
+        // Check to see if the sender really owns these items and if we're approved for them
+        checkItemsApproval(
+            msg.sender,
+            input.nftAddressArray,
+            input.nftTokenIdArray,
+            input.nftTokenTypeArray
+        );
+
         // Computing the defaulting limit
         if ( input.nrOfInstallments <= 3 )
             loans[id].defaultingLimit = 1;

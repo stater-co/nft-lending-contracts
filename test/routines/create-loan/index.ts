@@ -10,31 +10,58 @@ function generateLoanParams(erc20Address: string): Array<number | string> {
     let nrOfInstallments: number = Math.floor(Math.random() * 20) + 1;
     let currency: string = Math.floor(Math.random() * 2) + 1 === 1 ? address0 : erc20Address;
     let collateralType: number = Math.floor(Math.random() * 2);
-    return [randomValue, loanValue, nrOfInstallments, currency, collateralType];
+    
+    return [
+        randomValue, // 1 - 99999999
+        loanValue,  // 1 - 60
+        nrOfInstallments, // 1 - 21
+        currency, // address(0) || custom ERC20 address
+        collateralType // 0 - ERC721, 1 - ERC1155
+    ];
 }
 
 export async function main(
     input: CreateLoanParams
-): Promise<any> {
+): Promise<Boolean> {
+
+    // Generate random loan params
     let loanParams: Array<number | string> = generateLoanParams(input.erc20.address);
+    let currentId = Number(await input.lending.id()) - 1;
+
     let nftAddressArray: Array<string> = [];
     let nftTokenIdArray: Array<number> = [];
     let nftTokenTypeArray: Array<number> = [];
+
+    // Get default signer
     const [owner] = await ethers.getSigners();
 
+    // Filling up the creat loan array params
     for ( let i: number = 0 , l: number = Number(loanParams[2]) ; i < l ; ++i ) {
+
+        // If the nft to be used it's supposed to be ERC721
         if ( loanParams[4] === 0 ) {
+
+            // We create the nft
             await input.erc721.createItem(
                 "name",
                 "description",
                 "image_url"
             );
-            let itemId = await input.erc721.totalCreated();
-            await input.erc721.setApprovalForAll(input.lending.address,true);
+
+            // Get its ID
+            let itemId = Number(await input.erc721.totalCreated()) - 1;
+
+            // And approve the lending contract for all
+            await input.erc721.approve(input.lending.address,itemId);
+
             nftAddressArray.push(input.erc721.address);
-            nftTokenIdArray.push(Number(itemId)-1);
+            nftTokenIdArray.push(itemId);
             nftTokenTypeArray.push(0);
+
+        // Otherwise, ERC1155
         } else {
+
+            // We create the nft
             await input.erc1155.createTokens(
                 owner.address,
                 1,
@@ -43,25 +70,18 @@ export async function main(
                 "description",
                 "image_url"
             );
-            // let items = await input.erc1155.items(i);
-            // console.log(items);
+
+            // And approve the lending contract for all
             await input.erc1155.setApprovalForAll(input.lending.address,true);
+            
             nftAddressArray.push(input.erc1155.address);
             nftTokenIdArray.push(1);
             nftTokenTypeArray.push(0);
+
         }
     }
 
-    console.log([
-        Number(loanParams[1]),
-        Number(loanParams[2]),
-        String(loanParams[3]),
-        Number(loanParams[1]) * 2,
-        nftAddressArray,
-        nftTokenIdArray,
-        nftTokenTypeArray
-    ]);
-    return await input.lending.createLoan(
+    await input.lending.createLoan(
         [
             Number(loanParams[1]),
             Number(loanParams[2]),
@@ -72,5 +92,8 @@ export async function main(
             nftTokenTypeArray
         ]
     );
-   
+
+    let newId = Number(await input.lending.id()) - 1;
+    return currentId === (newId - 1);
+
 }

@@ -43,6 +43,21 @@ contract StaterTransfers is Ownable {
         return IERC20(currency).allowance(from,address(this));
     }
 
+    function checkItemsApproval(
+        address sender,
+        address[] memory nftAddressArray, 
+        uint256[] memory nftTokenIdArray,
+        uint8[] memory nftTokenTypeArray
+    ) public view returns(uint256) {
+        for(uint256 i = 0; i < nftAddressArray.length; ++i) 
+            if ( nftTokenTypeArray[i] == 0 )
+                require(IERC721(nftAddressArray[i]).getApproved(nftTokenIdArray[i]) == address(this));
+            else
+                require(
+                    IERC1155(nftAddressArray[i]).isApprovedForAll(sender,address(this))
+                );
+    }
+
     /*
      * @DIIMIIM : standard method to send items from an account to another
      */
@@ -53,9 +68,7 @@ contract StaterTransfers is Ownable {
         uint256[] memory nftTokenIdArray,
         uint8[] memory nftTokenTypeArray
     ) public {
-        uint256 length = nftAddressArray.length;
-        require(length == nftTokenIdArray.length && nftTokenTypeArray.length == length, "Token infos provided are invalid");
-        for(uint256 i = 0; i < length; ++i) 
+        for(uint256 i = 0; i < nftAddressArray.length; ++i) 
             if ( nftTokenTypeArray[i] == 0 )
                 IERC721(nftAddressArray[i]).safeTransferFrom(
                     from,
