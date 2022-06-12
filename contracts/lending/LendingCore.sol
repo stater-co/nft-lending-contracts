@@ -113,7 +113,6 @@ contract LendingCore is Ownable, StaterTransfers, ERC721, ERC721Holder {
         address[] nftAddressArray; // the adderess of the ERC721
         address[] offerers; // the array of offerers
         address payable borrower; // the address who receives the loan
-        address payable lender; // the address who gives/offers the loan to the borrower
         address currency; // the token that the borrower lends, address(0) for ETH
         Status status; // the loan status
         uint256[] nftTokenIdArray; // the unique identifier of the NFT token that the borrower uses as collateral

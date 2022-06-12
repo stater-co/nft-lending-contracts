@@ -164,12 +164,11 @@ contract LendingMethods is LendingCore {
     }
 
     function approveLoanOffer(uint256 loanId, uint256 offerId) external {
-        require(loans[loanId].lender == address(0));
+        require(ownerOf(loanId) == address(0));
         require(loans[loanId].paidAmount == 0);
         require(loans[loanId].status == Status.LISTED);
 
         // Borrower assigned , status is 1 , first installment ( payment ) completed
-        loans[loanId].lender = payable(loans[loanId].offerers[offerId]);
         loans[loanId].startEnd[1] = block.timestamp + loans[loanId].nrOfInstallments * loans[loanId].installmentTime;
         loans[loanId].status = Status.APPROVED;
         loans[loanId].startEnd[0] = block.timestamp;
@@ -204,16 +203,17 @@ contract LendingMethods is LendingCore {
             );
         }
 
+        _safeMint(loans[loanId].offerers[offerId],loanId);
+
     }
     
     // Lender approves a loan
     function approveLoan(uint256 loanId) external payable {
-        require(loans[loanId].lender == address(0));
+        require(ownerOf(loanId) == address(0));
         require(loans[loanId].paidAmount == 0);
         require(loans[loanId].status == Status.LISTED);
         
         // Borrower assigned , status is 1 , first installment ( payment ) completed
-        loans[loanId].lender = payable(msg.sender);
         loans[loanId].startEnd[1] = block.timestamp + loans[loanId].nrOfInstallments * loans[loanId].installmentTime;
         loans[loanId].status = Status.APPROVED;
         loans[loanId].startEnd[0] = block.timestamp;
@@ -248,13 +248,13 @@ contract LendingMethods is LendingCore {
             loans[loanId].startEnd[1]
         );
 
+        _safeMint(msg.sender,loanId);
+
     }
 
     // Borrower cancels a loan
     function cancelLoan(uint256 loanId) external {
-        require(loans[loanId].lender == address(0));
         require(loans[loanId].borrower == msg.sender);
-        require(loans[loanId].status != Status.CANCELLED);
         require(loans[loanId].status == Status.LISTED);
         loans[loanId].status = Status.CANCELLED;
 
@@ -295,7 +295,7 @@ contract LendingMethods is LendingCore {
         // We transfer the tokens to borrower here
         transferTokens(
             msg.sender,
-            loans[loanId].lender,
+            payable(ownerOf(loanId)),
             loans[loanId].currency,
             amountPaidAsInstallmentToLender,
             interestToStaterPerInstallement
@@ -314,7 +314,7 @@ contract LendingMethods is LendingCore {
     // Borrower can withdraw loan items if loan is LIQUIDATED
     // Lender can withdraw loan item is loan is DEFAULTED
     function terminateLoan(uint256 loanId) external {
-        require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender);
+        require(msg.sender == loans[loanId].borrower || msg.sender == ownerOf(loanId));
         require(loans[loanId].status != Status.WITHDRAWN);
         require((block.timestamp >= loans[loanId].startEnd[1] || loans[loanId].paidAmount >= loans[loanId].amountDue) || canBeTerminated(loanId));
         require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED);
@@ -324,7 +324,7 @@ contract LendingMethods is LendingCore {
             // We send the items back to lender
             transferItems(
                 address(this),
-                loans[loanId].lender,
+                ownerOf(loanId),
                 loans[loanId].nftAddressArray,
                 loans[loanId].nftTokenIdArray,
                 loans[loanId].nftTokenTypeArray
@@ -335,7 +335,7 @@ contract LendingMethods is LendingCore {
                 // We send the items back to lender
                 transferItems(
                     address(this),
-                    loans[loanId].lender,
+                    ownerOf(loanId),
                     loans[loanId].nftAddressArray,
                     loans[loanId].nftTokenIdArray,
                     loans[loanId].nftTokenTypeArray
