@@ -1,3 +1,4 @@
+import { Contract } from 'ethers';
 import { ethers } from 'hardhat';
 import { CreateLoanParams } from './index-params.dto';
 
@@ -18,6 +19,41 @@ function generateLoanParams(erc20Address: string): Array<number | string> {
         currency, // address(0) || custom ERC20 address
         collateralType // 0 - ERC721, 1 - ERC1155
     ];
+}
+
+export async function checkNftApprovalState(
+    nftTokenIdArray: Array<number>,
+    nftTokenTypeArray: Array<number>,
+    lending: Contract,
+    erc721: Contract,
+    erc1155: Contract
+): Promise<Boolean> {
+    // Get default signer
+    const [owner] = await ethers.getSigners();
+    console.log(nftTokenIdArray,nftTokenTypeArray);
+
+    for ( let i = 0 , l = nftTokenIdArray.length ; i < l && l === nftTokenTypeArray.length ; ++i ) {
+        let status: Boolean = true;
+        console.log(nftTokenIdArray[i]);
+        switch ( nftTokenTypeArray[i] ) {
+            case 0:
+                console.log("erc721");
+                status = await erc721.getApproved(nftTokenIdArray[i]) === lending.address;
+                if ( !status ) {
+                    return false;
+                }
+            break;
+
+            case 1:
+                status = await erc1155.isApprovedForAll(owner.address,lending.address);
+                if ( !status ) {
+                    return false;
+                }
+            break;
+        }
+    }
+
+    return true;
 }
 
 export async function main(
@@ -79,6 +115,20 @@ export async function main(
             nftTokenTypeArray.push(0);
 
         }
+    }
+
+    console.log(">> " + nftTokenIdArray);
+    console.log(">> " + nftTokenTypeArray);
+
+    let assetsValidation: Boolean = await checkNftApprovalState(
+        nftTokenIdArray, 
+        nftTokenTypeArray, 
+        input.lending,
+        input.erc721,
+        input.erc1155
+    );
+    if ( !assetsValidation ) {
+        return false;
     }
 
     await input.lending.createLoan(
