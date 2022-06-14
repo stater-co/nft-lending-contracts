@@ -122,17 +122,14 @@ describe("<< Lending Workflow >>", function () {
 
   describe("Create loan", function () {
     it("Creation", async function () {
-      //for ( let i = 0 ; i < LOANS_TO_CREATE ; ++i ) {
-        let validation: Boolean = await CreateLoan(new CreateLoanParams({
+      for ( let i = 0 ; i < LOANS_TO_CREATE ; ++i ) {
+        await CreateLoan(new CreateLoanParams({
           erc1155: ERC1155,
           erc20: ERC20,
           erc721: ERC721,
           lending: LENDING_TEMPLATE
         }));
-        if ( !validation ) {
-          expect.fail("Failed");
-        }
-      //}
+      }
     });
   });
 
