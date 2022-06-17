@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.14;
+pragma solidity 0.8.15;
 import '@openzeppelin/contracts/token/ERC1155/ERC1155.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 
@@ -20,7 +20,7 @@ contract GameItems1155 is Ownable, ERC1155 {
     
     Item[] public items;
 
-    constructor() ERC1155("Test ERC1155") {}
+    constructor(string memory name) ERC1155(name) {}
     
     // Can be used for both fungible and non fungible tokens
     function createTokens(address receiver, uint256 quantity, bytes memory info, string calldata name, string calldata description, string calldata image_url) external onlyOwner {

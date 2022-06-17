@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.14;
+pragma solidity 0.8.15;
 import '@openzeppelin/contracts/token/ERC1155/IERC1155.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
@@ -48,7 +48,7 @@ contract StaterTransfers is Ownable {
         address[] memory nftAddressArray, 
         uint256[] memory nftTokenIdArray,
         uint8[] memory nftTokenTypeArray
-    ) public view returns(uint256) {
+    ) public view {
         for(uint256 i = 0; i < nftAddressArray.length; ++i) 
             if ( nftTokenTypeArray[i] == 0 )
                 require(IERC721(nftAddressArray[i]).getApproved(nftTokenIdArray[i]) == address(this));

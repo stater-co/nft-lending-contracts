@@ -3,7 +3,7 @@
 /* 
  * Stater.co
  */
-pragma solidity 0.8.14;
+pragma solidity 0.8.15;
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import '@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol';
 import '@openzeppelin/contracts/utils/Counters.sol';
@@ -12,7 +12,7 @@ import '@openzeppelin/contracts/access/Ownable.sol';
 
 contract GameItems721 is ERC721, Ownable, ERC721Holder {
 
-    constructor() ERC721("Test ERC721", "TERC721") {}
+    constructor(string memory name, string memory symbol) ERC721(name, symbol) {}
 
     event ItemCreation(uint256 indexed itemId, address indexed owner, string name, string description, string image_url);
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.14;
+pragma solidity 0.8.15;
 import "./LendingCore.sol";
 
 
@@ -11,7 +11,7 @@ contract LendingTemplate is LendingCore {
 
     // Borrower creates a loan
     function createLoan(
-        CreateLoanParams.Struct memory input
+        //CreateLoanParams.Struct memory input
     ) external {
         (bool success, ) = lendingMethodsAddress.delegatecall(msg.data);
         require(success,"Failed to createLoan via delegatecall");
