@@ -171,4 +171,22 @@ contract LendingCore is Ownable, StaterTransfers, ERC721, ERC721Holder {
         return loans[loanId].startEnd;
     }
 
+    function setGlobalVariables(
+        uint256 _ltv,  
+        uint256 _interestRate, 
+        uint256 _interestRateToStater, 
+        uint32 _lenderFee,
+        address _lendingMethodsAddress,
+        address _lendingDiscountsAddress
+    ) external onlyOwner {
+        require(_lendingMethodsAddress != address(0), "Lending Methods address not valid");
+        require(_lendingDiscountsAddress != address(0), "Lending Discounts address not valid");
+        ltv = _ltv;
+        interestRate = _interestRate;
+        interestRateToStater = _interestRateToStater;
+        lenderFee = _lenderFee;
+        lendingMethodsAddress = _lendingMethodsAddress;
+        discounts = IStaterDiscounts(_lendingDiscountsAddress);
+    }
+
 }

@@ -11,7 +11,7 @@ contract LendingTemplate is LendingCore {
 
     // Borrower creates a loan
     function createLoan(
-        //CreateLoanParams.Struct memory input
+        CreateLoanParams.Struct memory input
     ) external {
         (bool success, ) = lendingMethodsAddress.delegatecall(msg.data);
         require(success,"Failed to createLoan via delegatecall");
@@ -80,25 +80,6 @@ contract LendingTemplate is LendingCore {
             )
         );
         require(success,"Failed to terminateLoan via delegatecall");
-    }
-
-  
-    function setGlobalVariables(
-        uint256 _ltv,  
-        uint256 _interestRate, 
-        uint256 _interestRateToStater, 
-        uint32 _lenderFee,
-        address _lendingMethodsAddress,
-        address _lendingDiscountsAddress
-    ) external onlyOwner {
-        require(_lendingMethodsAddress != address(0), "Lending Methods address not valid");
-        require(_lendingDiscountsAddress != address(0), "Lending Discounts address not valid");
-        ltv = _ltv;
-        interestRate = _interestRate;
-        interestRateToStater = _interestRateToStater;
-        lenderFee = _lenderFee;
-        lendingMethodsAddress = _lendingMethodsAddress;
-        discounts = IStaterDiscounts(_lendingDiscountsAddress);
     }
     
     function getLoanRemainToPay(uint256 loanId) external view returns(uint256) {
