@@ -20,7 +20,7 @@ function generateLoanParams(erc20Address) {
   ];
 }
 
-describe("Create Loan", async function () {
+describe("Cancel Loan", async function () {
   let lending_methods, loan, erc721, erc1155, erc20, lending_template, discounts;
 
   beforeEach(async () => {
@@ -74,6 +74,8 @@ describe("Create Loan", async function () {
     it("Status", async () => {
 
       const loanParams = generateLoanParams(erc20.address);
+      const currentId = Number(await lending_template.id()) - 1;
+
       const nftAddressArray = [];
       const nftTokenIdArray = [];
       const nftTokenTypeArray = [];
@@ -146,7 +148,11 @@ describe("Create Loan", async function () {
           nftTokenTypeArray
         ]
       );
+
+      const currentId1 = Number(await lending_template.id()) - 1;
       
+      console.log(currentId + " && " + currentId1);
+
     })
   })
   
