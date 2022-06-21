@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.7.6;
-import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
-import "../libs/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "../libs/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
-import "../libs/multi-token-standard/contracts/interfaces/IERC1155.sol";
-import "../libs/openzeppelin-solidity/contracts/token/ERC721/ERC721Holder.sol";
-import "../libs/openzeppelin-solidity/contracts/token/ERC1155/ERC1155Holder.sol";
+pragma solidity 0.8.15;
+import '@openzeppelin/contracts/token/ERC1155/IERC1155.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
 
-contract StaterTransfers is Ownable, ERC721Holder, ERC1155Holder {
+
+contract StaterTransfers is Ownable {
     
 
     /*
@@ -37,6 +36,27 @@ contract StaterTransfers is Ownable, ERC721Holder, ERC1155Holder {
       }
     }
 
+    function checkTokensApproval(
+        address from,
+        address currency
+    ) public view returns(uint256) {
+        return IERC20(currency).allowance(from,address(this));
+    }
+
+    function checkItemsApproval(
+        address sender,
+        address[] memory nftAddressArray, 
+        uint256[] memory nftTokenIdArray,
+        uint8[] memory nftTokenTypeArray
+    ) public view {
+        for(uint256 i = 0; i < nftAddressArray.length; ++i) 
+            if ( nftTokenTypeArray[i] == 0 )
+                require(IERC721(nftAddressArray[i]).getApproved(nftTokenIdArray[i]) == address(this));
+            else
+                require(
+                    IERC1155(nftAddressArray[i]).isApprovedForAll(sender,address(this))
+                );
+    }
 
     /*
      * @DIIMIIM : standard method to send items from an account to another
@@ -48,9 +68,7 @@ contract StaterTransfers is Ownable, ERC721Holder, ERC1155Holder {
         uint256[] memory nftTokenIdArray,
         uint8[] memory nftTokenTypeArray
     ) public {
-        uint256 length = nftAddressArray.length;
-        require(length == nftTokenIdArray.length && nftTokenTypeArray.length == length, "Token infos provided are invalid");
-        for(uint256 i = 0; i < length; ++i) 
+        for(uint256 i = 0; i < nftAddressArray.length; ++i) 
             if ( nftTokenTypeArray[i] == 0 )
                 IERC721(nftAddressArray[i]).safeTransferFrom(
                     from,

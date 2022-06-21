@@ -10,3 +10,8 @@ package-lock.json
 .vscode
 
 **/contracts/artifacts/
+
+artifacts
+cache
+.deps
+.nvmrc

@@ -1,12 +1,17 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.7.6;
-import "../plugins/StaterTransfers.sol";
-import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../workers/IStaterDiscounts.sol";
+pragma solidity 0.8.15;
+import '@openzeppelin/contracts/access/Ownable.sol';
+import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
+import '@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol';
+import '@openzeppelin/contracts/utils/Counters.sol';
+import '../plugins/StaterTransfers.sol';
+import '../workers/IStaterDiscounts.sol';
+import '../params/LendingConstructor.sol';
+import '../params/CreateLoanParams.sol';
+import '../params/EditLoanParams.sol';
 
-contract LendingCore is StaterTransfers {
-    using SafeMath for uint256;
-    using SafeMath for uint8;
+
+contract LendingCore is Ownable, StaterTransfers, ERC721, ERC721Holder {
     
     /*
      * @DIIMIIM : The loan events
@@ -50,6 +55,24 @@ contract LendingCore is StaterTransfers {
         uint256 interestToStaterPerInstallement,
         Status status
     );
+    event LoanOffer(
+        uint256 indexed loanId,
+        address indexed offerer,
+        uint256 offerId,
+        uint256 indexed position
+    );
+    event CloseLoanOffer(
+        uint256 indexed loanId,
+        address indexed offerer,
+        uint256 indexed position
+    );
+    event LoanOfferApproved(
+        address indexed lender,
+        uint256 indexed loanId,
+        uint256 indexed offerId,
+        uint256 offerAmount,
+        uint256 loanPaymentEnd
+    );
     
     /*
      * @DIIMIIM Public & global variables for the lending contract
@@ -67,7 +90,6 @@ contract LendingCore is StaterTransfers {
      *   CANCELLED - loan is cancelled before a lender to be assigned
      *   WITHDRAWN - loan is LIQUIDATED and items are withdrawn to either lender or borrower
      */
-    address public promissoryNoteAddress;
     address public lendingMethodsAddress;
     IStaterDiscounts public discounts;
     uint256 public id = 1; // the loan ID
@@ -89,11 +111,12 @@ contract LendingCore is StaterTransfers {
      */
     struct Loan {
         address[] nftAddressArray; // the adderess of the ERC721
+        address[] offerers; // the array of offerers
         address payable borrower; // the address who receives the loan
-        address payable lender; // the address who gives/offers the loan to the borrower
         address currency; // the token that the borrower lends, address(0) for ETH
         Status status; // the loan status
         uint256[] nftTokenIdArray; // the unique identifier of the NFT token that the borrower uses as collateral
+        uint256[] offers;
         uint256 installmentTime; // the installment unix timestamp
         uint256 nrOfPayments; // the number of installments paid
         uint256 loanAmount; // the amount, denominated in tokens (see next struct entry), the borrower lends
@@ -112,14 +135,16 @@ contract LendingCore is StaterTransfers {
      *   loans - the loans mapping
      */
     mapping(uint256 => Loan) public loans;
-    
-    // @notice Mapping for all the loans that are approved by the owner in order to be used in the promissory note
-    mapping(uint256 => address) public promissoryPermissions;
-    
-    modifier isPromissoryNote {
-        require(msg.sender == promissoryNoteAddress, "Lending Methods: Access denied");
-        _;
+
+    constructor(string memory name, string memory symbol) ERC721(name,symbol) {
+        
     }
+
+    function setGlobalParameters(address lending, address discountsAddress) external onlyOwner {
+        lendingMethodsAddress = lending;
+        discounts = IStaterDiscounts(discountsAddress);
+    }
+    
     
     /*
      * @DIIMIIM Determines if a loan has passed the maximum unpaid installments limit or not
@@ -127,14 +152,14 @@ contract LendingCore is StaterTransfers {
      * @ => FALSE = Loan has not exceed the maximum unpaid installments limit, lender can not terminate the loan
      */
     function canBeTerminated(uint256 loanId) public view returns(bool) {
-        require(loans[loanId].status == Status.APPROVED || loans[loanId].status == Status.LIQUIDATED, "Loan is not yet approved");
+        require(loans[loanId].status == Status.APPROVED || loans[loanId].status == Status.LIQUIDATED, 'Loan is not yet approved');
         // return last paid installment date + defaultingLimit * installment time interval <= block.timestamp
-        return loans[loanId].startEnd[0].add(loans[loanId].nrOfPayments.mul(loans[loanId].installmentTime)).add(loans[loanId].defaultingLimit.mul(loans[loanId].installmentTime)) <= min(block.timestamp,loans[loanId].startEnd[1]);
+        return ( loans[loanId].startEnd[0] + loans[loanId].nrOfPayments * loans[loanId].installmentTime ) + loans[loanId].defaultingLimit * loans[loanId].installmentTime <= min(block.timestamp,loans[loanId].startEnd[1]);
     }
 
     // Checks the loan to value ratio
     function checkLtv(uint256 loanValue, uint256 assetsValue) public view {
-        require(loanValue <= assetsValue.div(100).mul(ltv), "LTV too high");
+        require(loanValue <= assetsValue / 100 * ltv, 'LTV too high');
     }
 
 
@@ -144,11 +169,6 @@ contract LendingCore is StaterTransfers {
 
     function getLoanStartEnd(uint256 loanId) external view returns(uint256[2] memory) {
         return loans[loanId].startEnd;
-    }
-
-    function getPromissoryPermission(uint256 loanId) external view returns(address) {
-        require(loans[loanId].status == Status.APPROVED, "Loan is no longer approved");
-        return promissoryPermissions[loanId];
     }
 
 }
