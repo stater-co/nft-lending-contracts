@@ -1,73 +1,119 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.7.6;
+pragma solidity 0.8.15;
 import "./LendingCore.sol";
-import "../libs/openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../libs/openzeppelin-solidity/contracts/access/Ownable.sol";
 
 
-contract LendingMethods is Ownable, LendingCore {
-    using SafeMath for uint256;
-    using SafeMath for uint16;
+contract LendingMethods is LendingCore {
     
+    constructor(string memory name, string memory symbol) LendingCore(name,symbol) {
+        
+    }
+
     // Borrower creates a loan
     function createLoan(
-        uint256 loanAmount,
-        uint16 nrOfInstallments,
-        address currency,
-        uint256 assetsValue,
-        address[] calldata nftAddressArray, 
-        uint256[] calldata nftTokenIdArray,
-        uint8[] calldata nftTokenTypeArray
+        CreateLoanParams.Struct memory input
     ) external {
-        require(nrOfInstallments > 0 && loanAmount > 0 && nftAddressArray.length > 0);
-        require(nftAddressArray.length == nftTokenIdArray.length && nftTokenIdArray.length == nftTokenTypeArray.length);
+        require(input.nrOfInstallments > 0 && input.loanAmount > 0 && input.nftAddressArray.length > 0);
+        require(input.nftAddressArray.length == input.nftTokenIdArray.length && input.nftTokenIdArray.length == input.nftTokenTypeArray.length);
         
-        loans[id].assetsValue = assetsValue;
+        loans[id].assetsValue = input.assetsValue;
         
         // Checks the loan to value ration
-        checkLtv(loanAmount, loans[id].assetsValue);
+        checkLtv(
+            input.loanAmount, 
+            loans[id].assetsValue
+        );
         
+        // Check to see if the sender really owns these items and if we're approved for them
+        checkItemsApproval(
+            msg.sender,
+            input.nftAddressArray,
+            input.nftTokenIdArray,
+            input.nftTokenTypeArray
+        );
+
         // Computing the defaulting limit
-        if ( nrOfInstallments <= 3 )
+        if ( input.nrOfInstallments <= 3 )
             loans[id].defaultingLimit = 1;
-        else if ( nrOfInstallments <= 5 )
+        else if ( input.nrOfInstallments <= 5 )
             loans[id].defaultingLimit = 2;
-        else if ( nrOfInstallments >= 6 )
+        else if ( input.nrOfInstallments >= 6 )
             loans[id].defaultingLimit = 3;
         
         // Set loan fields
         
-        loans[id].nftTokenIdArray = nftTokenIdArray;
-        loans[id].loanAmount = loanAmount;
-        loans[id].amountDue = loanAmount.mul(interestRate.add(100)).div(100); // interest rate >> 20%
-        loans[id].nrOfInstallments = nrOfInstallments;
-        loans[id].installmentAmount = loans[id].amountDue.mod(nrOfInstallments) > 0 ? loans[id].amountDue.div(nrOfInstallments).add(1) : loans[id].amountDue.div(nrOfInstallments);
+        loans[id].nftTokenIdArray = input.nftTokenIdArray;
+        loans[id].loanAmount = input.loanAmount;
+        loans[id].amountDue = input.loanAmount * (interestRate + 100) / 100; // interest rate >> 20%
+        loans[id].nrOfInstallments = input.nrOfInstallments;
+        loans[id].installmentAmount = loans[id].amountDue % input.nrOfInstallments > 0 ? loans[id].amountDue / input.nrOfInstallments + 1 : loans[id].amountDue / input.nrOfInstallments;
         loans[id].status = Status.LISTED;
-        loans[id].nftAddressArray = nftAddressArray;
-        loans[id].borrower = msg.sender;
-        loans[id].currency = currency;
-        loans[id].nftTokenTypeArray = nftTokenTypeArray;
+        loans[id].nftAddressArray = input.nftAddressArray;
+        loans[id].borrower = payable(msg.sender);
+        loans[id].currency = input.currency;
+        loans[id].nftTokenTypeArray = input.nftTokenTypeArray;
         loans[id].installmentTime = 1 weeks;
-        
-        // Transfer the items from lender to stater contract
-        transferItems(
-            msg.sender, 
-            address(this), 
-            nftAddressArray, 
-            nftTokenIdArray,
-            nftTokenTypeArray
-        );
         
         // Fire event
         emit NewLoan(
             msg.sender, 
-            currency, 
+            input.currency, 
             id,
-            nftAddressArray,
-            nftTokenIdArray,
-            nftTokenTypeArray
+            input.nftAddressArray,
+            input.nftTokenIdArray,
+            input.nftTokenTypeArray
         );
         ++id;
+    }
+
+
+    /*
+     * @ Make loan offer
+     * @ Accessible for lenders as long as the loan is available
+     */
+    function offer(
+        uint256 loanId,
+        uint256 offeredAmount
+    ) external payable {
+        require(loans[loanId].status == Status.LISTED);
+        require(offeredAmount <= loans[loanId].loanAmount);
+        require(loans[loanId].currency == address(0) ? msg.value >= offeredAmount : offeredAmount <= checkTokensApproval(msg.sender,loans[loanId].currency));
+        bool exists;
+        uint256 offerPosition;
+        for ( uint256 i = 0 ; i < loans[loanId].offerers.length ; ++i ) {
+            if ( loans[loanId].offerers[i] == msg.sender ) {
+                loans[loanId].offers[i] = offeredAmount;
+                exists = true;
+                offerPosition = i;
+                break;
+            }
+        }
+        if ( !exists ) {
+            offerPosition = loans[loanId].offerers.length;
+            loans[loanId].offerers.push(msg.sender);
+            loans[loanId].offers.push(offeredAmount);
+        }
+
+        emit LoanOffer(loanId,msg.sender,offeredAmount,offerPosition);
+    }
+
+    function closeOffer(
+        uint256 loanId,
+        uint256 position
+    ) external {
+        require(loans[loanId].offerers[position] == msg.sender);
+
+        // We send the tokens here
+        transferTokens(
+            msg.sender,
+            payable(msg.sender),
+            loans[loanId].currency,
+            loans[loanId].offers[position],
+            0
+        );
+
+        loans[loanId].offers[position] = 0;
+        emit CloseLoanOffer(loanId,msg.sender,position);
     }
 
 
@@ -76,68 +122,106 @@ contract LendingMethods is Ownable, LendingCore {
      * @ Accessible for borrower until a lender is found
      */
     function editLoan(
-        uint256 loanId,
-        uint256 loanAmount,
-        uint16 nrOfInstallments,
-        address currency,
-        uint256 assetsValue,
-        uint256 installmentTime
+        EditLoanParams.Struct memory input
     ) external {
-        require(nrOfInstallments > 0 && loanAmount > 0);
-        require(loans[loanId].borrower == msg.sender);
-        require(loans[loanId].status < Status.APPROVED);
-        checkLtv(loanAmount, assetsValue);
+        require(input.nrOfInstallments > 0 && input.loanAmount > 0);
+        require(loans[input.loanId].borrower == msg.sender);
+        require(loans[input.loanId].status < Status.APPROVED);
+        checkLtv(input.loanAmount, input.assetsValue);
         
 
-        loans[loanId].installmentTime = installmentTime;
-        loans[loanId].loanAmount = loanAmount;
-        loans[loanId].amountDue = loanAmount.mul(interestRate.add(100)).div(100);
-        loans[loanId].installmentAmount = loans[loanId].amountDue.mod(nrOfInstallments) > 0 ? loans[loanId].amountDue.div(nrOfInstallments).add(1) : loans[loanId].amountDue.div(nrOfInstallments);
-        loans[loanId].assetsValue = assetsValue;
-        loans[loanId].nrOfInstallments = nrOfInstallments;
-        loans[loanId].currency = currency;
+        loans[input.loanId].installmentTime = input.installmentTime;
+        loans[input.loanId].loanAmount = input.loanAmount;
+        loans[input.loanId].amountDue = input.loanAmount * (interestRate + 100) / 100;
+        loans[input.loanId].installmentAmount = loans[input.loanId].amountDue % input.nrOfInstallments > 0 ? loans[input.loanId].amountDue / input.nrOfInstallments + 1 : loans[input.loanId].amountDue / input.nrOfInstallments;
+        loans[input.loanId].assetsValue = input.assetsValue;
+        loans[input.loanId].nrOfInstallments = input.nrOfInstallments;
+        loans[input.loanId].currency = input.currency;
         
         
         /*
          * Computing the defaulting limit
          */
-        if ( nrOfInstallments <= 3 )
-            loans[loanId].defaultingLimit = 1;
-        else if ( nrOfInstallments <= 5 )
-            loans[loanId].defaultingLimit = 2;
-        else if ( nrOfInstallments >= 6 )
-            loans[loanId].defaultingLimit = 3;
+        if ( input.nrOfInstallments <= 3 )
+            loans[input.loanId].defaultingLimit = 1;
+        else if ( input.nrOfInstallments <= 5 )
+            loans[input.loanId].defaultingLimit = 2;
+        else if ( input.nrOfInstallments >= 6 )
+            loans[input.loanId].defaultingLimit = 3;
 
         // Fire event
         emit EditLoan(
-            currency, 
-            loanId,
-            loanAmount,
-            loans[loanId].amountDue,
-            loans[loanId].installmentAmount,
-            loans[loanId].assetsValue,
-            installmentTime,
-            nrOfInstallments
+            input.currency, 
+            input.loanId,
+            input.loanAmount,
+            loans[input.loanId].amountDue,
+            loans[input.loanId].installmentAmount,
+            loans[input.loanId].assetsValue,
+            input.installmentTime,
+            input.nrOfInstallments
         );
+
+    }
+
+    function approveLoanOffer(uint256 loanId, uint256 offerId) external {
+        require(ownerOf(loanId) == address(0));
+        require(loans[loanId].paidAmount == 0);
+        require(loans[loanId].status == Status.LISTED);
+
+        // Borrower assigned , status is 1 , first installment ( payment ) completed
+        loans[loanId].startEnd[1] = block.timestamp + loans[loanId].nrOfInstallments * loans[loanId].installmentTime;
+        loans[loanId].status = Status.APPROVED;
+        loans[loanId].startEnd[0] = block.timestamp;
+        uint256 discount = discounts.calculateDiscount(msg.sender);
+
+        // We send the tokens here
+        transferTokens(
+            address(this),
+            payable(msg.sender),
+            loans[loanId].currency,
+            loans[loanId].offers[offerId],
+            loans[loanId].offers[offerId] / lenderFee / discount
+        );
+
+        emit LoanOfferApproved(
+            msg.sender,
+            loanId,
+            offerId,
+            loans[loanId].offers[offerId],
+            loans[loanId].startEnd[1]
+        );
+
+        loans[loanId].offers[offerId] = 0;
+
+        for ( uint256 i = 0 ; i < loans[loanId].offerers.length ; ++i ) {
+            transferTokens(
+                address(this),
+                payable(loans[loanId].offerers[i]),
+                loans[loanId].currency,
+                loans[loanId].offers[i],
+                0
+            );
+        }
+
+        _safeMint(loans[loanId].offerers[offerId],loanId);
 
     }
     
     // Lender approves a loan
     function approveLoan(uint256 loanId) external payable {
-        require(loans[loanId].lender == address(0));
+        require(ownerOf(loanId) == address(0));
         require(loans[loanId].paidAmount == 0);
         require(loans[loanId].status == Status.LISTED);
         
         // Borrower assigned , status is 1 , first installment ( payment ) completed
-        loans[loanId].lender = msg.sender;
-        loans[loanId].startEnd[1] = block.timestamp.add(loans[loanId].nrOfInstallments.mul(loans[loanId].installmentTime));
+        loans[loanId].startEnd[1] = block.timestamp + loans[loanId].nrOfInstallments * loans[loanId].installmentTime;
         loans[loanId].status = Status.APPROVED;
         loans[loanId].startEnd[0] = block.timestamp;
         uint256 discount = discounts.calculateDiscount(msg.sender);
         
         // We check if currency is ETH
         if ( loans[loanId].currency == address(0) )
-            require(msg.value >= loans[loanId].loanAmount.add(loans[loanId].loanAmount.div(lenderFee).div(discount)));
+            require(msg.value >= loans[loanId].loanAmount + loans[loanId].loanAmount / lenderFee / discount);
         
         // We send the tokens here
         transferTokens(
@@ -145,8 +229,18 @@ contract LendingMethods is Ownable, LendingCore {
             payable(loans[loanId].borrower),
             loans[loanId].currency,
             loans[loanId].loanAmount,
-            loans[loanId].loanAmount.div(lenderFee).div(discount)
+            loans[loanId].loanAmount / lenderFee / discount
         );
+
+        for ( uint256 i = 0 ; i < loans[loanId].offerers.length ; ++i ) {
+            transferTokens(
+                address(this),
+                payable(loans[loanId].offerers[i]),
+                loans[loanId].currency,
+                loans[loanId].offers[i],
+                0
+            );
+        }
         
         emit LoanApproved(
             msg.sender,
@@ -154,24 +248,15 @@ contract LendingMethods is Ownable, LendingCore {
             loans[loanId].startEnd[1]
         );
 
+        _safeMint(msg.sender,loanId);
+
     }
 
     // Borrower cancels a loan
     function cancelLoan(uint256 loanId) external {
-        require(loans[loanId].lender == address(0));
         require(loans[loanId].borrower == msg.sender);
-        require(loans[loanId].status != Status.CANCELLED);
         require(loans[loanId].status == Status.LISTED);
         loans[loanId].status = Status.CANCELLED;
-
-        // We send the items back to him
-        transferItems(
-        address(this), 
-            loans[loanId].borrower, 
-            loans[loanId].nftAddressArray, 
-            loans[loanId].nftTokenIdArray,
-            loans[loanId].nftTokenTypeArray
-        );
 
         emit LoanCancelled(
             loanId
@@ -188,21 +273,21 @@ contract LendingMethods is Ownable, LendingCore {
         
         uint256 paidByBorrower = msg.value > 0 ? msg.value : amount;
         uint256 amountPaidAsInstallmentToLender = paidByBorrower; // >> amount of installment that goes to lender
-        uint256 interestPerInstallement = paidByBorrower.mul(interestRate).div(100); // entire interest for installment
+        uint256 interestPerInstallement = paidByBorrower * interestRate / 100; // entire interest for installment
         uint256 discount = discounts.calculateDiscount(msg.sender);
-        uint256 interestToStaterPerInstallement = interestPerInstallement.mul(interestRateToStater).div(100);
+        uint256 interestToStaterPerInstallement = interestPerInstallement * interestRateToStater / 100;
 
         if ( discount != 1 ){
             if ( loans[loanId].currency == address(0) ){
-                require(msg.sender.send(interestToStaterPerInstallement.div(discount)));
-                amountPaidAsInstallmentToLender = amountPaidAsInstallmentToLender.sub(interestToStaterPerInstallement.div(discount));
+                require(payable(msg.sender).send(interestToStaterPerInstallement / discount));
+                amountPaidAsInstallmentToLender = amountPaidAsInstallmentToLender - (interestToStaterPerInstallement / discount);
             }
-            interestToStaterPerInstallement = interestToStaterPerInstallement.sub(interestToStaterPerInstallement.div(discount));
+            interestToStaterPerInstallement = interestToStaterPerInstallement - (interestToStaterPerInstallement / discount);
         }
-        amountPaidAsInstallmentToLender = amountPaidAsInstallmentToLender.sub(interestToStaterPerInstallement);
+        amountPaidAsInstallmentToLender = amountPaidAsInstallmentToLender - interestToStaterPerInstallement;
 
-        loans[loanId].paidAmount = loans[loanId].paidAmount.add(paidByBorrower);
-        loans[loanId].nrOfPayments = loans[loanId].nrOfPayments.add(paidByBorrower.div(loans[loanId].installmentAmount));
+        loans[loanId].paidAmount = loans[loanId].paidAmount + paidByBorrower;
+        loans[loanId].nrOfPayments = loans[loanId].nrOfPayments + (paidByBorrower / loans[loanId].installmentAmount);
 
         if (loans[loanId].paidAmount >= loans[loanId].amountDue)
         loans[loanId].status = Status.LIQUIDATED;
@@ -210,7 +295,7 @@ contract LendingMethods is Ownable, LendingCore {
         // We transfer the tokens to borrower here
         transferTokens(
             msg.sender,
-            loans[loanId].lender,
+            payable(ownerOf(loanId)),
             loans[loanId].currency,
             amountPaidAsInstallmentToLender,
             interestToStaterPerInstallement
@@ -229,7 +314,7 @@ contract LendingMethods is Ownable, LendingCore {
     // Borrower can withdraw loan items if loan is LIQUIDATED
     // Lender can withdraw loan item is loan is DEFAULTED
     function terminateLoan(uint256 loanId) external {
-        require(msg.sender == loans[loanId].borrower || msg.sender == loans[loanId].lender);
+        require(msg.sender == loans[loanId].borrower || msg.sender == ownerOf(loanId));
         require(loans[loanId].status != Status.WITHDRAWN);
         require((block.timestamp >= loans[loanId].startEnd[1] || loans[loanId].paidAmount >= loans[loanId].amountDue) || canBeTerminated(loanId));
         require(loans[loanId].status == Status.LIQUIDATED || loans[loanId].status == Status.APPROVED);
@@ -239,7 +324,7 @@ contract LendingMethods is Ownable, LendingCore {
             // We send the items back to lender
             transferItems(
                 address(this),
-                loans[loanId].lender,
+                ownerOf(loanId),
                 loans[loanId].nftAddressArray,
                 loans[loanId].nftTokenIdArray,
                 loans[loanId].nftTokenTypeArray
@@ -250,7 +335,7 @@ contract LendingMethods is Ownable, LendingCore {
                 // We send the items back to lender
                 transferItems(
                     address(this),
-                    loans[loanId].lender,
+                    ownerOf(loanId),
                     loans[loanId].nftAddressArray,
                     loans[loanId].nftTokenIdArray,
                     loans[loanId].nftTokenTypeArray
@@ -275,32 +360,4 @@ contract LendingMethods is Ownable, LendingCore {
         );
     }
     
-    /**
-     * @notice Used by the Promissory Note contract to change the ownership of the loan when the Promissory Note NFT is sold 
-     * @param from The address of the current owner
-     * @param to The address of the new owner
-     * @param loanIds The ids of the loans that will be transferred to the new owner
-     */
-    function promissoryExchange(address from, address payable to, uint256[] calldata loanIds) external isPromissoryNote {
-        for (uint256 i = 0; i < loanIds.length; ++i) {
-            require(loans[loanIds[i]].lender == from);
-            require(loans[loanIds[i]].status == Status.APPROVED);
-            require(promissoryPermissions[loanIds[i]] == from);
-            loans[loanIds[i]].lender = to;
-            promissoryPermissions[loanIds[i]] = to;
-        }
-    }
-  
-    /**
-     * @notice Used by the Promissory Note contract to approve a list of loans to be used as a Promissory Note NFT
-     * @param loanIds The ids of the loans that will be approved
-     */
-     function setPromissoryPermissions(uint256[] calldata loanIds, address allowed) external {
-        require(allowed != address(0));
-        for (uint256 i = 0; i < loanIds.length; ++i) {
-            require(loans[loanIds[i]].lender == msg.sender);
-            require(loans[loanIds[i]].status == Status.APPROVED);
-            promissoryPermissions[loanIds[i]] = allowed;
-        }
-    }
 }
