@@ -1,23 +1,25 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// When running the script with `npx hardhat run <script>` you'll find the Hardhat
-// Runtime Environment's members available in the global scope.
-const { BigNumber } = require("ethers");
-const hre = require("hardhat");
+import DeploymentError from '../logs/deployment/printers/errors';
+import DeploymentLogger from '../logs/deployment/printers/deployment';
+import { deployContract } from '../plugins/deployContract';
 
-/** 
- * @type import('hardhat/config').HardhatUserConfig
- */
-require('@nomiclabs/hardhat-waffle');
 
 async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
+  try {
+
+    const paymentsMethods = await deployContract({
+      name: 'StaterDiscounts',
+      constructor: [],
+      props: {}
+    }) as PaymentsMethods;
+    DeploymentLogger('export PAYMENTS_METHODS=' + paymentsMethods.address);
+    deployments.update(5, {
+      step: "Deploy hound potions"
+    });
+
+  } catch(err) {
+    console.error(err);
+    DeploymentError((err as NodeJS.ErrnoException).message);
+  }
 
   // We get the contract to deploy
   const Discounts = await hre.ethers.getContractFactory("StaterDiscounts");
