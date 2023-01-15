@@ -12,9 +12,6 @@ async function main() {
       props: {}
     }) as PaymentsMethods;
     DeploymentLogger('export PAYMENTS_METHODS=' + paymentsMethods.address);
-    deployments.update(5, {
-      step: "Deploy hound potions"
-    });
 
   } catch(err) {
     console.error(err);
