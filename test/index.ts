@@ -7,9 +7,23 @@ import { StaterDiscounts } from '../typechain-types/StaterDiscounts';
 import { GameItems721 } from '../typechain-types/GameItems721';
 import { GameItems1155 } from '../typechain-types/GameItems1155';
 import { StaterPromissoryNote } from '../typechain-types/StaterPromissoryNote';
+import { StakingTokens } from '../typechain-types/StakingTokens';
+import { DistributionTokens } from '../typechain-types/DistributionTokens';
+import { TokenGeyser } from '../typechain-types/TokenGeyser';
+import { LendingMethods } from '../typechain-types/LendingMethods';
+import { LendingTemplate } from '../typechain-types/LendingTemplate';
 
 
-let discounts: StaterDiscounts, erc721: GameItems721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote: StaterPromissoryNote, lendingMethods, lendingTemplate, erc20: FungibleTokens;
+let discounts: StaterDiscounts, 
+  erc721: GameItems721, 
+  erc1155: GameItems1155, 
+  tokenGeyser: TokenGeyser, 
+  stakingTokens: StakingTokens, 
+  distributionTokens: DistributionTokens, 
+  promissoryNote: StaterPromissoryNote, 
+  lendingMethods: LendingMethods, 
+  lendingTemplate: LendingTemplate, 
+  erc20: FungibleTokens;
 const address0x0: string = "0x0000000000000000000000000000000000000000";
 const nrOfWorkflowsToTest: number = 5000;
 const ERC721_TYPE: number = 0;
@@ -77,32 +91,36 @@ describe("Smart Contracts Setup", function () {
 
   it("Should deploy the token geyser contract", async function () {
 
-    const StakingTokens = await ethers.getContractFactory("StakingTokens");
-    const _stakingTokens = await StakingTokens.deploy(BigNumber.from('1000000000000000000'),"Test Staking Tokens", "TST");
-    await _stakingTokens.deployed();
-    expect(_stakingTokens.address).to.have.lengthOf(42);
-    stakingTokens = _stakingTokens;
+    stakingTokens = await deployContract({
+      name: 'StakingTokens',
+      constructor: [BigNumber.from('1000000000000000000'),"Test Staking Tokens", "TST"],
+      props: {}
+    }) as StakingTokens;
+    expect(stakingTokens.address).to.have.lengthOf(42);
 
-    const Distributiontokens = await ethers.getContractFactory("DistributionTokens");
-    const _distributionTokens = await Distributiontokens.deploy(BigNumber.from('1000000000000000000'),"Test Distribution Tokens", "TDT");
-    await _distributionTokens.deployed();
-    expect(_distributionTokens.address).to.have.lengthOf(42);
-    distributionTokens = _distributionTokens;
+    distributionTokens = await deployContract({
+      name: 'DistributionTokens',
+      constructor: [BigNumber.from('1000000000000000000'),"Test Distribution Tokens", "TDT"],
+      props: {}
+    }) as DistributionTokens;
+    expect(distributionTokens.address).to.have.lengthOf(42);
 
-    const TokenGeyser = await ethers.getContractFactory("TokenGeyser");
-    const _tokenGeyser = await TokenGeyser.deploy(_stakingTokens.address,_distributionTokens.address,10000,100,1000,100);
-    await _tokenGeyser.deployed();
-    expect(_tokenGeyser.address).to.have.lengthOf(42);
-    tokenGeyser = _tokenGeyser;
+    tokenGeyser = await deployContract({
+      name: 'TokenGeyser',
+      constructor: [stakingTokens.address,distributionTokens.address,10000,100,1000,100],
+      props: {}
+    }) as TokenGeyser;
+    expect(tokenGeyser.address).to.have.lengthOf(42);
 
   });
 
   it("Should deploy the lending methods", async function () {
-    const LendingMethods = await ethers.getContractFactory("LendingMethods");
-    const _lendingMethods = await LendingMethods.deploy();
-    await _lendingMethods.deployed();
-    expect(_lendingMethods.address).to.have.lengthOf(42);
-    lendingMethods = _lendingMethods;
+    lendingMethods = await deployContract({
+      name: 'LendingMethods',
+      constructor: [],
+      props: {}
+    }) as LendingMethods;
+    expect(lendingMethods.address).to.have.lengthOf(42);
   });
 
   it("Should deploy the lending template", async function () {
