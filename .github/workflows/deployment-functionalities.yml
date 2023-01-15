@@ -1,0 +1,25 @@
+name: Deployment functionalities
+on: push
+jobs:
+  Deployment-functionalities:
+    name: Deployment functionalities
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout set-up
+        uses: actions/checkout@v3
+      - name: Node set-up
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+          cache: 'npm'
+      - name: Location set-up
+        run: npm install
+      - name: Deployment functionalities
+        run: npm run compile && npm run deploy
+        env: 
+          MAINNET_PROVIDER: ${{ secrets.MAINNET_PROVIDER }}
+          ACCOUNT_PRIVATE_KEY: ${{ secrets.ACCOUNT_PRIVATE_KEY }}
+          POLYGON_PROVIDER: ${{ secrets.POLYGON_PROVIDER }}
+          BSC_PROVIDER: ${{ secrets.BSC_PROVIDER }}
+          POLYSCAN_API_KEY: ${{ secrets.POLYSCAN_API_KEY }}
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
