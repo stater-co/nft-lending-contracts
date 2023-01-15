@@ -4,9 +4,11 @@ import { ethers } from 'hardhat';
 import { deployContract } from '../plugins/deployContract';
 import { FungibleTokens } from '../typechain-types/FungibleTokens';
 import { StaterDiscounts } from '../typechain-types/StaterDiscounts';
+import { GameItems721 } from '../typechain-types/GameItems721';
+import { GameItems1155 } from '../typechain-types/GameItems1155';
 
 
-let discounts: StaterDiscounts, erc721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote, lendingMethods, lendingTemplate, erc20: FungibleTokens;
+let discounts: StaterDiscounts, erc721: GameItems721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote, lendingMethods, lendingTemplate, erc20: FungibleTokens;
 const address0x0: string = "0x0000000000000000000000000000000000000000";
 const nrOfWorkflowsToTest: number = 5000;
 const ERC721_TYPE: number = 0;
@@ -46,19 +48,21 @@ describe("Smart Contracts Setup", function () {
   });
 
   it("Should deploy the ERC721 contract", async function () {
-    const NFT721 = await ethers.getContractFactory("GameItems721");
-    const _nft721 = await NFT721.deploy();
-    await _nft721.deployed();
-    expect(_nft721.address).to.have.lengthOf(42);
-    erc721 = _nft721;
+    erc721 = await deployContract({
+      name: 'GameItems721',
+      constructor: [],
+      props: {}
+    }) as GameItems721;
+    expect(erc721.address).to.have.lengthOf(42);
   });
 
   it("Should deploy the ERC1155 contract", async function () {
-    const NFT1155 = await ethers.getContractFactory("GameItems1155");
-    const _nft1155 = await NFT1155.deploy();
-    await _nft1155.deployed();
-    expect(_nft1155.address).to.have.lengthOf(42);
-    erc1155 = _nft1155;
+    erc1155 = await deployContract({
+      name: 'GameItems1155',
+      constructor: [],
+      props: {}
+    }) as GameItems1155;
+    expect(erc1155.address).to.have.lengthOf(42);
   });
 
   it("Should deploy the promissory contract", async function () {
