@@ -6,6 +6,7 @@
   "scripts": {
     "compile": "rm -rf cache && rm -rf artifacts && rm -rf typechain-types && npx hardhat compile",
     "deploy": "npx hardhat run scripts/deploy.ts",
+    "test": "npx hardhat test",
     "rinkeby-production-deploy": "npx hardhat run scripts/deploy.ts --network rinkeby",
     "rinkeby-development-deploy": "npx hardhat run scripts/deploy.ts --network rinkeby",
     "mainnet-production-deploy": "npx hardhat run scripts/deploy.ts --network mainnet",
