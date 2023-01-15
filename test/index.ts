@@ -1,23 +1,25 @@
-const { expect } = require("chai");
-const { BigNumber } = require("ethers");
-const { ethers } = require("hardhat");
+import { expect } from 'chai';
+import { BigNumber } from 'ethers';
+import { ethers } from 'hardhat';
+import { deployContract } from '../plugins/deployContract';
+import { FungibleTokens } from '../typechain-types/FungibleTokens';
 
 
-let discounts, erc721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote, lendingMethods, lendingTemplate, erc20;
-const address0x0 = "0x0000000000000000000000000000000000000000";
-const nrOfWorkflowsToTest = 5000;
-const ERC721_TYPE = 0;
-const ERC1155_TYPE = 1;
-const TOKEN_GEYSER_TYPE = 2;
+let discounts, erc721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote, lendingMethods, lendingTemplate, erc20: FungibleTokens;
+const address0x0: string = "0x0000000000000000000000000000000000000000";
+const nrOfWorkflowsToTest: number = 5000;
+const ERC721_TYPE: number = 0;
+const ERC1155_TYPE: number = 1;
+const TOKEN_GEYSER_TYPE: number = 2;
 
 
-function generateLoanParams() {
-  let randomValue = Math.floor(Math.random() * 99999999) + 1;
-  let randomLtv = Math.floor(Math.random() * 59) + 1;
-  let assetsValue = randomValue;
-  let loanValue = parseInt((assetsValue / 100) * randomLtv);
-  let nrOfInstallments = Math.floor(Math.random() * 20) + 1;
-  let currency = Math.floor(Math.random() * 2) + 1 === 1 ? address0x0 : erc20.address;
+const generateLoanParams = (): [number, number, number, string] => {
+  const randomValue: number = Math.floor(Math.random() * 99999999) + 1;
+  const randomLtv: number = Math.floor(Math.random() * 59) + 1;
+  const assetsValue: number = randomValue;
+  const loanValue: number = parseInt(String((assetsValue / 100) * randomLtv));
+  const nrOfInstallments: number = Math.floor(Math.random() * 20) + 1;
+  const currency: string = Math.floor(Math.random() * 2) + 1 === 1 ? address0x0 : erc20.address;
   return [assetsValue,loanValue,nrOfInstallments,currency];
 }
 
@@ -25,11 +27,12 @@ function generateLoanParams() {
 describe("Smart Contracts Setup", function () {
 
   it("Should deploy the erc20 contract", async function () {
-    const FungibleTokens = await ethers.getContractFactory("FungibleTokens");
-    const _fungibleTokens = await FungibleTokens.deploy(BigNumber.from("1000000000000000000"),"Test ERC20","TERC20");
-    await _fungibleTokens.deployed();
-    expect(_fungibleTokens.address).to.have.lengthOf(42);
-    erc20 = _fungibleTokens;
+    erc20 = await deployContract({
+      name: 'FungibleTokens',
+      constructor: [BigNumber.from("1000000000000000000"),"Test ERC20","TERC20"],
+      props: {}
+    }) as FungibleTokens;
+    expect(erc20.address).to.have.lengthOf(42);
   });
 
   it("Should deploy the discounts contract", async function () {
