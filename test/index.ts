@@ -15,6 +15,8 @@ import { LendingTemplate } from '../typechain-types/LendingTemplate';
 import { expecting } from '../plugins/expecting';
 import { globalParams } from '../common/params';
 import { generateLoanParams } from '../plugins/generateLoanParams';
+import { staterDiscountsSetup } from '../scripts/deployStaterDiscounts';
+import { deployLendingMethods } from '../scripts/deployLendingMethods';
 
 
 let discounts: StaterDiscounts, 
@@ -46,12 +48,11 @@ describe("Smart Contracts Setup", function () {
   });
 
   it("Should deploy the discounts contract", async function () {
-    discounts = await deployContract({
-      name: 'StaterDiscounts',
-      constructor: [],
-      props: {}
+    discounts = await staterDiscountsSetup({
+      executeInitialMethods: false,
+      logging: false,
+      testing: true
     }) as StaterDiscounts;
-    expect(discounts.address).to.have.lengthOf(42);
   });
 
   it("Should deploy the ERC721 contract", async function () {
@@ -107,12 +108,11 @@ describe("Smart Contracts Setup", function () {
   });
 
   it("Should deploy the lending methods", async function () {
-    lendingMethods = await deployContract({
-      name: 'LendingMethods',
-      constructor: [],
-      props: {}
+    lendingMethods = await deployLendingMethods({
+      executeInitialMethods: false,
+      logging: false,
+      testing: true
     }) as LendingMethods;
-    expect(lendingMethods.address).to.have.lengthOf(42);
   });
 
   it("Should deploy the lending template", async function () {

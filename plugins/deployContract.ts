@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { deploymentMessage } from "./deploymentMessage";
 import { ContractParams } from '../common/dto/contracts/contractParams.dto';
 import { TestLogger } from '../logs/test/printers/logs';
+import { expect } from 'chai';
 
 
 export async function deployContract(contractParams: ContractParams): Promise<ethers.Contract> {
@@ -13,6 +14,10 @@ export async function deployContract(contractParams: ContractParams): Promise<et
   
     if ( contractParams.logs ) {
       deploymentMessage(contractParams.name,contract.address);
+    }
+
+    if ( contractParams.verifyAddress ) {
+      expect(contract.address).to.have.lengthOf(42);
     }
 
     TestLogger("Contract: " + contractParams.name + ", deployed at: " + contract.address);

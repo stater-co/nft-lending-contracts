@@ -5,4 +5,5 @@ export interface ContractParams {
     constructor: Array<any>;
     props: object;
     logs?: boolean;
+    verifyAddress?: boolean;
 }
