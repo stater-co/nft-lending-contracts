@@ -3,9 +3,10 @@ import { BigNumber } from 'ethers';
 import { ethers } from 'hardhat';
 import { deployContract } from '../plugins/deployContract';
 import { FungibleTokens } from '../typechain-types/FungibleTokens';
+import { StaterDiscounts } from '../typechain-types/StaterDiscounts';
 
 
-let discounts, erc721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote, lendingMethods, lendingTemplate, erc20: FungibleTokens;
+let discounts: StaterDiscounts, erc721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote, lendingMethods, lendingTemplate, erc20: FungibleTokens;
 const address0x0: string = "0x0000000000000000000000000000000000000000";
 const nrOfWorkflowsToTest: number = 5000;
 const ERC721_TYPE: number = 0;
@@ -36,11 +37,12 @@ describe("Smart Contracts Setup", function () {
   });
 
   it("Should deploy the discounts contract", async function () {
-    const Discounts = await ethers.getContractFactory("StaterDiscounts");
-    const _discounts = await Discounts.deploy();
-    await _discounts.deployed();
-    expect(_discounts.address).to.have.lengthOf(42);
-    discounts = _discounts;
+    discounts = await deployContract({
+      name: 'StaterDiscounts',
+      constructor: [],
+      props: {}
+    }) as StaterDiscounts;
+    expect(discounts.address).to.have.lengthOf(42);
   });
 
   it("Should deploy the ERC721 contract", async function () {
