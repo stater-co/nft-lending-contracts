@@ -17,6 +17,7 @@ import { globalParams } from '../common/params';
 import { generateLoanParams } from '../plugins/generateLoanParams';
 import { staterDiscountsSetup } from '../scripts/deployStaterDiscounts';
 import { deployLendingMethods } from '../scripts/deployLendingMethods';
+import { staterPromissoryNoteSetup } from '../scripts/deployStaterPromissoryNote';
 
 
 let discounts: StaterDiscounts, 
@@ -74,12 +75,11 @@ describe("Smart Contracts Setup", function () {
   });
 
   it("Should deploy the promissory contract", async function () {
-    promissoryNote = await deployContract({
-      name: 'StaterPromissoryNote',
-      constructor: ["Stater Promissory Note","SPM"],
-      props: {}
+    promissoryNote = await staterPromissoryNoteSetup({
+      executeInitialMethods: false,
+      logging: false,
+      testing: true
     }) as StaterPromissoryNote;
-    expect(promissoryNote.address).to.have.lengthOf(42);
   });
 
   it("Should deploy the token geyser contract", async function () {

@@ -2,7 +2,6 @@ import DeploymentError from '../logs/deployment/printers/errors';
 import DeploymentLogger from '../logs/deployment/printers/deployment';
 import { deployContract } from '../plugins/deployContract';
 import { StaterDiscounts } from '../typechain-types/StaterDiscounts';
-import { expect } from 'chai';
 import { DeploymentParams } from '../common/dto/deployment/deploymentParams.dto';
 
 
