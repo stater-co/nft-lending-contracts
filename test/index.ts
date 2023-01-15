@@ -6,9 +6,10 @@ import { FungibleTokens } from '../typechain-types/FungibleTokens';
 import { StaterDiscounts } from '../typechain-types/StaterDiscounts';
 import { GameItems721 } from '../typechain-types/GameItems721';
 import { GameItems1155 } from '../typechain-types/GameItems1155';
+import { StaterPromissoryNote } from '../typechain-types/StaterPromissoryNote';
 
 
-let discounts: StaterDiscounts, erc721: GameItems721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote, lendingMethods, lendingTemplate, erc20: FungibleTokens;
+let discounts: StaterDiscounts, erc721: GameItems721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote: StaterPromissoryNote, lendingMethods, lendingTemplate, erc20: FungibleTokens;
 const address0x0: string = "0x0000000000000000000000000000000000000000";
 const nrOfWorkflowsToTest: number = 5000;
 const ERC721_TYPE: number = 0;
@@ -66,11 +67,12 @@ describe("Smart Contracts Setup", function () {
   });
 
   it("Should deploy the promissory contract", async function () {
-    const PromissoryNote = await ethers.getContractFactory("StaterPromissoryNote");
-    const _promissoryNote = await PromissoryNote.deploy("Stater Promissory Note","SPM");
-    await _promissoryNote.deployed();
-    expect(_promissoryNote.address).to.have.lengthOf(42);
-    promissoryNote = _promissoryNote;
+    promissoryNote = await deployContract({
+      name: 'StaterPromissoryNote',
+      constructor: ["Stater Promissory Note","SPM"],
+      props: {}
+    }) as StaterPromissoryNote;
+    expect(promissoryNote.address).to.have.lengthOf(42);
   });
 
   it("Should deploy the token geyser contract", async function () {
