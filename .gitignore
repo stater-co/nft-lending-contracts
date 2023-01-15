@@ -11,3 +11,4 @@ yarn.lock
 **/contracts/artifacts/
 cache
 artifacts
+typechain-types
