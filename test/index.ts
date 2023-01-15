@@ -1,107 +1,123 @@
-const { expect } = require("chai");
-const { BigNumber } = require("ethers");
-const { ethers } = require("hardhat");
+import { expect } from 'chai';
+import { BigNumber } from 'ethers';
+import { ethers } from 'hardhat';
+import { deployContract } from '../plugins/deployContract';
+import { FungibleTokens } from '../typechain-types/FungibleTokens';
+import { StaterDiscounts } from '../typechain-types/StaterDiscounts';
+import { GameItems721 } from '../typechain-types/GameItems721';
+import { GameItems1155 } from '../typechain-types/GameItems1155';
+import { StaterPromissoryNote } from '../typechain-types/StaterPromissoryNote';
+import { StakingTokens } from '../typechain-types/StakingTokens';
+import { DistributionTokens } from '../typechain-types/DistributionTokens';
+import { TokenGeyser } from '../typechain-types/TokenGeyser';
+import { LendingMethods } from '../typechain-types/LendingMethods';
+import { LendingTemplate } from '../typechain-types/LendingTemplate';
+import { expecting } from '../plugins/expecting';
+import { globalParams } from '../common/params';
+import { generateLoanParams } from '../plugins/generateLoanParams';
+import { staterDiscountsSetup } from '../scripts/deployStaterDiscounts';
+import { deployLendingMethods } from '../scripts/deployLendingMethods';
+import { staterPromissoryNoteSetup } from '../scripts/deployStaterPromissoryNote';
+import { deployLendingTemplate } from '../scripts/deployLendingTemplate';
 
 
-let discounts, erc721, erc1155, tokenGeyser, stakingTokens, distributionTokens, promissoryNote, lendingMethods, lendingTemplate, erc20;
-const address0x0 = "0x0000000000000000000000000000000000000000";
-const nrOfWorkflowsToTest = 5000;
-const ERC721_TYPE = 0;
-const ERC1155_TYPE = 1;
-const TOKEN_GEYSER_TYPE = 2;
+let discounts: StaterDiscounts, 
+  erc721: GameItems721, 
+  erc1155: GameItems1155, 
+  tokenGeyser: TokenGeyser, 
+  stakingTokens: StakingTokens, 
+  distributionTokens: DistributionTokens, 
+  promissoryNote: StaterPromissoryNote, 
+  lendingMethods: LendingMethods, 
+  lendingTemplate: LendingTemplate, 
+  erc20: FungibleTokens;
+const nrOfWorkflowsToTest: number = 20;
+const ERC721_TYPE: number = 0;
+const ERC1155_TYPE: number = 1;
+const TOKEN_GEYSER_TYPE: number = 2;
 
-
-function generateLoanParams() {
-  let randomValue = Math.floor(Math.random() * 99999999) + 1;
-  let randomLtv = Math.floor(Math.random() * 59) + 1;
-  let assetsValue = randomValue;
-  let loanValue = parseInt((assetsValue / 100) * randomLtv);
-  let nrOfInstallments = Math.floor(Math.random() * 20) + 1;
-  let currency = Math.floor(Math.random() * 2) + 1 === 1 ? address0x0 : erc20.address;
-  return [assetsValue,loanValue,nrOfInstallments,currency];
-}
 
 
 describe("Smart Contracts Setup", function () {
 
   it("Should deploy the erc20 contract", async function () {
-    const FungibleTokens = await ethers.getContractFactory("FungibleTokens");
-    const _fungibleTokens = await FungibleTokens.deploy(BigNumber.from("1000000000000000000"),"Test ERC20","TERC20");
-    await _fungibleTokens.deployed();
-    expect(_fungibleTokens.address).to.have.lengthOf(42);
-    erc20 = _fungibleTokens;
+    erc20 = await deployContract({
+      name: 'FungibleTokens',
+      constructor: [BigNumber.from("1000000000000000000"),"Test ERC20","TERC20"],
+      props: {}
+    }) as FungibleTokens;
+    expect(erc20.address).to.have.lengthOf(42);
   });
 
   it("Should deploy the discounts contract", async function () {
-    const Discounts = await ethers.getContractFactory("StaterDiscounts");
-    const _discounts = await Discounts.deploy();
-    await _discounts.deployed();
-    expect(_discounts.address).to.have.lengthOf(42);
-    discounts = _discounts;
+    discounts = await staterDiscountsSetup({
+      logging: false,
+      testing: true
+    }) as StaterDiscounts;
   });
 
   it("Should deploy the ERC721 contract", async function () {
-    const NFT721 = await ethers.getContractFactory("GameItems721");
-    const _nft721 = await NFT721.deploy();
-    await _nft721.deployed();
-    expect(_nft721.address).to.have.lengthOf(42);
-    erc721 = _nft721;
+    erc721 = await deployContract({
+      name: 'GameItems721',
+      constructor: [],
+      props: {}
+    }) as GameItems721;
+    expect(erc721.address).to.have.lengthOf(42);
   });
 
   it("Should deploy the ERC1155 contract", async function () {
-    const NFT1155 = await ethers.getContractFactory("GameItems1155");
-    const _nft1155 = await NFT1155.deploy();
-    await _nft1155.deployed();
-    expect(_nft1155.address).to.have.lengthOf(42);
-    erc1155 = _nft1155;
+    erc1155 = await deployContract({
+      name: 'GameItems1155',
+      constructor: [],
+      props: {}
+    }) as GameItems1155;
+    expect(erc1155.address).to.have.lengthOf(42);
   });
 
   it("Should deploy the promissory contract", async function () {
-    const PromissoryNote = await ethers.getContractFactory("StaterPromissoryNote");
-    const _promissoryNote = await PromissoryNote.deploy("Stater Promissory Note","SPM");
-    await _promissoryNote.deployed();
-    expect(_promissoryNote.address).to.have.lengthOf(42);
-    promissoryNote = _promissoryNote;
+    promissoryNote = await staterPromissoryNoteSetup({
+      logging: false,
+      testing: true
+    }) as StaterPromissoryNote;
   });
 
   it("Should deploy the token geyser contract", async function () {
 
-    const StakingTokens = await ethers.getContractFactory("StakingTokens");
-    const _stakingTokens = await StakingTokens.deploy(BigNumber.from('1000000000000000000'),"Test Staking Tokens", "TST");
-    await _stakingTokens.deployed();
-    expect(_stakingTokens.address).to.have.lengthOf(42);
-    stakingTokens = _stakingTokens;
+    stakingTokens = await deployContract({
+      name: 'StakingTokens',
+      constructor: [BigNumber.from('1000000000000000000'),"Test Staking Tokens", "TST"],
+      props: {}
+    }) as StakingTokens;
+    expect(stakingTokens.address).to.have.lengthOf(42);
 
-    const Distributiontokens = await ethers.getContractFactory("DistributionTokens");
-    const _distributionTokens = await Distributiontokens.deploy(BigNumber.from('1000000000000000000'),"Test Distribution Tokens", "TDT");
-    await _distributionTokens.deployed();
-    expect(_distributionTokens.address).to.have.lengthOf(42);
-    distributionTokens = _distributionTokens;
+    distributionTokens = await deployContract({
+      name: 'DistributionTokens',
+      constructor: [BigNumber.from('1000000000000000000'),"Test Distribution Tokens", "TDT"],
+      props: {}
+    }) as DistributionTokens;
+    expect(distributionTokens.address).to.have.lengthOf(42);
 
-    const TokenGeyser = await ethers.getContractFactory("TokenGeyser");
-    const _tokenGeyser = await TokenGeyser.deploy(_stakingTokens.address,_distributionTokens.address,10000,100,1000,100);
-    await _tokenGeyser.deployed();
-    expect(_tokenGeyser.address).to.have.lengthOf(42);
-    tokenGeyser = _tokenGeyser;
+    tokenGeyser = await deployContract({
+      name: 'TokenGeyser',
+      constructor: [stakingTokens.address,distributionTokens.address,10000,100,1000,100],
+      props: {}
+    }) as TokenGeyser;
+    expect(tokenGeyser.address).to.have.lengthOf(42);
 
   });
 
   it("Should deploy the lending methods", async function () {
-    const LendingMethods = await ethers.getContractFactory("LendingMethods");
-    const _lendingMethods = await LendingMethods.deploy();
-    await _lendingMethods.deployed();
-    expect(_lendingMethods.address).to.have.lengthOf(42);
-    lendingMethods = _lendingMethods;
+    lendingMethods = await deployLendingMethods({
+      logging: false,
+      testing: true
+    }) as LendingMethods;
   });
 
   it("Should deploy the lending template", async function () {
-    const LendingTemplate = await ethers.getContractFactory("LendingTemplate");
-    const _lendingTemplate = await LendingTemplate.deploy(promissoryNote.address,lendingMethods.address,discounts.address);
-    await _lendingTemplate.deployed();
-    expect(_lendingTemplate.address).to.have.lengthOf(42);
-
-    // @DIIMIIM: Change this if you want to swith between lendingTemplate and lendingMethods
-    lendingTemplate = _lendingTemplate;
+    lendingTemplate = await deployLendingTemplate(promissoryNote.address, lendingMethods.address, discounts.address, {
+      logging: false,
+      testing: true
+    }) as LendingTemplate;
   });
 
 });
@@ -117,7 +133,7 @@ describe("Preparations", function () {
   it("Check lending template approval on erc1155 contract", async function () {
     const [deployer] = await ethers.getSigners();
     const isApproved = await erc1155.isApprovedForAll(deployer.address,lendingTemplate.address);
-    expect(isApproved);
+    expecting(isApproved);
   });
 
   it("Approve lending template on erc721 contract", async function () {
@@ -128,7 +144,7 @@ describe("Preparations", function () {
   it("Check lending template approval on erc721 contract", async function () {
     const [deployer] = await ethers.getSigners();
     const isApproved = await erc721.isApprovedForAll(deployer.address,lendingTemplate.address);
-    expect(isApproved);
+    expecting(isApproved);
   });
 
   it("Should create the ERC721 discount", async function () {
@@ -157,19 +173,19 @@ describe("Preparations", function () {
 describe("Lending Unit Tests", function () {
   
   for ( let i = 1 , l = nrOfWorkflowsToTest; i <= l; ++i ) {
-    let nrOfAssets;
-    let nftAddressArray = [];
-    let nftTokenIdArray = [];
-    let nftTokenTypeArray = [];
+    let nrOfAssets: number;
+    let nftAddressArray: Array<string> = [];
+    let nftTokenIdArray: Array<number> = [];
+    let nftTokenTypeArray: Array<number> = [];
 
     it("Create loan " + i, async function () {
       const [deployer] = await ethers.getSigners();
       nrOfAssets = Math.floor(Math.random() * 10) + 1;
-      let params = generateLoanParams();
-      let assetsValue = params[0];
-      let loanValue = params[1];
-      let nrOfInstallments = params[2];
-      let currency = params[3];
+      let params: [number, number, number, string] = generateLoanParams(erc20.address);
+      let assetsValue: number = params[0];
+      let loanValue: number = params[1];
+      let nrOfInstallments: number = params[2];
+      let currency: string = params[3];
       let newSupply, balanceOf, tokenId;
       await lendingTemplate.checkLtv(loanValue,assetsValue);
       for ( let j = 0 , k = nrOfAssets; j < k; ++j ) {
@@ -194,7 +210,7 @@ describe("Lending Unit Tests", function () {
 
             balanceOf = await erc1155.balanceOf(deployer.address,tokenId);
             balanceOf = Number((BigNumber.from(balanceOf._hex).toString()));
-            expect(balanceOf > 0, "Token " + tokenId + " of loan: " + i + " is not owned by loan creator ( [deployer.address] : " + deployer.address + " )");
+            expecting(balanceOf > 0, "Token " + tokenId + " of loan: " + i + " is not owned by loan creator ( [deployer.address] : " + deployer.address + " )");
           break;
         }
         nftTokenTypeArray.push(assetType);
@@ -207,7 +223,7 @@ describe("Lending Unit Tests", function () {
 
     it("Check loan " + i + " existence", async function () {
       const loan = await lendingTemplate.loans(i);
-      expect(loan[0] !== address0x0);
+      expecting(loan[0] !== globalParams.address0);
     });
 
     const willEdit = Math.floor(Math.random() * 2) + 1 === 1 ? true : false;
@@ -219,7 +235,7 @@ describe("Lending Unit Tests", function () {
 
       it("Edit loan " + i, async function () {
         const [deployer] = await ethers.getSigners();
-        let params = generateLoanParams();
+        let params = generateLoanParams(erc20.address);
         let assetsValue = params[0];
         let loanValue = params[1];
         let nrOfInstallments = params[2];
@@ -237,7 +253,7 @@ describe("Lending Unit Tests", function () {
       if ( initialLoan ) {
         it("Check loan edit " + i, async function () {
           const loan = await lendingTemplate.loans(i);
-          expect(loan[4].hex !== initialLoan[4].hex || loan[2] !== initialLoan[2] || loan[6].hex !== initialLoan[6].hex || loan[7].hex !== initialLoan[7].hex || loan[12] !== initialLoan[12]);
+          expecting(loan[4]._hex !== initialLoan[4].hex || loan[2] !== initialLoan[2] || loan[6]._hex !== initialLoan[6].hex || loan[7]._hex !== initialLoan[7].hex || loan[12] !== initialLoan[12]);
         });
       }
 
@@ -252,7 +268,7 @@ describe("Lending Unit Tests", function () {
       });
       it("Check loan " + i + " cancellation", async function () {
         const cancelledLoan = await lendingTemplate.loans(i);
-        expect(cancelledLoan[3] === 3);
+        expecting(cancelledLoan[3] === 3);
       });
     }
 
@@ -263,16 +279,16 @@ describe("Lending Unit Tests", function () {
           const loan = await lendingTemplate.loans(i);
           const approvalCosts = await lendingTemplate.getLoanApprovalCost(i);
 
-          if ( loan[2] !== address0x0 ) {
+          if ( loan[2] !== globalParams.address0 ) {
             const approvetokens = await erc20.approve(lendingTemplate.address,Number((BigNumber.from(approvalCosts[0]._hex).toString())));
             expect(approvetokens.hash).to.have.lengthOf(66);
           }
           
           await lendingTemplate.approveLoan(i, { value: Number((BigNumber.from(approvalCosts[0]._hex).toString())) });
-          expect(false);
+          expecting(false);
 
         } catch (err) {
-          expect(true);
+          expecting(true);
         }
       });
     } else {
@@ -288,17 +304,16 @@ describe("Lending Unit Tests", function () {
 
             it("Will edit discount before using it for loan " + i + " approval", async function () {
               const [deployer] = await ethers.getSigners();
-              let discountId = await discounts.discountId();
-              discountId = Number((BigNumber.from(discountId._hex).toString())) -1;
+              const discountId: number = Number(await discounts.discountId()) - 1;
 
               const possibleDiscounts = [erc721.address,erc1155.address,tokenGeyser.address];
               const discountIndexToUse = Math.floor(Math.random() * possibleDiscounts.length);
               const discountValue = Math.floor(Math.random() * 9) + 2;
-              let tokensForDiscount, erc721TotalSupply, usedErc1155TokenId;
+              let tokensForDiscount, erc721TotalSupply, usedErc1155TokenId: number;
               
               if ( discountId > 0 ) {
                 const discountToEdit = Math.floor(Math.random() * (discountId-1));
-                let usedErc1155TokenIds = [];
+                let usedErc1155TokenIds: Array<number> = [];
 
                 switch ( discountIndexToUse ) {
                   case 0:
@@ -355,7 +370,7 @@ describe("Lending Unit Tests", function () {
 
               } else {
 
-                let usedTokens = [];
+                let usedTokens: Array<number> = [];
 
                 switch ( discountIndexToUse ) {
                   case 0:
@@ -397,11 +412,11 @@ describe("Lending Unit Tests", function () {
 
               const loan = await lendingTemplate.loans(i);
 
-              if ( loan[1] === address0x0 ) {
+              if ( loan[1] === globalParams.address0 ) {
 
                 const approvalCosts = await lendingTemplate.getLoanApprovalCost(i);              
                 
-                if ( loan[2] !== address0x0 ) {
+                if ( loan[2] !== globalParams.address0 ) {
               
                   await erc20.transfer(deployer.address, approvalCosts[0]._hex);
                   
@@ -426,7 +441,7 @@ describe("Lending Unit Tests", function () {
               const discountIndexToUse = Math.floor(Math.random() * possibleDiscounts.length);
               const discountValue = Math.floor(Math.random() * 9) + 2;
               let tokensForDiscount, erc721TotalSupply, erc1155TotalSupply;
-              let usedTokens = [];
+              let usedTokens: Array<number> = [];
 
               switch ( discountIndexToUse ) {
                 case 0:
@@ -474,9 +489,9 @@ describe("Lending Unit Tests", function () {
           const loan = await lendingTemplate.loans(i);
           const approvalCosts = await lendingTemplate.getLoanApprovalCost(i);
 
-          if ( loan[1] === address0x0 ) {
+          if ( loan[1] === globalParams.address0 ) {
 
-            if ( loan[2] !== address0x0 ) {
+            if ( loan[2] !== globalParams.address0 ) {
               
               await erc20.transfer(deployer.address, approvalCosts[0]._hex);
               
@@ -508,16 +523,14 @@ describe("Lending Unit Tests", function () {
 
           if ( willBurnPromissoryNote ) {
             it("Will burn the promissory note", async function () {
-              let promissoryNoteId = await promissoryNote.promissoryNoteId();
-              promissoryNoteId = Number((BigNumber.from(promissoryNoteId._hex).toString())) - 1;
+              const promissoryNoteId: number = Number(await promissoryNote.promissoryNoteId()) - 1;
               const operation = await promissoryNote.burnPromissoryNote(promissoryNoteId);
               expect(operation.hash).to.have.lengthOf(66);
             });
           } else {
             it("Will transfer the promissory note", async function () {
               const [deployer] = await ethers.getSigners();
-              let promissoryNoteId = await promissoryNote.promissoryNoteId();
-              promissoryNoteId = Number((BigNumber.from(promissoryNoteId._hex).toString())) - 1;
+              const promissoryNoteId: number = Number(await promissoryNote.promissoryNoteId()) - 1;
               const operation = await promissoryNote.transferFrom(deployer.address,lendingMethods.address,promissoryNoteId);
               expect(operation.hash).to.have.lengthOf(66);
               loanLenderTransferredViaPromissoryNote = true;
@@ -531,7 +544,7 @@ describe("Lending Unit Tests", function () {
             const installmentCost = await lendingTemplate.getLoanInstallmentCost(i,1);
             const loan = await lendingTemplate.loans(i);
 
-            if ( loan[2] !== address0x0 ) {
+            if ( loan[2] !== globalParams.address0 ) {
 
               const approvetokens = await erc20.approve(lendingTemplate.address,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())));
               expect(approvetokens.hash).to.have.lengthOf(66);
@@ -557,7 +570,7 @@ describe("Lending Unit Tests", function () {
             const halfRemainingInstallments = remainingInstallments / 2;
 
             for ( let j = 0; j < halfRemainingInstallments; ++j ) {
-              if ( loan[2] !== address0x0 ) {
+              if ( loan[2] !== globalParams.address0 ) {
 
                 const approvetokens = await erc20.approve(lendingTemplate.address,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())));
                 expect(approvetokens.hash).to.have.lengthOf(66);
@@ -584,7 +597,7 @@ describe("Lending Unit Tests", function () {
             const remainingInstallments = nrOfInstallments - nrOfPayments;
 
             for ( let j = 0; j < remainingInstallments; ++j ) {
-              if ( loan[2] !== address0x0 ) {
+              if ( loan[2] !== globalParams.address0 ) {
 
                 const approvetokens = await erc20.approve(lendingTemplate.address,Number((BigNumber.from(installmentCost.overallInstallmentAmount).toString())));
                 expect(approvetokens.hash).to.have.lengthOf(66);
@@ -613,10 +626,10 @@ describe("Lending Unit Tests", function () {
       it("It will try to terminate cancelled loan " + i, async function () {
         try {
           await lendingTemplate.terminateLoan(i);
-          expect(false,"[BUG]: Cancelled loan " + i + " has been terminated!");
+          expecting(false,"[BUG]: Cancelled loan " + i + " has been terminated!");
           isTerminated = true;
         } catch (err) {
-          expect(true);
+          expecting(true);
         }
       });
     }
@@ -635,10 +648,10 @@ describe("Lending Unit Tests", function () {
       it("It will try to terminate terminated loan " + i, async function () {
         try {
           await lendingTemplate.terminateLoan(i);
-          expect(false,"[BUG]: Terminated loan " + i + " has been terminated again!");
+          expecting(false,"[BUG]: Terminated loan " + i + " has been terminated again!");
           isTerminated = true;
         } catch (err) {
-          expect(true);
+          expecting(true);
         }
       });
     }
@@ -650,9 +663,8 @@ describe("Lending Unit Tests", function () {
 describe("Finishing Test Results", function () {
 
   it("Check loan id", async function () {
-    const lastLoan = await lendingTemplate.loans(nrOfWorkflowsToTest);
-    const afterLastLoan = await lendingTemplate.loans(nrOfWorkflowsToTest + nrOfWorkflowsToTest);
-    expect(lastLoan[0] !== address0x0 && afterLastLoan === address0x0);
+    const lastLoan: number = Number(await lendingTemplate.id());
+    expecting(lastLoan >= nrOfWorkflowsToTest);
   });
 
 });
