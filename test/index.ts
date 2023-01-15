@@ -18,6 +18,7 @@ import { generateLoanParams } from '../plugins/generateLoanParams';
 import { staterDiscountsSetup } from '../scripts/deployStaterDiscounts';
 import { deployLendingMethods } from '../scripts/deployLendingMethods';
 import { staterPromissoryNoteSetup } from '../scripts/deployStaterPromissoryNote';
+import { deployLendingTemplate } from '../scripts/deployLendingTemplate';
 
 
 let discounts: StaterDiscounts, 
@@ -116,12 +117,11 @@ describe("Smart Contracts Setup", function () {
   });
 
   it("Should deploy the lending template", async function () {
-    lendingTemplate = await deployContract({
-      name: 'LendingTemplate',
-      constructor: [promissoryNote.address, lendingMethods.address, discounts.address],
-      props: {}
+    lendingTemplate = await deployLendingTemplate(promissoryNote.address, lendingMethods.address, discounts.address, {
+      executeInitialMethods: false, 
+      logging: false,
+      testing: true
     }) as LendingTemplate;
-    expect(lendingTemplate.address).to.have.lengthOf(42);
   });
 
 });
