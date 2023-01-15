@@ -124,13 +124,12 @@ describe("Smart Contracts Setup", function () {
   });
 
   it("Should deploy the lending template", async function () {
-    const LendingTemplate = await ethers.getContractFactory("LendingTemplate");
-    const _lendingTemplate = await LendingTemplate.deploy(promissoryNote.address,lendingMethods.address,discounts.address);
-    await _lendingTemplate.deployed();
-    expect(_lendingTemplate.address).to.have.lengthOf(42);
-
-    // @DIIMIIM: Change this if you want to swith between lendingTemplate and lendingMethods
-    lendingTemplate = _lendingTemplate;
+    lendingTemplate = await deployContract({
+      name: 'LendingTemplate',
+      constructor: [],
+      props: {}
+    }) as LendingTemplate;
+    expect(lendingTemplate.address).to.have.lengthOf(42);
   });
 
 });
