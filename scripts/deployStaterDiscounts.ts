@@ -24,16 +24,6 @@ export const staterDiscountsSetup = async (params?: DeploymentParams): Promise<S
       }
     }
 
-    if ( !params ) {
-      await contract.addDiscount(2,"0x1a08a4be4c59d808ee730d57a369b1c09ed62352",20,[]);
-      await contract.addDiscount(1,"0x4100670ee2f8aef6c47a4ed13c7f246e621228ec",2,[1,4,5,2]);
-    } else {
-      if ( params.executeInitialMethods ) {
-        await contract.addDiscount(2,"0x1a08a4be4c59d808ee730d57a369b1c09ed62352",20,[]);
-        await contract.addDiscount(1,"0x4100670ee2f8aef6c47a4ed13c7f246e621228ec",2,[1,4,5,2]);
-      }
-    }
-
     return contract;
 
   } catch(err) {

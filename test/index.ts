@@ -31,7 +31,7 @@ let discounts: StaterDiscounts,
   lendingMethods: LendingMethods, 
   lendingTemplate: LendingTemplate, 
   erc20: FungibleTokens;
-const nrOfWorkflowsToTest: number = 10;
+const nrOfWorkflowsToTest: number = 20;
 const ERC721_TYPE: number = 0;
 const ERC1155_TYPE: number = 1;
 const TOKEN_GEYSER_TYPE: number = 2;
@@ -51,7 +51,6 @@ describe("Smart Contracts Setup", function () {
 
   it("Should deploy the discounts contract", async function () {
     discounts = await staterDiscountsSetup({
-      executeInitialMethods: false,
       logging: false,
       testing: true
     }) as StaterDiscounts;
@@ -77,7 +76,6 @@ describe("Smart Contracts Setup", function () {
 
   it("Should deploy the promissory contract", async function () {
     promissoryNote = await staterPromissoryNoteSetup({
-      executeInitialMethods: false,
       logging: false,
       testing: true
     }) as StaterPromissoryNote;
@@ -110,7 +108,6 @@ describe("Smart Contracts Setup", function () {
 
   it("Should deploy the lending methods", async function () {
     lendingMethods = await deployLendingMethods({
-      executeInitialMethods: false,
       logging: false,
       testing: true
     }) as LendingMethods;
@@ -118,7 +115,6 @@ describe("Smart Contracts Setup", function () {
 
   it("Should deploy the lending template", async function () {
     lendingTemplate = await deployLendingTemplate(promissoryNote.address, lendingMethods.address, discounts.address, {
-      executeInitialMethods: false, 
       logging: false,
       testing: true
     }) as LendingTemplate;

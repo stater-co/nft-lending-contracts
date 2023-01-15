@@ -22,6 +22,9 @@ export const deployContractsInfrastructure = async () => {
       return;
     }
 
+    await discounts.addDiscount(2,"0x1a08a4be4c59d808ee730d57a369b1c09ed62352",20,[]);
+    await discounts.addDiscount(1,"0x4100670ee2f8aef6c47a4ed13c7f246e621228ec",2,[1,4,5,2]);
+
     const lendingTemplate: LendingTemplate | void = await deployLendingTemplate(promissoryNotes.address, lendingMethods.address, discounts.address);
     if ( !lendingTemplate ) {
       DeploymentError("Lending Template failed to deploy. Aborted.");
