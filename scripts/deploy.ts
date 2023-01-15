@@ -1,77 +1,124 @@
 import DeploymentError from '../logs/deployment/printers/errors';
 import DeploymentLogger from '../logs/deployment/printers/deployment';
 import { deployContract } from '../plugins/deployContract';
+import { StaterDiscounts } from '../typechain-types/StaterDiscounts';
+import { StaterPromissoryNote } from '../typechain-types/StaterPromissoryNote';
+import { LendingMethods } from '../typechain-types/LendingMethods';
+import { LendingTemplate } from '../typechain-types/LendingTemplate';
 
-
-async function main() {
+export const staterDiscountsSetup = async (): Promise<StaterDiscounts | void> => {
+  let contract: StaterDiscounts;
   try {
 
-    const paymentsMethods = await deployContract({
+    contract = await deployContract({
       name: 'StaterDiscounts',
       constructor: [],
       props: {}
-    }) as PaymentsMethods;
-    DeploymentLogger('export PAYMENTS_METHODS=' + paymentsMethods.address);
+    }) as StaterDiscounts;
+    DeploymentLogger('export DISCOUNTS=' + contract.address);
+
+    await contract.addDiscount(2,"0x1a08a4be4c59d808ee730d57a369b1c09ed62352",20,[]);
+
+    await contract.addDiscount(1,"0x4100670ee2f8aef6c47a4ed13c7f246e621228ec",2,[1,4,5,2]);
+
+    return contract;
 
   } catch(err) {
     console.error(err);
     DeploymentError((err as NodeJS.ErrnoException).message);
   }
+}
 
-  // We get the contract to deploy
-  const Discounts = await hre.ethers.getContractFactory("StaterDiscounts");
-  console.log('Discounts: Got Contract Factory');
-  const sender = await hre.ethers.getSigner();
-  //const initialNonce = await sender.getTransactionCount();
-  const discounts = await Discounts.deploy();
-  console.log('Discounts: Deployed Contract ' + JSON.stringify(discounts));
+export const staterPromissoryNoteSetup = async (): Promise<StaterPromissoryNote | void> => {
+  let contract: StaterPromissoryNote;
+  try {
 
-  await discounts.deployed();
-  console.log('Discounts: Got deployed contract >> ' + JSON.stringify(discounts));
+    contract = await deployContract({
+      name: 'StaterPromissoryNote',
+      constructor: ["Test Promissory Note","TPN"],
+      props: {}
+    }) as StaterPromissoryNote;
+    DeploymentLogger('export PROMISSORY_NOTE=' + contract.address);
 
-  await discounts.addDiscount(2,"0x1a08a4be4c59d808ee730d57a369b1c09ed62352",20,[]);
-  console.log('Discounts: Add Geyser Discount >> ' + JSON.stringify(discounts));
-  await discounts.addDiscount(1,"0x4100670ee2f8aef6c47a4ed13c7f246e621228ec",2,[1,4,5,2]);
-  console.log('Discounts: Add Stater Rarible tokens Discount >> ' + JSON.stringify(discounts));
+    return contract;
 
-  const PromissoryNote = await hre.ethers.getContractFactory("StaterPromissoryNote");
-  console.log('PromissoryNote: Got Contract Factory >> ' + JSON.stringify(PromissoryNote));
-  const promissoryNote = await PromissoryNote.deploy("Test Promissory Note","TPN");
-  console.log('PromissoryNote: Deployed Contract >> ' + JSON.stringify(promissoryNote));
+  } catch(err) {
+    console.error(err);
+    DeploymentError((err as NodeJS.ErrnoException).message);
+  }
+}
 
-  const LendingMethods = await hre.ethers.getContractFactory("LendingMethods");
-  console.log('LendingMethods: Got Contract Factory >> ' + JSON.stringify(LendingMethods));
-  const lendingMethods = await LendingMethods.deploy();
-  console.log('LendingMethods: Deployed Contract >> ' + JSON.stringify(lendingMethods));
+export const deployLendingMethods = async (): Promise<LendingMethods | void> => {
+  let contract: LendingMethods;
+  try {
 
-  const LendingTemplate = await hre.ethers.getContractFactory("LendingTemplate");
-  console.log('LendingTemplate: Got Contract Factory >> ' + JSON.stringify(LendingTemplate));
-  const lendingTemplate = await LendingTemplate.deploy(promissoryNote.address,lendingMethods.address,discounts.address);
-  console.log('LendingTemplate: Deployed Contract >> ' + JSON.stringify(lendingTemplate));
-  await lendingTemplate.deployed();
-  console.log('LendingTemplate: Got Deployed Contract >> ' + JSON.stringify(lendingTemplate));
+    contract = await deployContract({
+      name: 'LendingMethods',
+      constructor: [],
+      props: {}
+    }) as LendingMethods;
+    DeploymentLogger('export LENDING_METHODS=' + contract.address);
 
-  const deployedPromissoryNote = await promissoryNote.deployed();
-  console.log('PromissoryNote: Got Deployed Contract >> ' + JSON.stringify(promissoryNote));
-  await lendingMethods.deployed();
-  console.log('LendingMethods: Got Deployed Contract >> ' + JSON.stringify(lendingMethods));
-  await deployedPromissoryNote.setLendingDataAddress(lendingTemplate.address);
-  console.log('PromissoryNote: Set Lending Data Address >> ' + JSON.stringify(deployedPromissoryNote));
+    return contract;
 
-  console.log('\n=========================================================================\n')
+  } catch(err) {
+    console.error(err);
+    DeploymentError((err as NodeJS.ErrnoException).message);
+  }
+}
 
-  console.log("Discounts deployed to:", discounts.address);
-  console.log("Promissory Note deployed to:" + promissoryNote.address);
-  console.log("Lending methods deployed to:" + lendingMethods.address);
-  console.log("Lending template deployed to:" + lendingTemplate.address);
+export const deployLendingTemplate = async (
+  promissoryNoteContractAddress: string,
+  lendingMethodsContractAddress: string,
+  discountsContractAddress: string
+): Promise<LendingTemplate | void> => {
+  let contract: LendingTemplate;
+  try {
+
+    contract = await deployContract({
+      name: 'LendingTemplate',
+      constructor: [promissoryNoteContractAddress, lendingMethodsContractAddress, discountsContractAddress],
+      props: {}
+    }) as LendingTemplate;
+    DeploymentLogger('export LENDING_TEMPLATE=' + contract.address);
+
+    return contract;
+
+  } catch(err) {
+    console.error(err);
+    DeploymentError((err as NodeJS.ErrnoException).message);
+  }
+}
 
 
-  console.log('\n=========================================================================\n')
+export const deployContractsInfrastructure = async () => {
+  try {
+
+    const discounts: StaterDiscounts | void = await staterDiscountsSetup();
+    const promissoryNotes: StaterPromissoryNote | void = await staterPromissoryNoteSetup();
+    const lendingMethods: LendingMethods | void = await deployLendingMethods();
+    
+    if ( !discounts || !promissoryNotes || !lendingMethods ) {
+      DeploymentError("Some of the Lending Template Contract dependencies failed to properly deploy. Aborted.");
+      return;
+    }
+
+    const lendingTemplate: LendingTemplate | void = await deployLendingTemplate(promissoryNotes.address, lendingMethods.address, discounts.address);
+    if ( !lendingTemplate ) {
+      DeploymentError("Lending Template failed to deploy. Aborted.");
+      return;
+    }
+    promissoryNotes.setLendingDataAddress(lendingTemplate.address);
+
+  } catch(err) {
+    console.error(err);
+    DeploymentError((err as NodeJS.ErrnoException).message);
+  }
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
-main()
+deployContractsInfrastructure()
   .then(() => process.exit(0))
   .catch((error) => {
     console.error(error);
